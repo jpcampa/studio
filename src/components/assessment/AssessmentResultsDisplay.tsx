@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, BarChart as BarChartIcon, PieChart as PieChartIcon, Activity } from 'lucide-react'; // Added Activity as a potential radar icon
+import { CheckCircle, ListChecks, Activity } from 'lucide-react';
 import {
   ChartContainer,
   ChartTooltip,
@@ -30,39 +30,44 @@ interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
 }
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82Ca9D"]; // For Pie Chart
+// Use shadcn/ui theme colors for charts
+const themedChartColors = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+];
 
 export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
 
   // Data preparation for Radar Chart (Emotional Profile)
   const radarData = Object.entries(results.emotionalProfile).map(([name, valueString]) => {
-    const match = valueString.match(/\((\d)\/\d\)/); // Extracts '3' from "(3/5)"
+    const match = valueString.match(/\((\d)\/\d\)/); 
     let numericValue;
     if (match && match[1]) {
       numericValue = parseInt(match[1], 10);
     } else {
-      // Fallback for values like "Alto", "Bajo", "Medio".
       const lowerValueString = valueString.toLowerCase();
       if (lowerValueString.includes("muy bajo") || lowerValueString.includes("muy mal")) numericValue = 1;
       else if (lowerValueString.includes("bajo") || lowerValueString.includes("mal")) numericValue = 2;
       else if (lowerValueString.includes("medio") || lowerValueString.includes("regular") || lowerValueString.includes("normal")) numericValue = 3;
       else if (lowerValueString.includes("alto") || lowerValueString.includes("bien")) numericValue = 4;
       else if (lowerValueString.includes("muy alto") || lowerValueString.includes("muy bien")) numericValue = 5;
-      else numericValue = 3; // Default if no specific pattern matches
+      else numericValue = 3; 
     }
     return {
-      dimension: name, // e.g., "Autoestima"
-      score: numericValue, // e.g., 3
-      fullMark: 5, // Assuming all are out of 5 for the scale
-      fullLabel: valueString // e.g., "Nivel medio (3/5)" for tooltip
+      dimension: name, 
+      score: numericValue, 
+      fullMark: 5, 
+      fullLabel: valueString 
     };
   });
   
-  // ChartConfig for the Radar Chart series
   const emotionalProfileRadarConfig: ChartConfig = {
-    score: { // This key matches the dataKey of the <Radar /> component
-      label: t.emotionalProfile, // Used in legend if enabled
+    score: { 
+      label: t.emotionalProfile, 
       color: "hsl(var(--primary))",
     },
   };
@@ -70,14 +75,14 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
   // Data and Config for Pie Chart (Priority Areas)
   const pieChartData = results.priorityAreas.map((area) => ({
     name: area,
-    value: 1, // Equal weight for priority areas
+    value: 1, 
   }));
 
   const priorityAreasPieConfig: ChartConfig = {};
   results.priorityAreas.forEach((area, index) => {
-    priorityAreasPieConfig[area] = {
+    priorityAreasPieConfig[area] = { // Key is the area name (e.g., "Autoestima")
       label: area,
-      color: COLORS[index % COLORS.length],
+      color: themedChartColors[index % themedChartColors.length], // Assign themed color HSL string
     };
   });
 
@@ -87,7 +92,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-primary flex items-center">
-            <Activity className="mr-3 h-8 w-8" /> {/* Changed icon for results title */}
+            <Activity className="mr-3 h-8 w-8" /> 
              {t.assessmentResultsTitle}
           </CardTitle>
           <CardDescription className="text-lg">{t.summaryAndRecommendations}</CardDescription>
@@ -97,7 +102,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center"><BarChartIcon className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle> {/* Kept BarChartIcon or could use Activity */}
+            <CardTitle className="flex items-center"><Activity className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle> 
           </CardHeader>
           <CardContent>
             <div className="h-[350px] w-full">
@@ -125,15 +130,11 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
                         <ChartTooltipContent
                             className="!bg-background !border !border-border !shadow-lg !rounded-md"
                             formatter={(value, name, itemProps) => {
-                            // value is the score (e.g., 3)
-                            // name is the dataKey of the Radar (e.g., "score")
-                            // itemProps.payload is the data object for this point
                             if (itemProps.payload) {
                                 return (
                                 <div className="text-sm p-1">
                                     <div className="font-medium text-foreground">{itemProps.payload.dimension}</div>
                                     <div className="text-muted-foreground">{itemProps.payload.fullLabel}</div>
-                                    {/* <div className="text-primary font-semibold">Score: {itemProps.payload.score}</div> */}
                                 </div>
                                 );
                             }
@@ -142,8 +143,6 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
                         />
                         }
                     />
-                    {/* Optional: Legend can be added if desired for a single series */}
-                    {/* <ChartLegend content={<ChartLegendContent />} /> */}
                 </RadarChart>
             </ChartContainer>
             </div>
@@ -162,14 +161,14 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
             <CardTitle className="flex items-center"><ListChecks className="mr-2 h-6 w-6 text-accent" />{t.priorityAreas}</CardTitle>
           </CardHeader>
           <CardContent>
-             <div className="h-[350px] w-full"> {/* Increased height slightly */}
+             <div className="h-[350px] w-full"> 
                <ChartContainer config={priorityAreasPieConfig} className="w-full h-full">
                 <PieChart>
                   <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />
                   <Pie
                     data={pieChartData}
                     dataKey="value"
-                    nameKey="name"
+                    nameKey="name" // This refers to the 'name' property in pieChartData objects
                     cx="50%"
                     cy="50%"
                     labelLine={false}
@@ -177,6 +176,9 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
                     label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                   >
                     {pieChartData.map((entry, index) => (
+                      // entry.name is the area name, e.g., "Autoestima"
+                      // priorityAreasPieConfig uses area names as keys.
+                      // ChartStyle will generate --color-Autoestima, etc.
                       <Cell key={`cell-${index}`} fill={`var(--color-${entry.name})`} />
                     ))}
                   </Pie>
@@ -217,3 +219,4 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
     </div>
   );
 }
+
