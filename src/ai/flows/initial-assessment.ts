@@ -38,7 +38,10 @@ const prompt = ai.definePrompt({
 
 You will analyze the user's answers to a questionnaire and provide an emotional profile, identify priority areas, and offer a summary of the results.
 
-Answers: {{{answers}}}
+User's Answers (question ID: score):
+{{#each answers}}
+  {{@key}}: {{this}}
+{{/each}}
 
 Based on the answers, generate an emotional profile, identify the top 3 priority areas for the user, and provide a summary of the assessment results.
 
@@ -58,6 +61,13 @@ const initialAssessmentFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    // It's crucial that the AI's output strictly matches the InitialAssessmentOutputSchema.
+    // If 'output' is null or doesn't match, the calling action will handle it.
+    if (!output) {
+      // This case should ideally be handled by Genkit's schema validation,
+      // but as a fallback, we ensure a proper error structure.
+      throw new Error('AI response did not match the expected output schema.');
+    }
+    return output;
   }
 );
