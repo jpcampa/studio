@@ -1,7 +1,9 @@
+
 "use client";
 
 import { useEffect } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
+import { useActionState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -52,7 +54,7 @@ export function RegisterForm() {
   const t = useTranslations();
   const { toast } = useToast();
   const router = useRouter();
-  const [state, formAction] = useFormState(registerUser, initialState);
+  const [state, formAction] = useActionState(registerUser, initialState);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(formSchema),

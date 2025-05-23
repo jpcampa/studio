@@ -1,7 +1,9 @@
+
 "use client";
 
 import { useEffect } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
+import { useActionState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +37,7 @@ export function LoginForm() {
   const { toast } = useToast();
   const { login: contextLogin, user: contextUser } = useUser();
   const router = useRouter();
-  const [state, formAction] = useFormState(loginUser, initialState);
+  const [state, formAction] = useActionState(loginUser, initialState);
 
   useEffect(() => {
     if (contextUser) {
