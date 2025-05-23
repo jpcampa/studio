@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BookOpen, Headphones, Zap, Clock, ArrowLeft } from 'lucide-react';
+import { BookOpen, Headphones, Zap, Clock, ArrowLeft, PlayCircle } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 
 interface ResourceDetailPageProps {
   params: Promise<{ resourceId: string }>;
@@ -39,7 +40,7 @@ export default function ResourceDetailPage({ params: paramsPromise }: ResourceDe
   return (
     <div className="container mx-auto py-8 max-w-3xl">
       <Card className="shadow-xl">
-        {resource.imageUrl && (
+        {resource.imageUrl && resource.type !== 'audio' && (
             <div className="relative h-64 w-full rounded-t-lg overflow-hidden">
             <Image 
                 src={resource.imageUrl} 
@@ -48,6 +49,17 @@ export default function ResourceDetailPage({ params: paramsPromise }: ResourceDe
                 objectFit="cover" 
                 data-ai-hint={resource.dataAiHint || "resource details image"}
             />
+            </div>
+        )}
+         {resource.type === 'audio' && resource.imageUrl && ( // Specific image for audio card header if available
+            <div className="relative h-64 w-full rounded-t-lg overflow-hidden">
+              <Image 
+                  src={resource.imageUrl} 
+                  alt={resource.title} 
+                  layout="fill" 
+                  objectFit="cover" 
+                  data-ai-hint={resource.dataAiHint || "audio resource image"}
+              />
             </div>
         )}
         <CardHeader className="border-b">
@@ -64,9 +76,19 @@ export default function ResourceDetailPage({ params: paramsPromise }: ResourceDe
         </CardHeader>
         <CardContent className="py-6 px-6 md:px-8">
           {resource.type === 'audio' && resource.content?.startsWith('https://placehold.co') ? (
-            <div className="my-4 flex flex-col justify-center items-center bg-gray-100 p-6 rounded-md">
-                <Image src={resource.content} alt={resource.title} width={128} height={128} data-ai-hint={resource.dataAiHint || "audio player icon"} />
-                <p className="mt-4 text-muted-foreground text-center">Contenido de audio no disponible en la demostración.<br/> Normalmente, aquí encontrarías un reproductor de audio.</p>
+             <div className="my-4 p-4 border rounded-lg shadow-sm bg-muted/30" data-ai-hint="audio player interface">
+                <div className="flex items-center w-full gap-3 mb-3">
+                    <PlayCircle className="w-10 h-10 text-primary flex-shrink-0" />
+                    <div className="flex-grow overflow-hidden">
+                    <p className="font-semibold text-foreground truncate" title={resource.title.replace('Audio: ', '')}>{resource.title.replace('Audio: ', '')}</p>
+                    <p className="text-xs text-muted-foreground">Reproductor simulado</p>
+                    </div>
+                </div>
+                <Progress value={60} className="w-full h-2 mb-2" aria-label="Progreso de audio simulado" />
+                <p className="mt-3 text-xs text-muted-foreground text-center">
+                  Contenido de audio no disponible en la demostración.
+                  <br/> Normalmente, aquí encontrarías un reproductor de audio.
+                </p>
             </div>
           ) : (
             <div className="prose prose-lg max-w-none text-foreground dark:prose-invert" dangerouslySetInnerHTML={{ __html: resource.content?.replace(/\n/g, '<br />') || resource.summary }} />
