@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, type FormEvent } from 'react';
@@ -10,12 +11,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Palette } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 export default function SettingsPage() {
   const t = useTranslations();
   const { user, updateUser, loading: userLoading } = useUser();
   const { toast } = useToast();
+  const { theme, setTheme, themes } = useTheme();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -23,7 +26,6 @@ export default function SettingsPage() {
   const [gender, setGender] = useState('');
   const [language, setLanguage] = useState('es'); // Default to Spanish for V1
   
-  // Mock notification preferences
   const [dailyCheckIn, setDailyCheckIn] = useState(true);
   const [moduleReminders, setModuleReminders] = useState(true);
   const [motivationalQuotes, setMotivationalQuotes] = useState(false);
@@ -52,14 +54,17 @@ export default function SettingsPage() {
     { value: "prefer_not_to_say", label: t.gender_prefer_not_to_say },
   ];
 
+  const themeOptions = [
+    { value: "light", label: t.themeLight },
+    { value: "dark", label: t.themeDark },
+    { value: "system", label: t.themeSystem },
+  ];
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     updateUser({ name, email, ageRange, gender });
-    // In a real app, also save notification preferences and language.
     setIsSaving(false);
     toast({
       title: "Configuración Guardada",
@@ -76,46 +81,64 @@ export default function SettingsPage() {
       <Card className="max-w-3xl mx-auto shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-primary">{t.settingsTitle}</CardTitle>
-          <CardDescription>{t.personalInformation}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="name">{t.name}</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div>
-                <Label htmlFor="email">{t.email}</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-              <div>
-                <Label htmlFor="ageRange">{t.ageRange}</Label>
-                <Select value={ageRange} onValueChange={setAgeRange}>
-                  <SelectTrigger id="ageRange"><SelectValue placeholder={t.ageRangePlaceholder} /></SelectTrigger>
-                  <SelectContent>
-                    {ageRanges.map(r => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="gender">{t.gender}</Label>
-                 <Select value={gender} onValueChange={setGender}>
-                  <SelectTrigger id="gender"><SelectValue placeholder={t.genderPlaceholder} /></SelectTrigger>
-                  <SelectContent>
-                    {genders.map(g => <SelectItem key={g.value} value={g.value}>{g.label}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div>
+                <CardDescription className="mb-4">{t.personalInformation}</CardDescription>
+                <div className="space-y-4">
+                <div>
+                    <Label htmlFor="name">{t.name}</Label>
+                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div>
+                    <Label htmlFor="email">{t.email}</Label>
+                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <div>
+                    <Label htmlFor="ageRange">{t.ageRange}</Label>
+                    <Select value={ageRange} onValueChange={setAgeRange}>
+                    <SelectTrigger id="ageRange"><SelectValue placeholder={t.ageRangePlaceholder} /></SelectTrigger>
+                    <SelectContent>
+                        {ageRanges.map(r => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+                    </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <Label htmlFor="gender">{t.gender}</Label>
+                    <Select value={gender} onValueChange={setGender}>
+                    <SelectTrigger id="gender"><SelectValue placeholder={t.genderPlaceholder} /></SelectTrigger>
+                    <SelectContent>
+                        {genders.map(g => <SelectItem key={g.value} value={g.value}>{g.label}</SelectItem>)}
+                    </SelectContent>
+                    </Select>
+                </div>
+                </div>
             </div>
 
             <div className="space-y-4 border-t pt-8">
+              <h3 className="text-xl font-semibold text-accent flex items-center"><Palette className="mr-2 h-5 w-5" />{t.themeSettingsTitle}</h3>
+              <CardDescription>{t.selectThemePrompt}</CardDescription>
+              <Select value={theme} onValueChange={setTheme}>
+                <SelectTrigger id="themeSelector">
+                  <SelectValue placeholder={t.selectThemePrompt} />
+                </SelectTrigger>
+                <SelectContent>
+                  {themeOptions.map(opt => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-4 border-t pt-8">
               <h3 className="text-xl font-semibold text-accent">{t.language}</h3>
-              <Select value={language} onValueChange={setLanguage} disabled> {/* Language change not implemented for V1 */}
+              <Select value={language} onValueChange={setLanguage} disabled> 
                 <SelectTrigger id="language"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="es">Español</SelectItem>
-                  {/* Add other languages here when supported */}
                 </SelectContent>
               </Select>
             </div>

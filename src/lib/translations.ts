@@ -1,3 +1,4 @@
+
 // For V1, directly use Spanish. This structure allows easy replacement with a full i18n solution.
 // All text literals should be sourced from here.
 
@@ -93,8 +94,12 @@ export const t = {
   gender_other: "Otro",
   gender_prefer_not_to_say: "Prefiero no decirlo",
   // Theme
-  themeToggleLight: "Modo Claro",
-  themeToggleDark: "Modo Oscuro",
+  theme: "Tema",
+  themeSettingsTitle: "Apariencia",
+  themeLight: "Claro",
+  themeDark: "Oscuro",
+  themeSystem: "Sistema",
+  selectThemePrompt: "Elige cómo quieres que se vea la aplicación.",
 };
 
 export type Translations = typeof t;
