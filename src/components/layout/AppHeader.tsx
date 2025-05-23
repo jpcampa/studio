@@ -11,16 +11,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, User as UserIcon, Settings as SettingsIcon } from "lucide-react";
+import { LogOut, User as UserIcon, Settings as SettingsIcon, Sun, Moon } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { useTheme } from "next-themes";
 
 export function AppHeader() {
   const { user, logout } = useUser();
   const t = useTranslations();
   const { isMobile } = useSidebar();
+  const { theme, setTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
@@ -34,8 +36,8 @@ export function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={`https://placehold.co/100x100.png?text=${user.name?.[0] || 'U'}`} alt={user.name || "Usuarie"} data-ai-hint="user avatar" />
-                <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
+                <AvatarImage src={`https://placehold.co/100x100.png?text=${user.name?.[0]?.toUpperCase() || 'U'}`} alt={user.name || "Usuarie"} data-ai-hint="user avatar" />
+                <AvatarFallback>{user.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
@@ -54,6 +56,14 @@ export function AppHeader() {
                 <SettingsIcon className="mr-2 h-4 w-4" />
                 <span>{t.navSettings}</span>
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+              {theme === "dark" ? (
+                <Sun className="mr-2 h-4 w-4" />
+              ) : (
+                <Moon className="mr-2 h-4 w-4" />
+              )}
+              <span>{theme === "dark" ? t.themeToggleLight : t.themeToggleDark}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout} className="cursor-pointer">

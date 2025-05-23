@@ -4,7 +4,7 @@
 export const t = {
   appName: "WorkWell",
   // General
-  welcome: "Hola!", 
+  welcome: "¡Hola!", 
   loading: "Cargando...",
   submit: "Enviar",
   save: "Guardar",
@@ -37,7 +37,7 @@ export const t = {
   navResources: "Recursos",
   navSettings: "Configuración",
   // Welcome Page / Dashboard
-  welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.", // Changed from feminine specific
+  welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.",
   startYourJourney: "Comienza tu viaje hacia el bienestar",
   takeInitialAssessment: "Realizar Evaluación Inicial",
   continueYourPath: "Continúa tu Ruta",
@@ -92,6 +92,9 @@ export const t = {
   gender_non_binary: "No binario",
   gender_other: "Otro",
   gender_prefer_not_to_say: "Prefiero no decirlo",
+  // Theme
+  themeToggleLight: "Modo Claro",
+  themeToggleDark: "Modo Oscuro",
 };
 
 export type Translations = typeof t;
