@@ -6,25 +6,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, BarChart as BarChartIcon, PieChart as PieChartIcon } from 'lucide-react'; // Aliased lucide imports
+import { CheckCircle, ListChecks, BarChart as BarChartIcon, PieChart as PieChartIcon } from 'lucide-react';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
+  type ChartConfig,
 } from "@/components/ui/chart"
 import { 
-  BarChart, // Added BarChart from recharts
-  PieChart, // Added PieChart from recharts
+  BarChart, 
+  PieChart, 
   Bar, 
   CartesianGrid, 
   XAxis, 
   YAxis, 
-  ResponsiveContainer, 
   Pie, 
-  Cell, 
-  Tooltip as RechartsTooltip 
+  Cell,
 } from "recharts"
 
 interface AssessmentResultsDisplayProps {
@@ -36,18 +35,31 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82Ca9D"
 export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
 
-  const chartData = Object.entries(results.emotionalProfile).map(([name, value]) => {
-    // Attempt to parse a numeric value from strings like "Nivel medio-bajo (2/5)"
+  const barChartData = Object.entries(results.emotionalProfile).map(([name, value]) => {
     const match = value.match(/\((\d)\/\d\)/);
-    const numericValue = match ? parseInt(match[1], 10) : Math.floor(Math.random() * 5) + 1; // fallback for non-standard values
+    const numericValue = match ? parseInt(match[1], 10) : Math.floor(Math.random() * 5) + 1; 
     return { name, value: numericValue, fullValue: value };
   });
   
-  const pieChartData = results.priorityAreas.map((area, index) => ({
+  const emotionalProfileBarConfig: ChartConfig = {
+    value: { // Corresponds to dataKey="value" in <Bar />
+      label: "Nivel", // You might want to translate this or make it dynamic
+      color: "hsl(var(--primary))",
+    },
+  };
+
+  const pieChartData = results.priorityAreas.map((area) => ({
     name: area,
     value: 1, // Equal weight for priority areas
-    fill: COLORS[index % COLORS.length],
   }));
+
+  const priorityAreasPieConfig: ChartConfig = {};
+  results.priorityAreas.forEach((area, index) => {
+    priorityAreasPieConfig[area] = {
+      label: area,
+      color: COLORS[index % COLORS.length],
+    };
+  });
 
 
   return (
@@ -55,7 +67,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-primary flex items-center">
-            <BarChartIcon className="mr-3 h-8 w-8" /> {t.assessmentResultsTitle} {/* Use aliased icon */}
+            <BarChartIcon className="mr-3 h-8 w-8" /> {t.assessmentResultsTitle}
           </CardTitle>
           <CardDescription className="text-lg">{t.summaryAndRecommendations}</CardDescription>
         </CardHeader>
@@ -64,19 +76,32 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center"><PieChartIcon className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle> {/* Use aliased icon */}
+            <CardTitle className="flex items-center"><PieChartIcon className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} layout="vertical" margin={{ left: 20, right:20}}> {/* Use recharts BarChart */}
+            <ChartContainer config={emotionalProfileBarConfig} className="w-full h-full">
+                <BarChart data={barChartData} layout="vertical" margin={{ left: 20, right:20}}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" domain={[0,5]} ticks={[1,2,3,4,5]} />
+                    <XAxis type="number" dataKey="value" domain={[0,5]} ticks={[1,2,3,4,5]} />
                     <YAxis dataKey="name" type="category" width={120} />
-                    <RechartsTooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }} formatter={(value, name, props) => [props.payload.fullValue, name]}/>
-                    <Bar dataKey="value" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+                    <ChartTooltip
+                      cursor={false}
+                      content={
+                        <ChartTooltipContent
+                          formatter={(value, name, item) => ( // name is dataKey here
+                            <div className="text-sm">
+                              <div className="font-medium">{item.payload.name}</div>
+                              <div className="text-muted-foreground">{item.payload.fullValue}</div>
+                            </div>
+                          )}
+                          className="bg-background border rounded-md p-2 shadow-lg"
+                        />
+                      }
+                    />
+                    <Bar dataKey="value" fill="var(--color-value)" radius={[0, 4, 4, 0]} />
                 </BarChart>
-            </ResponsiveContainer>
+            </ChartContainer>
             </div>
             <ul className="mt-4 space-y-2">
               {Object.entries(results.emotionalProfile).map(([key, value]) => (
@@ -94,25 +119,26 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
           </CardHeader>
           <CardContent>
              <div className="h-[300px] w-full">
-               <ResponsiveContainer width="100%" height="100%">
-                <PieChart> {/* Use recharts PieChart */}
+               <ChartContainer config={priorityAreasPieConfig} className="w-full h-full">
+                <PieChart>
+                  <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />
                   <Pie
                     data={pieChartData}
+                    dataKey="value"
+                    nameKey="name"
                     cx="50%"
                     cy="50%"
                     labelLine={false}
                     outerRadius={100}
-                    dataKey="value"
                     label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                   >
                     {pieChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                      <Cell key={`cell-${index}`} fill={`var(--color-${entry.name})`} />
                     ))}
                   </Pie>
-                  <RechartsTooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }} />
-                  <ChartLegend content={<ChartLegendContent />} />
+                  <ChartLegend content={<ChartLegendContent nameKey="name"/>} />
                 </PieChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
             <ul className="mt-4 space-y-2">
               {results.priorityAreas.map((area, index) => (
@@ -147,3 +173,4 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
     </div>
   );
 }
+
