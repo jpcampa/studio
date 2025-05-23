@@ -21,31 +21,33 @@ interface Message {
 
 export function ChatInterface() {
   const t = useTranslations();
-  const { user: currentUser } = useUser(); // Get current user for avatar
+  const { user: currentUser } = useUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Add initial welcome message from bot, only if messages array is empty.
-    // Using an empty dependency array [] to ensure this runs only once on mount.
+    // Add initial welcome message from bot.
+    // This effect runs only once after the component mounts due to the empty dependency array [].
+    // It uses a functional update for setMessages to safely update based on the previous state.
     setMessages((prevMessages) => {
+      // Only add the welcome message if the messages array is currently empty.
       if (prevMessages.length === 0) {
         return [
           {
-            id: crypto.randomUUID(), // Generate a unique ID for the welcome message
-            text: t.chatbotWelcome,   // t.chatbotWelcome is from a stable source
+            id: crypto.randomUUID(), // Generates a unique ID for the message
+            text: t.chatbotWelcome,   // Uses a stable translation string
             sender: 'bot',
-            timestamp: new Date(),
+            timestamp: new Date(),    // Timestamp for the message
           },
         ];
       }
-      return prevMessages; // If messages already exist, don't modify them
+      // If messages already exist (e.g., from a previous state or HMR), do not modify them.
+      return prevMessages;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array ensures this effect runs only once after initial mount.
-          // t.chatbotWelcome is stable and used here for initial setup.
+  }, []); // Empty dependency array ensures this effect runs only ONCE after initial mount.
 
   useEffect(() => {
     // Scroll to bottom when new messages are added
@@ -55,7 +57,7 @@ export function ChatInterface() {
         scrollableViewport.scrollTop = scrollableViewport.scrollHeight;
       }
     }
-  }, [messages]);
+  }, [messages]); // This effect depends on the 'messages' state.
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -71,9 +73,8 @@ export function ChatInterface() {
     setInputValue('');
     setIsLoading(true);
 
-    // Prepare context from previous messages (simple concatenation for V1)
     const context = messages
-      .slice(-5) // Last 5 messages for context
+      .slice(-5)
       .map(msg => `${msg.sender === 'user' ? 'User' : 'Bot'}: ${msg.text}`)
       .join('\n');
 
