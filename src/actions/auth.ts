@@ -65,7 +65,7 @@ export async function loginUser(prevState: any, formData: FormData) {
   if (validatedFields.data.email === "user@example.com" && validatedFields.data.password === "password123") {
     const mockUser: User = {
       id: "mockUserId",
-      name: "Usuario Ejemplo",
+      name: "Usuarie Ejemplo", // Changed from "Usuario Ejemplo"
       email: "user@example.com",
     };
     return { user: mockUser, message: "Inicio de sesión exitoso." };

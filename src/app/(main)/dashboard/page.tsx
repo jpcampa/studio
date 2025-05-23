@@ -30,7 +30,7 @@ export default function DashboardPage() {
           <div className="md:w-1/2 p-8 flex flex-col justify-center">
             <CardHeader>
               <CardTitle className="text-4xl font-bold text-primary">
-                {t.welcome}, {user?.name || "Usuario"}!
+                {t.welcome}, {user?.name || "Usuarie"}!
               </CardTitle>
               <CardDescription className="text-lg mt-2">
                 {t.welcomeToWorkWell}

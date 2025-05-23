@@ -4,7 +4,7 @@
 export const t = {
   appName: "WorkWell",
   // General
-  welcome: "Bienvenido/a",
+  welcome: "Bienvenide", // Changed from "Bienvenido/a"
   loading: "Cargando...",
   submit: "Enviar",
   save: "Guardar",
@@ -37,7 +37,7 @@ export const t = {
   navResources: "Recursos",
   navSettings: "Configuración",
   // Welcome Page / Dashboard
-  welcomeToWorkWell: "Bienvenida a WorkWell, un espacio para reconectar contigo misma. Este viaje es solo tuyo.",
+  welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.", // Changed from feminine specific
   startYourJourney: "Comienza tu viaje hacia el bienestar",
   takeInitialAssessment: "Realizar Evaluación Inicial",
   continueYourPath: "Continúa tu Ruta",

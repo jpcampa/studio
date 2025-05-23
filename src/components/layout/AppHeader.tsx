@@ -34,7 +34,7 @@ export function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={`https://placehold.co/100x100.png?text=${user.name?.[0] || 'U'}`} alt={user.name || "Usuario"} data-ai-hint="user avatar" />
+                <AvatarImage src={`https://placehold.co/100x100.png?text=${user.name?.[0] || 'U'}`} alt={user.name || "Usuarie"} data-ai-hint="user avatar" />
                 <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
               </Avatar>
             </Button>
