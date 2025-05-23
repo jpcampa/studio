@@ -68,16 +68,14 @@ export async function loginUser(prevState: any, formData: FormData) {
   // Simulate checking credentials
   console.log("Logging in user:", validatedFields.data);
   
-  // Mock user lookup
-  if (validatedFields.data.email === "user@example.com" && validatedFields.data.password === "password123") {
-    const mockUser: User = {
-      id: "mockUserId",
-      name: "Usuarie Ejemplo", 
-      email: "user@example.com",
-    };
-    return { user: mockUser, message: "Inicio de sesión exitoso." };
-  }
-
-  return { message: "Credenciales incorrectas." };
+  // For mock purposes, "successfully" log in any user that passes schema validation.
+  // In a real app, you would check credentials against a database.
+  const mockUser: User = {
+    id: Math.random().toString(36).substr(2, 9), // Generate a dynamic ID
+    name: validatedFields.data.email.split('@')[0] || "Usuarie", // Derive name from email or use a default
+    email: validatedFields.data.email,
+    // Other user fields (ageRange, gender, etc.) are not part of the login form,
+    // so they won't be populated here. They are optional in the User interface.
+  };
+  return { user: mockUser, message: "Inicio de sesión exitoso." };
 }
-
