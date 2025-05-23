@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, BarChart as BarChartIcon, PieChart as PieChartIcon } from 'lucide-react';
+import { CheckCircle, ListChecks, BarChart as BarChartIcon, PieChart as PieChartIcon, Activity } from 'lucide-react'; // Added Activity as a potential radar icon
 import {
   ChartContainer,
   ChartTooltip,
@@ -16,38 +16,58 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 import { 
-  BarChart, 
   PieChart, 
-  Bar, 
-  CartesianGrid, 
-  XAxis, 
-  YAxis, 
   Pie, 
   Cell,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
 } from "recharts"
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
 }
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82Ca9D"];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82Ca9D"]; // For Pie Chart
 
 export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
 
-  const barChartData = Object.entries(results.emotionalProfile).map(([name, value]) => {
-    const match = value.match(/\((\d)\/\d\)/);
-    const numericValue = match ? parseInt(match[1], 10) : Math.floor(Math.random() * 5) + 1; 
-    return { name, value: numericValue, fullValue: value };
+  // Data preparation for Radar Chart (Emotional Profile)
+  const radarData = Object.entries(results.emotionalProfile).map(([name, valueString]) => {
+    const match = valueString.match(/\((\d)\/\d\)/); // Extracts '3' from "(3/5)"
+    let numericValue;
+    if (match && match[1]) {
+      numericValue = parseInt(match[1], 10);
+    } else {
+      // Fallback for values like "Alto", "Bajo", "Medio".
+      const lowerValueString = valueString.toLowerCase();
+      if (lowerValueString.includes("muy bajo") || lowerValueString.includes("muy mal")) numericValue = 1;
+      else if (lowerValueString.includes("bajo") || lowerValueString.includes("mal")) numericValue = 2;
+      else if (lowerValueString.includes("medio") || lowerValueString.includes("regular") || lowerValueString.includes("normal")) numericValue = 3;
+      else if (lowerValueString.includes("alto") || lowerValueString.includes("bien")) numericValue = 4;
+      else if (lowerValueString.includes("muy alto") || lowerValueString.includes("muy bien")) numericValue = 5;
+      else numericValue = 3; // Default if no specific pattern matches
+    }
+    return {
+      dimension: name, // e.g., "Autoestima"
+      score: numericValue, // e.g., 3
+      fullMark: 5, // Assuming all are out of 5 for the scale
+      fullLabel: valueString // e.g., "Nivel medio (3/5)" for tooltip
+    };
   });
   
-  const emotionalProfileBarConfig: ChartConfig = {
-    value: { // Corresponds to dataKey="value" in <Bar />
-      label: "Nivel", // You might want to translate this or make it dynamic
+  // ChartConfig for the Radar Chart series
+  const emotionalProfileRadarConfig: ChartConfig = {
+    score: { // This key matches the dataKey of the <Radar /> component
+      label: t.emotionalProfile, // Used in legend if enabled
       color: "hsl(var(--primary))",
     },
   };
 
+  // Data and Config for Pie Chart (Priority Areas)
   const pieChartData = results.priorityAreas.map((area) => ({
     name: area,
     value: 1, // Equal weight for priority areas
@@ -67,7 +87,8 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-primary flex items-center">
-            <BarChartIcon className="mr-3 h-8 w-8" /> {t.assessmentResultsTitle}
+            <Activity className="mr-3 h-8 w-8" /> {/* Changed icon for results title */}
+             {t.assessmentResultsTitle}
           </CardTitle>
           <CardDescription className="text-lg">{t.summaryAndRecommendations}</CardDescription>
         </CardHeader>
@@ -76,37 +97,60 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center"><PieChartIcon className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle>
+            <CardTitle className="flex items-center"><BarChartIcon className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle> {/* Kept BarChartIcon or could use Activity */}
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] w-full">
-            <ChartContainer config={emotionalProfileBarConfig} className="w-full h-full">
-                <BarChart data={barChartData} layout="vertical" margin={{ left: 20, right:20}}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" dataKey="value" domain={[0,5]} ticks={[1,2,3,4,5]} />
-                    <YAxis dataKey="name" type="category" width={120} />
-                    <ChartTooltip
-                      cursor={false}
-                      content={
-                        <ChartTooltipContent
-                          formatter={(value, name, item) => ( // name is dataKey here
-                            <div className="text-sm">
-                              <div className="font-medium">{item.payload.name}</div>
-                              <div className="text-muted-foreground">{item.payload.fullValue}</div>
-                            </div>
-                          )}
-                          className="bg-background border rounded-md p-2 shadow-lg"
-                        />
-                      }
+            <div className="h-[350px] w-full">
+            <ChartContainer config={emotionalProfileRadarConfig} className="w-full h-full">
+                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                    <PolarGrid gridType="polygon" stroke="hsl(var(--border))" />
+                    <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 11, fill: "hsl(var(--foreground))" }} />
+                    <PolarRadiusAxis 
+                        angle={90} 
+                        domain={[0, 5]} 
+                        tickCount={6}
+                        tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                        axisLine={{ stroke: "hsl(var(--border))" }}
                     />
-                    <Bar dataKey="value" fill="var(--color-value)" radius={[0, 4, 4, 0]} />
-                </BarChart>
+                    <Radar
+                        name={t.emotionalProfile}
+                        dataKey="score"
+                        stroke="hsl(var(--primary))"
+                        fill="hsl(var(--primary))"
+                        fillOpacity={0.6}
+                    />
+                    <ChartTooltip
+                        cursor={{ stroke: "hsl(var(--primary))", strokeDasharray: '3 3' }}
+                        content={
+                        <ChartTooltipContent
+                            className="!bg-background !border !border-border !shadow-lg !rounded-md"
+                            formatter={(value, name, itemProps) => {
+                            // value is the score (e.g., 3)
+                            // name is the dataKey of the Radar (e.g., "score")
+                            // itemProps.payload is the data object for this point
+                            if (itemProps.payload) {
+                                return (
+                                <div className="text-sm p-1">
+                                    <div className="font-medium text-foreground">{itemProps.payload.dimension}</div>
+                                    <div className="text-muted-foreground">{itemProps.payload.fullLabel}</div>
+                                    {/* <div className="text-primary font-semibold">Score: {itemProps.payload.score}</div> */}
+                                </div>
+                                );
+                            }
+                            return null;
+                            }}
+                        />
+                        }
+                    />
+                    {/* Optional: Legend can be added if desired for a single series */}
+                    {/* <ChartLegend content={<ChartLegendContent />} /> */}
+                </RadarChart>
             </ChartContainer>
             </div>
             <ul className="mt-4 space-y-2">
-              {Object.entries(results.emotionalProfile).map(([key, value]) => (
-                <li key={key} className="text-sm p-2 bg-muted/50 rounded-md">
-                  <span className="font-semibold">{key}:</span> {value}
+              {radarData.map((item) => (
+                <li key={item.dimension} className="text-sm p-2 bg-muted/50 rounded-md">
+                  <span className="font-semibold">{item.dimension}:</span> {item.fullLabel}
                 </li>
               ))}
             </ul>
@@ -118,7 +162,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
             <CardTitle className="flex items-center"><ListChecks className="mr-2 h-6 w-6 text-accent" />{t.priorityAreas}</CardTitle>
           </CardHeader>
           <CardContent>
-             <div className="h-[300px] w-full">
+             <div className="h-[350px] w-full"> {/* Increased height slightly */}
                <ChartContainer config={priorityAreasPieConfig} className="w-full h-full">
                 <PieChart>
                   <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />
@@ -173,4 +217,3 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
     </div>
   );
 }
-
