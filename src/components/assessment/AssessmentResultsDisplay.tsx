@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
@@ -5,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { BarChart, CheckCircle, ListChecks, PieChart } from 'lucide-react';
+import { CheckCircle, ListChecks, BarChart as BarChartIcon, PieChart as PieChartIcon } from 'lucide-react'; // Aliased lucide imports
 import {
   ChartContainer,
   ChartTooltip,
@@ -13,7 +14,18 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart"
-import { Bar, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Pie, Cell, Tooltip as RechartsTooltip } from "recharts"
+import { 
+  BarChart, // Added BarChart from recharts
+  PieChart, // Added PieChart from recharts
+  Bar, 
+  CartesianGrid, 
+  XAxis, 
+  YAxis, 
+  ResponsiveContainer, 
+  Pie, 
+  Cell, 
+  Tooltip as RechartsTooltip 
+} from "recharts"
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
@@ -43,7 +55,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-primary flex items-center">
-            <BarChart className="mr-3 h-8 w-8" /> {t.assessmentResultsTitle}
+            <BarChartIcon className="mr-3 h-8 w-8" /> {t.assessmentResultsTitle} {/* Use aliased icon */}
           </CardTitle>
           <CardDescription className="text-lg">{t.summaryAndRecommendations}</CardDescription>
         </CardHeader>
@@ -52,12 +64,12 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center"><PieChart className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle>
+            <CardTitle className="flex items-center"><PieChartIcon className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle> {/* Use aliased icon */}
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} layout="vertical" margin={{ left: 20, right:20}}>
+                <BarChart data={chartData} layout="vertical" margin={{ left: 20, right:20}}> {/* Use recharts BarChart */}
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" domain={[0,5]} ticks={[1,2,3,4,5]} />
                     <YAxis dataKey="name" type="category" width={120} />
@@ -83,7 +95,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
           <CardContent>
              <div className="h-[300px] w-full">
                <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart> {/* Use recharts PieChart */}
                   <Pie
                     data={pieChartData}
                     cx="50%"
