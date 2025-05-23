@@ -12,7 +12,7 @@ const registerSchema = z.object({
   gender: z.string().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).optional(),
   agreeTerms: z.preprocess(
-    (val) => val === "on", // HTML checkbox envía "on" cuando está marcado
+    (val) => val === "on" || val === true, // HTML checkbox envía "on" o booleano
     z.boolean().refine((val) => val === true, {
       message: "Debes aceptar los términos y condiciones para registrarte.",
     })
@@ -70,12 +70,16 @@ export async function loginUser(prevState: any, formData: FormData) {
   
   // For mock purposes, "successfully" log in any user that passes schema validation.
   // In a real app, you would check credentials against a database.
+  const emailPrefix = validatedFields.data.email.split('@')[0] || "Usuarie";
+  const displayName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+  
   const mockUser: User = {
     id: Math.random().toString(36).substr(2, 9), // Generate a dynamic ID
-    name: validatedFields.data.email.split('@')[0] || "Usuarie", // Derive name from email or use a default
+    name: displayName, // Use the capitalized email prefix or a default
     email: validatedFields.data.email,
     // Other user fields (ageRange, gender, etc.) are not part of the login form,
     // so they won't be populated here. They are optional in the User interface.
   };
   return { user: mockUser, message: "Inicio de sesión exitoso." };
 }
+
