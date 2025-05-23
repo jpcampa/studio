@@ -1,5 +1,7 @@
+
 "use client";
 
+import { use, useState } from 'react'; // Import use
 import { pathsData, PathModule, Path } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,10 +9,17 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, BookOpen, Headphones, Edit3, Clock } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react'; // For V1, progress is not saved. In V2, this would come from user data.
 
-export default function PathDetailPage({ params }: { params: { pathId: string } }) {
+interface PathDetailPageProps {
+  params: Promise<{ pathId: string }>;
+}
+
+export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();
+  
+  // Unwrap the params Promise
+  const params = use(paramsPromise); 
+  
   const path = pathsData.find(p => p.id === params.pathId);
   const [completedModules, setCompletedModules] = useState<Set<string>>(new Set()); // Mock completion state
 
