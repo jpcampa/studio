@@ -8,41 +8,54 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --background: 0 0% 96%; /* #F5F5F5 light off-white */
+    --foreground: 0 0% 20%; /* #333333 dark gray for text */
+
+    --card: 0 0% 100%; /* white */
+    --card-foreground: 0 0% 3.9%; /* default dark text */
+
+    --popover: 0 0% 100%; /* white */
+    --popover-foreground: 0 0% 3.9%; /* default dark text */
+
+    --primary: 207 88% 68%; /* #64B5F6 calming desaturated blue */
+    --primary-foreground: 0 0% 98%; /* white/very light text for contrast */
+
+    --secondary: 0 0% 93%; /* Slightly darker than background */
+    --secondary-foreground: 0 0% 9%; /* Dark text on secondary */
+
+    --muted: 0 0% 90%; /* Muted elements */
+    --muted-foreground: 0 0% 45.1%; /* Muted foreground text */
+
+    --accent: 265 43% 73%; /* #B39DDB gentle lavender */
+    --accent-foreground: 0 0% 98%; /* white/very light text for contrast */
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
+
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --ring: 207 88% 68%; /* primary color for ring */
+
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Sidebar specific theme variables, can be adjusted if needed */
+    --sidebar-background: 220 10% 97%; /* Slightly off-white, adjust as needed */
+    --sidebar-foreground: 220 10% 25%; /* Darker text for sidebar */
+    --sidebar-primary: 207 88% 68%; /* Same as app primary */
+    --sidebar-primary-foreground: 0 0% 98%; /* Same as app primary-foreground */
+    --sidebar-accent: 265 43% 73%; /* Same as app accent */
+    --sidebar-accent-foreground: 0 0% 98%; /* Same as app accent-foreground */
+    --sidebar-border: 0 0% 89.8%; /* Consistent border */
+    --sidebar-ring: 207 88% 68%; /* Consistent ring */
   }
+
   .dark {
+    /* Keeping dark theme as is, can be adjusted later if needed */
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -67,6 +80,7 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
