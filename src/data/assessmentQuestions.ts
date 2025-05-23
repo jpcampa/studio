@@ -19,10 +19,11 @@ export const assessmentQuestions: Question[] = [
   { id: 'q12', dimension: 'Propósito Vital', text: '¿Sientes que tu vida tiene un propósito claro y significativo?' },
 ];
 
+// Emojis represent "Nunca o Casi Nunca" (más negativo) a "Siempre o Casi Siempre" (más positivo)
 export const likertOptions = [
-  { value: 1, label: 'Nunca o Casi Nunca' },
-  { value: 2, label: 'A Veces' },
-  { value: 3, label: 'Regularmente' },
-  { value: 4, label: 'Frecuentemente' },
-  { value: 5, label: 'Siempre o Casi Siempre' },
+  { value: 1, label: '😩' }, // Muy Mal / Nunca
+  { value: 2, label: '🙁' }, // Mal / A Veces
+  { value: 3, label: '😐' }, // Regular / Regularmente
+  { value: 4, label: '🙂' }, // Bien / Frecuentemente
+  { value: 5, label: '😄' }, // Muy Bien / Siempre
 ];

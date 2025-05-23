@@ -71,7 +71,10 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             {likertOptions.map(option => (
               <div key={option.value} className="flex items-center space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors">
                 <RadioGroupItem value={option.value.toString()} id={`${currentQuestion.id}-${option.value}`} />
-                <Label htmlFor={`${currentQuestion.id}-${option.value}`} className="text-base flex-1 cursor-pointer">
+                <Label 
+                  htmlFor={`${currentQuestion.id}-${option.value}`} 
+                  className="text-3xl flex-1 cursor-pointer text-center" // Increased emoji size and centered
+                >
                   {option.label}
                 </Label>
               </div>
