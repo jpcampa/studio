@@ -1,12 +1,12 @@
 
 "use client";
 
-import { use, useState } from 'react'; // Import use
+import { use, useState } from 'react'; 
 import { pathsData, PathModule, Path } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Headphones, Edit3, Clock, PlayCircle } from 'lucide-react';
+import { CheckCircle, BookOpen, Headphones, Edit3, Clock, PlayCircle, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
@@ -18,11 +18,10 @@ interface PathDetailPageProps {
 export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();
   
-  // Unwrap the params Promise
   const params = use(paramsPromise); 
   
   const path = pathsData.find(p => p.id === params.pathId);
-  const [completedModules, setCompletedModules] = useState<Set<string>>(new Set()); // Mock completion state
+  const [completedModules, setCompletedModules] = useState<Set<string>>(new Set()); 
 
   if (!path) {
     return <div className="container mx-auto py-8 text-center text-xl">{t.errorOccurred} Ruta no encontrada.</div>;
@@ -43,7 +42,7 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
   const getModuleIcon = (type: PathModule['type']) => {
     switch (type) {
       case 'text': return <BookOpen className="h-6 w-6 text-primary" />;
-      case 'audio': return <Headphones className="h-6 w-6 text-primary" />; // Icon for header
+      case 'audio': return <Headphones className="h-6 w-6 text-primary" />; 
       case 'reflection': return <Edit3 className="h-6 w-6 text-primary" />;
       default: return <BookOpen className="h-6 w-6 text-primary" />;
     }
@@ -93,7 +92,15 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
               </div>
             </CardHeader>
             <CardContent>
-              {module.type === 'audio' && module.content.startsWith('https://placehold.co') ? (
+              {module.type === 'text' && (
+                <Button asChild>
+                  <Link href={module.content} target="_blank" rel="noopener noreferrer">
+                    {t.startReading}
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              )}
+              {module.type === 'audio' && module.content.startsWith('https://placehold.co') && (
                  <div className="my-4 p-4 border rounded-lg shadow-sm bg-muted/30" data-ai-hint="audio player interface">
                     <div className="flex items-center w-full gap-3 mb-3">
                         <PlayCircle className="w-10 h-10 text-primary flex-shrink-0" />
@@ -105,10 +112,10 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
                     <Progress value={35} className="w-full h-2 mb-2" aria-label="Progreso de audio simulado" />
                     <p className="text-xs text-muted-foreground text-center">Contenido de audio no disponible en la demostración.</p>
                  </div>
-              ) : module.type !== 'audio' && <p className="text-base leading-relaxed whitespace-pre-line">{module.content}</p>
-              }
-              { module.type === 'text' && <p className="text-base leading-relaxed whitespace-pre-line">{module.content}</p> }
-              { module.type === 'reflection' && <p className="text-base leading-relaxed whitespace-pre-line italic text-muted-foreground">{module.content}</p> }
+              )}
+              {module.type === 'reflection' && (
+                <p className="text-base leading-relaxed whitespace-pre-line italic text-muted-foreground">{module.content}</p>
+              )}
             </CardContent>
             <CardFooter>
               <Button onClick={() => toggleComplete(module.id)} variant={completedModules.has(module.id) ? "secondary" : "default"}>

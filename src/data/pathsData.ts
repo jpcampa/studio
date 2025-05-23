@@ -1,8 +1,9 @@
+
 export type PathModule = {
   id: string;
   title: string; // Spanish
   type: 'text' | 'audio' | 'reflection';
-  content: string; // For text/reflection prompt, or URL for audio
+  content: string; // For text: URL to PDF; for reflection: prompt text; for audio: URL to audio placeholder/file
   estimatedTime?: string; // e.g., "5 min", "10 min"
   dataAiHint?: string; // For images related to audio/reflection if any
 };
@@ -15,6 +16,8 @@ export type Path = {
   dataAiHint?: string;
 };
 
+const examplePdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+
 export const pathsData: Path[] = [
   {
     id: 'autoestima',
@@ -26,14 +29,14 @@ export const pathsData: Path[] = [
         id: 'autoestima_m1', 
         title: 'Introducción a la Autoestima', 
         type: 'text', 
-        content: 'La autoestima es la valoración que tenemos de nosotros mismos. No se trata de ser perfecto, sino de aceptarnos y valorarnos con nuestras fortalezas y áreas de mejora. En este módulo exploraremos qué es la autoestima y por qué es fundamental para nuestro bienestar.',
-        estimatedTime: '5 min',
+        content: examplePdfUrl, // Ahora es una URL de PDF
+        estimatedTime: '5 min lectura',
       },
       { 
         id: 'autoestima_m2', 
         title: 'Audio: Meditación de Autoaceptación', 
         type: 'audio', 
-        content: 'https://placehold.co/128x128.png/64B5F6/FFFFFF?text=Audio', // Placeholder image for audio
+        content: 'https://placehold.co/128x128.png/64B5F6/FFFFFF?text=Audio', 
         estimatedTime: '10 min',
         dataAiHint: 'meditation audio',
       },
@@ -57,8 +60,8 @@ export const pathsData: Path[] = [
         id: 'estres_m1', 
         title: 'Entendiendo el Estrés', 
         type: 'text', 
-        content: 'El estrés es una respuesta natural del cuerpo ante los desafíos. Sin embargo, cuando es crónico, puede afectar nuestra salud. Este módulo te ayudará a identificar tus fuentes de estrés y cómo te afecta.',
-        estimatedTime: '7 min' 
+        content: examplePdfUrl, // Ahora es una URL de PDF
+        estimatedTime: '7 min lectura' 
       },
       { 
         id: 'estres_m2', 
@@ -88,8 +91,8 @@ export const pathsData: Path[] = [
         id: 'sueno_m1', 
         title: 'La Importancia del Sueño', 
         type: 'text', 
-        content: 'Un buen descanso es crucial para la salud física y mental. Exploraremos los ciclos del sueño y cómo optimizar tu rutina para dormir mejor.',
-        estimatedTime: '6 min' 
+        content: examplePdfUrl, // Ahora es una URL de PDF
+        estimatedTime: '6 min lectura' 
       },
       { 
         id: 'sueno_m2', 

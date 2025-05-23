@@ -61,6 +61,7 @@ export const t = {
   module: "Módulo",
   startModule: "Comenzar Módulo",
   markAsCompleted: "Marcar como completado",
+  startReading: "Iniciar Lectura",
   // Chatbot
   chatbotTitle: "Mentor Emocional AI",
   chatbotWelcome: "Hola, estoy aquí para escucharte y acompañarte. ¿En qué quieres trabajar hoy?",
