@@ -9,13 +9,21 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
-import { Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Loader2, ArrowLeft, ArrowRight, Frown, Annoyed, Meh, Smile, Laugh, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface QuestionnaireFormProps {
   onSubmit: (answers: Record<string, number>) => Promise<void>;
   isSubmitting: boolean;
 }
+
+const iconMap: Record<string, LucideIcon> = {
+  Frown,
+  Annoyed,
+  Meh,
+  Smile,
+  Laugh,
+};
 
 export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormProps) {
   const t = useTranslations();
@@ -70,28 +78,31 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             onValueChange={(value) => handleAnswerChange(currentQuestion.id, value)}
             className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 p-4"
           >
-            {likertOptions.map(option => (
-              <Label
-                key={option.value}
-                htmlFor={`${currentQuestion.id}-${option.value}`}
-                className={cn(
-                  "flex flex-col items-center justify-center p-2 border-2 rounded-lg cursor-pointer transition-all duration-150 ease-in-out",
-                  "hover:border-primary hover:shadow-md",
-                  "w-16 h-16 sm:w-20 sm:h-20", // Responsive size for the clickable area
-                  answers[currentQuestion.id] === option.value
-                    ? "bg-primary/10 border-primary ring-2 ring-primary shadow-lg scale-105"
-                    : "bg-card border-input"
-                )}
-                title={option.description} // Accessibility: provides text for the emoji
-              >
-                <RadioGroupItem
-                  value={option.value.toString()}
-                  id={`${currentQuestion.id}-${option.value}`}
-                  className="sr-only" // Visually hide the radio button
-                />
-                <span className="text-2xl sm:text-3xl">{option.label}</span> 
-              </Label>
-            ))}
+            {likertOptions.map(option => {
+              const IconComponent = iconMap[option.label];
+              return (
+                <Label
+                  key={option.value}
+                  htmlFor={`${currentQuestion.id}-${option.value}`}
+                  className={cn(
+                    "flex flex-col items-center justify-center p-2 border-2 rounded-lg cursor-pointer transition-all duration-150 ease-in-out",
+                    "hover:border-primary hover:shadow-md",
+                    "w-16 h-16 sm:w-20 sm:h-20", // Responsive size for the clickable area
+                    answers[currentQuestion.id] === option.value
+                      ? "bg-primary/10 border-primary ring-2 ring-primary shadow-lg scale-105"
+                      : "bg-card border-input"
+                  )}
+                  title={option.description} // Accessibility: provides text for the icon
+                >
+                  <RadioGroupItem
+                    value={option.value.toString()}
+                    id={`${currentQuestion.id}-${option.value}`}
+                    className="sr-only" // Visually hide the radio button
+                  />
+                  {IconComponent && <IconComponent className="h-8 w-8 sm:h-10 sm:w-10 text-foreground/80 group-hover:text-primary" />}
+                </Label>
+              );
+            })}
           </RadioGroup>
         </form>
       </CardContent>

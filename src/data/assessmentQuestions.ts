@@ -19,11 +19,11 @@ export const assessmentQuestions: Question[] = [
   { id: 'q12', dimension: 'Propósito Vital', text: '¿Sientes que tu vida tiene un propósito claro y significativo?' },
 ];
 
-// Emojis represent "Nunca o Casi Nunca" (más negativo) a "Siempre o Casi Siempre" (más positivo)
+// Usamos nombres de iconos de Lucide para 'label'
 export const likertOptions = [
-  { value: 1, label: '😩', description: 'Nunca o Casi Nunca / Muy Mal' }, 
-  { value: 2, label: '🙁', description: 'A Veces / Mal' }, 
-  { value: 3, label: '😐', description: 'Regularmente / Regular' }, 
-  { value: 4, label: '🙂', description: 'Frecuentemente / Bien' }, 
-  { value: 5, label: '😄', description: 'Siempre o Casi Siempre / Muy Bien' }, 
+  { value: 1, label: 'Frown', description: 'Nunca o Casi Nunca / Muy Mal' },
+  { value: 2, label: 'Annoyed', description: 'A Veces / Mal' },
+  { value: 3, label: 'Meh', description: 'Regularmente / Regular' },
+  { value: 4, label: 'Smile', description: 'Frecuentemente / Bien' },
+  { value: 5, label: 'Laugh', description: 'Siempre o Casi Siempre / Muy Bien' },
 ];
