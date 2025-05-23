@@ -1,3 +1,4 @@
+
 "use server";
 
 import { z } from "zod";
@@ -10,6 +11,12 @@ const registerSchema = z.object({
   ageRange: z.string().optional(),
   gender: z.string().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).optional(),
+  agreeTerms: z.preprocess(
+    (val) => val === "on", // HTML checkbox envía "on" cuando está marcado
+    z.boolean().refine((val) => val === true, {
+      message: "Debes aceptar los términos y condiciones para registrarte.",
+    })
+  ),
 });
 
 const loginSchema = z.object({
@@ -65,7 +72,7 @@ export async function loginUser(prevState: any, formData: FormData) {
   if (validatedFields.data.email === "user@example.com" && validatedFields.data.password === "password123") {
     const mockUser: User = {
       id: "mockUserId",
-      name: "Usuarie Ejemplo", // Changed from "Usuario Ejemplo"
+      name: "Usuarie Ejemplo", 
       email: "user@example.com",
     };
     return { user: mockUser, message: "Inicio de sesión exitoso." };
@@ -73,3 +80,4 @@ export async function loginUser(prevState: any, formData: FormData) {
 
   return { message: "Credenciales incorrectas." };
 }
+
