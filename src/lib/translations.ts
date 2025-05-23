@@ -4,13 +4,13 @@
 export const t = {
   appName: "WorkWell",
   // General
-  welcome: "Bienvenide", // Changed from "Bienvenido/a"
+  welcome: "Hola!", 
   loading: "Cargando...",
   submit: "Enviar",
   save: "Guardar",
   errorOccurred: "Ocurrió un error. Por favor, inténtalo de nuevo.",
   // Auth
-  login: "Iniciar Sesión",
+  login: "Inicia Sesión",
   register: "Registrarse",
   logout: "Cerrar Sesión",
   email: "Correo Electrónico",
