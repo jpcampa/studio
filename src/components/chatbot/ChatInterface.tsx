@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect, type FormEvent } from 'react';
@@ -27,16 +28,24 @@ export function ChatInterface() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Add initial welcome message from bot
-    setMessages([
-      {
-        id: crypto.randomUUID(),
-        text: t.chatbotWelcome,
-        sender: 'bot',
-        timestamp: new Date(),
+    // Add initial welcome message from bot, only if messages array is empty.
+    // Using an empty dependency array [] to ensure this runs only once on mount.
+    setMessages((prevMessages) => {
+      if (prevMessages.length === 0) {
+        return [
+          {
+            id: crypto.randomUUID(), // Generate a unique ID for the welcome message
+            text: t.chatbotWelcome,   // t.chatbotWelcome is from a stable source
+            sender: 'bot',
+            timestamp: new Date(),
+          },
+        ];
       }
-    ]);
-  }, [t.chatbotWelcome]);
+      return prevMessages; // If messages already exist, don't modify them
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array ensures this effect runs only once after initial mount.
+          // t.chatbotWelcome is stable and used here for initial setup.
 
   useEffect(() => {
     // Scroll to bottom when new messages are added
