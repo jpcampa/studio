@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -9,7 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
 import { Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
-import type { InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
+import { cn } from '@/lib/utils';
 
 interface QuestionnaireFormProps {
   onSubmit: (answers: Record<string, number>) => Promise<void>;
@@ -42,9 +43,10 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Check if all questions are answered (optional, could add validation)
-    if (Object.keys(answers).length < assessmentQuestions.length) {
-        // alert("Por favor, responde todas las preguntas.");
+    if (Object.keys(answers).length < assessmentQuestions.length && currentQuestionIndex !== assessmentQuestions.length -1 ) {
+        // This condition is to ensure all questions are answered IF user clicks submit early.
+        // Usually, submit button is only active on the last question.
+        // alert("Por favor, responde todas las preguntas."); 
         // return;
     }
     await onSubmit(answers);
@@ -59,25 +61,36 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             .replace('{current}', (currentQuestionIndex + 1).toString())
             .replace('{total}', assessmentQuestions.length.toString())}
         </CardTitle>
-        <CardDescription className="text-lg mt-1">{currentQuestion.text}</CardDescription>
+        <CardDescription className="text-lg mt-1 min-h-[60px]">{currentQuestion.text}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
           <RadioGroup
             value={answers[currentQuestion.id]?.toString() || ""}
             onValueChange={(value) => handleAnswerChange(currentQuestion.id, value)}
-            className="space-y-3"
+            className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 p-4"
           >
             {likertOptions.map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors">
-                <RadioGroupItem value={option.value.toString()} id={`${currentQuestion.id}-${option.value}`} />
-                <Label 
-                  htmlFor={`${currentQuestion.id}-${option.value}`} 
-                  className="text-3xl flex-1 cursor-pointer text-center" // Increased emoji size and centered
-                >
-                  {option.label}
-                </Label>
-              </div>
+              <Label
+                key={option.value}
+                htmlFor={`${currentQuestion.id}-${option.value}`}
+                className={cn(
+                  "flex flex-col items-center justify-center p-2 border-2 rounded-lg cursor-pointer transition-all duration-150 ease-in-out",
+                  "hover:border-primary hover:shadow-md",
+                  "w-16 h-16 sm:w-20 sm:h-20", // Responsive size for the clickable area
+                  answers[currentQuestion.id] === option.value
+                    ? "bg-primary/10 border-primary ring-2 ring-primary shadow-lg scale-105"
+                    : "bg-card border-input"
+                )}
+                title={option.description} // Accessibility: provides text for the emoji
+              >
+                <RadioGroupItem
+                  value={option.value.toString()}
+                  id={`${currentQuestion.id}-${option.value}`}
+                  className="sr-only" // Visually hide the radio button
+                />
+                <span className="text-2xl sm:text-3xl">{option.label}</span> 
+              </Label>
             ))}
           </RadioGroup>
         </form>

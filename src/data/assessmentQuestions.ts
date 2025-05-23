@@ -21,9 +21,9 @@ export const assessmentQuestions: Question[] = [
 
 // Emojis represent "Nunca o Casi Nunca" (más negativo) a "Siempre o Casi Siempre" (más positivo)
 export const likertOptions = [
-  { value: 1, label: '😩' }, // Muy Mal / Nunca
-  { value: 2, label: '🙁' }, // Mal / A Veces
-  { value: 3, label: '😐' }, // Regular / Regularmente
-  { value: 4, label: '🙂' }, // Bien / Frecuentemente
-  { value: 5, label: '😄' }, // Muy Bien / Siempre
+  { value: 1, label: '😩', description: 'Nunca o Casi Nunca / Muy Mal' }, 
+  { value: 2, label: '🙁', description: 'A Veces / Mal' }, 
+  { value: 3, label: '😐', description: 'Regularmente / Regular' }, 
+  { value: 4, label: '🙂', description: 'Frecuentemente / Bien' }, 
+  { value: 5, label: '😄', description: 'Siempre o Casi Siempre / Muy Bien' }, 
 ];
