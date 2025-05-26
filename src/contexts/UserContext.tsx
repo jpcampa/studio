@@ -34,7 +34,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     console.log("UserContext: Subscribing to onAuthStateChanged.");
-    // setLoading(true) // Already set initially, and will be set to false inside callback
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       console.log("UserContext: onAuthStateChanged event. Firebase user UID:", firebaseUser ? firebaseUser.uid : "null");
       if (firebaseUser) {
@@ -77,14 +76,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
           };
           setUser(basicProfile);
           console.log("UserContext: User state updated with basic profile (due to Firestore error):", basicProfile);
+        } finally {
+          console.log("UserContext: (Inside if firebaseUser) Setting loading state to false.");
+          setLoading(false);
         }
       } else {
         // User is signed out
         console.log("UserContext: No Firebase user (signed out). Setting user state to null.");
         setUser(null);
+        console.log("UserContext: (Inside else !firebaseUser) Setting loading state to false.");
+        setLoading(false);
       }
-      console.log("UserContext: Setting loading state to false.");
-      setLoading(false);
+      // console.log("UserContext: Setting loading state to false."); // MOVED
     });
 
     // Cleanup subscription on unmount
@@ -96,17 +99,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     console.log("UserContext: Logout requested.");
-    setLoading(true);
+    setLoading(true); // Keep this to show loading state during logout process
     try {
       await firebaseSignOut(auth);
       console.log("UserContext: Firebase sign out successful.");
-      // setUser(null) will be handled by onAuthStateChanged
+      // setUser(null) and setLoading(false) will be handled by onAuthStateChanged
       router.push('/login');
     } catch (error) {
       console.error("UserContext: Error signing out: ", error);
       // setLoading(false) will be handled by onAuthStateChanged setting user to null and loading to false
     }
-    // setLoading(false) is handled by onAuthStateChanged
   };
   
   const updateUser = async (updatedData: Partial<Pick<User, 'name' | 'ageRange' | 'gender'>>) => {
@@ -145,3 +147,4 @@ export function useUser() {
   }
   return context;
 }
+
