@@ -55,15 +55,25 @@ export function ActivePathProvider({ children }: { children: ReactNode }) {
 
       const currentCompletedSet = new Set(prev.completedModuleIds);
       if (isCompleted) {
-        currentCompletedSet.add(moduleId);
+        if (moduleId) currentCompletedSet.add(moduleId); // Add moduleId only if it's not empty
       } else {
-        currentCompletedSet.delete(moduleId);
+        if (moduleId) currentCompletedSet.delete(moduleId); // Delete moduleId only if it's not empty
       }
       
-      const updatedPath = { ...prev, completedModuleIds: Array.from(currentCompletedSet) };
-      // No actualizamos localStorage para ActivePathDetails aquí, solo el progreso de módulos individuales.
-      // ActivePathDetails se actualiza en loadPath.
-      // La persistencia de los módulos completados se hace en PathDetailPage directamente con saveCompletedModules.
+      const newCompletedModuleIds = Array.from(currentCompletedSet);
+
+      // Optimization: if the effective list of completed IDs hasn't changed, return the previous state
+      // to prevent unnecessary re-renders of consumers.
+      if (prev.completedModuleIds.length === newCompletedModuleIds.length &&
+          newCompletedModuleIds.every(id => prev.completedModuleIds.includes(id)) &&
+          prev.completedModuleIds.every(id => newCompletedModuleIds.includes(id))
+         ) {
+        return prev;
+      }
+      
+      const updatedPath = { ...prev, completedModuleIds: newCompletedModuleIds };
+      // Persist active path details whenever completion changes as well
+      storeActivePathDetails(updatedPath);
       return updatedPath;
     });
   }, []);

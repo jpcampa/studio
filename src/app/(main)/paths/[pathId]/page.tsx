@@ -22,7 +22,7 @@ interface PathDetailPageProps {
 export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();
   const { toast } = useToast();
-  const activePathContext = useActivePath();
+  const { loadPath, updateModuleCompletion: contextUpdateModuleCompletion } = useActivePath();
   
   const params = use(paramsPromise); 
   const path = pathsData.find(p => p.id === params.pathId);
@@ -34,11 +34,12 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
     if (path) {
       const initialCompleted = getCompletedModules(path.id);
       setCompletedModules(initialCompleted);
-      activePathContext.loadPath(path.id, path.title, path.modules.length);
-      // Actualizar numCompleted en el contexto después de cargar desde localStorage
-      activePathContext.updateModuleCompletion(path.id, '', false); // Truco para forzar actualización del conteo
+      loadPath(path.id, path.title, path.modules.length);
+      // The line below was removed as it was redundant and likely causing a re-render loop.
+      // activePathContext.updateModuleCompletion(path.id, '', false); 
     }
-  }, [path, activePathContext]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, loadPath]); // Dependencies updated to stable function reference from context and path object.
 
 
   if (!path) {
@@ -66,7 +67,7 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
 
     setCompletedModules(newCompletedModules);
     saveCompletedModules(path.id, newCompletedModules);
-    activePathContext.updateModuleCompletion(path.id, moduleId, justCompletedModule);
+    contextUpdateModuleCompletion(path.id, moduleId, justCompletedModule);
 
 
     if (justCompletedModule) {
@@ -100,7 +101,7 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
             <Image 
               src={`https://placehold.co/800x300.png`} 
               alt={path.title} 
-              fill // Reemplaza layout="fill" objectFit="cover" 
+              fill 
               className="object-cover"
               data-ai-hint={path.dataAiHint} 
             />
