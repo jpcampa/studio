@@ -40,9 +40,13 @@ export function LoginForm() {
   const [state, formAction] = useActionState(loginUser, initialState);
 
   useEffect(() => {
+    console.log("LoginForm useEffect: contextUser:", contextUser, "userLoading:", userLoading);
     // Redirect if user is already logged in and not loading
     if (!userLoading && contextUser) {
+      console.log("LoginForm: Redirecting to /dashboard");
       router.push("/dashboard");
+    } else {
+      console.log("LoginForm: Not redirecting. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
     }
   }, [contextUser, userLoading, router]);
 
@@ -77,8 +81,10 @@ export function LoginForm() {
   }, [state, toast, t]);
 
   // Prevent rendering form if user is already logged in (or loading)
-  if (userLoading || (!userLoading && contextUser)) {
-      return null; // Or a loader, but App page and MainLayout already handle this
+  // but allow rendering if loading is true BUT user is null (initial load state)
+  if (userLoading && contextUser) { // Only hide if loading AND we already have a user (meaning it's not initial load)
+      console.log("LoginForm: Rendering null because userLoading is true and contextUser exists.");
+      return null; 
   }
 
   return (

@@ -1,3 +1,4 @@
+
 "use client";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -9,12 +10,17 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
+    console.log("HomePage useEffect: user:", user, "loading:", loading);
     if (!loading) {
       if (user) {
+        console.log("HomePage: Redirecting to /dashboard");
         router.replace('/dashboard');
       } else {
+        console.log("HomePage: Redirecting to /login");
         router.replace('/login');
       }
+    } else {
+      console.log("HomePage: Not redirecting, loading is true.");
     }
   }, [user, loading, router]);
 
