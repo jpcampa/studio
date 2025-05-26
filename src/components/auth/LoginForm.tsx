@@ -14,6 +14,7 @@ import { loginUser } from "@/actions/auth";
 import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 
 const initialState = {
@@ -27,7 +28,7 @@ function SubmitButton() {
   const t = useTranslations();
   return (
     <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? t.loading : t.login}
+      {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t.login}
     </Button>
   );
 }
@@ -35,57 +36,79 @@ function SubmitButton() {
 export function LoginForm() {
   const t = useTranslations();
   const { toast } = useToast();
-  const { user: contextUser, loading: userLoading } = useUser(); // Use contextUser and userLoading
+  const { user: contextUser, loading: userLoading } = useUser();
   const router = useRouter();
   const [state, formAction] = useActionState(loginUser, initialState);
 
   useEffect(() => {
-    console.log("LoginForm useEffect: contextUser:", contextUser, "userLoading:", userLoading);
+    console.log("LoginForm useEffect (Mount/UserUpdate): contextUser:", contextUser, "userLoading:", userLoading);
     // Redirect if user is already logged in and not loading
     if (!userLoading && contextUser) {
-      console.log("LoginForm: Redirecting to /dashboard");
+      console.log("LoginForm: User detected (from UserContext), redirecting to /dashboard");
       router.push("/dashboard");
     } else {
-      console.log("LoginForm: Not redirecting. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
+      console.log("LoginForm: No user in UserContext or still loading, not redirecting. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
     }
   }, [contextUser, userLoading, router]);
 
   useEffect(() => {
+    console.log("LoginForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
     if (state.message) {
-      if (state.message === "Inicio de sesión exitoso.") { // Check for success message
+      if (state.message === "Inicio de sesión exitoso.") {
         toast({
           title: t.login,
           description: state.message,
         });
-        // No need to call contextLogin, onAuthStateChanged will handle it
-        // Router push will also be handled by onAuthStateChanged redirecting or MainAppLayout
+        console.log("LoginForm: Server action reported successful login ('Inicio de sesión exitoso.'). Waiting for UserContext to update and trigger redirection via onAuthStateChanged.");
+        // The redirection is now primarily handled by UserContext detecting the auth state change
+        // and the useEffect above reacting to contextUser.
       } else {
         toast({
           title: t.loginFailed,
           description: state.message,
           variant: "destructive",
         });
+        console.error("LoginForm: Server action reported login failure or other message. Message:", state.message);
       }
     }
      if (state.errors && Object.keys(state.errors).length > 0) {
-       Object.values(state.errors).flat().forEach(error => {
-        if (typeof error === 'string') { // Ensure error is a string
-          toast({
-            title: "Error de validación",
-            description: error,
-            variant: "destructive",
+       console.error("LoginForm: Server action reported validation errors:", state.errors);
+       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
+        if (Array.isArray(fieldErrors)) {
+          fieldErrors.forEach(error => {
+            if (typeof error === 'string') {
+              toast({
+                title: `Error en ${key}`,
+                description: error,
+                variant: "destructive",
+              });
+            }
           });
         }
-      });
+       });
     }
-  }, [state, toast, t]);
+  }, [state, toast, t, router]); // Added router to dependencies just in case, though not strictly needed here for redirection itself.
 
-  // Prevent rendering form if user is already logged in (or loading)
-  // but allow rendering if loading is true BUT user is null (initial load state)
-  if (userLoading && contextUser) { // Only hide if loading AND we already have a user (meaning it's not initial load)
-      console.log("LoginForm: Rendering null because userLoading is true and contextUser exists.");
+
+  // This logic is to prevent showing the form IF the user is already definitively loaded and present.
+  // Or show a loader during initial context load.
+  if (userLoading && !contextUser) { 
+    console.log("LoginForm: Rendering loader because UserContext is loading and no user is yet available.");
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  // If loading is finished and there IS a user, this component shouldn't be visible
+  // because the useEffect above should have redirected.
+  // This is a fallback or for scenarios where redirection might be pending.
+  if (!userLoading && contextUser) {
+      console.log("LoginForm: Rendering null because user is already loaded and present (should have been/be redirecting).");
       return null; 
   }
+
 
   return (
      <Card className="w-full shadow-xl">
