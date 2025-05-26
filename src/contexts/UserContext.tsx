@@ -15,7 +15,6 @@ export interface User {
   ageRange?: string | null;
   gender?: string | null;
   initialEmotionalState?: number | null;
-  // Add any other fields that might come from Firestore
 }
 
 interface UserContextType {
@@ -28,25 +27,31 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserState] = useState<User | null>(null); // user is the state, setUserState is the setter
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // Wrapper for setUser to log changes
+  const setUser = (newUser: User | null) => {
+    console.log("UserContext: setUser called with:", newUser);
+    setUserState(newUser); // Correctly calls the setter for the 'user' state variable
+  };
+
   useEffect(() => {
     console.log("UserContext: useEffect for onAuthStateChanged mounting.");
-    if (!auth) { // Check if auth is defined
-      console.error("UserContext: Firebase Auth instance is not available. Cannot subscribe to onAuthStateChanged. This usually means Firebase initialization failed in firebase.ts.");
-      setLoading(false); // Stop loading if auth is not available
-      setUser(null); // Ensure user is null
-      return; // Exit early
+    if (!auth) {
+      console.error("UserContext: Firebase Auth instance is not available. Cannot subscribe to onAuthStateChanged. This usually means Firebase initialization failed in firebase.ts or is not complete yet.");
+      setLoading(false);
+      setUser(null);
+      return;
     }
     console.log("UserContext: Auth object available, proceeding to subscribe to onAuthStateChanged. Auth instance:", auth);
-    
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       console.log("UserContext: onAuthStateChanged event. Firebase user UID:", firebaseUser ? firebaseUser.uid : "null");
       if (firebaseUser) {
         console.log("UserContext: Firebase user detected. Attempting to fetch Firestore data for UID:", firebaseUser.uid);
-        if (!db) { // Check if db is defined
+        if (!db) {
             console.error("UserContext: Firestore DB instance is not available. Cannot fetch user document. Setting basic profile.");
             const basicProfile: User = {
               id: firebaseUser.uid,
@@ -80,14 +85,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
               email: firebaseUser.email,
               name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || "Usuarie",
             };
-            // Consider creating the doc if it's truly missing and expected
-            // await setDoc(userDocRef, { uid: firebaseUser.uid, email: firebaseUser.email, name: basicProfile.name, createdAt: serverTimestamp() }, { merge: true });
             setUser(basicProfile);
             console.log("UserContext: User state updated with basic profile (Firestore doc missing):", basicProfile);
           }
         } catch (error) {
           console.error("UserContext: Error fetching/processing Firestore document for UID:", firebaseUser.uid, error);
-          // Fallback to basic user info from auth if Firestore fails
           const basicProfile: User = {
               id: firebaseUser.uid,
               email: firebaseUser.email,
@@ -100,7 +102,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
           setLoading(false);
         }
       } else {
-        // User is signed out
         console.log("UserContext: No Firebase user (signed out). Setting user state to null.");
         setUser(null);
         console.log("UserContext: (Inside else !firebaseUser) Setting loading state to false.");
@@ -108,61 +109,61 @@ export function UserProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    // Cleanup subscription on unmount
     return () => {
       console.log("UserContext: Unsubscribing from onAuthStateChanged.");
       unsubscribe();
     };
-  }, []); // Empty dependency array ensures this runs once on mount and cleans up on unmount
+  }, []); // Removed 'auth' from dependencies to prevent re-subscription if auth instance itself changes, which is rare and usually not intended for this effect.
 
   const logout = async () => {
     console.log("UserContext: Logout requested.");
     if (!auth) {
       console.error("UserContext: Logout failed, Firebase Auth instance is not available.");
-      setUser(null); // Clear user state locally
+      setUser(null);
       setLoading(false);
-      router.push('/login'); // Redirect to login
+      router.push('/login');
       return;
     }
-    setLoading(true); 
+    console.log("UserContext: Setting loading to true for logout.");
+    setLoading(true);
     try {
       await firebaseSignOut(auth);
-      console.log("UserContext: Firebase sign out successful.");
-      // setUser(null) and setLoading(false) will be handled by onAuthStateChanged
-      // No need to push router here, onAuthStateChanged will handle user being null
-      // and MainAppLayout or HomePage will redirect if necessary.
+      console.log("UserContext: Firebase sign out successful. onAuthStateChanged will handle state update.");
+      // setUser(null) and setLoading(false) are now primarily handled by onAuthStateChanged
     } catch (error) {
       console.error("UserContext: Error signing out: ", error);
-      setLoading(false); 
-      setUser(null); 
+      setUser(null); // Ensure user state is cleared on error
+      setLoading(false);
       router.push('/login'); // Fallback redirect
     }
   };
-  
+
   const updateUser = async (updatedData: Partial<Pick<User, 'name' | 'ageRange' | 'gender'>>) => {
-    if (user && db && auth) { // Check for auth as well, user implies auth but good practice
+    if (user && db && auth) { // CORRECTED: use 'user' (the state variable)
       console.log("UserContext: updateUser called for UID:", user.id, "with data:", updatedData);
       const userDocRef = doc(db, "users", user.id);
       try {
-        await setDoc(userDocRef, { 
-          ...updatedData, 
-          updatedAt: serverTimestamp() 
+        await setDoc(userDocRef, {
+          ...updatedData,
+          updatedAt: serverTimestamp()
         }, { merge: true });
-        
+
         setUser(prevUser => prevUser ? ({ ...prevUser, ...updatedData }) : null);
         console.log("UserContext: User data updated successfully in Firestore and local state.");
       } catch (error) {
         console.error("UserContext: Error updating user data in Firestore: ", error);
-        throw error; // Re-throw to be caught by the calling component
+        throw error;
       }
     } else {
-      console.error("UserContext: updateUser called but user is not authenticated, or Firestore DB/Auth is not available.");
-      throw new Error("Usuario no autenticado o servicios de Firebase no disponibles para actualizar datos.");
+      const reason = !user ? "user is not authenticated" : !db ? "Firestore DB is not available" : "Auth is not available"; // CORRECTED: use 'user'
+      console.error(`UserContext: updateUser called but ${reason}.`);
+      throw new Error(`Usuario no autenticado o servicios de Firebase no disponibles para actualizar datos (${reason}).`);
     }
   };
 
+  console.log("UserContext: Rendering provider. User:", user, "Loading:", loading); // CORRECTED: use 'user'
   return (
-    <UserContext.Provider value={{ user, logout, loading, updateUser }}>
+    <UserContext.Provider value={{ user: user, logout, loading, updateUser }}>
       {children}
     </UserContext.Provider>
   );

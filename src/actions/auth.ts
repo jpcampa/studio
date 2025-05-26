@@ -48,6 +48,11 @@ export async function registerUser(prevState: any, formData: FormData) {
   const { name, email, password, ageRange, gender, initialEmotionalState } = validatedFields.data;
   console.log(`RegisterUser action: Validation successful for email: ${email}. Proceeding to Firebase Auth.`);
 
+  if (!auth || !db) {
+    console.error("RegisterUser action: Firebase auth or db service is not available.");
+    return { message: "Servicio de Firebase no disponible. Contacta al administrador.", errors: {} };
+  }
+
   try {
     console.log("RegisterUser action: Calling createUserWithEmailAndPassword...");
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -75,10 +80,9 @@ export async function registerUser(prevState: any, formData: FormData) {
     return { message: "Registro exitoso. Se ha enviado un correo de verificación (funcionalidad simulada)." };
   } catch (error: any) {
     let errorMessage = "Error al registrar el usuario.";
-    // Log the raw error object for more details on the server
     console.error("RegisterUser action: Firebase registration process error object:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
 
-    if (error.code) { // Firebase specific error
+    if (error.code) { 
       errorMessage = `Error de Firebase (${error.code}): ${error.message}`;
       switch (error.code) {
         case "auth/email-already-in-use":
@@ -90,10 +94,8 @@ export async function registerUser(prevState: any, formData: FormData) {
         case "auth/invalid-email":
           errorMessage = "El formato del correo electrónico no es válido.";
           break;
-        // Add more specific Firebase Auth error codes if needed
-        // e.g., auth/operation-not-allowed if email/password sign-in isn't enabled
       }
-    } else if (error instanceof Error) { // Generic JS error
+    } else if (error instanceof Error) { 
         errorMessage = error.message;
     }
     
@@ -119,31 +121,34 @@ export async function loginUser(prevState: any, formData: FormData) {
   const { email, password } = validatedFields.data;
   console.log(`LoginUser action: Validation successful for email: ${email}. Proceeding to Firebase Auth.`);
 
+  if (!auth) {
+    console.error("LoginUser action: Firebase auth service is not available.");
+    return { message: "Servicio de Firebase no disponible. Contacta al administrador.", errors: {} };
+  }
+
   try {
     console.log("LoginUser action: Calling signInWithEmailAndPassword...");
-    await signInWithEmailAndPassword(auth, email, password);
-    console.log(`LoginUser action: User successfully signed in with Firebase Auth for email: ${email}`);
-    // User state will be handled by onAuthStateChanged in UserContext
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    console.log(`LoginUser action: signInWithEmailAndPassword successful. UserCredential User UID: ${userCredential?.user?.uid}`);
+    // User state will be handled by onAuthStateChanged in UserContext on the client
     return { message: "Inicio de sesión exitoso." };
   } catch (error: any) {
     let errorMessage = "Error al iniciar sesión.";
-     // Log the raw error object for more details on the server
     console.error("LoginUser action: Firebase login process error object:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
 
-    if (error.code) { // Firebase specific error
+    if (error.code) { 
       errorMessage = `Error de Firebase (${error.code}): ${error.message}`;
       switch (error.code) {
         case "auth/user-not-found":
         case "auth/wrong-password":
-        case "auth/invalid-credential": // More generic error for wrong email/password
+        case "auth/invalid-credential": 
           errorMessage = "Correo electrónico o contraseña incorrectos.";
           break;
         case "auth/invalid-email":
           errorMessage = "El formato del correo electrónico no es válido.";
           break;
-        // Add more specific Firebase Auth error codes if needed
       }
-    } else if (error instanceof Error) { // Generic JS error
+    } else if (error instanceof Error) { 
         errorMessage = error.message;
     }
     console.error("LoginUser action: Processed error message to be returned to client:", errorMessage);
