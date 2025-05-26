@@ -18,10 +18,11 @@ export default function SettingsPage() {
   const t = useTranslations();
   const { user, updateUser, loading: userLoading } = useUser();
   const { toast } = useToast();
-  const { theme, setTheme, themes } = useTheme();
+  const { theme, setTheme } = useTheme(); // Corrected: themes is not directly provided by useTheme
 
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  // Email is handled by Firebase Auth directly, not typically updated via profile form without re-authentication
+  // const [email, setEmail] = useState(''); 
   const [ageRange, setAgeRange] = useState('');
   const [gender, setGender] = useState('');
   const [language, setLanguage] = useState('es'); // Default to Spanish for V1
@@ -35,7 +36,7 @@ export default function SettingsPage() {
   useEffect(() => {
     if (user) {
       setName(user.name || '');
-      setEmail(user.email || '');
+      // setEmail(user.email || '');
       setAgeRange(user.ageRange || '');
       setGender(user.gender || '');
     }
@@ -63,18 +64,32 @@ export default function SettingsPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    updateUser({ name, email, ageRange, gender });
-    setIsSaving(false);
-    toast({
-      title: "Configuración Guardada",
-      description: "Tus cambios han sido guardados exitosamente.",
-    });
+    try {
+      // Only pass fields that updateUser expects and are modifiable here
+      await updateUser({ name, ageRange, gender });
+      toast({
+        title: "Configuración Guardada",
+        description: "Tus cambios han sido guardados exitosamente en Firestore.",
+      });
+    } catch (error) {
+       toast({
+        title: "Error al Guardar",
+        description: (error as Error).message || "No se pudieron guardar los cambios.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  if (userLoading) {
+  if (userLoading && !user) { // Show loader if user state is still loading and no user yet
     return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
+  
+  if (!user) { // If done loading and still no user, perhaps show a message or rely on layout to redirect
+    return <div className="container mx-auto py-8 text-center">{t.loading}</div>;
+  }
+
 
   return (
     <div className="container mx-auto py-8">
@@ -92,12 +107,13 @@ export default function SettingsPage() {
                     <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div>
-                    <Label htmlFor="email">{t.email}</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <Label htmlFor="emailStatic">{t.email}</Label>
+                    <Input id="emailStatic" type="email" value={user.email || ''} disabled className="bg-muted/50" />
+                    <p className="text-xs text-muted-foreground mt-1">El correo electrónico no se puede cambiar desde aquí.</p>
                 </div>
                 <div>
                     <Label htmlFor="ageRange">{t.ageRange}</Label>
-                    <Select value={ageRange} onValueChange={setAgeRange}>
+                    <Select value={ageRange || ''} onValueChange={setAgeRange}>
                     <SelectTrigger id="ageRange"><SelectValue placeholder={t.ageRangePlaceholder} /></SelectTrigger>
                     <SelectContent>
                         {ageRanges.map(r => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
@@ -106,7 +122,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                     <Label htmlFor="gender">{t.gender}</Label>
-                    <Select value={gender} onValueChange={setGender}>
+                    <Select value={gender || ''} onValueChange={setGender}>
                     <SelectTrigger id="gender"><SelectValue placeholder={t.genderPlaceholder} /></SelectTrigger>
                     <SelectContent>
                         {genders.map(g => <SelectItem key={g.value} value={g.value}>{g.label}</SelectItem>)}
@@ -175,7 +191,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="border-t pt-8">
-                <Button type="submit" disabled={isSaving} className="w-full md:w-auto">
+                <Button type="submit" disabled={isSaving || userLoading} className="w-full md:w-auto">
                 {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                 {t.saveChanges}
                 </Button>

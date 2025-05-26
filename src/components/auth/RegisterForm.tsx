@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
 import { registerUser } from "@/actions/auth";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/contexts/UserContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,7 +38,7 @@ type RegisterFormValues = z.infer<typeof formSchema>;
 const initialState = {
   message: null,
   errors: {},
-  user: null,
+  // user field is no longer needed here
 };
 
 function SubmitButton() {
@@ -54,6 +55,7 @@ export function RegisterForm() {
   const t = useTranslations();
   const { toast } = useToast();
   const router = useRouter();
+  const { user: contextUser, loading: userLoading } = useUser();
   const [state, formAction] = useActionState(registerUser, initialState);
 
   const form = useForm<RegisterFormValues>({
@@ -68,13 +70,21 @@ export function RegisterForm() {
   });
 
   useEffect(() => {
+    // Redirect if user is already logged in and not loading
+    if (!userLoading && contextUser) {
+      router.push("/dashboard");
+    }
+  }, [contextUser, userLoading, router]);
+
+  useEffect(() => {
     if (state.message) {
-      if (state.user) {
+      if (state.message.startsWith("Registro exitoso")) {
         toast({
           title: t.registrationSuccessTitle,
           description: state.message,
         });
-        router.push("/login");
+        // User will be redirected by onAuthStateChanged or if they manually go to login
+        // router.push("/login"); // Or directly to dashboard if auto-login is desired and handled by Firebase
       } else {
         toast({
           title: t.errorOccurred,
@@ -83,13 +93,15 @@ export function RegisterForm() {
         });
       }
     }
-    if (state.errors) {
+    if (state.errors && Object.keys(state.errors).length > 0) {
        Object.values(state.errors).flat().forEach(error => {
-        toast({
-          title: "Error de validación",
-          description: error as string,
-          variant: "destructive",
-        });
+         if (typeof error === 'string') {
+            toast({
+              title: "Error de validación",
+              description: error,
+              variant: "destructive",
+            });
+          }
       });
     }
   }, [state, toast, router, t]);
@@ -112,6 +124,10 @@ export function RegisterForm() {
     { value: "prefer_not_to_say", label: t.gender_prefer_not_to_say },
   ];
 
+  // Prevent rendering form if user is already logged in (or loading)
+  if (userLoading || (!userLoading && contextUser)) {
+      return null; // Or a loader
+  }
 
   return (
     <Card className="w-full shadow-xl">
@@ -138,7 +154,7 @@ export function RegisterForm() {
           </div>
           <div>
             <Label htmlFor="ageRange">{t.ageRange}</Label>
-            <Select name="ageRange">
+            <Select name="ageRange" onValueChange={(value) => form.setValue('ageRange', value)}>
               <SelectTrigger id="ageRange">
                 <SelectValue placeholder={t.ageRangePlaceholder} />
               </SelectTrigger>
@@ -150,7 +166,7 @@ export function RegisterForm() {
           </div>
           <div>
             <Label htmlFor="gender">{t.gender}</Label>
-            <Select name="gender">
+            <Select name="gender" onValueChange={(value) => form.setValue('gender', value)}>
               <SelectTrigger id="gender">
                 <SelectValue placeholder={t.genderPlaceholder} />
               </SelectTrigger>
@@ -162,17 +178,22 @@ export function RegisterForm() {
           </div>
           <div>
             <Label htmlFor="initialEmotionalState">{t.initialEmotionalState}: {form.watch('initialEmotionalState')}</Label>
+            <Input type="hidden" name="initialEmotionalState" value={form.watch('initialEmotionalState')} />
             <Slider
-              id="initialEmotionalState"
-              name="initialEmotionalState"
+              id="initialEmotionalStateSlider" // Changed id to avoid conflict with hidden input
               min={1} max={5} step={1}
-              defaultValue={[3]}
+              defaultValue={[form.getValues('initialEmotionalState') || 3]}
               onValueChange={(value) => form.setValue('initialEmotionalState', value[0])}
             />
             {state.errors?.initialEmotionalState && <p className="text-sm text-destructive">{state.errors.initialEmotionalState[0]}</p>}
           </div>
           <div className="flex items-center space-x-2">
-            <Checkbox id="agreeTerms" name="agreeTerms" onCheckedChange={(checked) => form.setValue('agreeTerms', checked as boolean)} />
+            <Checkbox 
+              id="agreeTerms" 
+              name="agreeTerms" 
+              onCheckedChange={(checked) => form.setValue('agreeTerms', checked as boolean)}
+              checked={form.watch('agreeTerms')}
+            />
             <Label htmlFor="agreeTerms" className="text-sm font-normal text-muted-foreground">{t.agreeToTerms}</Label>
           </div>
            {state.errors?.agreeTerms && <p className="text-sm text-destructive">{state.errors.agreeTerms[0]}</p>}

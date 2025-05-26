@@ -19,7 +19,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 const initialState = {
   message: null,
   errors: {},
-  user: null,
+  // user field is no longer needed here as Firebase handles auth state
 };
 
 function SubmitButton() {
@@ -35,25 +35,26 @@ function SubmitButton() {
 export function LoginForm() {
   const t = useTranslations();
   const { toast } = useToast();
-  const { login: contextLogin, user: contextUser } = useUser();
+  const { user: contextUser, loading: userLoading } = useUser(); // Use contextUser and userLoading
   const router = useRouter();
   const [state, formAction] = useActionState(loginUser, initialState);
 
   useEffect(() => {
-    if (contextUser) {
+    // Redirect if user is already logged in and not loading
+    if (!userLoading && contextUser) {
       router.push("/dashboard");
     }
-  }, [contextUser, router]);
+  }, [contextUser, userLoading, router]);
 
   useEffect(() => {
     if (state.message) {
-      if (state.user) {
+      if (state.message === "Inicio de sesión exitoso.") { // Check for success message
         toast({
           title: t.login,
           description: state.message,
         });
-        contextLogin(state.user); // Update context
-        router.push("/dashboard");
+        // No need to call contextLogin, onAuthStateChanged will handle it
+        // Router push will also be handled by onAuthStateChanged redirecting or MainAppLayout
       } else {
         toast({
           title: t.loginFailed,
@@ -62,16 +63,23 @@ export function LoginForm() {
         });
       }
     }
-     if (state.errors) {
+     if (state.errors && Object.keys(state.errors).length > 0) {
        Object.values(state.errors).flat().forEach(error => {
-        toast({
-          title: "Error de validación",
-          description: error as string,
-          variant: "destructive",
-        });
+        if (typeof error === 'string') { // Ensure error is a string
+          toast({
+            title: "Error de validación",
+            description: error,
+            variant: "destructive",
+          });
+        }
       });
     }
-  }, [state, toast, contextLogin, router, t]);
+  }, [state, toast, t]);
+
+  // Prevent rendering form if user is already logged in (or loading)
+  if (userLoading || (!userLoading && contextUser)) {
+      return null; // Or a loader, but App page and MainLayout already handle this
+  }
 
   return (
      <Card className="w-full shadow-xl">

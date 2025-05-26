@@ -2,7 +2,14 @@
 "use server";
 
 import { z } from "zod";
-import { User } from "@/contexts/UserContext";
+import { auth, db } from "@/lib/firebase";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword,
+  sendEmailVerification
+} from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import type { User } from "@/contexts/UserContext"; // Ensure User type is available
 
 const registerSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
@@ -12,7 +19,7 @@ const registerSchema = z.object({
   gender: z.string().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).optional(),
   agreeTerms: z.preprocess(
-    (val) => val === "on" || val === true, // HTML checkbox envía "on" o booleano
+    (val) => val === "on" || val === true,
     z.boolean().refine((val) => val === true, {
       message: "Debes aceptar los términos y condiciones para registrarte.",
     })
@@ -36,21 +43,38 @@ export async function registerUser(prevState: any, formData: FormData) {
     };
   }
 
-  // Simulate database interaction & email verification
-  console.log("Registering user:", validatedFields.data);
-  
-  // In a real app, you'd save to DB and send verification email.
-  // For this mock, we'll assume success.
-  const mockUser: User = {
-    id: Math.random().toString(36).substr(2, 9),
-    name: validatedFields.data.name,
-    email: validatedFields.data.email,
-    ageRange: validatedFields.data.ageRange,
-    gender: validatedFields.data.gender,
-    initialEmotionalState: validatedFields.data.initialEmotionalState,
-  };
+  const { name, email, password, ageRange, gender, initialEmotionalState } = validatedFields.data;
 
-  return { user: mockUser, message: "Registro exitoso. Por favor, inicia sesión." };
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const firebaseUser = userCredential.user;
+
+    // Send email verification
+    // await sendEmailVerification(firebaseUser);
+
+    // Store additional user data in Firestore
+    const userDocRef = doc(db, "users", firebaseUser.uid);
+    await setDoc(userDocRef, {
+      uid: firebaseUser.uid,
+      name,
+      email, // Storing email here too for easier access if needed, though it's in Auth
+      ageRange: ageRange || null,
+      gender: gender || null,
+      initialEmotionalState: initialEmotionalState || null,
+      createdAt: serverTimestamp(),
+    });
+
+    return { message: "Registro exitoso. Se ha enviado un correo de verificación (funcionalidad simulada)." };
+  } catch (error: any) {
+    let errorMessage = "Error al registrar el usuario.";
+    if (error.code === "auth/email-already-in-use") {
+      errorMessage = "Este correo electrónico ya está en uso.";
+    } else if (error.code === "auth/weak-password") {
+      errorMessage = "La contraseña es demasiado débil.";
+    }
+    console.error("Firebase registration error:", error);
+    return { message: errorMessage, errors: {} }; // Provide general error
+  }
 }
 
 export async function loginUser(prevState: any, formData: FormData) {
@@ -65,21 +89,18 @@ export async function loginUser(prevState: any, formData: FormData) {
     };
   }
 
-  // Simulate checking credentials
-  console.log("Logging in user:", validatedFields.data);
-  
-  // For mock purposes, "successfully" log in any user that passes schema validation.
-  // In a real app, you would check credentials against a database.
-  const emailPrefix = validatedFields.data.email.split('@')[0] || "Usuarie";
-  const displayName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-  
-  const mockUser: User = {
-    id: Math.random().toString(36).substr(2, 9), // Generate a dynamic ID
-    name: displayName, // Use the capitalized email prefix or a default
-    email: validatedFields.data.email,
-    // Other user fields (ageRange, gender, etc.) are not part of the login form,
-    // so they won't be populated here. They are optional in the User interface.
-  };
-  return { user: mockUser, message: "Inicio de sesión exitoso." };
-}
+  const { email, password } = validatedFields.data;
 
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    // User state will be handled by onAuthStateChanged in UserContext
+    return { message: "Inicio de sesión exitoso." };
+  } catch (error: any) {
+    let errorMessage = "Error al iniciar sesión.";
+    if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+      errorMessage = "Correo electrónico o contraseña incorrectos.";
+    }
+    console.error("Firebase login error:", error);
+    return { message: errorMessage, errors: {} }; // Provide general error
+  }
+}
