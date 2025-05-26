@@ -25,6 +25,7 @@ import { useTheme } from "next-themes";
 import { useActivePath } from "@/contexts/ActivePathContext";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { usePathname } from "next/navigation"; // Import usePathname
 
 export function AppHeader() {
   const { user, logout } = useUser();
@@ -32,8 +33,23 @@ export function AppHeader() {
   const { isMobile } = useSidebar();
   const { theme, setTheme } = useTheme();
   const { activePath } = useActivePath();
+  const pathname = usePathname(); // Get current pathname
 
   const modulesRemaining = activePath ? activePath.totalModules - activePath.completedModuleIds.length : 0;
+
+  // Determine if the badge should be shown based on refined logic
+  let showProgressBadge = false;
+  if (activePath && modulesRemaining > 0) {
+    const isCurrentlyOnActivePathPage = pathname === `/paths/${activePath.id}`;
+    const hasMadeProgressOnActivePath = activePath.completedModuleIds.length > 0;
+    if (isCurrentlyOnActivePathPage || hasMadeProgressOnActivePath) {
+      showProgressBadge = true;
+    }
+  }
+  if (activePath) {
+    console.log("AppHeader: activePath", activePath, "modulesRemaining", modulesRemaining, "pathname", pathname, "showProgressBadge", showProgressBadge);
+  }
+
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
@@ -43,15 +59,17 @@ export function AppHeader() {
       </div>
       
       <div className="flex items-center gap-4">
-        {activePath && modulesRemaining > 0 && (
+        {showProgressBadge && activePath && ( // Ensure activePath is not null here
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" asChild className="relative">
                 <Link href={`/paths/${activePath.id}`}>
                   <ListChecks className="h-5 w-5 text-primary" />
-                  <Badge variant="destructive" className="absolute -top-1 -right-1 px-1.5 py-0.5 text-xs">
-                    {modulesRemaining}
-                  </Badge>
+                  {modulesRemaining > 0 && (
+                    <Badge variant="destructive" className="absolute -top-1 -right-1 px-1.5 py-0.5 text-xs">
+                      {modulesRemaining}
+                    </Badge>
+                  )}
                   <span className="sr-only">Progreso de Ruta</span>
                 </Link>
               </Button>
