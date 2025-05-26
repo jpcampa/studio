@@ -4,43 +4,44 @@ import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
-// Define a mapping for clarity and easier checking
-const firebaseEnvVarKeys = {
-  apiKey: 'NEXT_PUBLIC_FIREBASE_API_KEY',
-  authDomain: 'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
-  projectId: 'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
-  storageBucket: 'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
-  messagingSenderId: 'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
-  appId: 'NEXT_PUBLIC_FIREBASE_APP_ID',
+// Define the EXPECTED NAMES of the environment variables
+const EXPECTED_ENV_VARS = {
+  apiKey: "NEXT_PUBLIC_FIREBASE_API_KEY",
+  authDomain: "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
+  projectId: "NEXT_PUBLIC_FIREBASE_PROJECT_ID",
+  storageBucket: "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID",
+  appId: "NEXT_PUBLIC_FIREBASE_APP_ID",
 };
 
 // Your web app's Firebase configuration
 // These values are read from your .env.local file (for local development)
 // or from the hosting environment variables (for deployment).
 const firebaseConfig = {
-  apiKey: process.env[firebaseEnvVarKeys.apiKey],
-  authDomain: process.env[firebaseEnvVarKeys.authDomain],
-  projectId: process.env[firebaseEnvVarKeys.projectId],
-  storageBucket: process.env[firebaseEnvVarKeys.storageBucket],
-  messagingSenderId: process.env[firebaseEnvVarKeys.messagingSenderId],
-  appId: process.env[firebaseEnvVarKeys.appId],
+  apiKey: process.env[EXPECTED_ENV_VARS.apiKey],
+  authDomain: process.env[EXPECTED_ENV_VARS.authDomain],
+  projectId: process.env[EXPECTED_ENV_VARS.projectId],
+  storageBucket: process.env[EXPECTED_ENV_VARS.storageBucket],
+  messagingSenderId: process.env[EXPECTED_ENV_VARS.messagingSenderId],
+  appId: process.env[EXPECTED_ENV_VARS.appId],
 };
 
 // Enhanced debugging for Firebase initialization
-const missingEnvVars: string[] = [];
-(Object.keys(firebaseEnvVarKeys) as Array<keyof typeof firebaseEnvVarKeys>).forEach((key) => {
-  if (!firebaseConfig[key]) { // Check if the value derived from process.env is missing
-    missingEnvVars.push(firebaseEnvVarKeys[key]); // Log the expected environment variable name
+const missingEnvVarNames: string[] = [];
+(Object.keys(EXPECTED_ENV_VARS) as Array<keyof typeof EXPECTED_ENV_VARS>).forEach((key) => {
+  const envVarName = EXPECTED_ENV_VARS[key];
+  if (!process.env[envVarName]) { // Check if process.env.NEXT_PUBLIC_FIREBASE_... is missing
+    missingEnvVarNames.push(envVarName); // Log the expected environment variable NAME
   }
 });
 
-if (missingEnvVars.length > 0) {
+if (missingEnvVarNames.length > 0) {
   console.error(
     "FIREBASE INITIALIZATION ERROR: The following Firebase environment variables are missing or empty. " +
     "For local development, ensure they are correctly set in your .env.local file (in the project root) " +
     "AND that you have RESTARTED your Next.js development server after changes. " +
-    "For deployment, ensure they are set in your hosting provider's environment variable settings. Missing variables:",
-    missingEnvVars.join(", ")
+    "For deployment, ensure they are set in your hosting provider's environment variable settings. Missing variable NAMES:",
+    missingEnvVarNames.join(", ")
   );
 }
 
@@ -60,8 +61,11 @@ let app: FirebaseApp | undefined = undefined;
 let auth: Auth | undefined = undefined;
 let db: Firestore | undefined = undefined;
 
-if (missingEnvVars.length > 0 || !firebaseConfig.apiKey || !firebaseConfig.projectId) {
-    console.error("CRITICAL Firebase Init Error: One or more Firebase config values are missing or empty. Firebase will not be initialized correctly.");
+if (missingEnvVarNames.length > 0 || !firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    console.error("CRITICAL Firebase Init Error: One or more Firebase config values are missing or empty. Firebase will not be initialized correctly. Please check environment variables and restart your server/deployment.");
+    if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+        console.error("CRITICAL Firebase Init Error: API Key or Project ID is definitively missing from the config object passed to initializeApp. Check .env.local (for local dev) or hosting environment variables (for deployment) and server restart.");
+    }
 } else {
   // Check if Firebase has already been initialized
   if (getApps().length === 0) {
@@ -98,11 +102,11 @@ if (app) {
     db = undefined;
   }
 } else {
-  if (missingEnvVars.length === 0 && firebaseConfig.apiKey && firebaseConfig.projectId) {
+  if (missingEnvVarNames.length === 0 && firebaseConfig.apiKey && firebaseConfig.projectId) {
     // This case means initializeApp itself failed for other reasons if config seemed present
     console.error("Firebase Init: Firebase app was not initialized despite environment variables appearing to be set. Auth and Firestore will not be available.");
   } else {
-    // This case means env vars were indeed missing
+    // This case means env vars were indeed missing as detected by missingEnvVarNames
      console.error("Firebase Init: Firebase app was not initialized due to missing environment variables. Auth and Firestore will not be available.");
   }
   auth = undefined;
