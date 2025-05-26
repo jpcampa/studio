@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react"; // Added useState import
 import { useFormStatus } from "react-dom";
 import { useActionState } from "react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2 } from "lucide-react";
 
 
-const initialState: RegisterState = { // Use RegisterState type from actions
+const initialState: RegisterState = { 
   message: null,
   errors: {},
 };
@@ -39,51 +39,67 @@ export function RegisterForm() {
   const t = useTranslations();
   const { toast } = useToast();
   const router = useRouter();
-  const { user: contextUser, loading: userLoading } = useUser();
+  const { user: contextUser, loading: userLoading, login: loginContext } = useUser();
   const [state, formAction] = useActionState(registerUser, initialState);
 
-  // State for controlled components not directly part of form data for server action
-  // but used by react-hook-form for validation or complex UI logic before submission.
-  // For this simple form, direct formData entries are mostly fine,
-  // but for more complex scenarios, you'd use react-hook-form's useForm.
-  // Here, we are keeping it simple as the form data is directly handled by server action.
-  // Let's add local state for controlled inputs if they don't map directly to FormData names easily.
-  // For this form, initialEmotionalState, agreeTerms are handled.
   const [localInitialEmotionalState, setLocalInitialEmotionalState] = useState(3);
   const [localAgreeTerms, setLocalAgreeTerms] = useState(false);
 
 
   useEffect(() => {
     if (!userLoading && contextUser) {
+      console.log("RegisterForm: User detected in UserContext, redirecting to /dashboard");
       router.push("/dashboard");
+    } else {
+      console.log("RegisterForm: No user in UserContext or still loading. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
     }
   }, [contextUser, userLoading, router]);
 
   useEffect(() => {
+    console.log("RegisterForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
     if (state.message) {
-      if (state.message.startsWith("Registro simulado exitoso")) {
+      if (state.user && state.message === "Registro exitoso.") { // Assuming 'user' is returned on successful registration and login
+        loginContext(state.user); // Log in the user with the returned user data
         toast({
           title: t.registrationSuccessTitle,
           description: state.message,
         });
-        // router.push("/login"); // Optionally redirect to login
-      } else {
-        // For general form errors not tied to a specific field
+        // Redirection is handled by the other useEffect monitoring contextUser
+        console.log("RegisterForm: Server action reported successful registration & login. User set in context.");
+      } else if (state.message === "Registro simulado exitoso. Por favor, inicia sesión.") { // Handle simulated success
+         toast({
+          title: t.registrationSuccessTitle,
+          description: state.message,
+        });
+        console.log("RegisterForm: Server action reported successful SIMULATED registration.");
+        // router.push("/login"); // Optionally redirect to login for simulated flow
+      } else if (state.errors && Object.keys(state.errors).length > 0) {
+        // This case is for validation errors that have a general message
         toast({
           title: t.errorOccurred,
           description: state.message,
           variant: "destructive",
         });
+        console.error("RegisterForm: Server action reported general error message with field errors. Message:", state.message, "Errors:", state.errors);
+      } else if (!state.user && state.message !== "Registro simulado exitoso. Por favor, inicia sesión.") {
+         // General form errors not tied to a specific field from the server
+        toast({
+          title: t.errorOccurred,
+          description: state.message,
+          variant: "destructive",
+        });
+        console.error("RegisterForm: Server action reported general error message. Message:", state.message);
       }
     }
-    // Display field-specific errors
+    // Display field-specific errors from server action
     if (state.errors && Object.keys(state.errors).length > 0) {
+      console.error("RegisterForm: Server action reported validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
         if (Array.isArray(fieldErrors)) {
           fieldErrors.forEach(error => {
-            if (typeof error === 'string') {
+            if (typeof error === 'string') { // Ensure error is a string before toasting
               toast({
-                title: `Error en ${key === '_form' ? 'formulario' : key}`,
+                title: `Error en ${key === '_form' ? 'formulario' : t[key as keyof typeof t] || key}`,
                 description: error,
                 variant: "destructive",
               });
@@ -92,7 +108,7 @@ export function RegisterForm() {
         }
       });
     }
-  }, [state, toast, router, t]);
+  }, [state, toast, router, t, loginContext]);
 
   const ageRanges = [
     { value: "under_18", label: t.age_under_18 },
@@ -112,12 +128,18 @@ export function RegisterForm() {
     { value: "prefer_not_to_say", label: t.gender_prefer_not_to_say },
   ];
 
-  if (userLoading || (!userLoading && contextUser)) {
+  if (userLoading && !contextUser) {
+    console.log("RegisterForm: Rendering loader because UserContext is loading and no user is yet available.");
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     );
+  }
+  
+  if (!userLoading && contextUser) {
+    console.log("RegisterForm: Rendering null because user is already loaded and present (should have been/be redirecting).");
+    return null; 
   }
 
 
@@ -206,3 +228,4 @@ export function RegisterForm() {
     </Card>
   );
 }
+
