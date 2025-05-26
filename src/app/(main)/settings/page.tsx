@@ -18,15 +18,13 @@ export default function SettingsPage() {
   const t = useTranslations();
   const { user, updateUser, loading: userLoading } = useUser();
   const { toast } = useToast();
-  const { theme, setTheme } = useTheme(); // Corrected: themes is not directly provided by useTheme
+  const { theme, setTheme } = useTheme();
 
   const [name, setName] = useState('');
-  // Email is handled by Firebase Auth directly, not typically updated via profile form without re-authentication
-  // const [email, setEmail] = useState(''); 
   const [ageRange, setAgeRange] = useState('');
   const [gender, setGender] = useState('');
-  const [language, setLanguage] = useState('es'); // Default to Spanish for V1
-  
+  const [language, setLanguage] = useState('es'); 
+
   const [dailyCheckIn, setDailyCheckIn] = useState(true);
   const [moduleReminders, setModuleReminders] = useState(true);
   const [motivationalQuotes, setMotivationalQuotes] = useState(false);
@@ -36,9 +34,10 @@ export default function SettingsPage() {
   useEffect(() => {
     if (user) {
       setName(user.name || '');
-      // setEmail(user.email || '');
       setAgeRange(user.ageRange || '');
       setGender(user.gender || '');
+      // Note: email and initialEmotionalState are not typically updated from settings form
+      // in this simple setup. They are part of the user object but not form fields here.
     }
   }, [user]);
   
@@ -65,11 +64,10 @@ export default function SettingsPage() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      // Only pass fields that updateUser expects and are modifiable here
-      await updateUser({ name, ageRange, gender });
+      await updateUser({ name, ageRange, gender }); // Only pass fields that updateUser expects
       toast({
         title: "Configuración Guardada",
-        description: "Tus cambios han sido guardados exitosamente en Firestore.",
+        description: "Tus cambios han sido guardados exitosamente (simulado).",
       });
     } catch (error) {
        toast({
@@ -82,12 +80,12 @@ export default function SettingsPage() {
     }
   };
 
-  if (userLoading && !user) { // Show loader if user state is still loading and no user yet
+  if (userLoading && !user) { 
     return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
   
-  if (!user) { // If done loading and still no user, perhaps show a message or rely on layout to redirect
-    return <div className="container mx-auto py-8 text-center">{t.loading}</div>;
+  if (!user) { 
+    return <div className="container mx-auto py-8 text-center">{t.loading}</div>; // Or redirect via layout
   }
 
 

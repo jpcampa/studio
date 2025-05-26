@@ -2,14 +2,17 @@
 "use server";
 
 import { z } from "zod";
-import { auth, db } from "@/lib/firebase";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword,
-  sendEmailVerification
-} from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import type { User } from "@/contexts/UserContext"; // Ensure User type is available
+
+// Define the User interface that actions will deal with
+// This should be compatible with the User interface in UserContext
+export interface ActionUser {
+  id: string;
+  name: string;
+  email: string;
+  ageRange?: string | null;
+  gender?: string | null;
+  initialEmotionalState?: number | null;
+}
 
 const registerSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
@@ -31,87 +34,58 @@ const loginSchema = z.object({
   password: z.string().min(1, "La contraseña es requerida."),
 });
 
-export async function registerUser(prevState: any, formData: FormData) {
-  console.log("RegisterUser action: Initiated.");
+export type RegisterState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+    ageRange?: string[];
+    gender?: string[];
+    initialEmotionalState?: string[];
+    agreeTerms?: string[];
+    _form?: string[];
+  };
+  message?: string | null;
+};
+
+export async function registerUser(prevState: RegisterState, formData: FormData): Promise<RegisterState> {
+  console.log("Simulated RegisterUser action: Initiated.");
   const validatedFields = registerSchema.safeParse(
     Object.fromEntries(formData.entries())
   );
 
   if (!validatedFields.success) {
-    console.error("RegisterUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
+    console.error("Simulated RegisterUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Error de validación.",
     };
   }
-
-  const { name, email, password, ageRange, gender, initialEmotionalState } = validatedFields.data;
-  console.log(`RegisterUser action: Validation successful for email: ${email}. Proceeding to Firebase Auth.`);
-
-  if (!auth || !db) {
-    console.error("RegisterUser action: Firebase auth or db service is not available.");
-    return { message: "Servicio de Firebase no disponible. Contacta al administrador.", errors: {} };
-  }
-
-  try {
-    console.log("RegisterUser action: Calling createUserWithEmailAndPassword...");
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const firebaseUser = userCredential.user;
-    console.log(`RegisterUser action: User successfully created in Firebase Auth. UID: ${firebaseUser.uid}`);
-
-    // Email verification (optional, currently commented out)
-    // console.log(`RegisterUser action: Attempting to send email verification to: ${firebaseUser.email}`);
-    // await sendEmailVerification(firebaseUser);
-    // console.log(`RegisterUser action: Email verification sent (or call skipped).`);
-
-    const userDocRef = doc(db, "users", firebaseUser.uid);
-    console.log(`RegisterUser action: Preparing to store user data in Firestore for UID: ${firebaseUser.uid}`);
-    await setDoc(userDocRef, {
-      uid: firebaseUser.uid,
-      name,
-      email,
-      ageRange: ageRange || null,
-      gender: gender || null,
-      initialEmotionalState: initialEmotionalState || null,
-      createdAt: serverTimestamp(),
-    });
-    console.log(`RegisterUser action: User data successfully stored in Firestore for UID: ${firebaseUser.uid}`);
-
-    return { message: "Registro exitoso. Se ha enviado un correo de verificación (funcionalidad simulada)." };
-  } catch (error: any) {
-    let errorMessage = "Error al registrar el usuario.";
-    console.error("RegisterUser action: Firebase registration process error object:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
-
-    if (error.code) { 
-      errorMessage = `Error de Firebase (${error.code}): ${error.message}`;
-      switch (error.code) {
-        case "auth/email-already-in-use":
-          errorMessage = "Este correo electrónico ya está en uso.";
-          break;
-        case "auth/weak-password":
-          errorMessage = "La contraseña es demasiado débil (debe tener al menos 6 caracteres).";
-          break;
-        case "auth/invalid-email":
-          errorMessage = "El formato del correo electrónico no es válido.";
-          break;
-      }
-    } else if (error instanceof Error) { 
-        errorMessage = error.message;
-    }
-    
-    console.error("RegisterUser action: Processed error message to be returned to client:", errorMessage);
-    return { message: errorMessage, errors: {} };
-  }
+  console.log("Simulated RegisterUser action: Validation successful for email:", validatedFields.data.email);
+  // In a real app, user data would be saved here.
+  return { message: "Registro simulado exitoso. Por favor, inicia sesión." };
 }
 
-export async function loginUser(prevState: any, formData: FormData) {
-  console.log("LoginUser action: Initiated.");
+
+export type LoginState = {
+  errors?: {
+    email?: string[];
+    password?: string[];
+    _form?: string[];
+  };
+  message?: string | null;
+  user?: ActionUser | null; // Include user for successful login
+};
+
+
+export async function loginUser(prevState: LoginState, formData: FormData): Promise<LoginState> {
+  console.log("Simulated LoginUser action: Initiated.");
   const validatedFields = loginSchema.safeParse(
     Object.fromEntries(formData.entries())
   );
 
   if (!validatedFields.success) {
-    console.error("LoginUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
+    console.error("Simulated LoginUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Error de validación.",
@@ -119,39 +93,39 @@ export async function loginUser(prevState: any, formData: FormData) {
   }
 
   const { email, password } = validatedFields.data;
-  console.log(`LoginUser action: Validation successful for email: ${email}. Proceeding to Firebase Auth.`);
+  console.log(`Simulated LoginUser action: Validation successful for email: ${email}.`);
 
-  if (!auth) {
-    console.error("LoginUser action: Firebase auth service is not available.");
-    return { message: "Servicio de Firebase no disponible. Contacta al administrador.", errors: {} };
+  // Simulate user check
+  if (email === 'user@example.com' && password === 'password123') {
+    const user: ActionUser = {
+      id: 'simulated-id-1',
+      name: 'Usuarie Ejemplo',
+      email: 'user@example.com',
+      ageRange: "25_34",
+      gender: "prefer_not_to_say",
+      initialEmotionalState: 3,
+    };
+    console.log("Simulated LoginUser action: Hardcoded user login successful.");
+    return { message: "Inicio de sesión exitoso.", user };
+  } else {
+     // For demo, accept any other valid email/password if not the hardcoded one
+     // This allows login after a simulated registration
+    console.log(`Simulated LoginUser action: Attempting login for non-hardcoded user: ${email}`);
+    const simulatedName = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const user: ActionUser = {
+      id: crypto.randomUUID(), // Generate a random ID for other users
+      name: simulatedName,
+      email: email,
+      // You can add default/random values for other fields if needed
+      ageRange: "18_24",
+      gender: "other",
+      initialEmotionalState: Math.floor(Math.random() * 5) + 1,
+    };
+    console.log("Simulated LoginUser action: Dynamic user login successful.", user);
+    return { message: "Inicio de sesión exitoso.", user };
   }
 
-  try {
-    console.log("LoginUser action: Calling signInWithEmailAndPassword...");
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log(`LoginUser action: signInWithEmailAndPassword successful. UserCredential User UID: ${userCredential?.user?.uid}`);
-    // User state will be handled by onAuthStateChanged in UserContext on the client
-    return { message: "Inicio de sesión exitoso." };
-  } catch (error: any) {
-    let errorMessage = "Error al iniciar sesión.";
-    console.error("LoginUser action: Firebase login process error object:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
-
-    if (error.code) { 
-      errorMessage = `Error de Firebase (${error.code}): ${error.message}`;
-      switch (error.code) {
-        case "auth/user-not-found":
-        case "auth/wrong-password":
-        case "auth/invalid-credential": 
-          errorMessage = "Correo electrónico o contraseña incorrectos.";
-          break;
-        case "auth/invalid-email":
-          errorMessage = "El formato del correo electrónico no es válido.";
-          break;
-      }
-    } else if (error instanceof Error) { 
-        errorMessage = error.message;
-    }
-    console.error("LoginUser action: Processed error message to be returned to client:", errorMessage);
-    return { message: errorMessage, errors: {} };
-  }
+  // This part might not be reached if the above 'else' catches all other valid formats
+  // console.log("Simulated LoginUser action: Credentials invalid.");
+  // return { message: "Credenciales inválidas." };
 }

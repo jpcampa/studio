@@ -5,40 +5,24 @@ import { useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { useActionState } from "react";
 import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
-import { registerUser } from "@/actions/auth";
+import { registerUser, type RegisterState } from "@/actions/auth"; // Import RegisterState
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
-const formSchema = z.object({
-  name: z.string().min(2, "El nombre es requerido."),
-  email: z.string().email("Correo electrónico inválido."),
-  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres."),
-  ageRange: z.string().optional(),
-  gender: z.string().optional(),
-  initialEmotionalState: z.number().min(1).max(5).optional().default(3),
-  agreeTerms: z.boolean().refine((val) => val === true, {
-    message: "Debes aceptar los términos y condiciones.",
-  }),
-});
 
-type RegisterFormValues = z.infer<typeof formSchema>;
-
-const initialState = {
+const initialState: RegisterState = { // Use RegisterState type from actions
   message: null,
   errors: {},
-  // user field is no longer needed here
 };
 
 function SubmitButton() {
@@ -46,7 +30,7 @@ function SubmitButton() {
   const t = useTranslations();
   return (
     <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? t.loading : t.register}
+      {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t.register}
     </Button>
   );
 }
@@ -58,19 +42,18 @@ export function RegisterForm() {
   const { user: contextUser, loading: userLoading } = useUser();
   const [state, formAction] = useActionState(registerUser, initialState);
 
-  const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      initialEmotionalState: 3,
-      agreeTerms: false,
-    },
-  });
+  // State for controlled components not directly part of form data for server action
+  // but used by react-hook-form for validation or complex UI logic before submission.
+  // For this simple form, direct formData entries are mostly fine,
+  // but for more complex scenarios, you'd use react-hook-form's useForm.
+  // Here, we are keeping it simple as the form data is directly handled by server action.
+  // Let's add local state for controlled inputs if they don't map directly to FormData names easily.
+  // For this form, initialEmotionalState, agreeTerms are handled.
+  const [localInitialEmotionalState, setLocalInitialEmotionalState] = useState(3);
+  const [localAgreeTerms, setLocalAgreeTerms] = useState(false);
+
 
   useEffect(() => {
-    // Redirect if user is already logged in and not loading
     if (!userLoading && contextUser) {
       router.push("/dashboard");
     }
@@ -78,14 +61,14 @@ export function RegisterForm() {
 
   useEffect(() => {
     if (state.message) {
-      if (state.message.startsWith("Registro exitoso")) {
+      if (state.message.startsWith("Registro simulado exitoso")) {
         toast({
           title: t.registrationSuccessTitle,
           description: state.message,
         });
-        // User will be redirected by onAuthStateChanged or if they manually go to login
-        // router.push("/login"); // Or directly to dashboard if auto-login is desired and handled by Firebase
+        // router.push("/login"); // Optionally redirect to login
       } else {
+        // For general form errors not tied to a specific field
         toast({
           title: t.errorOccurred,
           description: state.message,
@@ -93,19 +76,24 @@ export function RegisterForm() {
         });
       }
     }
+    // Display field-specific errors
     if (state.errors && Object.keys(state.errors).length > 0) {
-       Object.values(state.errors).flat().forEach(error => {
-         if (typeof error === 'string') {
-            toast({
-              title: "Error de validación",
-              description: error,
-              variant: "destructive",
-            });
-          }
+      Object.entries(state.errors).forEach(([key, fieldErrors]) => {
+        if (Array.isArray(fieldErrors)) {
+          fieldErrors.forEach(error => {
+            if (typeof error === 'string') {
+              toast({
+                title: `Error en ${key === '_form' ? 'formulario' : key}`,
+                description: error,
+                variant: "destructive",
+              });
+            }
+          });
+        }
       });
     }
   }, [state, toast, router, t]);
-  
+
   const ageRanges = [
     { value: "under_18", label: t.age_under_18 },
     { value: "18_24", label: t.age_18_24 },
@@ -124,10 +112,14 @@ export function RegisterForm() {
     { value: "prefer_not_to_say", label: t.gender_prefer_not_to_say },
   ];
 
-  // Prevent rendering form if user is already logged in (or loading)
   if (userLoading || (!userLoading && contextUser)) {
-      return null; // Or a loader
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
   }
+
 
   return (
     <Card className="w-full shadow-xl">
@@ -154,7 +146,7 @@ export function RegisterForm() {
           </div>
           <div>
             <Label htmlFor="ageRange">{t.ageRange}</Label>
-            <Select name="ageRange" onValueChange={(value) => form.setValue('ageRange', value)}>
+            <Select name="ageRange" >
               <SelectTrigger id="ageRange">
                 <SelectValue placeholder={t.ageRangePlaceholder} />
               </SelectTrigger>
@@ -166,7 +158,7 @@ export function RegisterForm() {
           </div>
           <div>
             <Label htmlFor="gender">{t.gender}</Label>
-            <Select name="gender" onValueChange={(value) => form.setValue('gender', value)}>
+            <Select name="gender">
               <SelectTrigger id="gender">
                 <SelectValue placeholder={t.genderPlaceholder} />
               </SelectTrigger>
@@ -177,26 +169,29 @@ export function RegisterForm() {
             {state.errors?.gender && <p className="text-sm text-destructive">{state.errors.gender[0]}</p>}
           </div>
           <div>
-            <Label htmlFor="initialEmotionalState">{t.initialEmotionalState}: {form.watch('initialEmotionalState')}</Label>
-            <Input type="hidden" name="initialEmotionalState" value={form.watch('initialEmotionalState')} />
+            <Label htmlFor="initialEmotionalStateSlider">{t.initialEmotionalState}: {localInitialEmotionalState}</Label>
+            {/* Hidden input to ensure the value is part of FormData */}
+            <input type="hidden" name="initialEmotionalState" value={localInitialEmotionalState} />
             <Slider
-              id="initialEmotionalStateSlider" // Changed id to avoid conflict with hidden input
+              id="initialEmotionalStateSlider"
               min={1} max={5} step={1}
-              defaultValue={[form.getValues('initialEmotionalState') || 3]}
-              onValueChange={(value) => form.setValue('initialEmotionalState', value[0])}
+              defaultValue={[localInitialEmotionalState]}
+              onValueChange={(value) => setLocalInitialEmotionalState(value[0])}
+              className="mt-2"
             />
             {state.errors?.initialEmotionalState && <p className="text-sm text-destructive">{state.errors.initialEmotionalState[0]}</p>}
           </div>
           <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="agreeTerms" 
-              name="agreeTerms" 
-              onCheckedChange={(checked) => form.setValue('agreeTerms', checked as boolean)}
-              checked={form.watch('agreeTerms')}
+            <Checkbox
+              id="agreeTerms"
+              name="agreeTerms"
+              checked={localAgreeTerms}
+              onCheckedChange={(checked) => setLocalAgreeTerms(checked as boolean)}
             />
             <Label htmlFor="agreeTerms" className="text-sm font-normal text-muted-foreground">{t.agreeToTerms}</Label>
           </div>
            {state.errors?.agreeTerms && <p className="text-sm text-destructive">{state.errors.agreeTerms[0]}</p>}
+           {state.errors?._form && <p className="text-sm text-destructive">{state.errors._form[0]}</p>}
           <SubmitButton />
         </form>
       </CardContent>
