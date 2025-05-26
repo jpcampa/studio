@@ -1,15 +1,19 @@
 
 "use client";
 
-import { use, useState } from 'react'; 
+import { use, useState, useEffect } from 'react'; 
 import { pathsData, PathModule, Path } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Headphones, Edit3, Clock, PlayCircle, ExternalLink } from 'lucide-react';
+import { CheckCircle, BookOpen, Headphones, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { getCompletedModules, saveCompletedModules } from '@/lib/progressStore';
+import { useActivePath } from '@/contexts/ActivePathContext';
 
 interface PathDetailPageProps {
   params: Promise<{ pathId: string }>;
@@ -17,26 +21,66 @@ interface PathDetailPageProps {
 
 export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();
+  const { toast } = useToast();
+  const activePathContext = useActivePath();
   
   const params = use(paramsPromise); 
-  
   const path = pathsData.find(p => p.id === params.pathId);
-  const [completedModules, setCompletedModules] = useState<Set<string>>(new Set()); 
+
+  const [completedModules, setCompletedModules] = useState<Set<string>>(new Set());
+  const [showPathCongratsDialog, setShowPathCongratsDialog] = useState(false);
+
+  useEffect(() => {
+    if (path) {
+      const initialCompleted = getCompletedModules(path.id);
+      setCompletedModules(initialCompleted);
+      activePathContext.loadPath(path.id, path.title, path.modules.length);
+      // Actualizar numCompleted en el contexto después de cargar desde localStorage
+      activePathContext.updateModuleCompletion(path.id, '', false); // Truco para forzar actualización del conteo
+    }
+  }, [path, activePathContext]);
+
 
   if (!path) {
-    return <div className="container mx-auto py-8 text-center text-xl">{t.errorOccurred} Ruta no encontrada.</div>;
+    return (
+      <div className="container mx-auto py-8 text-center text-xl flex flex-col items-center gap-4">
+        <AlertTriangle className="w-12 h-12 text-destructive" />
+        {t.errorOccurred} Ruta no encontrada.
+        <Button asChild variant="outline">
+          <Link href="/paths">{t.allPaths}</Link>
+        </Button>
+      </div>
+    );
   }
 
-  const toggleComplete = (moduleId: string) => {
-    setCompletedModules(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(moduleId)) {
-        newSet.delete(moduleId);
-      } else {
-        newSet.add(moduleId);
+  const toggleComplete = (moduleId: string, moduleTitle: string) => {
+    const newCompletedModules = new Set(completedModules);
+    let justCompletedModule = false;
+
+    if (newCompletedModules.has(moduleId)) {
+      newCompletedModules.delete(moduleId);
+    } else {
+      newCompletedModules.add(moduleId);
+      justCompletedModule = true;
+    }
+
+    setCompletedModules(newCompletedModules);
+    saveCompletedModules(path.id, newCompletedModules);
+    activePathContext.updateModuleCompletion(path.id, moduleId, justCompletedModule);
+
+
+    if (justCompletedModule) {
+      toast({
+        title: t.moduleCompletedTitle,
+        description: t.moduleCompletedMessage.replace("{moduleTitle}", moduleTitle),
+        duration: 3000,
+      });
+
+      const allModulesCompleted = path.modules.every(m => newCompletedModules.has(m.id));
+      if (allModulesCompleted) {
+        setShowPathCongratsDialog(true);
       }
-      return newSet;
-    });
+    }
   };
   
   const getModuleIcon = (type: PathModule['type']) => {
@@ -56,8 +100,8 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
             <Image 
               src={`https://placehold.co/800x300.png`} 
               alt={path.title} 
-              layout="fill" 
-              objectFit="cover" 
+              fill // Reemplaza layout="fill" objectFit="cover" 
+              className="object-cover"
               data-ai-hint={path.dataAiHint} 
             />
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
@@ -118,9 +162,9 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
               )}
             </CardContent>
             <CardFooter>
-              <Button onClick={() => toggleComplete(module.id)} variant={completedModules.has(module.id) ? "secondary" : "default"}>
+              <Button onClick={() => toggleComplete(module.id, module.title)} variant={completedModules.has(module.id) ? "secondary" : "default"}>
                 <CheckCircle className="mr-2 h-4 w-4" />
-                {completedModules.has(module.id) ? "Marcar como No Completado" : t.markAsCompleted}
+                {completedModules.has(module.id) ? t.markAsNotCompleted : t.markAsCompleted}
               </Button>
             </CardFooter>
           </Card>
@@ -129,9 +173,23 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
       
       <div className="mt-12 text-center">
         <Button variant="outline" size="lg" asChild>
-            <Link href="/paths">Volver a todas las Rutas</Link>
+            <Link href="/paths">{t.allPaths}</Link>
         </Button>
       </div>
+
+      <AlertDialog open={showPathCongratsDialog} onOpenChange={setShowPathCongratsDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl text-primary">{t.pathCompletedTitle}</AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              {t.pathCompletedMessage.replace("{pathTitle}", path.title)}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowPathCongratsDialog(false)}>{t.continueLearning}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

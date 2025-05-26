@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -9,24 +10,35 @@ import { useTranslations } from '@/lib/translations';
 import { ArrowRight } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useActivePath } from '@/contexts/ActivePathContext'; // Importar el contexto
 
 export default function PathsPage() {
   const t = useTranslations();
   const searchParams = useSearchParams();
   const [highlightedPathId, setHighlightedPathId] = useState<string | null>(null);
+  const { clearActivePath } = useActivePath(); // Usar el contexto
 
   useEffect(() => {
     const startWithPath = searchParams.get('start_with');
     if (startWithPath) {
-      const path = pathsData.find(p => p.title === startWithPath || p.id === startWithPath);
+      const path = pathsData.find(p => p.title.toLowerCase() === startWithPath.toLowerCase() || p.id === startWithPath);
       if (path) {
         setHighlightedPathId(path.id);
-        // Scroll to the highlighted path if needed
         const element = document.getElementById(`path-${path.id}`);
         element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
   }, [searchParams]);
+
+  // Limpiar la ruta activa al salir de la página de listado de rutas,
+  // si no se quiere que el badge persista globalmente.
+  // Opcional: Podría ser mejor limpiarlo al navegar a una sección completamente diferente (ej. dashboard).
+  // Por ahora, lo dejamos así para que el badge se quite si el usuario vuelve aquí.
+  // useEffect(() => {
+  //   return () => {
+  //     clearActivePath();
+  //   };
+  // }, [clearActivePath]);
 
   return (
     <div className="container mx-auto py-8">
@@ -48,8 +60,8 @@ export default function PathsPage() {
                   <Image 
                     src={`https://placehold.co/600x400.png`} 
                     alt={path.title} 
-                    layout="fill" 
-                    objectFit="cover" 
+                    fill // Reemplaza layout="fill" objectFit="cover"
+                    className="object-cover"
                     data-ai-hint={path.dataAiHint}
                   />
                 </div>
