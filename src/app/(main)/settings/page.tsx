@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
@@ -30,16 +30,23 @@ export default function SettingsPage() {
   const [motivationalQuotes, setMotivationalQuotes] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
+  const [appVersion, setAppVersion] = useState('');
 
   useEffect(() => {
     if (user) {
       setName(user.name || '');
       setAgeRange(user.ageRange || '');
       setGender(user.gender || '');
-      // Note: email and initialEmotionalState are not typically updated from settings form
-      // in this simple setup. They are part of the user object but not form fields here.
     }
   }, [user]);
+
+  useEffect(() => {
+    // Generar la parte de la fecha de la versión en el cliente
+    const currentDate = new Date();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = currentDate.getFullYear();
+    setAppVersion(`B-0.4-${month}-${year}`);
+  }, []);
   
   const ageRanges = [
     { value: "under_18", label: t.age_under_18 }, { value: "18_24", label: t.age_18_24 },
@@ -64,10 +71,12 @@ export default function SettingsPage() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      await updateUser({ name, ageRange, gender }); // Only pass fields that updateUser expects
+      // En el sistema simulado, updateUser solo espera estos campos
+      // Si usaras Firebase real y quisieras actualizar más, tendrías que ajustar la función updateUser
+      await updateUser({ name, ageRange, gender }); 
       toast({
         title: "Configuración Guardada",
-        description: "Tus cambios han sido guardados exitosamente (simulado).",
+        description: "Tus cambios han sido guardados exitosamente.",
       });
     } catch (error) {
        toast({
@@ -85,7 +94,9 @@ export default function SettingsPage() {
   }
   
   if (!user) { 
-    return <div className="container mx-auto py-8 text-center">{t.loading}</div>; // Or redirect via layout
+    // Esto podría ser un redirect a login si el layout principal no lo maneja ya.
+    // Por ahora, UserContext y el layout principal deberían manejar la redirección.
+    return <div className="container mx-auto py-8 text-center">{t.loading}</div>; 
   }
 
 
@@ -196,6 +207,11 @@ export default function SettingsPage() {
             </div>
           </form>
         </CardContent>
+        <CardFooter>
+          <p className="text-xs text-muted-foreground w-full text-right pt-4 mt-4 border-t">
+            Versión: {appVersion}
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );
