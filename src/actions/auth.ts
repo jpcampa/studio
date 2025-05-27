@@ -46,6 +46,7 @@ export type RegisterState = {
     _form?: string[];
   };
   message?: string | null;
+  user?: ActionUser | null; // Añadido para devolver el usuario tras el registro
 };
 
 export async function registerUser(prevState: RegisterState, formData: FormData): Promise<RegisterState> {
@@ -61,9 +62,23 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       message: "Error de validación.",
     };
   }
-  console.log("Simulated RegisterUser action: Validation successful for email:", validatedFields.data.email);
-  // In a real app, user data would be saved here.
-  return { message: "Registro simulado exitoso. Por favor, inicia sesión." };
+  
+  const { name, email, ageRange, gender, initialEmotionalState } = validatedFields.data;
+
+  // In a real app, user data would be saved to a database here.
+  // For simulation, we construct the user object to be returned.
+  const newUser: ActionUser = {
+    id: crypto.randomUUID(),
+    name,
+    email,
+    ageRange: ageRange || null,
+    gender: gender || null,
+    initialEmotionalState: initialEmotionalState || null,
+  };
+
+  console.log("Simulated RegisterUser action: Validation successful. Created user:", newUser);
+  // Return the new user and a success message. The client will use this user to log in.
+  return { message: "Registro exitoso. Serás redirigido.", user: newUser };
 }
 
 
@@ -111,21 +126,18 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
      // For demo, accept any other valid email/password if not the hardcoded one
      // This allows login after a simulated registration
     console.log(`Simulated LoginUser action: Attempting login for non-hardcoded user: ${email}`);
+    // Derivamos el nombre del email para esta simulación de login directo.
+    // El nombre completo del registro se usaría si el flujo de registro inicia sesión al usuario.
     const simulatedName = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const user: ActionUser = {
-      id: crypto.randomUUID(), // Generate a random ID for other users
+      id: crypto.randomUUID(), 
       name: simulatedName,
       email: email,
-      // You can add default/random values for other fields if needed
-      ageRange: "18_24",
-      gender: "other",
-      initialEmotionalState: Math.floor(Math.random() * 5) + 1,
+      ageRange: "18_24", // Default/random values
+      gender: "other", // Default/random values
+      initialEmotionalState: Math.floor(Math.random() * 5) + 1, // Default/random values
     };
     console.log("Simulated LoginUser action: Dynamic user login successful.", user);
     return { message: "Inicio de sesión exitoso.", user };
   }
-
-  // This part might not be reached if the above 'else' catches all other valid formats
-  // console.log("Simulated LoginUser action: Credentials invalid.");
-  // return { message: "Credenciales inválidas." };
 }

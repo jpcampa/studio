@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react"; // Added useState import
+import { useEffect, useState } from "react"; 
 import { useFormStatus } from "react-dom";
 import { useActionState } from "react";
 import Link from "next/link";
@@ -11,9 +11,9 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
-import { registerUser, type RegisterState } from "@/actions/auth"; // Import RegisterState
+import { registerUser, type RegisterState } from "@/actions/auth"; 
 import { useRouter } from "next/navigation";
-import { useUser } from "@/contexts/UserContext";
+import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,7 @@ import { Loader2 } from "lucide-react";
 const initialState: RegisterState = { 
   message: null,
   errors: {},
+  user: null,
 };
 
 function SubmitButton() {
@@ -58,31 +59,28 @@ export function RegisterForm() {
   useEffect(() => {
     console.log("RegisterForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
     if (state.message) {
-      if (state.user && state.message === "Registro exitoso.") { // Assuming 'user' is returned on successful registration and login
-        loginContext(state.user); // Log in the user with the returned user data
+      if (state.user && state.message === "Registro exitoso. Serás redirigido.") { 
+        loginContext(state.user as ContextUser); 
         toast({
           title: t.registrationSuccessTitle,
           description: state.message,
         });
-        // Redirection is handled by the other useEffect monitoring contextUser
-        console.log("RegisterForm: Server action reported successful registration & login. User set in context.");
-      } else if (state.message === "Registro simulado exitoso. Por favor, inicia sesión.") { // Handle simulated success
+        console.log("RegisterForm: Server action reported successful registration. User set in context via loginContext.");
+        // Redirection to dashboard will be handled by the other useEffect watching contextUser
+      } else if (state.message === "Registro simulado exitoso. Por favor, inicia sesión.") { 
          toast({
           title: t.registrationSuccessTitle,
           description: state.message,
         });
-        console.log("RegisterForm: Server action reported successful SIMULATED registration.");
-        // router.push("/login"); // Optionally redirect to login for simulated flow
+        console.log("RegisterForm: Server action reported successful SIMULATED registration (old flow, should be less common now).");
       } else if (state.errors && Object.keys(state.errors).length > 0) {
-        // This case is for validation errors that have a general message
         toast({
           title: t.errorOccurred,
-          description: state.message,
+          description: state.message || "Error de validación.", // Use state.message if available
           variant: "destructive",
         });
         console.error("RegisterForm: Server action reported general error message with field errors. Message:", state.message, "Errors:", state.errors);
       } else if (!state.user && state.message !== "Registro simulado exitoso. Por favor, inicia sesión.") {
-         // General form errors not tied to a specific field from the server
         toast({
           title: t.errorOccurred,
           description: state.message,
@@ -91,13 +89,13 @@ export function RegisterForm() {
         console.error("RegisterForm: Server action reported general error message. Message:", state.message);
       }
     }
-    // Display field-specific errors from server action
+    
     if (state.errors && Object.keys(state.errors).length > 0) {
       console.error("RegisterForm: Server action reported validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
         if (Array.isArray(fieldErrors)) {
           fieldErrors.forEach(error => {
-            if (typeof error === 'string') { // Ensure error is a string before toasting
+            if (typeof error === 'string') { 
               toast({
                 title: `Error en ${key === '_form' ? 'formulario' : t[key as keyof typeof t] || key}`,
                 description: error,
@@ -192,7 +190,6 @@ export function RegisterForm() {
           </div>
           <div>
             <Label htmlFor="initialEmotionalStateSlider">{t.initialEmotionalState}: {localInitialEmotionalState}</Label>
-            {/* Hidden input to ensure the value is part of FormData */}
             <input type="hidden" name="initialEmotionalState" value={localInitialEmotionalState} />
             <Slider
               id="initialEmotionalStateSlider"
@@ -228,4 +225,3 @@ export function RegisterForm() {
     </Card>
   );
 }
-
