@@ -93,6 +93,10 @@ export const t = {
   clearEmotionalEntriesButton: "Borrar Registros Emocionales",
   clearEmotionalEntriesSuccessTitle: "Registros Borrados",
   clearEmotionalEntriesSuccessMessage: "Todos los registros emocionales han sido eliminados.",
+  activateEmotionalDashboardButton: "Activar Dashboard Emocional",
+  deactivateEmotionalDashboardButton: "Desactivar Dashboard Emocional",
+  emotionalDashboardActivated: "Dashboard Emocional activado.",
+  emotionalDashboardDeactivated: "Dashboard Emocional desactivado.",
   // Age Ranges
   age_under_18: "Menor de 18",
   age_18_24: "18-24",
@@ -137,6 +141,7 @@ export const t = {
   myEvolution: "Mi Evolución del Ánimo",
   myEvolutionDescription: "Sigue tus cambios a lo largo del tiempo.",
   viewDetails: "Ver detalles",
+  emotionalDashboardDisabledMessage: "El registro emocional y las visualizaciones avanzadas están desactivadas. (Opción de desarrollador)",
 
   // Emotional Entry Form
   registerEmotionDialogTitle: "Nuevo Registro Emocional",

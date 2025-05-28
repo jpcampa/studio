@@ -11,16 +11,22 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, Palette, Trash2, AlertTriangle } from 'lucide-react';
+import { Loader2, Save, Palette, Trash2, AlertTriangle, ToggleRight, ToggleLeft } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
 import { Separator } from '@/components/ui/separator';
+import { useFeatureFlag } from '@/contexts/FeatureFlagContext'; // Import useFeatureFlag
+
+// Use a specific email for 'jpcampa' for testing purposes.
+// In a real app, this might be based on user roles or other criteria.
+const DEVELOPER_EMAIL = 'jpcampa@example.com';
 
 export default function SettingsPage() {
   const t = useTranslations();
   const { user, updateUser, loading: userLoading } = useUser();
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
+  const { isEmotionalDashboardEnabled, toggleEmotionalDashboard } = useFeatureFlag(); // Consume FeatureFlagContext
 
   const [name, setName] = useState('');
   const [ageRange, setAgeRange] = useState('');
@@ -43,7 +49,6 @@ export default function SettingsPage() {
   }, [user]);
 
   useEffect(() => {
-    // Generar la parte de la fecha de la versión en el cliente
     const currentDate = new Date();
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const year = currentDate.getFullYear();
@@ -73,7 +78,9 @@ export default function SettingsPage() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      await updateUser({ name, ageRange, gender });
+      // In a real app, this would call a Firebase function or backend endpoint
+      // For simulation, we update UserContext which updates localStorage
+      const updatedUser = await updateUser({ name, ageRange, gender });
       toast({
         title: "Configuración Guardada",
         description: "Tus cambios han sido guardados exitosamente.",
@@ -90,14 +97,19 @@ export default function SettingsPage() {
   };
 
   const handleClearEntries = () => {
-    // Consider adding a confirmation dialog here for a real app
     clearAllEmotionalEntries();
     toast({
       title: t.clearEmotionalEntriesSuccessTitle,
       description: t.clearEmotionalEntriesSuccessMessage,
     });
-    // Optionally, you could try to trigger a re-fetch or state update on the dashboard
-    // For now, user will see changes on next dashboard visit/reload
+  };
+
+  const handleToggleEmotionalDashboard = () => {
+    toggleEmotionalDashboard();
+    toast({
+      title: "Dashboard Emocional",
+      description: isEmotionalDashboardEnabled ? t.emotionalDashboardDeactivated : t.emotionalDashboardActivated,
+    });
   };
 
   if (userLoading && !user) {
@@ -108,6 +120,7 @@ export default function SettingsPage() {
     return <div className="container mx-auto py-8 text-center">{t.loading}</div>;
   }
 
+  const isDeveloper = user?.email === DEVELOPER_EMAIL;
 
   return (
     <div className="container mx-auto py-8">
@@ -226,10 +239,19 @@ export default function SettingsPage() {
             <CardDescription className="mb-4">
                 Estas opciones son para fines de desarrollo y pueden afectar tu experiencia. Úsalas con precaución.
             </CardDescription>
-            <Button variant="destructive" onClick={handleClearEntries}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              {t.clearEmotionalEntriesButton}
-            </Button>
+            <div className="space-y-3">
+              <Button variant="destructive" onClick={handleClearEntries}>
+                <Trash2 className="mr-2 h-4 w-4" />
+                {t.clearEmotionalEntriesButton}
+              </Button>
+
+              {isDeveloper && (
+                <Button variant="outline" onClick={handleToggleEmotionalDashboard}>
+                  {isEmotionalDashboardEnabled ? <ToggleLeft className="mr-2 h-4 w-4" /> : <ToggleRight className="mr-2 h-4 w-4" />}
+                  {isEmotionalDashboardEnabled ? t.deactivateEmotionalDashboardButton : t.activateEmotionalDashboardButton}
+                </Button>
+              )}
+            </div>
           </div>
 
         </CardContent>

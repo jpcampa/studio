@@ -6,6 +6,7 @@ import { UserProvider } from '@/contexts/UserContext';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ActivePathProvider } from '@/contexts/ActivePathContext';
+import { FeatureFlagProvider } from '@/contexts/FeatureFlagContext'; // Import FeatureFlagProvider
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,8 +39,10 @@ export default function RootLayout({
         >
           <UserProvider>
             <ActivePathProvider>
-              {children}
-              <Toaster />
+              <FeatureFlagProvider> {/* Wrap with FeatureFlagProvider */}
+                {children}
+                <Toaster />
+              </FeatureFlagProvider>
             </ActivePathProvider>
           </UserProvider>
         </ThemeProvider>

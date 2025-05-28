@@ -19,15 +19,17 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
+import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; // Import useFeatureFlag
+import { Alert, AlertDescription } from "@/components/ui/alert"; // Import Alert for message
 
 interface ProcessedChartDataPoint {
-  date: string; // Formatted for X-axis label (e.g., "dd MMM")
+  date: string; 
   moodScore: number;
   emotionLabel: string;
-  fullDate: string; // Full date for tooltip
+  fullDate: string; 
 }
 
 const moodScoreMapping: Record<string, number> = {
@@ -47,69 +49,77 @@ export default function DashboardPage() {
   const t = useTranslations();
   const { user } = useUser();
   const { toast } = useToast();
-  const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
+  const { isEmotionalDashboardEnabled } = useFeatureFlag(); // Consume feature flag
   
+  const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
 
   useEffect(() => {
-    console.log("DashboardPage: Initial Load useEffect running.");
-    // Load entries from localStorage on mount
-    const loadedRecentEntries = getRecentEmotionalEntries();
-    const loadedAllEntries = getEmotionalEntries();
-    
-    console.log("DashboardPage: Initial Load - loadedRecentEntries:", loadedRecentEntries);
-    console.log("DashboardPage: Initial Load - loadedAllEntries:", loadedAllEntries);
+    console.log("DashboardPage: Initial Load useEffect running. Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
+    if (isEmotionalDashboardEnabled) {
+      const loadedRecentEntries = getRecentEmotionalEntries();
+      const loadedAllEntries = getEmotionalEntries();
+      
+      console.log("DashboardPage: Initial Load (Emotional Dashboard Enabled) - loadedRecentEntries:", loadedRecentEntries);
+      console.log("DashboardPage: Initial Load (Emotional Dashboard Enabled) - loadedAllEntries:", loadedAllEntries);
 
-    setRecentEntries(loadedRecentEntries);
-    setAllEntries(loadedAllEntries);
+      setRecentEntries(loadedRecentEntries);
+      setAllEntries(loadedAllEntries);
 
-    if (loadedRecentEntries.length > 0) {
-      const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
-      if (lastRegisteredEmotion) {
-        setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
+      if (loadedRecentEntries.length > 0) {
+        const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
+        if (lastRegisteredEmotion) {
+          setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
+        }
       }
+    } else {
+      // Clear emotional data if dashboard is disabled
+      setRecentEntries([]);
+      setAllEntries([]);
+      setLastEmotion(null);
     }
     console.log("DashboardPage: Initial Load useEffect finished.");
-  }, [t]); // Added t to dependencies as it's used inside
+  }, [t, isEmotionalDashboardEnabled]); // Add isEmotionalDashboardEnabled to dependencies
 
   const chartData = useMemo(() => {
-    console.log("DashboardPage: Recalculating chartData. allEntries count:", allEntries.length);
-    if (!allEntries || allEntries.length === 0) {
-      console.log("DashboardPage: No entries for chartData calculation.");
+    if (!isEmotionalDashboardEnabled || !allEntries || allEntries.length === 0) {
+      console.log("DashboardPage: No entries for chartData calculation or dashboard disabled.");
       return [];
     }
+    console.log("DashboardPage: Recalculating chartData. allEntries count:", allEntries.length);
 
     const processedData = allEntries
       .map(entry => ({
         ...entry,
-        timestampDate: new Date(entry.timestamp), // Convert string to Date for sorting
+        timestampDate: new Date(entry.timestamp), 
       }))
-      .sort((a, b) => a.timestampDate.getTime() - b.timestampDate.getTime()) // Sort oldest to newest
-      .slice(-15) // Take last 15 entries for the chart
+      .sort((a, b) => a.timestampDate.getTime() - b.timestampDate.getTime()) 
+      .slice(-15) 
       .map(entry => {
         const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
         const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
         return {
-          date: formatEntryTimestamp(entry.timestamp).split(',')[0], // e.g., "25 May"
-          moodScore: moodScoreMapping[entry.emotion] ?? 0, // Default to 0 if not mapped
+          date: formatEntryTimestamp(entry.timestamp).split(',')[0], 
+          moodScore: moodScoreMapping[entry.emotion] ?? 0, 
           emotionLabel: emotionLabel,
           fullDate: formatEntryTimestamp(entry.timestamp),
         };
       });
     console.log("DashboardPage: Processed chartData:", processedData);
     return processedData;
-  }, [allEntries, t]);
+  }, [allEntries, t, isEmotionalDashboardEnabled]);
 
 
   const handleEmotionalEntrySubmit = (data: { situation: string; emotion: string }) => {
     console.log("DashboardPage: handleEmotionalEntrySubmit called with:", data);
+    if (!isEmotionalDashboardEnabled) return;
+
     const newEntry = addEmotionalEntry(data);
     
     setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); 
     setAllEntries(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-
 
     const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
     if (lastRegisteredEmotionDetails) {
@@ -124,11 +134,10 @@ export default function DashboardPage() {
     console.log("DashboardPage: Emotional entry submitted and states updated.");
   };
   
-  console.log("DashboardPage: Rendering JSX. User:", user?.name);
+  console.log("DashboardPage: Rendering JSX. User:", user?.name, "Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
 
   return (
     <div className="container mx-auto py-8 space-y-10">
-      {/* Saludo */}
       <div className="text-center md:text-left">
         <h1 className="text-3xl md:text-4xl font-bold text-primary">
           {t.welcome}, {user?.name || "Usuarie"}! 👋
@@ -136,7 +145,6 @@ export default function DashboardPage() {
         <p className="text-lg text-muted-foreground mt-1">{t.dashboardGreeting}</p>
       </div>
 
-      {/* Resumen Rápido */}
       <section aria-labelledby="quick-summary-heading">
         <h2 id="quick-summary-heading" className="text-2xl font-semibold text-accent mb-6">
           {t.quickSummary}
@@ -144,11 +152,11 @@ export default function DashboardPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <DashboardSummaryCard
             title={t.currentWellbeing}
-            value={lastEmotion || t.wellbeingPlaceholder}
-            description={t.wellbeingDescription}
-            icon={lastEmotion ? CheckCircle : Smile}
-            cardColorClass={lastEmotion ? "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700" : "bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700" }
-            iconColorClass={lastEmotion ? "text-green-600 dark:text-green-400" : "text-slate-600 dark:text-slate-400"}
+            value={isEmotionalDashboardEnabled && lastEmotion ? lastEmotion : t.wellbeingPlaceholder}
+            description={isEmotionalDashboardEnabled ? t.wellbeingDescription : ""}
+            icon={isEmotionalDashboardEnabled && lastEmotion ? CheckCircle : Smile}
+            cardColorClass={isEmotionalDashboardEnabled && lastEmotion ? "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700" : "bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700" }
+            iconColorClass={isEmotionalDashboardEnabled && lastEmotion ? "text-green-600 dark:text-green-400" : "text-slate-600 dark:text-slate-400"}
             ctaLink="/assessment" 
             ctaLabel={t.viewDetails}
           />
@@ -185,68 +193,79 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Registro Emocional */}
-      <section aria-labelledby="emotional-registry-heading" className="text-center py-6">
-        <h2 id="emotional-registry-heading" className="sr-only">{t.emotionalRegistry}</h2>
-        <Dialog open={isEntryDialogOpen} onOpenChange={setIsEntryDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="lg" className="shadow-md hover:shadow-lg transition-shadow">
-              <Edit className="mr-2 h-5 w-5" />
-              {t.registerEmotion}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[480px]">
-            <DialogHeader>
-              <DialogTitle className="text-2xl">{t.registerEmotionDialogTitle}</DialogTitle>
-              <DialogDescription>
-                {t.registerEmotionDialogDescription}
-              </DialogDescription>
-            </DialogHeader>
-            <EmotionalEntryForm onSubmit={handleEmotionalEntrySubmit} />
-          </DialogContent>
-        </Dialog>
-      </section>
+      {!isEmotionalDashboardEnabled && (
+        <Alert variant="default" className="shadow-md bg-amber-50 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700">
+          <Info className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+          <AlertDescription className="text-amber-700 dark:text-amber-300">
+            {t.emotionalDashboardDisabledMessage}
+            {user?.email === 'jpcampa@example.com' && " Puedes activarlo en Configuración > Utilidades de Desarrollo."}
+          </AlertDescription>
+        </Alert>
+      )}
 
-      {/* Mis Registros Emocionales Recientes */}
-      <section aria-labelledby="recent-entries-heading">
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold text-accent flex items-center">
-                <NotebookPen className="mr-3 h-6 w-6" />
-                {t.recentEmotionalEntriesTitle}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {recentEntries.length > 0 ? (
-              <ul className="space-y-4">
-                {recentEntries.map((entry, index) => {
-                  const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
-                  const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
-                  return (
-                    <li key={entry.id} className="p-4 border rounded-lg bg-muted/30 shadow-sm">
-                      <p className="text-xs text-muted-foreground">{formatEntryTimestamp(entry.timestamp)}</p>
-                      <p className="font-semibold text-primary mt-1">{emotionLabel}</p>
-                      <p className="text-sm text-foreground mt-1 truncate" title={entry.situation}>
-                        {entry.situation}
-                      </p>
-                       {index < recentEntries.length - 1 && <Separator className="my-4" />}
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <p className="text-muted-foreground italic text-center py-4">{t.noRecentEntries}</p>
-            )}
-          </CardContent>
-           {recentEntries.length > 0 && (
-             <CardFooter className="justify-center pt-4">
-                <Button variant="link" disabled>Ver todos los registros (próximamente)</Button>
-            </CardFooter>
-           )}
-        </Card>
-      </section>
+      {isEmotionalDashboardEnabled && (
+        <>
+          <section aria-labelledby="emotional-registry-heading" className="text-center py-6">
+            <h2 id="emotional-registry-heading" className="sr-only">{t.emotionalRegistry}</h2>
+            <Dialog open={isEntryDialogOpen} onOpenChange={setIsEntryDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="shadow-md hover:shadow-lg transition-shadow">
+                  <Edit className="mr-2 h-5 w-5" />
+                  {t.registerEmotion}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[480px]">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl">{t.registerEmotionDialogTitle}</DialogTitle>
+                  <DialogDescription>
+                    {t.registerEmotionDialogDescription}
+                  </DialogDescription>
+                </DialogHeader>
+                <EmotionalEntryForm onSubmit={handleEmotionalEntrySubmit} />
+              </DialogContent>
+            </Dialog>
+          </section>
 
-      {/* Visualizaciones */}
+          <section aria-labelledby="recent-entries-heading">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-accent flex items-center">
+                    <NotebookPen className="mr-3 h-6 w-6" />
+                    {t.recentEmotionalEntriesTitle}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {recentEntries.length > 0 ? (
+                  <ul className="space-y-4">
+                    {recentEntries.map((entry, index) => {
+                      const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
+                      const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
+                      return (
+                        <li key={entry.id} className="p-4 border rounded-lg bg-muted/30 shadow-sm">
+                          <p className="text-xs text-muted-foreground">{formatEntryTimestamp(entry.timestamp)}</p>
+                          <p className="font-semibold text-primary mt-1">{emotionLabel}</p>
+                          <p className="text-sm text-foreground mt-1 truncate" title={entry.situation}>
+                            {entry.situation}
+                          </p>
+                           {index < recentEntries.length - 1 && <Separator className="my-4" />}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-muted-foreground italic text-center py-4">{t.noRecentEntries}</p>
+                )}
+              </CardContent>
+               {recentEntries.length > 0 && (
+                 <CardFooter className="justify-center pt-4">
+                    <Button variant="link" disabled>Ver todos los registros (próximamente)</Button>
+                </CardFooter>
+               )}
+            </Card>
+          </section>
+        </>
+      )}
+
       <section aria-labelledby="visualizations-heading">
         <h2 id="visualizations-heading" className="sr-only">Visualizaciones de Progreso</h2>
         <div className="grid gap-8 lg:grid-cols-2">
@@ -256,23 +275,23 @@ export default function DashboardPage() {
             icon={Radar}
             className="lg:h-[450px]"
           />
-          {/* <ChartPlaceholder
-            title={t.myEvolution}
-            description={t.myEvolutionDescription}
-            icon={LineChartIcon}
-            className="lg:h-[450px]"
-          /> */}
-           <MoodEvolutionChart 
-            data={chartData} 
-            title={t.myEvolution}
-            description={t.myEvolutionDescription}
-            className="lg:h-[450px]"
-          />
+          {isEmotionalDashboardEnabled ? (
+             <MoodEvolutionChart 
+              data={chartData} 
+              title={t.myEvolution}
+              description={t.myEvolutionDescription}
+              className="lg:h-[450px]"
+            />
+          ) : (
+            <ChartPlaceholder
+              title={t.myEvolution}
+              description={t.myEvolutionDescription}
+              icon={LineChartIcon}
+              className="lg:h-[450px]"
+            />
+          )}
         </div>
       </section>
     </div>
   );
 }
-    
-
-    
