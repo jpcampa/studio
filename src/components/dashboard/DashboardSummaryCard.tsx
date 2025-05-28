@@ -30,11 +30,11 @@ export function DashboardSummaryCard({
   return (
     <Card className={cn('shadow-lg hover:shadow-xl transition-shadow duration-300', cardColorClass)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-medium">{title}</CardTitle>
+        <CardTitle className="text-sm md:text-base font-medium">{title}</CardTitle>
         <Icon className={cn('h-5 w-5', iconColorClass)} />
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-bold">{value}</div>
+        <div className="text-2xl md:text-3xl font-bold">{value}</div>
         {description && <p className="text-xs text-muted-foreground pt-1">{description}</p>}
         {ctaLink && ctaLabel && (
           <Button asChild variant="link" className="px-0 pt-3 text-sm h-auto leading-tight">
@@ -45,3 +45,4 @@ export function DashboardSummaryCard({
     </Card>
   );
 }
+
