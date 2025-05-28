@@ -132,6 +132,28 @@ export const t = {
   myEvolution: "Mi Evolución",
   myEvolutionDescription: "Sigue tus cambios a lo largo del tiempo.",
   viewDetails: "Ver detalles",
+
+  // Emotional Entry Form
+  registerEmotionDialogTitle: "Nuevo Registro Emocional",
+  registerEmotionDialogDescription: "Describe cómo te sientes. Este espacio es para ti.",
+  situationLabel: "¿Qué situación relevante viviste hoy o recientemente?",
+  situationPlaceholder: "Ej: Tuve una reunión importante, recibí una noticia, tuve una conversación difícil...",
+  thoughtLabel: "¿Qué pensamiento automático tuviste en ese momento?",
+  thoughtPlaceholder: "Ej: 'No soy capaz', 'Todo va a salir mal', 'Esto es injusto'...",
+  emotionLabel: "¿Qué emoción principal sentiste?",
+  emotionPlaceholder: "Selecciona una emoción",
+  saveEntryButton: "Guardar Registro",
+  emotionalEntrySavedTitle: "Registro Guardado",
+  emotionalEntrySavedMessage: "Tu entrada emocional ha sido guardada con éxito.",
+  fillAllFields: "Por favor, completa todos los campos requeridos.",
+  emotionJoy: "Alegría",
+  emotionSadness: "Tristeza",
+  emotionAnger: "Enfado",
+  emotionFear: "Miedo",
+  emotionSurprise: "Sorpresa",
+  emotionAnticipation: "Anticipación",
+  emotionTrust: "Confianza",
+  emotionDisgust: "Asco",
 };
 
 export type Translations = typeof t;
