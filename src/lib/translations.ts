@@ -5,7 +5,7 @@
 export const t = {
   appName: "WorkWell",
   // General
-  welcome: "¡Hola!", 
+  welcome: "¡Hola!",
   loading: "Cargando...",
   submit: "Enviar",
   save: "Guardar",
@@ -27,7 +27,7 @@ export const t = {
   alreadyHaveAccount: "¿Ya tienes cuenta? Inicia Sesión",
   agreeToTerms: "Acepto la política de privacidad y aviso legal.",
   registrationSuccessTitle: "¡Registro Exitoso!",
-  registrationSuccessMessage: "Revisa tu correo para activar tu cuenta.",
+  registrationSuccessMessage: "Revisa tu correo para activar tu cuenta.", // TODO: Ajustar si el registro es directo
   loginFailed: "Error al iniciar sesión. Verifica tus credenciales.",
   registrationFailed: "Error al registrar. Inténtalo de nuevo.",
   // Sidebar Navigation
@@ -37,7 +37,7 @@ export const t = {
   navChatbot: "Mentor AI",
   navResources: "Recursos",
   navSettings: "Configuración",
-  // Welcome Page / Dashboard
+  // Welcome Page / Dashboard (Old, parts might be reused or removed)
   welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.",
   startYourJourney: "Comienza tu viaje hacia el bienestar",
   takeInitialAssessment: "Realizar Evaluación Inicial",
@@ -109,6 +109,29 @@ export const t = {
   themeDark: "Oscuro",
   themeSystem: "Sistema",
   selectThemePrompt: "Elige cómo quieres que se vea la aplicación.",
+
+  // Dashboard Emocional
+  dashboardGreeting: "Así va tu camino",
+  quickSummary: "Resumen Rápido",
+  currentWellbeing: "Tu Bienestar Hoy",
+  wellbeingPlaceholder: "Estable",
+  wellbeingDescription: "Basado en tu último registro.",
+  progressSinceLast: "Tu Progreso",
+  progressPlaceholder: "+5%",
+  progressDescription: "Desde la última evaluación.",
+  inFocus: "En Foco",
+  inFocusPlaceholder: "Mindfulness",
+  inFocusDescription: "Reto actual: ser más consciente.",
+  nextStep: "Siguiente Paso",
+  nextStepPlaceholder: "Ruta de Estrés",
+  nextStepDescription: "Recomendado para ti.",
+  emotionalRegistry: "Registro Emocional",
+  registerEmotion: "✨ Registrar Emoción",
+  myEmotionalProfile: "Mi Perfil Emocional",
+  myEmotionalProfileDescription: "Una vista multidimensional de tu estado.",
+  myEvolution: "Mi Evolución",
+  myEvolutionDescription: "Sigue tus cambios a lo largo del tiempo.",
+  viewDetails: "Ver detalles",
 };
 
 export type Translations = typeof t;
