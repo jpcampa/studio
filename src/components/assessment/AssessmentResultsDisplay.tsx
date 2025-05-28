@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity } from 'lucide-react';
+import { CheckCircle, ListChecks, Activity, AlertTriangle } from 'lucide-react'; // Added AlertTriangle
 import {
   ChartContainer,
   ChartTooltip,
@@ -30,35 +30,43 @@ interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
 }
 
-// Use shadcn/ui theme colors for charts
 const themedChartColors = [
   "hsl(var(--chart-1))",
   "hsl(var(--chart-2))",
   "hsl(var(--chart-3))",
   "hsl(var(--chart-4))",
   "hsl(var(--chart-5))",
+  "hsl(var(--primary))", // Added more colors for up to 12 dimensions
+  "hsl(var(--accent))",
+  "hsl(var(--secondary))",
+  "hsl(var(--chart-1) / 0.7)",
+  "hsl(var(--chart-2) / 0.7)",
+  "hsl(var(--chart-3) / 0.7)",
+  "hsl(var(--chart-4) / 0.7)",
 ];
 
 export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
 
-  // Data preparation for Radar Chart (Emotional Profile)
-  const radarData = Object.entries(results.emotionalProfile).map(([name, valueString]) => {
-    const match = valueString.match(/\((\d)\/\d\)/); 
-    let numericValue;
-    if (match && match[1]) {
-      numericValue = parseInt(match[1], 10);
-    } else {
-      const lowerValueString = valueString.toLowerCase();
-      if (lowerValueString.includes("muy bajo") || lowerValueString.includes("muy mal")) numericValue = 1;
-      else if (lowerValueString.includes("bajo") || lowerValueString.includes("mal")) numericValue = 2;
-      else if (lowerValueString.includes("medio") || lowerValueString.includes("regular") || lowerValueString.includes("normal")) numericValue = 3;
-      else if (lowerValueString.includes("alto") || lowerValueString.includes("bien")) numericValue = 4;
-      else if (lowerValueString.includes("muy alto") || lowerValueString.includes("muy bien")) numericValue = 5;
-      else numericValue = 3; 
+  const radarData = Object.entries(results.emotionalProfile).map(([dimensionName, valueString]) => {
+    let numericValue = 3; // Default to medium (3 out of 5)
+    const lowerValueString = valueString.toLowerCase();
+    
+    // Try to parse a score like (X/5) first
+    const scoreMatch = valueString.match(/\((\d)\s*\/\s*5\)/);
+    if (scoreMatch && scoreMatch[1]) {
+      numericValue = parseInt(scoreMatch[1], 10);
+    } else { // Fallback to keyword-based parsing
+      if (lowerValueString.includes("muy bajo") || lowerValueString.includes("muy mal") || lowerValueString.includes("muy crítica")) numericValue = 1;
+      else if (lowerValueString.includes("bajo") || lowerValueString.includes("mal") || lowerValueString.includes("crítica") || lowerValueString.includes("desafío claro")) numericValue = 2;
+      else if (lowerValueString.includes("medio") || lowerValueString.includes("regular") || lowerValueString.includes("normal") || lowerValueString.includes("adecuado")) numericValue = 3;
+      else if (lowerValueString.includes("alto") || lowerValueString.includes("bien") || lowerValueString.includes("buen") || lowerValueString.includes("fuerte") || lowerValueString.includes("potencial de crecimiento")) numericValue = 4;
+      else if (lowerValueString.includes("muy alto") || lowerValueString.includes("muy bien") || lowerValueString.includes("excelente") || lowerValueString.includes("notable") || lowerValueString.includes("fortaleza clara")) numericValue = 5;
     }
+    numericValue = Math.max(1, Math.min(5, numericValue)); // Clamp between 1 and 5
+
     return {
-      dimension: name, 
+      dimension: dimensionName, 
       score: numericValue, 
       fullMark: 5, 
       fullLabel: valueString 
@@ -72,19 +80,32 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
     },
   };
 
-  // Data and Config for Pie Chart (Priority Areas)
   const pieChartData = results.priorityAreas.map((area) => ({
-    name: area,
+    name: area, // This is the full dimension name
     value: 1, 
   }));
 
   const priorityAreasPieConfig: ChartConfig = {};
   results.priorityAreas.forEach((area, index) => {
-    priorityAreasPieConfig[area] = { // Key is the area name (e.g., "Autoestima")
-      label: area,
-      color: themedChartColors[index % themedChartColors.length], // Assign themed color HSL string
+    priorityAreasPieConfig[area] = { 
+      label: area.split('(')[0].trim(), // Use shorter label for legend if possible
+      color: themedChartColors[index % themedChartColors.length],
     };
   });
+
+
+  if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0) {
+    return (
+      <div className="container mx-auto py-8 text-center">
+        <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
+        <p className="mt-4 text-lg font-semibold">{t.errorOccurred}</p>
+        <p className="text-muted-foreground">No se pudieron cargar los resultados de la evaluación.</p>
+        <Button asChild className="mt-6">
+          <Link href="/assessment">{t.takeInitialAssessment}</Link>
+        </Button>
+      </div>
+    );
+  }
 
 
   return (
@@ -99,17 +120,24 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
         </CardHeader>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center"><Activity className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle> 
           </CardHeader>
           <CardContent>
-            <div className="h-[350px] w-full">
+            <div className="h-[400px] w-full"> {/* Increased height for better readability with 12 dimensions */}
             <ChartContainer config={emotionalProfileRadarConfig} className="w-full h-full">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
                     <PolarGrid gridType="polygon" stroke="hsl(var(--border))" />
-                    <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 11, fill: "hsl(var(--foreground))" }} />
+                    <PolarAngleAxis 
+                        dataKey="dimension" 
+                        tick={({ x, y, payload }) => ( // Custom tick to shorten labels
+                          <text x={x} y={y} dy={4} textAnchor="middle" fill="hsl(var(--foreground))" fontSize={10}>
+                            {payload.value.split('(')[0].trim().substring(0,15)} 
+                          </text>
+                        )}
+                    />
                     <PolarRadiusAxis 
                         angle={90} 
                         domain={[0, 5]} 
@@ -128,13 +156,13 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
                         cursor={{ stroke: "hsl(var(--primary))", strokeDasharray: '3 3' }}
                         content={
                         <ChartTooltipContent
-                            className="!bg-background !border !border-border !shadow-lg !rounded-md"
+                            className="!bg-background !border !border-border !shadow-lg !rounded-md max-w-xs" // Added max-w-xs
                             formatter={(value, name, itemProps) => {
                             if (itemProps.payload) {
                                 return (
                                 <div className="text-sm p-1">
                                     <div className="font-medium text-foreground">{itemProps.payload.dimension}</div>
-                                    <div className="text-muted-foreground">{itemProps.payload.fullLabel}</div>
+                                    <div className="text-muted-foreground">{itemProps.payload.fullLabel} (Puntuación: {itemProps.payload.score}/5)</div>
                                 </div>
                                 );
                             }
@@ -146,9 +174,9 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
                 </RadarChart>
             </ChartContainer>
             </div>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-2 text-xs sm:text-sm"> {/* Adjusted text size */}
               {radarData.map((item) => (
-                <li key={item.dimension} className="text-sm p-2 bg-muted/50 rounded-md">
+                <li key={item.dimension} className="p-2 bg-muted/50 rounded-md">
                   <span className="font-semibold">{item.dimension}:</span> {item.fullLabel}
                 </li>
               ))}
@@ -161,35 +189,36 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
             <CardTitle className="flex items-center"><ListChecks className="mr-2 h-6 w-6 text-accent" />{t.priorityAreas}</CardTitle>
           </CardHeader>
           <CardContent>
-             <div className="h-[350px] w-full"> 
+             <div className="h-[400px] w-full"> {/* Increased height */}
                <ChartContainer config={priorityAreasPieConfig} className="w-full h-full">
                 <PieChart>
-                  <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />
+                  <ChartTooltip 
+                    content={<ChartTooltipContent nameKey="name" hideLabel className="!bg-background !border !border-border !shadow-lg !rounded-md" />} 
+                  />
                   <Pie
                     data={pieChartData}
                     dataKey="value"
-                    nameKey="name" // This refers to the 'name' property in pieChartData objects
+                    nameKey="name" 
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={100}
-                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                    outerRadius={120} // Adjusted radius
+                    label={({ name, percent }) => `${name.split('(')[0].trim().substring(0,15)}... (${(percent * 100).toFixed(0)}%)`} // Shortened label
                   >
                     {pieChartData.map((entry, index) => (
-                      // entry.name is the area name, e.g., "Autoestima"
-                      // priorityAreasPieConfig uses area names as keys.
-                      // ChartStyle will generate --color-Autoestima, etc.
                       <Cell key={`cell-${index}`} fill={`var(--color-${entry.name})`} />
                     ))}
                   </Pie>
-                  <ChartLegend content={<ChartLegendContent nameKey="name"/>} />
+                  <ChartLegend 
+                    content={<ChartLegendContent nameKey="name" className="text-xs"/>} // Smaller legend text
+                  />
                 </PieChart>
               </ChartContainer>
             </div>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-2 text-xs sm:text-sm"> {/* Adjusted text size */}
               {results.priorityAreas.map((area, index) => (
-                <li key={index} className="flex items-center text-sm p-2 bg-muted/50 rounded-md">
-                  <CheckCircle className="mr-2 h-5 w-5 text-green-500" />
+                <li key={index} className="flex items-center p-2 bg-muted/50 rounded-md">
+                  <CheckCircle className="mr-2 h-5 w-5 text-green-500 flex-shrink-0" />
                   {area}
                 </li>
               ))}
@@ -198,7 +227,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
         </Card>
       </div>
 
-      <Card className="shadow-lg">
+      <Card className="shadow-lg mt-8">
         <CardHeader>
           <CardTitle>{t.summaryAndRecommendations}</CardTitle>
         </CardHeader>
@@ -211,7 +240,7 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
         <div className="text-center mt-8">
           <Button asChild size="lg">
             <Link href={`/paths?start_with=${encodeURIComponent(results.priorityAreas[0])}`}>
-              {t.startPathFor.replace("{area}", results.priorityAreas[0])}
+              {t.startPathFor.replace("{area}", results.priorityAreas[0].split('(')[0].trim())}
             </Link>
           </Button>
         </div>
@@ -220,3 +249,4 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
   );
 }
 
+    
