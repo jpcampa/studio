@@ -52,7 +52,7 @@ export default function SettingsPage() {
     const currentDate = new Date();
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const year = currentDate.getFullYear();
-    setAppVersion(`B-0.4-${month}-${year}`);
+    setAppVersion(`B-0.5-${month}-${year}`);
   }, []);
 
   const ageRanges = [
