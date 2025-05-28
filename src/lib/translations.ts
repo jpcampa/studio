@@ -1,5 +1,4 @@
 
-
 // For V1, directly use Spanish. This structure allows easy replacement with a full i18n solution.
 // All text literals should be sourced from here.
 
@@ -47,9 +46,9 @@ export const t = {
   assessmentTitle: "Evaluación Psicológica Inicial",
   assessmentIntro: "Conocer cómo estás hoy es el primer paso para cuidarte. Tómate unos minutos, este espacio es solo para ti.",
   startAssessment: "Comenzar Evaluación",
-  questionProgress: "Pregunta {current} de {total}",
-  nextQuestion: "Siguiente",
-  previousQuestion: "Anterior",
+  dimensionProgress: "Dimensión {current} de {total}",
+  nextDimension: "Siguiente Dimensión",
+  previousDimension: "Dimensión Anterior",
   finishAssessment: "Finalizar Evaluación",
   assessmentResultsTitle: "Resultados de tu Evaluación",
   emotionalProfile: "Perfil Emocional",
@@ -141,7 +140,7 @@ export const t = {
   myEvolution: "Mi Evolución del Ánimo",
   myEvolutionDescription: "Sigue tus cambios a lo largo del tiempo.",
   viewDetails: "Ver detalles",
-  emotionalDashboardDisabledMessage: "El registro emocional y las visualizaciones avanzadas están desactivadas. (Opción de desarrollador)",
+  emotionalDashboardDisabledMessage: "El registro emocional y las visualizaciones avanzadas están desactivadas.",
 
   // Emotional Entry Form
   registerEmotionDialogTitle: "Nuevo Registro Emocional",
