@@ -1,4 +1,5 @@
 
+
 // For V1, directly use Spanish. This structure allows easy replacement with a full i18n solution.
 // All text literals should be sourced from here.
 
@@ -27,7 +28,7 @@ export const t = {
   alreadyHaveAccount: "¿Ya tienes cuenta? Inicia Sesión",
   agreeToTerms: "Acepto la política de privacidad y aviso legal.",
   registrationSuccessTitle: "¡Registro Exitoso!",
-  registrationSuccessMessage: "Revisa tu correo para activar tu cuenta.", // TODO: Ajustar si el registro es directo
+  registrationSuccessMessage: "Serás redirigido en breve.", 
   loginFailed: "Error al iniciar sesión. Verifica tus credenciales.",
   registrationFailed: "Error al registrar. Inténtalo de nuevo.",
   // Sidebar Navigation
@@ -129,7 +130,7 @@ export const t = {
   registerEmotion: "✨ Registrar Emoción",
   myEmotionalProfile: "Mi Perfil Emocional",
   myEmotionalProfileDescription: "Una vista multidimensional de tu estado.",
-  myEvolution: "Mi Evolución",
+  myEvolution: "Mi Evolución del Ánimo",
   myEvolutionDescription: "Sigue tus cambios a lo largo del tiempo.",
   viewDetails: "Ver detalles",
 
@@ -159,6 +160,10 @@ export const t = {
   recentEmotionalEntriesTitle: "Mis Registros Emocionales Recientes",
   noRecentEntries: "Aún no tienes registros emocionales. ¡Anímate a crear el primero!",
   entryRegisteredOn: "Registrado el {date}:",
+
+  // Mood Evolution Chart
+  notEnoughDataForChart: "Registra al menos dos emociones para ver tu evolución.",
+  moodScoreLabel: "Puntuación de Ánimo",
 };
 
 export type Translations = typeof t;
@@ -167,5 +172,7 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
+
+    
 
     

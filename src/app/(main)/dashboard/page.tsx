@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useUser } from "@/contexts/UserContext";
@@ -9,6 +9,7 @@ import { useTranslations } from "@/lib/translations";
 import { DashboardSummaryCard } from "@/components/dashboard/DashboardSummaryCard";
 import { ChartPlaceholder } from "@/components/dashboard/ChartPlaceholder";
 import { EmotionalEntryForm, emotions as emotionOptions } from "@/components/dashboard/EmotionalEntryForm";
+import { MoodEvolutionChart } from "@/components/dashboard/MoodEvolutionChart";
 import { 
   Dialog, 
   DialogContent, 
@@ -19,33 +20,97 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle } from "lucide-react";
-import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry } from "@/data/emotionalEntriesStore";
+import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 
+interface ProcessedChartDataPoint {
+  date: string; // Formatted for X-axis label (e.g., "dd MMM")
+  moodScore: number;
+  emotionLabel: string;
+  fullDate: string; // Full date for tooltip
+}
+
+const moodScoreMapping: Record<string, number> = {
+  alegria: 5,
+  confianza: 5,
+  sorpresa: 4,
+  anticipacion: 4,
+  enfado: 2,
+  miedo: 2,
+  tristeza: 1,
+  asco: 1,
+};
+
+
 export default function DashboardPage() {
+  console.log("DashboardPage: Component rendering or re-rendering.");
   const t = useTranslations();
   const { user } = useUser();
   const { toast } = useToast();
   const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
+  
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
+  const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
 
   useEffect(() => {
+    console.log("DashboardPage: Initial Load useEffect running.");
     // Load entries from localStorage on mount
-    const loadedEntries = getRecentEmotionalEntries();
-    setRecentEntries(loadedEntries);
-    if (loadedEntries.length > 0) {
-      const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedEntries[0].emotion);
+    const loadedRecentEntries = getRecentEmotionalEntries();
+    const loadedAllEntries = getEmotionalEntries();
+    
+    console.log("DashboardPage: Initial Load - loadedRecentEntries:", loadedRecentEntries);
+    console.log("DashboardPage: Initial Load - loadedAllEntries:", loadedAllEntries);
+
+    setRecentEntries(loadedRecentEntries);
+    setAllEntries(loadedAllEntries);
+
+    if (loadedRecentEntries.length > 0) {
+      const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
       if (lastRegisteredEmotion) {
         setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
       }
     }
-  }, [t]);
+    console.log("DashboardPage: Initial Load useEffect finished.");
+  }, [t]); // Added t to dependencies as it's used inside
+
+  const chartData = useMemo(() => {
+    console.log("DashboardPage: Recalculating chartData. allEntries count:", allEntries.length);
+    if (!allEntries || allEntries.length === 0) {
+      console.log("DashboardPage: No entries for chartData calculation.");
+      return [];
+    }
+
+    const processedData = allEntries
+      .map(entry => ({
+        ...entry,
+        timestampDate: new Date(entry.timestamp), // Convert string to Date for sorting
+      }))
+      .sort((a, b) => a.timestampDate.getTime() - b.timestampDate.getTime()) // Sort oldest to newest
+      .slice(-15) // Take last 15 entries for the chart
+      .map(entry => {
+        const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
+        const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
+        return {
+          date: formatEntryTimestamp(entry.timestamp).split(',')[0], // e.g., "25 May"
+          moodScore: moodScoreMapping[entry.emotion] ?? 0, // Default to 0 if not mapped
+          emotionLabel: emotionLabel,
+          fullDate: formatEntryTimestamp(entry.timestamp),
+        };
+      });
+    console.log("DashboardPage: Processed chartData:", processedData);
+    return processedData;
+  }, [allEntries, t]);
+
 
   const handleEmotionalEntrySubmit = (data: { situation: string; emotion: string }) => {
+    console.log("DashboardPage: handleEmotionalEntrySubmit called with:", data);
     const newEntry = addEmotionalEntry(data);
-    setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); // Show last 5 in UI
     
+    setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); 
+    setAllEntries(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+
+
     const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
     if (lastRegisteredEmotionDetails) {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
@@ -56,7 +121,10 @@ export default function DashboardPage() {
       description: t.emotionalEntrySavedMessage,
     });
     setIsEntryDialogOpen(false); 
+    console.log("DashboardPage: Emotional entry submitted and states updated.");
   };
+  
+  console.log("DashboardPage: Rendering JSX. User:", user?.name);
 
   return (
     <div className="container mx-auto py-8 space-y-10">
@@ -188,10 +256,16 @@ export default function DashboardPage() {
             icon={Radar}
             className="lg:h-[450px]"
           />
-          <ChartPlaceholder
+          {/* <ChartPlaceholder
             title={t.myEvolution}
             description={t.myEvolutionDescription}
             icon={LineChartIcon}
+            className="lg:h-[450px]"
+          /> */}
+           <MoodEvolutionChart 
+            data={chartData} 
+            title={t.myEvolution}
+            description={t.myEvolutionDescription}
             className="lg:h-[450px]"
           />
         </div>
@@ -199,5 +273,6 @@ export default function DashboardPage() {
     </div>
   );
 }
+    
 
     
