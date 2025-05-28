@@ -28,7 +28,7 @@ export const t = {
   alreadyHaveAccount: "¿Ya tienes cuenta? Inicia Sesión",
   agreeToTerms: "Acepto la política de privacidad y aviso legal.",
   registrationSuccessTitle: "¡Registro Exitoso!",
-  registrationSuccessMessage: "Serás redirigido en breve.", 
+  registrationSuccessMessage: "Serás redirigido en breve.",
   loginFailed: "Error al iniciar sesión. Verifica tus credenciales.",
   registrationFailed: "Error al registrar. Inténtalo de nuevo.",
   // Sidebar Navigation
@@ -89,6 +89,10 @@ export const t = {
   privacyAndSecurity: "Privacidad y Seguridad",
   language: "Idioma",
   saveChanges: "Guardar Cambios",
+  devUtilitiesTitle: "Utilidades de Desarrollo",
+  clearEmotionalEntriesButton: "Borrar Registros Emocionales",
+  clearEmotionalEntriesSuccessTitle: "Registros Borrados",
+  clearEmotionalEntriesSuccessMessage: "Todos los registros emocionales han sido eliminados.",
   // Age Ranges
   age_under_18: "Menor de 18",
   age_18_24: "18-24",
@@ -155,7 +159,7 @@ export const t = {
   emotionAnticipation: "Anticipación",
   emotionTrust: "Confianza",
   emotionDisgust: "Asco",
-  
+
   // Recent Emotional Entries
   recentEmotionalEntriesTitle: "Mis Registros Emocionales Recientes",
   noRecentEntries: "Aún no tienes registros emocionales. ¡Anímate a crear el primero!",
@@ -172,7 +176,3 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
-
-    
-
-    

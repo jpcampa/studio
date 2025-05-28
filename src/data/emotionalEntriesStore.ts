@@ -32,10 +32,10 @@ export function getEmotionalEntries(): EmotionalEntry[] {
 export function addEmotionalEntry(newEntryData: { situation: string; emotion: string }): EmotionalEntry {
   if (typeof window === "undefined") {
     // Should not happen if called from client component, but good for safety
-    const placeholderEntry: EmotionalEntry = { 
-        id: crypto.randomUUID(), 
-        ...newEntryData, 
-        timestamp: new Date().toISOString() 
+    const placeholderEntry: EmotionalEntry = {
+        id: crypto.randomUUID(),
+        ...newEntryData,
+        timestamp: new Date().toISOString()
     };
     console.warn("Attempted to add emotional entry in non-browser environment. Returning placeholder:", placeholderEntry);
     return placeholderEntry;
@@ -72,4 +72,12 @@ export function formatEntryTimestamp(isoTimestamp: string): string {
   }
 }
 
-    
+export function clearAllEmotionalEntries(): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(EMOTIONAL_ENTRIES_KEY);
+    console.log("Emotional entries cleared from localStorage.");
+  } catch (error) {
+    console.error("Error clearing emotional entries from localStorage:", error);
+  }
+}

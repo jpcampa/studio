@@ -11,8 +11,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, Palette } from 'lucide-react';
+import { Loader2, Save, Palette, Trash2, AlertTriangle } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
+import { Separator } from '@/components/ui/separator';
 
 export default function SettingsPage() {
   const t = useTranslations();
@@ -23,7 +25,7 @@ export default function SettingsPage() {
   const [name, setName] = useState('');
   const [ageRange, setAgeRange] = useState('');
   const [gender, setGender] = useState('');
-  const [language, setLanguage] = useState('es'); 
+  const [language, setLanguage] = useState('es');
 
   const [dailyCheckIn, setDailyCheckIn] = useState(true);
   const [moduleReminders, setModuleReminders] = useState(true);
@@ -47,7 +49,7 @@ export default function SettingsPage() {
     const year = currentDate.getFullYear();
     setAppVersion(`B-0.4-${month}-${year}`);
   }, []);
-  
+
   const ageRanges = [
     { value: "under_18", label: t.age_under_18 }, { value: "18_24", label: t.age_18_24 },
     { value: "25_34", label: t.age_25_34 }, { value: "35_44", label: t.age_35_44 },
@@ -71,9 +73,7 @@ export default function SettingsPage() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      // En el sistema simulado, updateUser solo espera estos campos
-      // Si usaras Firebase real y quisieras actualizar más, tendrías que ajustar la función updateUser
-      await updateUser({ name, ageRange, gender }); 
+      await updateUser({ name, ageRange, gender });
       toast({
         title: "Configuración Guardada",
         description: "Tus cambios han sido guardados exitosamente.",
@@ -89,14 +89,23 @@ export default function SettingsPage() {
     }
   };
 
-  if (userLoading && !user) { 
+  const handleClearEntries = () => {
+    // Consider adding a confirmation dialog here for a real app
+    clearAllEmotionalEntries();
+    toast({
+      title: t.clearEmotionalEntriesSuccessTitle,
+      description: t.clearEmotionalEntriesSuccessMessage,
+    });
+    // Optionally, you could try to trigger a re-fetch or state update on the dashboard
+    // For now, user will see changes on next dashboard visit/reload
+  };
+
+  if (userLoading && !user) {
     return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
-  
-  if (!user) { 
-    // Esto podría ser un redirect a login si el layout principal no lo maneja ya.
-    // Por ahora, UserContext y el layout principal deberían manejar la redirección.
-    return <div className="container mx-auto py-8 text-center">{t.loading}</div>; 
+
+  if (!user) {
+    return <div className="container mx-auto py-8 text-center">{t.loading}</div>;
   }
 
 
@@ -157,17 +166,17 @@ export default function SettingsPage() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-4 border-t pt-8">
               <h3 className="text-xl font-semibold text-accent">{t.language}</h3>
-              <Select value={language} onValueChange={setLanguage} disabled> 
+              <Select value={language} onValueChange={setLanguage} disabled>
                 <SelectTrigger id="language"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="es">Español</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-4 border-t pt-8">
               <h3 className="text-xl font-semibold text-accent">{t.notificationPreferences}</h3>
                <div className="flex items-center justify-between rounded-lg border p-4">
@@ -206,6 +215,23 @@ export default function SettingsPage() {
                 </Button>
             </div>
           </form>
+
+          <Separator className="my-10" />
+
+          <div>
+            <h3 className="text-xl font-semibold text-destructive flex items-center mb-3">
+                <AlertTriangle className="mr-2 h-5 w-5" />
+                {t.devUtilitiesTitle}
+            </h3>
+            <CardDescription className="mb-4">
+                Estas opciones son para fines de desarrollo y pueden afectar tu experiencia. Úsalas con precaución.
+            </CardDescription>
+            <Button variant="destructive" onClick={handleClearEntries}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              {t.clearEmotionalEntriesButton}
+            </Button>
+          </div>
+
         </CardContent>
         <CardFooter>
           <p className="text-xs text-muted-foreground w-full text-right pt-4 mt-4 border-t">
