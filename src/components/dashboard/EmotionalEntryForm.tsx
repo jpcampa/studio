@@ -19,8 +19,8 @@ interface EmotionalEntryFormProps {
   onSubmit: (data: { situation: string; emotion: string }) => void;
 }
 
-// Placeholder emotions - this can be expanded and categorized later
-const emotions = [
+// Moved emotions here to be exportable and usable by dashboard page
+export const emotions = [
   { value: "alegria", labelKey: "emotionJoy" },
   { value: "tristeza", labelKey: "emotionSadness" },
   { value: "enfado", labelKey: "emotionAnger" },
@@ -91,3 +91,5 @@ export function EmotionalEntryForm({ onSubmit }: EmotionalEntryFormProps) {
     </form>
   );
 }
+
+    

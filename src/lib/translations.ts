@@ -114,16 +114,16 @@ export const t = {
   dashboardGreeting: "Así va tu camino",
   quickSummary: "Resumen Rápido",
   currentWellbeing: "Tu Bienestar Hoy",
-  wellbeingPlaceholder: "Estable",
+  wellbeingPlaceholder: "Estable", // Será reemplazado por la última emoción
   wellbeingDescription: "Basado en tu último registro.",
   progressSinceLast: "Tu Progreso",
-  progressPlaceholder: "+5%",
+  progressPlaceholder: "+0%", // Placeholder
   progressDescription: "Desde la última evaluación.",
   inFocus: "En Foco",
-  inFocusPlaceholder: "Mindfulness",
-  inFocusDescription: "Reto actual: ser más consciente.",
+  inFocusPlaceholder: "Autoconocimiento", // Placeholder
+  inFocusDescription: "Área actual de desarrollo.",
   nextStep: "Siguiente Paso",
-  nextStepPlaceholder: "Ruta de Estrés",
+  nextStepPlaceholder: "Ruta de Autoestima", // Placeholder
   nextStepDescription: "Recomendado para ti.",
   emotionalRegistry: "Registro Emocional",
   registerEmotion: "✨ Registrar Emoción",
@@ -154,6 +154,11 @@ export const t = {
   emotionAnticipation: "Anticipación",
   emotionTrust: "Confianza",
   emotionDisgust: "Asco",
+  
+  // Recent Emotional Entries
+  recentEmotionalEntriesTitle: "Mis Registros Emocionales Recientes",
+  noRecentEntries: "Aún no tienes registros emocionales. ¡Anímate a crear el primero!",
+  entryRegisteredOn: "Registrado el {date}:",
 };
 
 export type Translations = typeof t;
@@ -162,3 +167,5 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
+
+    
