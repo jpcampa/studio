@@ -56,18 +56,15 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const currentItem = currentDimension?.items[currentItemIndexInDimension];
 
   const overallProgress = Math.round(((currentDimensionIndex) / assessmentDimensions.length) * 100);
-  const itemsInCurrentDimensionProgress = currentDimension ? Math.round(((currentItemIndexInDimension) / currentDimension.items.length) * 100) : 0;
+  
+  const itemsInCurrentDimensionProgress = currentDimension ? Math.round(((currentItemIndexInDimension +1) / currentDimension.items.length) * 100) : 0;
 
 
   useEffect(() => {
-    // No avanzar si el item actual no está definido, si el diálogo de dimensión completada está visible,
-    // o si la respuesta para el item actual aún no se ha dado.
     if (!currentItem || showDimensionCompletedDialog || answers[currentItem.id] === undefined) {
       return;
     }
   
-    // Un pequeño retraso antes de pasar al siguiente ítem o mostrar el diálogo.
-    // Esto permite al usuario ver su selección antes de que la UI cambie.
     const timer = setTimeout(() => {
       const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
   
@@ -76,7 +73,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       } else {
         setCurrentItemIndexInDimension(prev => prev + 1);
       }
-    }, 300); // Retraso de 300ms antes de avanzar
+    }, 300); 
   
     return () => clearTimeout(timer);
   }, [answers, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, setCurrentItemIndexInDimension, setShowDimensionCompletedDialog, currentDimension]);
@@ -84,7 +81,6 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
   const handleAnswerChange = (itemId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [itemId]: parseInt(value) }));
-    // El avance al siguiente ítem se maneja en el useEffect
   };
 
   const handleDialogContinue = () => {
@@ -93,7 +89,6 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       setCurrentDimensionIndex(prev => prev + 1);
       setCurrentItemIndexInDimension(0);
     } else {
-      // Es la última dimensión, finalizar evaluación (esto también lo maneja el botón del diálogo)
       submitFullAssessment();
     }
   };
@@ -101,27 +96,27 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const handlePreviousDimension = () => {
     if (currentDimensionIndex > 0) {
       setCurrentDimensionIndex(prev => prev - 1);
-      setCurrentItemIndexInDimension(0); // O al último ítem de la dimensión anterior, según preferencia
+      setCurrentItemIndexInDimension(0); 
       setShowDimensionCompletedDialog(false);
     }
   };
 
   const handleSaveForLater = () => {
     console.log("Guardar para luego - Respuestas actuales:", answers);
-    // Lógica futura para guardar progreso
     setShowDimensionCompletedDialog(false);
     router.push('/dashboard');
   };
 
   const submitFullAssessment = async (e?: FormEvent) => {
     if (e) e.preventDefault();
+    
     const allAnswered = assessmentDimensions.every(dim =>
       dim.items.every(item => answers.hasOwnProperty(item.id) && answers[item.id] >= 1 && answers[item.id] <=5)
     );
-    if (!allAnswered && (currentDimensionIndex === assessmentDimensions.length -1 && currentItemIndexInDimension === currentDimension.items.length -1)) {
+
+    if (!allAnswered) {
        console.warn("Intento de envío final, pero no todas las preguntas están respondidas.");
-       // Podríamos mostrar un error más específico al usuario aquí.
-       // Por ahora, la lógica del diálogo previene esto si no es el último ítem.
+       // Idealmente, mostrar un mensaje al usuario
        return;
     }
     await onSubmit(answers);
@@ -134,6 +129,14 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const isAllCurrentDimensionItemsAnswered = currentDimension.items.every(item => answers.hasOwnProperty(item.id));
   const isLastDimension = currentDimensionIndex === assessmentDimensions.length - 1;
   const isLastItemOfLastDimension = isLastDimension && currentItemIndexInDimension === currentDimension.items.length - 1;
+  const allItemsAnswered = assessmentDimensions.every(dim => dim.items.every(item => answers.hasOwnProperty(item.id)));
+
+
+  const itemProgressText = t.itemProgress
+    .replace('{currentItem}', (currentItemIndexInDimension + 1).toString())
+    .replace('{totalItems}', currentDimension.items.length.toString())
+    .replace('{currentDim}', (currentDimensionIndex + 1).toString())
+    .replace('{totalDims}', assessmentDimensions.length.toString());
 
   return (
     <>
@@ -154,17 +157,14 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
         {!showDimensionCompletedDialog && (
           <CardContent className="pt-2 px-2 sm:px-6">
             <div 
-              key={currentItem.id} // Key para forzar re-render con animación
+              key={currentItem.id} 
               className={cn(
-                "py-4", // Removed border-t and border-b
-                "animate-in fade-in-0 slide-in-from-bottom-5 duration-500" // Clases de animación de entrada
+                "py-4",
+                "animate-in fade-in-0 slide-in-from-bottom-5 duration-500" 
               )}
             >
               <p className="text-xs font-medium text-muted-foreground mb-2 text-center">
-                {t.itemProgress
-                  .replace('{currentItem}', (currentItemIndexInDimension + 1).toString())
-                  .replace('{totalItems}', currentDimension.items.length.toString())
-                }
+                {itemProgressText}
               </p>
               <Progress value={itemsInCurrentDimensionProgress} className="w-3/4 mx-auto mb-4 h-2" aria-label={`Progreso en dimensión actual: ${itemsInCurrentDimensionProgress}%`} />
               <p className="text-md sm:text-lg font-semibold text-primary mb-4 min-h-[3em] text-center px-2">{currentItem.text}</p>
@@ -183,7 +183,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
                       className={cn(
                         "flex flex-col items-center justify-center p-1 border-2 rounded-lg cursor-pointer transition-all duration-150 ease-in-out",
                         "hover:border-primary hover:shadow-md",
-                        "w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16", // Tamaños ajustados
+                        "w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16", 
                         answers[currentItem.id] === option.value
                           ? "bg-primary/10 border-primary ring-2 ring-primary shadow-lg scale-105"
                           : "bg-background border-input"
@@ -229,7 +229,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
           {isLastItemOfLastDimension && answers[currentItem.id] !== undefined && !showDimensionCompletedDialog && (
             <Button 
               onClick={submitFullAssessment} 
-              disabled={isSubmitting || !isAllCurrentDimensionItemsAnswered}
+              disabled={isSubmitting || !allItemsAnswered}
               className="w-full sm:w-auto"
             >
               {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
@@ -256,9 +256,9 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
               <Save className="mr-2 h-4 w-4" /> {t.saveForLaterButton}
             </Button>
             <Button onClick={handleDialogContinue} disabled={isSubmitting} className="w-full sm:w-auto" autoFocus>
-              {isLastDimension ? t.finishAssessment : t.continueButton} 
+              {isLastDimension ? (isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t.finishAssessment) : t.continueButton} 
               {!isLastDimension && <ArrowRight className="ml-2 h-4 w-4" />}
-              {isLastDimension && <CheckCircle className="ml-2 h-4 w-4" />}
+              {isLastDimension && !isSubmitting && <CheckCircle className="ml-2 h-4 w-4" />}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -266,5 +266,3 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     </>
   );
 }
-
-    
