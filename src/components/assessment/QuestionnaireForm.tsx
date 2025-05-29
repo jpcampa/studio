@@ -156,7 +156,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             <div 
               key={currentItem.id} // Key para forzar re-render con animación
               className={cn(
-                "py-4 border-t border-b",
+                "py-4", // Removed border-t and border-b
                 "animate-in fade-in-0 slide-in-from-bottom-5 duration-500" // Clases de animación de entrada
               )}
             >
@@ -164,8 +164,6 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
                 {t.itemProgress
                   .replace('{currentItem}', (currentItemIndexInDimension + 1).toString())
                   .replace('{totalItems}', currentDimension.items.length.toString())
-                  .replace('{currentDim}', (currentDimensionIndex + 1).toString()) // No usado, pero podría ser
-                  .replace('{totalDims}', assessmentDimensions.length.toString()) // No usado, pero podría ser
                 }
               </p>
               <Progress value={itemsInCurrentDimensionProgress} className="w-3/4 mx-auto mb-4 h-2" aria-label={`Progreso en dimensión actual: ${itemsInCurrentDimensionProgress}%`} />
