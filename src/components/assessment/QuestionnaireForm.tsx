@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
-import { Loader2, ArrowRight, CheckCircle, Save, Info, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle, Save, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
   AlertDialog, 
@@ -65,18 +65,22 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       return;
     }
   
+    // This effect runs if currentItem exists, dialog is not showing, and currentItem HAS an answer.
+    // This is intended to auto-advance.
     const timer = setTimeout(() => {
       const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
   
       if (isLastItemInDimension) {
-        setShowDimensionCompletedDialog(true);
+        if (!isSubmitting) { // Avoid dialog if already submitting from elsewhere
+            setShowDimensionCompletedDialog(true);
+        }
       } else {
         setCurrentItemIndexInDimension(prev => prev + 1);
       }
-    }, 300); 
+    }, 500); // Increased delay slightly for better UX with animation
   
     return () => clearTimeout(timer);
-  }, [answers, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, setCurrentItemIndexInDimension, setShowDimensionCompletedDialog, currentDimension]);
+  }, [answers, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, setCurrentItemIndexInDimension, setShowDimensionCompletedDialog, currentDimension, isSubmitting]);
 
 
   const handleAnswerChange = (itemId: string, value: string) => {
@@ -89,22 +93,16 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       setCurrentDimensionIndex(prev => prev + 1);
       setCurrentItemIndexInDimension(0);
     } else {
+      // This means it's the last dimension, and "Continue" was effectively "Finish Assessment"
       submitFullAssessment();
-    }
-  };
-
-  const handlePreviousDimension = () => {
-    if (currentDimensionIndex > 0) {
-      setCurrentDimensionIndex(prev => prev - 1);
-      setCurrentItemIndexInDimension(0); 
-      setShowDimensionCompletedDialog(false);
     }
   };
 
   const handleSaveForLater = () => {
     console.log("Guardar para luego - Respuestas actuales:", answers);
-    setShowDimensionCompletedDialog(false);
-    router.push('/dashboard');
+    // Potentially save `answers` and `currentDimensionIndex`/`currentItemIndexInDimension` to localStorage
+    setShowDimensionCompletedDialog(false); // Close dialog
+    router.push('/dashboard'); // Navigate away
   };
 
   const submitFullAssessment = async (e?: FormEvent) => {
@@ -116,7 +114,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
     if (!allAnswered) {
        console.warn("Intento de envío final, pero no todas las preguntas están respondidas.");
-       // Idealmente, mostrar un mensaje al usuario
+       // Ideally, show a user message or prevent this state
        return;
     }
     await onSubmit(answers);
@@ -126,11 +124,9 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
   
-  const isAllCurrentDimensionItemsAnswered = currentDimension.items.every(item => answers.hasOwnProperty(item.id));
   const isLastDimension = currentDimensionIndex === assessmentDimensions.length - 1;
   const isLastItemOfLastDimension = isLastDimension && currentItemIndexInDimension === currentDimension.items.length - 1;
   const allItemsAnswered = assessmentDimensions.every(dim => dim.items.every(item => answers.hasOwnProperty(item.id)));
-
 
   const itemProgressText = t.itemProgress
     .replace('{currentItem}', (currentItemIndexInDimension + 1).toString())
@@ -159,7 +155,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             <div 
               key={currentItem.id} 
               className={cn(
-                "py-4",
+                "py-4", // Removed border-t and border-b
                 "animate-in fade-in-0 slide-in-from-bottom-5 duration-500" 
               )}
             >
@@ -216,16 +212,8 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
                 </Alert>
             </CardContent>
         )}
-        <CardFooter className="flex flex-col sm:flex-row justify-between items-center mt-4 p-4 border-t">
-          <Button 
-            onClick={handlePreviousDimension} 
-            disabled={isSubmitting || currentDimensionIndex === 0}
-            variant="outline"
-            className="w-full sm:w-auto mb-2 sm:mb-0"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t.previousDimension}
-          </Button>
+        <CardFooter className="flex flex-col sm:flex-row justify-end items-center mt-4 p-4 border-t">
+          {/* Previous Dimension Button Removed */}
           {isLastItemOfLastDimension && answers[currentItem.id] !== undefined && !showDimensionCompletedDialog && (
             <Button 
               onClick={submitFullAssessment} 
