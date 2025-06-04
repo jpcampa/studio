@@ -19,12 +19,12 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2 } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
 import { Alert, AlertDescription } from "@/components/ui/alert"; 
-import { encryptDataAES } from "@/lib/encryption"; // Import for temporary test
+import { encryptDataAES } from "@/lib/encryption"; 
 
 interface ProcessedChartDataPoint {
   date: string; 
@@ -56,7 +56,8 @@ export default function DashboardPage() {
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
-  const [encryptedPepito, setEncryptedPepito] = useState<string | null>(null); // State for temporary display
+  const [encryptedPepito, setEncryptedPepito] = useState<string | null>(null);
+  const [currentUserDisplay, setCurrentUserDisplay] = useState<string | null>(null);
 
   useEffect(() => {
     console.log("DashboardPage: Initial Load useEffect running. Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
@@ -84,11 +85,10 @@ export default function DashboardPage() {
     console.log("DashboardPage: Initial Load useEffect finished.");
   }, [t, isEmotionalDashboardEnabled]); 
 
-  // useEffect for temporary encryption test
   useEffect(() => {
     console.log("DashboardPage: Encrypt Test Value useEffect running.");
     try {
-      const testObject = { testValue: 'Pepito' }; // encryptDataAES expects an object
+      const testObject = { testValue: 'Pepito' }; 
       const encryptedString = encryptDataAES(testObject);
       console.log('DashboardPage - Encrypted Test Value (encryptDataAES output):', encryptedString);
       setEncryptedPepito(encryptedString);
@@ -96,7 +96,16 @@ export default function DashboardPage() {
       console.error("Error encrypting 'Pepito' for test display:", error);
       setEncryptedPepito("Error durante la encriptación del valor de prueba.");
     }
-  }, []); // Runs once on mount
+  }, []); 
+
+  useEffect(() => {
+    if (user && isEmotionalDashboardEnabled) {
+      console.log("DashboardPage: Current user data for display:", user);
+      setCurrentUserDisplay(JSON.stringify(user, null, 2));
+    } else if (!isEmotionalDashboardEnabled) {
+      setCurrentUserDisplay(null); // Clear if dashboard disabled
+    }
+  }, [user, isEmotionalDashboardEnabled]);
 
 
   const chartData = useMemo(() => {
@@ -240,19 +249,35 @@ export default function DashboardPage() {
                 <EmotionalEntryForm onSubmit={handleEmotionalEntrySubmit} />
               </DialogContent>
             </Dialog>
-            {/* Temporary display for encrypted "Pepito" */}
-            <div className="mt-6 p-4 border rounded bg-muted/20 text-left max-w-md mx-auto">
-              <p className="text-sm font-semibold mb-1">Valor Encriptado de Prueba (objeto con "Pepito"):</p>
-              {encryptedPepito ? (
-                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow">
-                  <code>{encryptedPepito}</code>
-                </pre>
-              ) : (
-                <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
-              )}
-              <p className="text-xs mt-2 text-muted-foreground">
-                Esto es para verificar la función <code>encryptDataAES(&#123; testValue: 'Pepito' &#125;)</code>.
-              </p>
+            
+            <div className="mt-6 p-4 border rounded-lg bg-muted/20 text-left max-w-xl mx-auto space-y-4 shadow">
+              <div>
+                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                  <UserCircle2 className="mr-2 h-4 w-4" />
+                  Datos del Usuario Actual (para prueba):
+                </p>
+                {currentUserDisplay ? (
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{currentUserDisplay}</code>
+                  </pre>
+                ) : (
+                  <p className="text-xs italic text-muted-foreground">[Datos de usuario no disponibles o cargando...]</p>
+                )}
+              </div>
+              <Separator />
+              <div>
+                <p className="text-sm font-semibold mb-1 text-primary">Valor Encriptado de Prueba (objeto con "Pepito"):</p>
+                {encryptedPepito ? (
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{encryptedPepito}</code>
+                  </pre>
+                ) : (
+                  <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
+                )}
+                <p className="text-xs mt-2 text-muted-foreground">
+                  Esto es para verificar la función <code>encryptDataAES(&#123; testValue: 'Pepito' &#125;)</code>.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -325,6 +350,6 @@ export default function DashboardPage() {
     </div>
   );
 }
-
+    
 
     
