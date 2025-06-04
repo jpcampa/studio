@@ -19,12 +19,12 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
 import { Alert, AlertDescription } from "@/components/ui/alert"; 
-import { encryptDataAES } from "@/lib/encryption"; 
+import { encryptDataAES, decryptDataAES } from "@/lib/encryption"; 
 
 interface ProcessedChartDataPoint {
   date: string; 
@@ -44,6 +44,8 @@ const moodScoreMapping: Record<string, number> = {
   asco: 1,
 };
 
+const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"fFSCQmMlCgSZG9XRJSAxDg==","data":"mGYBMywLz+IaEznL5pSRoYi6ylU2DIL7gyITvA+ubCCL+kHEUanWCfg9nFFZE8Gmn4DarDlIbWo5/AhrBXEiMhd+PIrvxa/aWLBjx73DqeQ63LZMvZ8zMA6WrdpNVLqYvbBDXd3GTKDmeSqFvC15AIG2lHizv1HmX6PL2hMlq45rfCg6ChJgVHfeK7PsinHN42maB3FcT7VS1RCNxIQpCw=="}';
+
 
 export default function DashboardPage() {
   console.log("DashboardPage: Component rendering or re-rendering.");
@@ -57,6 +59,7 @@ export default function DashboardPage() {
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
   const [encryptedUserDataForTest, setEncryptedUserDataForTest] = useState<string | null>(null);
+  const [decryptedDataForTest, setDecryptedDataForTest] = useState<string | null>(null);
   const [currentUserDisplay, setCurrentUserDisplay] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,7 +90,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     console.log("DashboardPage: Encrypt User Data Test Value useEffect running. Current user:", user);
-    if (user) {
+    if (user && isEmotionalDashboardEnabled) {
       try {
         const encryptedString = encryptDataAES(user);
         console.log('DashboardPage - Encrypted User Data for Test (encryptDataAES output):', encryptedString);
@@ -96,17 +99,35 @@ export default function DashboardPage() {
         console.error("Error encrypting user data for test display:", error);
         setEncryptedUserDataForTest("Error durante la encriptación de los datos de usuario para prueba.");
       }
-    } else {
+    } else if (isEmotionalDashboardEnabled) {
       setEncryptedUserDataForTest("No hay datos de usuario para encriptar.");
+    } else {
+      setEncryptedUserDataForTest(null);
     }
-  }, [user]); // Re-run if user object changes
+  }, [user, isEmotionalDashboardEnabled]); 
+
+  useEffect(() => {
+    if (isEmotionalDashboardEnabled) {
+      console.log("DashboardPage: Decrypt Specific String Test useEffect running.");
+      const decryptedObject = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
+      if (decryptedObject && typeof decryptedObject === 'object') {
+        setDecryptedDataForTest(JSON.stringify(decryptedObject, null, 2));
+        console.log('DashboardPage - Decrypted Specific String for Test:', decryptedObject);
+      } else {
+        setDecryptedDataForTest("Error al desencriptar la cadena de prueba o resultado no es un objeto.");
+        console.error('DashboardPage - Failed to decrypt specific string or result was not an object:', decryptedObject);
+      }
+    } else {
+        setDecryptedDataForTest(null);
+    }
+  }, [isEmotionalDashboardEnabled]);
 
   useEffect(() => {
     if (user && isEmotionalDashboardEnabled) {
       console.log("DashboardPage: Current user data for display:", user);
       setCurrentUserDisplay(JSON.stringify(user, null, 2));
     } else if (!isEmotionalDashboardEnabled) {
-      setCurrentUserDisplay(null); // Clear if dashboard disabled
+      setCurrentUserDisplay(null); 
     }
   }, [user, isEmotionalDashboardEnabled]);
 
@@ -271,7 +292,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Lock className="mr-2 h-4 w-4" />
-                  Datos de Usuario Encriptados (para prueba):
+                  Datos de Usuario Actual Encriptados (para prueba):
                 </p>
                 {encryptedUserDataForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
@@ -282,6 +303,23 @@ export default function DashboardPage() {
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
                   Esto es para verificar la función <code>encryptDataAES(currentUserObject)</code>.
+                </p>
+              </div>
+              <Separator />
+               <div>
+                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                  <KeyRound className="mr-2 h-4 w-4" />
+                  Resultado Desencriptación de Cadena Específica (para prueba):
+                </p>
+                {decryptedDataForTest ? (
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{decryptedDataForTest}</code>
+                  </pre>
+                ) : (
+                  <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
+                )}
+                <p className="text-xs mt-2 text-muted-foreground">
+                  Esto es para verificar <code>decryptDataAES</code> con una cadena predefinida.
                 </p>
               </div>
             </div>
