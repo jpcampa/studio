@@ -18,52 +18,63 @@ export function encryptDataAES(data: object): string {
   });
 }
 
-export function decryptDataAES(encryptedPayloadString: string): object | null {
+export function decryptDataAES(payloadString: string): object | null {
+  let parsedPayload: any;
+
   try {
-    const encryptedPayload = JSON.parse(encryptedPayloadString);
-    // Validate structure
-    if (typeof encryptedPayload.iv !== 'string' || typeof encryptedPayload.data !== 'string') {
-        console.error("AES Decryption: Invalid payload structure. Missing 'iv' or 'data'.", encryptedPayload);
-        // Attempt fallback for unencrypted data immediately if structure is wrong for encrypted
-        return attemptUnencryptedParse(encryptedPayloadString);
-    }
+    parsedPayload = JSON.parse(payloadString);
+  } catch (e) {
+    // The string itself is not valid JSON, so it cannot be an encrypted payload or our user object.
+    console.warn("AES Decryption: Input string is not valid JSON. Cannot decrypt or parse.", payloadString, e);
+    return null;
+  }
 
-    const iv = CryptoJS.enc.Base64.parse(encryptedPayload.iv);
-    const decrypted = CryptoJS.AES.decrypt(
-      encryptedPayload.data,
-      CryptoJS.enc.Utf8.parse(SECRET_KEY),
-      { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
-    );
-    const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
+  // Check if it has the structure of our encrypted payload
+  if (parsedPayload && typeof parsedPayload === 'object' &&
+      typeof parsedPayload.iv === 'string' && typeof parsedPayload.data === 'string') {
+    try {
+      const iv = CryptoJS.enc.Base64.parse(parsedPayload.iv);
+      const decrypted = CryptoJS.AES.decrypt(
+        parsedPayload.data,
+        CryptoJS.enc.Utf8.parse(SECRET_KEY),
+        { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+      );
+      const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
 
-    if (!decryptedString) {
-        // This can happen if the key is wrong or data is corrupted and results in an empty string after decryption
-        console.error("AES Decryption: Decrypted string is empty. Possible key mismatch or data corruption.");
-        return attemptUnencryptedParse(encryptedPayloadString); // Try fallback
+      if (!decryptedString) {
+        console.error("AES Decryption: Decrypted string is empty. Possible key mismatch or data corruption. Original encrypted data:", parsedPayload.data);
+        return null;
+      }
+      // The decrypted string must also be valid JSON
+      try {
+        return JSON.parse(decryptedString);
+      } catch (jsonParseError) {
+        console.error("AES Decryption: Failed to parse decrypted string as JSON.", decryptedString, jsonParseError);
+        return null;
+      }
+    } catch (decryptionProcessError) {
+      console.error("AES Decryption: Error during the decryption process.", decryptionProcessError);
+      return null;
     }
-    return JSON.parse(decryptedString);
-  } catch (error) {
-    // This catch block primarily handles errors from JSON.parse(encryptedPayloadString) 
-    // if the string itself is not valid JSON, or JSON.parse(decryptedString) if the decrypted content is not valid JSON.
-    // It could also catch errors from CryptoJS if iv/key are malformed, though type checks should prevent some.
-    console.warn("AES Decryption failed, attempting unencrypted parse. Error:", error);
-    return attemptUnencryptedParse(encryptedPayloadString);
+  } else {
+    // If it's not our encrypted structure, check if `parsedPayload` itself is a valid unencrypted user object.
+    // This handles cases where data might not have been encrypted yet (e.g. old data, or "{}" from empty storage).
+    if (parsedPayload && typeof parsedPayload === 'object' && parsedPayload !== null) {
+      if ('id' in parsedPayload || 'email' in parsedPayload) {
+        // It looks like a user object.
+        console.warn("AES Decryption: Payload does not match encrypted structure. Treated as unencrypted user data.", parsedPayload);
+        return parsedPayload;
+      } else {
+        // It's a JSON object, but not our encrypted structure and not a recognizable user object (e.g., could be "{}").
+        console.warn("AES Decryption: Payload is a JSON object but not recognized as encrypted or user data.", parsedPayload);
+        return null;
+      }
+    } else {
+      // The parsed payloadString was not an object (e.g. "null", "true", or a number string from localStorage).
+      console.warn("AES Decryption: Parsed payload string is not an object. Cannot be user data.", parsedPayload);
+      return null;
+    }
   }
 }
 
-function attemptUnencryptedParse(payloadString: string): object | null {
-  try {
-    // console.log("Attempting direct JSON parse for fallback:", payloadString);
-    const unencryptedData = JSON.parse(payloadString);
-    // Basic check to see if it might be a user object
-    if (unencryptedData && typeof unencryptedData === 'object' && unencryptedData !== null && ('id' in unencryptedData || 'email' in unencryptedData)) {
-      console.warn("AES Decryption: Fallback to unencrypted data successful. Data was likely not encrypted.");
-      return unencryptedData;
-    }
-    console.warn("AES Decryption: Fallback to unencrypted data - parsed but doesn't look like user data.");
-    return null;
-  } catch (fallbackError) {
-    console.error("AES Decryption: Fallback to unencrypted JSON also failed. Data is likely corrupted or not valid JSON.", fallbackError);
-    return null;
-  }
-}
+// Removed the separate attemptUnencryptedParse as its logic is now integrated.
