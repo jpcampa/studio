@@ -1,3 +1,4 @@
+
 "use client"
 
 // Inspired by react-hot-toast library
@@ -9,7 +10,7 @@ import type {
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 1000 // Revertir a un delay más corto para limpieza post-cierre manual
 
 type ToasterToast = ToastProps & {
   id: string
@@ -158,8 +159,9 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
+      duration: Infinity, // Evita que el toast se cierre automáticamente
       onOpenChange: (open) => {
-        if (!open) dismiss()
+        if (!open) dismiss() // Se llama cuando el usuario cierra manualmente
       },
     },
   })
