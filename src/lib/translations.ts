@@ -47,21 +47,29 @@ export const t = {
   assessmentIntro: "Conocer cómo estás hoy es el primer paso para cuidarte. Tómate unos minutos, este espacio es solo para ti.",
   startAssessment: "Comenzar Evaluación",
   dimensionProgress: "Dimensión {current} de {total}",
-  itemProgress: "Pregunta {currentItem} de {totalItems} (Dimensión {currentDim}/{totalDims})",
-  nextItem: "Siguiente Pregunta",
-  previousItem: "Pregunta Anterior",
+  itemProgress: "Ítem {currentItem} de {totalItems} (Dimensión {currentDim}/{totalDims})",
+  nextItem: "Siguiente Ítem",
+  previousItem: "Ítem Anterior",
   nextDimension: "Siguiente Dimensión",
   previousDimension: "Dimensión Anterior",
   finishAssessment: "Finalizar Evaluación",
   assessmentResultsTitle: "Resultados de tu Evaluación",
-  emotionalProfile: "Perfil Emocional",
+  emotionalProfile: "Perfil Emocional (Puntuación)",
   priorityAreas: "Tus Áreas Prioritarias",
-  summaryAndRecommendations: "Resumen y Recomendaciones",
+  summaryAndRecommendations: "Resumen General y Recomendaciones",
   startPathFor: "Comenzar ruta para {area}",
   dimensionCompletedTitle: "Dimensión Completada",
   dimensionCompletedMessage: "¡Muy bien! Has completado la dimensión {dimensionNumber}: {dimensionName}.",
   continueButton: "Continuar",
   saveForLaterButton: "Guardar y Continuar Luego",
+  radarChartDescription: "Visualización de tu perfil en las diferentes dimensiones.",
+  priorityAreasDescription: "Dimensiones clave para tu desarrollo actual.",
+  detailedAnalysisTitle: "Análisis Detallado por Dimensión",
+  scoreLevelLow: "Bajo",
+  scoreLevelMedium: "Medio",
+  scoreLevelHigh: "Alto",
+  scoreLevelVeryHigh: "Muy Alto",
+
   // Paths
   pathsTitle: "Rutas de Desarrollo",
   selectPathPrompt: "Elige una ruta para trabajar en tu bienestar.",
@@ -187,3 +195,5 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
+
+    
