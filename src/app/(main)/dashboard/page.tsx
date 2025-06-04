@@ -44,7 +44,7 @@ const moodScoreMapping: Record<string, number> = {
   asco: 1,
 };
 
-const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"fFSCQmMlCgSZG9XRJSAxDg==","data":"mGYBMywLz+IaEznL5pSRoYi6ylU2DIL7gyITvA+ubCCL+kHEUanWCfg9nFFZE8Gmn4DarDlIbWo5/AhrBXEiMhd+PIrvxa/aWLBjx73DqeQ63LZMvZ8zMA6WrdpNVLqYvbBDXd3GTKDmeSqFvC15AIG2lHizv1HmX6PL2hMlq45rfCg6ChJgVHfeK7PsinHN42maB3FcT7VS1RCNxIQpCw=="}';
+const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"+qlG7LRW9es5HVkyZb5qBw==","data":"XGFYeXI0c1YgbLsx0n1atZ1iEvvWztRUnCmHQmeSwtnG70CJC6OUq7qrCOP830RGaV15IqJtp13co1fEUnirCH6W4CDarwqQnBGstSwsTAA="}';
 
 
 export default function DashboardPage() {
@@ -399,3 +399,4 @@ export default function DashboardPage() {
     
 
       
+
