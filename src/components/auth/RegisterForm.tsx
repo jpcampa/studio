@@ -24,7 +24,7 @@ const initialState: RegisterState = {
   message: null,
   errors: {},
   user: null,
-  generatedApiUrl: null,
+  // generatedApiUrl field is removed as it's no longer passed to the client for display
 };
 
 function SubmitButton() {
@@ -53,28 +53,22 @@ export function RegisterForm() {
       console.log("RegisterForm: User detected in UserContext, redirecting to /dashboard");
       router.push("/dashboard");
     } else {
-      console.log("RegisterForm: No user in UserContext or still loading. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
+      // console.log("RegisterForm: No user in UserContext or still loading. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
     }
   }, [contextUser, userLoading, router]);
 
   useEffect(() => {
-    console.log("RegisterForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
+    // console.log("RegisterForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
     if (state.message) {
       let toastDescription = state.message;
-      if (state.generatedApiUrl) {
-        // For very long URLs, maybe just log it or show a snippet.
-        // For now, let's add it to the description if it's short enough or just log for very long ones.
-        console.log("Generated API URL for testing:", state.generatedApiUrl);
-        toastDescription += `\n\nURL de prueba generada (ver consola para la URL completa si es muy larga): ${state.generatedApiUrl.substring(0, 150)}${state.generatedApiUrl.length > 150 ? '...' : ''}`;
-        // To show the full URL in a separate toast, you could do:
-        // toast({ title: "URL de API Generada (Prueba)", description: <pre className="whitespace-pre-wrap break-all">{state.generatedApiUrl}</pre>, duration: Infinity });
-      }
+      // The generatedApiUrl display logic was removed as per previous request to execute API call instead of showing URL.
+      // If API URL logging is still needed for server-side debugging, it's in the server action.
 
       if (state.user && state.message === "Registro exitoso. Serás redirigido.") { 
         loginContext(state.user as ContextUser); 
         toast({
           title: t.registrationSuccessTitle,
-          description: toastDescription, // Use the potentially augmented description
+          description: toastDescription,
         });
         console.log("RegisterForm: Server action reported successful registration. User set in context via loginContext.");
       } else if (state.message === "Registro simulado exitoso. Por favor, inicia sesión.") { 
@@ -83,25 +77,25 @@ export function RegisterForm() {
           description: toastDescription,
         });
         console.log("RegisterForm: Server action reported successful SIMULATED registration.");
-      } else if (state.errors && Object.keys(state.errors).length > 0) {
+      } else if (state.errors && Object.keys(state.errors).length > 0 && state.message && !state.user) {
         toast({
           title: t.errorOccurred,
           description: state.message || "Error de validación.", 
           variant: "destructive",
         });
-        console.error("RegisterForm: Server action reported general error message with field errors. Message:", state.message, "Errors:", state.errors);
+        console.warn("RegisterForm: Server action reported general error message with field errors. Message:", state.message, "Errors:", state.errors); // Changed to warn
       } else if (!state.user && state.message !== "Registro simulado exitoso. Por favor, inicia sesión.") {
         toast({
           title: t.errorOccurred,
-          description: state.message, // Show original message if no API URL
+          description: state.message, 
           variant: "destructive",
         });
-        console.error("RegisterForm: Server action reported general error message. Message:", state.message);
+        console.warn("RegisterForm: Server action reported general error message. Message:", state.message); // Changed to warn
       }
     }
     
-    if (state.errors && Object.keys(state.errors).length > 0 && !state.message?.includes("Registro exitoso")) { // Avoid double toasting errors if already handled above
-      console.error("RegisterForm: Server action reported validation errors:", state.errors);
+    if (state.errors && Object.keys(state.errors).length > 0 && !state.message?.includes("Registro exitoso")) { 
+      console.warn("RegisterForm: Server action reported validation errors:", state.errors); // Changed to warn
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
         if (Array.isArray(fieldErrors)) {
           fieldErrors.forEach(error => {
@@ -137,7 +131,7 @@ export function RegisterForm() {
   ];
 
   if (userLoading && !contextUser) {
-    console.log("RegisterForm: Rendering loader because UserContext is loading and no user is yet available.");
+    // console.log("RegisterForm: Rendering loader because UserContext is loading and no user is yet available.");
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -146,7 +140,7 @@ export function RegisterForm() {
   }
   
   if (!userLoading && contextUser) {
-    console.log("RegisterForm: Rendering null because user is already loaded and present (should have been/be redirecting).");
+    // console.log("RegisterForm: Rendering null because user is already loaded and present (should have been/be redirecting).");
     return null; 
   }
 
