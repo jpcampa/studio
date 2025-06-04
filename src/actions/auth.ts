@@ -2,6 +2,7 @@
 "use server";
 
 import { z } from "zod";
+import { encryptDataAES } from "@/lib/encryption";
 
 // Define the User interface that actions will deal with
 // This should be compatible with the User interface in UserContext
@@ -46,7 +47,8 @@ export type RegisterState = {
     _form?: string[];
   };
   message?: string | null;
-  user?: ActionUser | null; // Añadido para devolver el usuario tras el registro
+  user?: ActionUser | null;
+  generatedApiUrl?: string | null; // For testing: to display the generated URL
 };
 
 export async function registerUser(prevState: RegisterState, formData: FormData): Promise<RegisterState> {
@@ -63,7 +65,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     };
   }
   
-  const { name, email, ageRange, gender, initialEmotionalState } = validatedFields.data;
+  const { name, email, password, ageRange, gender, initialEmotionalState } = validatedFields.data;
 
   // In a real app, user data would be saved to a database here.
   // For simulation, we construct the user object to be returned.
@@ -76,9 +78,54 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     initialEmotionalState: initialEmotionalState || null,
   };
 
-  console.log("Simulated RegisterUser action: Validation successful. Created user:", newUser);
-  // Return the new user and a success message. The client will use this user to log in.
-  return { message: "Registro exitoso. Serás redirigido.", user: newUser };
+  console.log("Simulated RegisterUser action: Validation successful. Preparing API call for external service.");
+
+  let generatedApiUrlForTest: string | null = null;
+
+  try {
+    const emailToEncrypt = { value: email };
+    const passwordToEncrypt = { value: password }; // Encrypt the actual password
+
+    const encryptedEmailPayload = encryptDataAES(emailToEncrypt);
+    const encryptedPasswordPayload = encryptDataAES(passwordToEncrypt);
+
+    const finalEncryptedEmailForUrl = encodeURIComponent(encryptedEmailPayload);
+    const finalEncryptedPasswordForUrl = encodeURIComponent(encryptedPasswordPayload);
+    
+    const apiKey = "4463"; // Hardcoded as per example
+    const type = "registro";
+    const baseUrl = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php";
+    
+    generatedApiUrlForTest = `${baseUrl}?apikey=${apiKey}&tipo=${type}&usuario=${finalEncryptedEmailForUrl}&password=${finalEncryptedPasswordForUrl}`;
+    
+    console.log("Simulated RegisterUser action: Constructed API URL (for testing):", generatedApiUrlForTest);
+
+    // Perform the fetch call to the external API
+    console.log("Simulated RegisterUser action: Attempting to call external API...");
+    const apiResponse = await fetch(generatedApiUrlForTest);
+    
+    if (apiResponse.ok) {
+      const responseText = await apiResponse.text(); // Or .json() if it returns JSON
+      console.log("Simulated RegisterUser action: External API call successful. Response:", responseText);
+      // Potentially handle success (e.g., if API confirms registration)
+    } else {
+      const errorText = await apiResponse.text();
+      console.error(`Simulated RegisterUser action: External API call failed. Status: ${apiResponse.status}. Response: ${errorText}`);
+      // Potentially handle failure (e.g., if API rejects registration)
+      // For now, we'll still proceed with local registration success for the app demo.
+    }
+  } catch (error) {
+    console.error("Simulated RegisterUser action: Error during external API call:", error);
+    // Decide if this error should prevent user creation in your app or just be logged.
+    // For now, we log and continue.
+  }
+
+  console.log("Simulated RegisterUser action: Created user:", newUser);
+  return { 
+    message: "Registro exitoso. Serás redirigido.", 
+    user: newUser,
+    generatedApiUrl: generatedApiUrlForTest 
+  };
 }
 
 

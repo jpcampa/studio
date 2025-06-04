@@ -24,6 +24,7 @@ const initialState: RegisterState = {
   message: null,
   errors: {},
   user: null,
+  generatedApiUrl: null,
 };
 
 function SubmitButton() {
@@ -59,38 +60,47 @@ export function RegisterForm() {
   useEffect(() => {
     console.log("RegisterForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
     if (state.message) {
+      let toastDescription = state.message;
+      if (state.generatedApiUrl) {
+        // For very long URLs, maybe just log it or show a snippet.
+        // For now, let's add it to the description if it's short enough or just log for very long ones.
+        console.log("Generated API URL for testing:", state.generatedApiUrl);
+        toastDescription += `\n\nURL de prueba generada (ver consola para la URL completa si es muy larga): ${state.generatedApiUrl.substring(0, 150)}${state.generatedApiUrl.length > 150 ? '...' : ''}`;
+        // To show the full URL in a separate toast, you could do:
+        // toast({ title: "URL de API Generada (Prueba)", description: <pre className="whitespace-pre-wrap break-all">{state.generatedApiUrl}</pre>, duration: Infinity });
+      }
+
       if (state.user && state.message === "Registro exitoso. Serás redirigido.") { 
         loginContext(state.user as ContextUser); 
         toast({
           title: t.registrationSuccessTitle,
-          description: state.message,
+          description: toastDescription, // Use the potentially augmented description
         });
         console.log("RegisterForm: Server action reported successful registration. User set in context via loginContext.");
-        // Redirection to dashboard will be handled by the other useEffect watching contextUser
       } else if (state.message === "Registro simulado exitoso. Por favor, inicia sesión.") { 
          toast({
           title: t.registrationSuccessTitle,
-          description: state.message,
+          description: toastDescription,
         });
-        console.log("RegisterForm: Server action reported successful SIMULATED registration (old flow, should be less common now).");
+        console.log("RegisterForm: Server action reported successful SIMULATED registration.");
       } else if (state.errors && Object.keys(state.errors).length > 0) {
         toast({
           title: t.errorOccurred,
-          description: state.message || "Error de validación.", // Use state.message if available
+          description: state.message || "Error de validación.", 
           variant: "destructive",
         });
         console.error("RegisterForm: Server action reported general error message with field errors. Message:", state.message, "Errors:", state.errors);
       } else if (!state.user && state.message !== "Registro simulado exitoso. Por favor, inicia sesión.") {
         toast({
           title: t.errorOccurred,
-          description: state.message,
+          description: state.message, // Show original message if no API URL
           variant: "destructive",
         });
         console.error("RegisterForm: Server action reported general error message. Message:", state.message);
       }
     }
     
-    if (state.errors && Object.keys(state.errors).length > 0) {
+    if (state.errors && Object.keys(state.errors).length > 0 && !state.message?.includes("Registro exitoso")) { // Avoid double toasting errors if already handled above
       console.error("RegisterForm: Server action reported validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
         if (Array.isArray(fieldErrors)) {
