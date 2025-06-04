@@ -19,7 +19,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2 } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
@@ -56,7 +56,7 @@ export default function DashboardPage() {
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
-  const [encryptedPepito, setEncryptedPepito] = useState<string | null>(null);
+  const [encryptedUserDataForTest, setEncryptedUserDataForTest] = useState<string | null>(null);
   const [currentUserDisplay, setCurrentUserDisplay] = useState<string | null>(null);
 
   useEffect(() => {
@@ -86,17 +86,20 @@ export default function DashboardPage() {
   }, [t, isEmotionalDashboardEnabled]); 
 
   useEffect(() => {
-    console.log("DashboardPage: Encrypt Test Value useEffect running.");
-    try {
-      const testObject = { testValue: 'Pepito' }; 
-      const encryptedString = encryptDataAES(testObject);
-      console.log('DashboardPage - Encrypted Test Value (encryptDataAES output):', encryptedString);
-      setEncryptedPepito(encryptedString);
-    } catch (error) {
-      console.error("Error encrypting 'Pepito' for test display:", error);
-      setEncryptedPepito("Error durante la encriptación del valor de prueba.");
+    console.log("DashboardPage: Encrypt User Data Test Value useEffect running. Current user:", user);
+    if (user) {
+      try {
+        const encryptedString = encryptDataAES(user);
+        console.log('DashboardPage - Encrypted User Data for Test (encryptDataAES output):', encryptedString);
+        setEncryptedUserDataForTest(encryptedString);
+      } catch (error) {
+        console.error("Error encrypting user data for test display:", error);
+        setEncryptedUserDataForTest("Error durante la encriptación de los datos de usuario para prueba.");
+      }
+    } else {
+      setEncryptedUserDataForTest("No hay datos de usuario para encriptar.");
     }
-  }, []); 
+  }, [user]); // Re-run if user object changes
 
   useEffect(() => {
     if (user && isEmotionalDashboardEnabled) {
@@ -266,16 +269,19 @@ export default function DashboardPage() {
               </div>
               <Separator />
               <div>
-                <p className="text-sm font-semibold mb-1 text-primary">Valor Encriptado de Prueba (objeto con "Pepito"):</p>
-                {encryptedPepito ? (
+                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                  <Lock className="mr-2 h-4 w-4" />
+                  Datos de Usuario Encriptados (para prueba):
+                </p>
+                {encryptedUserDataForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{encryptedPepito}</code>
+                    <code>{encryptedUserDataForTest}</code>
                   </pre>
                 ) : (
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Esto es para verificar la función <code>encryptDataAES(&#123; testValue: 'Pepito' &#125;)</code>.
+                  Esto es para verificar la función <code>encryptDataAES(currentUserObject)</code>.
                 </p>
               </div>
             </div>
@@ -353,3 +359,5 @@ export default function DashboardPage() {
     
 
     
+
+      
