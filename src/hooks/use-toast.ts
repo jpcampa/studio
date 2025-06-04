@@ -159,9 +159,8 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      duration: Infinity, // Evita que el toast se cierre automáticamente
       onOpenChange: (open) => {
-        if (!open) dismiss() // Se llama cuando el usuario cierra manualmente
+        if (!open) dismiss()
       },
     },
   })
