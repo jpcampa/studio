@@ -22,8 +22,9 @@ import { useToast } from "@/hooks/use-toast";
 import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
-import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; // Import useFeatureFlag
-import { Alert, AlertDescription } from "@/components/ui/alert"; // Import Alert for message
+import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
+import { Alert, AlertDescription } from "@/components/ui/alert"; 
+import { encryptDataAES } from "@/lib/encryption"; // Import for temporary test
 
 interface ProcessedChartDataPoint {
   date: string; 
@@ -49,12 +50,13 @@ export default function DashboardPage() {
   const t = useTranslations();
   const { user } = useUser();
   const { toast } = useToast();
-  const { isEmotionalDashboardEnabled } = useFeatureFlag(); // Consume feature flag
+  const { isEmotionalDashboardEnabled } = useFeatureFlag(); 
   
   const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
+  const [encryptedPepito, setEncryptedPepito] = useState<string | null>(null); // State for temporary display
 
   useEffect(() => {
     console.log("DashboardPage: Initial Load useEffect running. Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
@@ -75,13 +77,27 @@ export default function DashboardPage() {
         }
       }
     } else {
-      // Clear emotional data if dashboard is disabled
       setRecentEntries([]);
       setAllEntries([]);
       setLastEmotion(null);
     }
     console.log("DashboardPage: Initial Load useEffect finished.");
-  }, [t, isEmotionalDashboardEnabled]); // Add isEmotionalDashboardEnabled to dependencies
+  }, [t, isEmotionalDashboardEnabled]); 
+
+  // useEffect for temporary encryption test
+  useEffect(() => {
+    console.log("DashboardPage: Encrypt Test Value useEffect running.");
+    try {
+      const testObject = { testValue: 'Pepito' }; // encryptDataAES expects an object
+      const encryptedString = encryptDataAES(testObject);
+      console.log('DashboardPage - Encrypted Test Value (encryptDataAES output):', encryptedString);
+      setEncryptedPepito(encryptedString);
+    } catch (error) {
+      console.error("Error encrypting 'Pepito' for test display:", error);
+      setEncryptedPepito("Error durante la encriptación del valor de prueba.");
+    }
+  }, []); // Runs once on mount
+
 
   const chartData = useMemo(() => {
     if (!isEmotionalDashboardEnabled || !allEntries || allEntries.length === 0) {
@@ -224,6 +240,20 @@ export default function DashboardPage() {
                 <EmotionalEntryForm onSubmit={handleEmotionalEntrySubmit} />
               </DialogContent>
             </Dialog>
+            {/* Temporary display for encrypted "Pepito" */}
+            <div className="mt-6 p-4 border rounded bg-muted/20 text-left max-w-md mx-auto">
+              <p className="text-sm font-semibold mb-1">Valor Encriptado de Prueba (objeto con "Pepito"):</p>
+              {encryptedPepito ? (
+                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow">
+                  <code>{encryptedPepito}</code>
+                </pre>
+              ) : (
+                <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
+              )}
+              <p className="text-xs mt-2 text-muted-foreground">
+                Esto es para verificar la función <code>encryptDataAES(&#123; testValue: 'Pepito' &#125;)</code>.
+              </p>
+            </div>
           </section>
 
           <section aria-labelledby="recent-entries-heading">
@@ -295,3 +325,6 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+
+    
