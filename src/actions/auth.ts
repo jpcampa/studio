@@ -48,43 +48,37 @@ export type RegisterState = {
   };
   message?: string | null;
   user?: ActionUser | null;
-  generatedApiUrl?: string | null; // For testing: to display the generated URL
+  // generatedApiUrl field is removed as it's no longer passed to the client for display
 };
 
+interface ExternalApiResponse {
+  status: "OK" | "NOOK";
+  message: string;
+  data: null | any; // Assuming data is null based on example
+}
+
 export async function registerUser(prevState: RegisterState, formData: FormData): Promise<RegisterState> {
-  console.log("Simulated RegisterUser action: Initiated.");
+  console.log("RegisterUser action: Initiated.");
   const validatedFields = registerSchema.safeParse(
     Object.fromEntries(formData.entries())
   );
 
   if (!validatedFields.success) {
-    console.error("Simulated RegisterUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
+    console.error("RegisterUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Error de validación.",
+      message: "Error de validación en los datos ingresados.",
+      user: null,
     };
   }
   
   const { name, email, password, ageRange, gender, initialEmotionalState } = validatedFields.data;
 
-  // In a real app, user data would be saved to a database here.
-  // For simulation, we construct the user object to be returned.
-  const newUser: ActionUser = {
-    id: crypto.randomUUID(),
-    name,
-    email,
-    ageRange: ageRange || null,
-    gender: gender || null,
-    initialEmotionalState: initialEmotionalState || null,
-  };
-
-  console.log("Simulated RegisterUser action: Validation successful. Preparing API call for external service.");
-
-  let generatedApiUrlForTest: string | null = null;
+  console.log("RegisterUser action: Validation successful. Preparing for external API call.");
 
   try {
     const emailToEncrypt = { value: email };
-    const passwordToEncrypt = { value: password }; // Encrypt the actual password
+    const passwordToEncrypt = { value: password };
 
     const encryptedEmailPayload = encryptDataAES(emailToEncrypt);
     const encryptedPasswordPayload = encryptDataAES(passwordToEncrypt);
@@ -92,40 +86,89 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     const finalEncryptedEmailForUrl = encodeURIComponent(encryptedEmailPayload);
     const finalEncryptedPasswordForUrl = encodeURIComponent(encryptedPasswordPayload);
     
-    const apiKey = "4463"; // Hardcoded as per example
+    const apiKey = "4463";
     const type = "registro";
     const baseUrl = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php";
     
-    generatedApiUrlForTest = `${baseUrl}?apikey=${apiKey}&tipo=${type}&usuario=${finalEncryptedEmailForUrl}&password=${finalEncryptedPasswordForUrl}`;
-    
-    console.log("Simulated RegisterUser action: Constructed API URL (for testing):", generatedApiUrlForTest);
+    const generatedApiUrl = `${baseUrl}?apikey=${apiKey}&tipo=${type}&usuario=${finalEncryptedEmailForUrl}&password=${finalEncryptedPasswordForUrl}`;
+    console.log("RegisterUser action: Constructed API URL (for server logging):", generatedApiUrl);
 
-    // Perform the fetch call to the external API
-    console.log("Simulated RegisterUser action: Attempting to call external API...");
-    const apiResponse = await fetch(generatedApiUrlForTest);
+    console.log("RegisterUser action: Attempting to call external API...");
+    const apiResponse = await fetch(generatedApiUrl);
     
-    if (apiResponse.ok) {
-      const responseText = await apiResponse.text(); // Or .json() if it returns JSON
-      console.log("Simulated RegisterUser action: External API call successful. Response:", responseText);
-      // Potentially handle success (e.g., if API confirms registration)
-    } else {
-      const errorText = await apiResponse.text();
-      console.error(`Simulated RegisterUser action: External API call failed. Status: ${apiResponse.status}. Response: ${errorText}`);
-      // Potentially handle failure (e.g., if API rejects registration)
-      // For now, we'll still proceed with local registration success for the app demo.
+    if (!apiResponse.ok) {
+      // Handle non-2xx HTTP statuses
+      const errorText = await apiResponse.text().catch(() => "No se pudo leer el cuerpo del error.");
+      console.error(`RegisterUser action: External API call failed. Status: ${apiResponse.status}. Response: ${errorText}`);
+      return {
+        message: `Error del servicio externo (HTTP ${apiResponse.status}): ${errorText.substring(0,100)}`,
+        errors: { _form: [`El servicio de registro devolvió un error (HTTP ${apiResponse.status}). Inténtalo más tarde.`] },
+        user: null,
+      };
     }
-  } catch (error) {
-    console.error("Simulated RegisterUser action: Error during external API call:", error);
-    // Decide if this error should prevent user creation in your app or just be logged.
-    // For now, we log and continue.
-  }
 
-  console.log("Simulated RegisterUser action: Created user:", newUser);
-  return { 
-    message: "Registro exitoso. Serás redirigido.", 
-    user: newUser,
-    generatedApiUrl: generatedApiUrlForTest 
-  };
+    // Try to parse the JSON response
+    let apiResult: ExternalApiResponse;
+    try {
+      apiResult = await apiResponse.json();
+      console.log("RegisterUser action: External API call successful. Parsed Response:", apiResult);
+    } catch (jsonError) {
+      console.error("RegisterUser action: Failed to parse JSON response from external API.", jsonError);
+      const responseText = await apiResponse.text().catch(() => "No se pudo leer la respuesta de texto."); // Re-read as text
+      console.error("RegisterUser action: Raw text response from API:", responseText);
+      return {
+        message: "Error al procesar la respuesta del servicio de registro. Respuesta no válida.",
+        errors: { _form: ["El servicio de registro devolvió una respuesta inesperada. Inténtalo más tarde."] },
+        user: null,
+      };
+    }
+
+    if (apiResult.status === "OK") {
+      console.log("RegisterUser action: External API reported 'OK'. Proceeding with local user creation.");
+      // External registration successful, create local user
+      const newUser: ActionUser = {
+        id: crypto.randomUUID(),
+        name,
+        email,
+        ageRange: ageRange || null,
+        gender: gender || null,
+        initialEmotionalState: initialEmotionalState || null,
+      };
+      console.log("RegisterUser action: Created user locally:", newUser);
+      return { 
+        message: apiResult.message || "Registro exitoso. Serás redirigido.", 
+        user: newUser,
+      };
+    } else if (apiResult.status === "NOOK") {
+      console.error("RegisterUser action: External API reported 'NOOK'. Message:", apiResult.message);
+      return {
+        message: apiResult.message || "El servicio de registro externo indicó un problema.",
+        errors: { _form: [apiResult.message || "No se pudo completar el registro con el servicio externo."] },
+        user: null,
+      };
+    } else {
+      console.error("RegisterUser action: External API reported an unknown status.", apiResult);
+      return {
+        message: "Respuesta desconocida del servicio de registro externo.",
+        errors: { _form: ["El servicio de registro externo devolvió un estado inesperado."] },
+        user: null,
+      };
+    }
+
+  } catch (error: any) {
+    console.error("RegisterUser action: Error during external API call or processing:", error);
+    let errorMessage = "Ocurrió un error inesperado durante el registro.";
+    if (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT') { // Example for Node.js fetch timeout
+        errorMessage = "No se pudo conectar con el servicio de registro (tiempo de espera agotado).";
+    } else if (error.message.includes('fetch failed')) { // Generic fetch failure
+        errorMessage = "Fallo en la comunicación con el servicio de registro. Verifica tu conexión.";
+    }
+    return {
+      message: errorMessage,
+      errors: { _form: [errorMessage] },
+      user: null,
+    };
+  }
 }
 
 
@@ -188,3 +231,4 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     return { message: "Inicio de sesión exitoso.", user };
   }
 }
+
