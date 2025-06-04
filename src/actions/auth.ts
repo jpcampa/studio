@@ -48,7 +48,6 @@ export type RegisterState = {
   };
   message?: string | null;
   user?: ActionUser | null;
-  // generatedApiUrl field is removed as it's no longer passed to the client for display
 };
 
 interface ExternalApiResponse {
@@ -97,7 +96,6 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     const apiResponse = await fetch(generatedApiUrl);
     
     if (!apiResponse.ok) {
-      // Handle non-2xx HTTP statuses
       const errorText = await apiResponse.text().catch(() => "No se pudo leer el cuerpo del error.");
       console.error(`RegisterUser action: External API call failed. Status: ${apiResponse.status}. Response: ${errorText}`);
       return {
@@ -107,14 +105,13 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       };
     }
 
-    // Try to parse the JSON response
     let apiResult: ExternalApiResponse;
     try {
       apiResult = await apiResponse.json();
       console.log("RegisterUser action: External API call successful. Parsed Response:", apiResult);
     } catch (jsonError) {
       console.error("RegisterUser action: Failed to parse JSON response from external API.", jsonError);
-      const responseText = await apiResponse.text().catch(() => "No se pudo leer la respuesta de texto."); // Re-read as text
+      const responseText = await apiResponse.text().catch(() => "No se pudo leer la respuesta de texto."); 
       console.error("RegisterUser action: Raw text response from API:", responseText);
       return {
         message: "Error al procesar la respuesta del servicio de registro. Respuesta no válida.",
@@ -124,20 +121,10 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     }
 
     if (apiResult.status === "OK") {
-      console.log("RegisterUser action: External API reported 'OK'. Proceeding with local user creation.");
-      // External registration successful, create local user
-      const newUser: ActionUser = {
-        id: crypto.randomUUID(),
-        name,
-        email,
-        ageRange: ageRange || null,
-        gender: gender || null,
-        initialEmotionalState: initialEmotionalState || null,
-      };
-      console.log("RegisterUser action: Created user locally:", newUser);
+      console.log("RegisterUser action: External API reported 'OK'. Registration successful. User should now log in.");
       return { 
-        message: apiResult.message || "Registro exitoso. Serás redirigido.", 
-        user: newUser,
+        message: "¡Registro completado! Ahora puedes iniciar sesión.", 
+        user: null, // User is not returned, login is a separate step
       };
     } else if (apiResult.status === "NOOK") {
       console.error("RegisterUser action: External API reported 'NOOK'. Message:", apiResult.message);
@@ -158,9 +145,9 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
   } catch (error: any) {
     console.error("RegisterUser action: Error during external API call or processing:", error);
     let errorMessage = "Ocurrió un error inesperado durante el registro.";
-    if (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT') { // Example for Node.js fetch timeout
+    if (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT') { 
         errorMessage = "No se pudo conectar con el servicio de registro (tiempo de espera agotado).";
-    } else if (error.message.includes('fetch failed')) { // Generic fetch failure
+    } else if (error.message.includes('fetch failed')) { 
         errorMessage = "Fallo en la comunicación con el servicio de registro. Verifica tu conexión.";
     }
     return {
@@ -179,7 +166,7 @@ export type LoginState = {
     _form?: string[];
   };
   message?: string | null;
-  user?: ActionUser | null; // Include user for successful login
+  user?: ActionUser | null; 
 };
 
 
@@ -200,7 +187,6 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
   const { email, password } = validatedFields.data;
   console.log(`Simulated LoginUser action: Validation successful for email: ${email}.`);
 
-  // Simulate user check
   if (email === 'user@example.com' && password === 'password123') {
     const user: ActionUser = {
       id: 'simulated-id-1',
@@ -213,19 +199,15 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     console.log("Simulated LoginUser action: Hardcoded user login successful.");
     return { message: "Inicio de sesión exitoso.", user };
   } else {
-     // For demo, accept any other valid email/password if not the hardcoded one
-     // This allows login after a simulated registration
     console.log(`Simulated LoginUser action: Attempting login for non-hardcoded user: ${email}`);
-    // Derivamos el nombre del email para esta simulación de login directo.
-    // El nombre completo del registro se usaría si el flujo de registro inicia sesión al usuario.
     const simulatedName = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const user: ActionUser = {
       id: crypto.randomUUID(), 
       name: simulatedName,
       email: email,
-      ageRange: "18_24", // Default/random values
-      gender: "other", // Default/random values
-      initialEmotionalState: Math.floor(Math.random() * 5) + 1, // Default/random values
+      ageRange: "18_24", 
+      gender: "other", 
+      initialEmotionalState: Math.floor(Math.random() * 5) + 1, 
     };
     console.log("Simulated LoginUser action: Dynamic user login successful.", user);
     return { message: "Inicio de sesión exitoso.", user };

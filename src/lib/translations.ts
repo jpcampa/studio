@@ -27,7 +27,8 @@ export const t = {
   alreadyHaveAccount: "¿Ya tienes cuenta? Inicia Sesión",
   agreeToTerms: "Acepto la política de privacidad y aviso legal.",
   registrationSuccessTitle: "¡Registro Exitoso!",
-  registrationSuccessMessage: "Serás redirigido en breve.",
+  registrationSuccessMessage: "Serás redirigido en breve.", // Original message, can be deprecated if not used.
+  registrationSuccessLoginPrompt: "¡Registro completado! Ahora puedes iniciar sesión.", // New message
   loginFailed: "Error al iniciar sesión. Verifica tus credenciales.",
   registrationFailed: "Error al registrar. Inténtalo de nuevo.",
   // Sidebar Navigation
@@ -137,16 +138,16 @@ export const t = {
   dashboardGreeting: "Así va tu camino",
   quickSummary: "Resumen Rápido",
   currentWellbeing: "Tu Bienestar Hoy",
-  wellbeingPlaceholder: "Estable", // Será reemplazado por la última emoción
+  wellbeingPlaceholder: "Estable", 
   wellbeingDescription: "Basado en tu último registro.",
   progressSinceLast: "Tu Progreso",
-  progressPlaceholder: "+0%", // Placeholder
+  progressPlaceholder: "+0%", 
   progressDescription: "Desde la última evaluación.",
   inFocus: "En Foco",
-  inFocusPlaceholder: "Autoconocimiento", // Placeholder
+  inFocusPlaceholder: "Autoconocimiento", 
   inFocusDescription: "Área actual de desarrollo.",
   nextStep: "Siguiente Paso",
-  nextStepPlaceholder: "Ruta de Autoestima", // Placeholder
+  nextStepPlaceholder: "Ruta de Autoestima", 
   nextStepDescription: "Recomendado para ti.",
   emotionalRegistry: "Registro Emocional",
   registerEmotion: "✨ Registrar Emoción",
@@ -196,4 +197,3 @@ export function useTranslations(): Translations {
   return t;
 }
 
-    

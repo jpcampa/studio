@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
 import { registerUser, type RegisterState } from "@/actions/auth"; 
 import { useRouter } from "next/navigation";
-import { useUser, type User as ContextUser } from "@/contexts/UserContext";
+import { useUser } from "@/contexts/UserContext"; // Removed ContextUser import as it's not directly used for casting here
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,7 +24,6 @@ const initialState: RegisterState = {
   message: null,
   errors: {},
   user: null,
-  // generatedApiUrl field is removed as it's no longer passed to the client for display
 };
 
 function SubmitButton() {
@@ -41,7 +40,7 @@ export function RegisterForm() {
   const t = useTranslations();
   const { toast } = useToast();
   const router = useRouter();
-  const { user: contextUser, loading: userLoading, login: loginContext } = useUser();
+  const { user: contextUser, loading: userLoading } = useUser(); // Removed loginContext as it's not called here
   const [state, formAction] = useActionState(registerUser, initialState);
 
   const [localInitialEmotionalState, setLocalInitialEmotionalState] = useState(3);
@@ -52,50 +51,37 @@ export function RegisterForm() {
     if (!userLoading && contextUser) {
       console.log("RegisterForm: User detected in UserContext, redirecting to /dashboard");
       router.push("/dashboard");
-    } else {
-      // console.log("RegisterForm: No user in UserContext or still loading. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
     }
   }, [contextUser, userLoading, router]);
 
   useEffect(() => {
-    // console.log("RegisterForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
     if (state.message) {
-      let toastDescription = state.message;
-      // The generatedApiUrl display logic was removed as per previous request to execute API call instead of showing URL.
-      // If API URL logging is still needed for server-side debugging, it's in the server action.
-
-      if (state.user && state.message === "Registro exitoso. Serás redirigido.") { 
-        loginContext(state.user as ContextUser); 
+      if (state.message === t.registrationSuccessLoginPrompt && !state.user) { 
         toast({
           title: t.registrationSuccessTitle,
-          description: toastDescription,
+          description: state.message,
         });
-        console.log("RegisterForm: Server action reported successful registration. User set in context via loginContext.");
-      } else if (state.message === "Registro simulado exitoso. Por favor, inicia sesión.") { 
-         toast({
-          title: t.registrationSuccessTitle,
-          description: toastDescription,
-        });
-        console.log("RegisterForm: Server action reported successful SIMULATED registration.");
+        console.log("RegisterForm: Server action reported successful registration. Redirecting to login.");
+        router.push('/login'); 
       } else if (state.errors && Object.keys(state.errors).length > 0 && state.message && !state.user) {
         toast({
           title: t.errorOccurred,
           description: state.message || "Error de validación.", 
           variant: "destructive",
         });
-        console.warn("RegisterForm: Server action reported general error message with field errors. Message:", state.message, "Errors:", state.errors); // Changed to warn
-      } else if (!state.user && state.message !== "Registro simulado exitoso. Por favor, inicia sesión.") {
+        console.warn("RegisterForm: Server action reported general error message with field errors. Message:", state.message, "Errors:", state.errors);
+      } else if (!state.user && state.message !== t.registrationSuccessLoginPrompt) { // Catch other non-success, non-error-with-fields messages
         toast({
           title: t.errorOccurred,
           description: state.message, 
           variant: "destructive",
         });
-        console.warn("RegisterForm: Server action reported general error message. Message:", state.message); // Changed to warn
+        console.warn("RegisterForm: Server action reported general error message. Message:", state.message);
       }
     }
     
-    if (state.errors && Object.keys(state.errors).length > 0 && !state.message?.includes("Registro exitoso")) { 
-      console.warn("RegisterForm: Server action reported validation errors:", state.errors); // Changed to warn
+    if (state.errors && Object.keys(state.errors).length > 0 && state.message !== t.registrationSuccessLoginPrompt) { 
+      console.warn("RegisterForm: Server action reported validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
         if (Array.isArray(fieldErrors)) {
           fieldErrors.forEach(error => {
@@ -110,7 +96,7 @@ export function RegisterForm() {
         }
       });
     }
-  }, [state, toast, router, t, loginContext]);
+  }, [state, toast, router, t]);
 
   const ageRanges = [
     { value: "under_18", label: t.age_under_18 },
@@ -131,7 +117,6 @@ export function RegisterForm() {
   ];
 
   if (userLoading && !contextUser) {
-    // console.log("RegisterForm: Rendering loader because UserContext is loading and no user is yet available.");
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -140,7 +125,6 @@ export function RegisterForm() {
   }
   
   if (!userLoading && contextUser) {
-    // console.log("RegisterForm: Rendering null because user is already loaded and present (should have been/be redirecting).");
     return null; 
   }
 
@@ -229,3 +213,4 @@ export function RegisterForm() {
     </Card>
   );
 }
+
