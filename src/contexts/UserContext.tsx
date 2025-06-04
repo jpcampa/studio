@@ -4,6 +4,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { encryptDataAES, decryptDataAES } from '@/lib/encryption'; // Import encryption functions
 
 export interface User {
   id: string;
@@ -18,7 +19,7 @@ const SIMULATED_USER_KEY = 'workwell-simulated-user';
 
 interface UserContextType {
   user: User | null;
-  login: (userData: User) => void; // Ensure login is defined in the type
+  login: (userData: User) => void;
   logout: () => void;
   loading: boolean;
   updateUser: (updatedData: Partial<Pick<User, 'name' | 'ageRange' | 'gender'>>) => Promise<void>;
@@ -32,69 +33,82 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Load user from localStorage on initial mount
-    console.log("UserContext (Simulated): useEffect to load from localStorage mounting.");
+    console.log("UserContext: useEffect to load from localStorage mounting.");
     try {
-      const storedUser = localStorage.getItem(SIMULATED_USER_KEY);
-      if (storedUser) {
-        console.log("UserContext (Simulated): Found user in localStorage:", storedUser);
-        setUser(JSON.parse(storedUser));
+      const storedEncryptedUser = localStorage.getItem(SIMULATED_USER_KEY);
+      if (storedEncryptedUser) {
+        console.log("UserContext: Found data in localStorage. Attempting decryption.");
+        const decryptedUser = decryptDataAES(storedEncryptedUser);
+        if (decryptedUser) {
+          setUser(decryptedUser as User);
+          console.log("UserContext: User decrypted and set from localStorage:", decryptedUser);
+        } else {
+          console.warn("UserContext: Failed to decrypt user from localStorage or data was invalid. Clearing invalid storage.");
+          localStorage.removeItem(SIMULATED_USER_KEY); // Remove invalid/corrupted data
+        }
       } else {
-        console.log("UserContext (Simulated): No user found in localStorage.");
+        console.log("UserContext: No user data found in localStorage.");
       }
     } catch (error) {
-      console.error("UserContext (Simulated): Error loading user from localStorage:", error);
-      localStorage.removeItem(SIMULATED_USER_KEY);
+      console.error("UserContext: Error during initial user load from localStorage:", error);
+      localStorage.removeItem(SIMULATED_USER_KEY); // Clear potentially corrupted data
     } finally {
       setLoading(false);
-      console.log("UserContext (Simulated): Initial load finished. Loading set to false.");
+      console.log("UserContext: Initial load finished. Loading set to false.");
     }
   }, []);
 
   const login = useCallback((userData: User) => {
-    console.log("UserContext (Simulated): login function called with:", userData);
-    setUser(userData);
+    console.log("UserContext: login function called with:", userData);
     try {
-      localStorage.setItem(SIMULATED_USER_KEY, JSON.stringify(userData));
-      console.log("UserContext (Simulated): User saved to localStorage.");
+      const encryptedUserData = encryptDataAES(userData);
+      localStorage.setItem(SIMULATED_USER_KEY, encryptedUserData);
+      setUser(userData); // Set user state after successful encryption and storage
+      console.log("UserContext: User encrypted and saved to localStorage.");
     } catch (error) {
-      console.error("UserContext (Simulated): Error saving user to localStorage:", error);
+      console.error("UserContext: Error encrypting/saving user to localStorage:", error);
+      // Decide on error handling: maybe don't set user if storage fails? For now, we set it.
+      setUser(userData);
     }
-    // Redirection will be handled by the LoginForm's useEffect after contextUser updates
   }, []);
 
   const logout = useCallback(() => {
-    console.log("UserContext (Simulated): logout function called.");
+    console.log("UserContext: logout function called.");
     setUser(null);
     try {
       localStorage.removeItem(SIMULATED_USER_KEY);
-      console.log("UserContext (Simulated): User removed from localStorage.");
+      console.log("UserContext: User removed from localStorage.");
     } catch (error) {
-      console.error("UserContext (Simulated): Error removing user from localStorage:", error);
+      console.error("UserContext: Error removing user from localStorage:", error);
     }
     router.push('/login');
   }, [router]);
 
   const updateUser = useCallback(async (updatedData: Partial<Pick<User, 'name' | 'ageRange' | 'gender'>>) => {
-    console.log("UserContext (Simulated): updateUser called with:", updatedData);
+    console.log("UserContext: updateUser called with:", updatedData);
+    
+    let finalUserToStore: User | null = null;
+
     setUser(prevUser => {
       if (prevUser) {
         const newUser = { ...prevUser, ...updatedData };
-        try {
-          localStorage.setItem(SIMULATED_USER_KEY, JSON.stringify(newUser));
-          console.log("UserContext (Simulated): User updated in localStorage:", newUser);
-        } catch (error) {
-          console.error("UserContext (Simulated): Error updating user in localStorage:", error);
-        }
+        finalUserToStore = newUser; // Capture for storage
         return newUser;
       }
       return null;
     });
-    // Simulate async operation
+
+    if (finalUserToStore) {
+      try {
+        const encryptedUser = encryptDataAES(finalUserToStore);
+        localStorage.setItem(SIMULATED_USER_KEY, encryptedUser);
+        console.log("UserContext: User updated, encrypted, and saved in localStorage:", finalUserToStore);
+      } catch (error) {
+        console.error("UserContext: Error encrypting/saving updated user in localStorage:", error);
+      }
+    }
     return Promise.resolve();
   }, []);
-
-  // console.log("UserContext (Simulated): Rendering provider. User:", user, "Loading:", loading);
 
   return (
     <UserContext.Provider value={{ user, login, logout, loading, updateUser }}>
