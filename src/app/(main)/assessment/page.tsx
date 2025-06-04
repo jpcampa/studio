@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -9,11 +10,16 @@ import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, TestTube2 } from 'lucide-react';
+import { useUser } from '@/contexts/UserContext';
+import { assessmentDimensions } from '@/data/assessmentDimensions';
+
+const DEVELOPER_EMAIL = 'jpcampa@example.com';
 
 export default function AssessmentPage() {
   const t = useTranslations();
   const { toast } = useToast();
+  const { user } = useUser();
   const [assessmentResults, setAssessmentResults] = useState<InitialAssessmentOutput | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showQuestionnaire, setShowQuestionnaire] = useState(true);
@@ -44,6 +50,18 @@ export default function AssessmentPage() {
     setShowQuestionnaire(true);
   };
 
+  const handleDevSubmit = async () => {
+    const randomAnswers: Record<string, number> = {};
+    assessmentDimensions.forEach(dimension => {
+      dimension.items.forEach(item => {
+        randomAnswers[item.id] = Math.floor(Math.random() * 5) + 1; // Random number between 1 and 5
+      });
+    });
+    await handleSubmit(randomAnswers);
+  };
+  
+  const isDeveloper = user?.email === DEVELOPER_EMAIL;
+
   if (!showQuestionnaire && assessmentResults) {
     return (
       <div className="container mx-auto py-8">
@@ -71,7 +89,19 @@ export default function AssessmentPage() {
            </CardContent>
         )}
       </Card>
-      {showQuestionnaire && <QuestionnaireForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />}
+      {showQuestionnaire && (
+        <>
+          {isDeveloper && (
+            <div className="mb-4 text-center">
+              <Button onClick={handleDevSubmit} variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700">
+                <TestTube2 className="mr-2 h-4 w-4" />
+                🧪 Rellenar para Desarrollo
+              </Button>
+            </div>
+          )}
+          <QuestionnaireForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        </>
+      )}
     </div>
   );
 }
