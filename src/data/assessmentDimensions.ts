@@ -15,7 +15,7 @@ export interface AssessmentDimension {
 export const assessmentDimensions: AssessmentDimension[] = [
   {
     id: 'dim1',
-    name: 'Calma en la Tormenta (Regulación Emocional y Estrés)',
+    name: 'Calma en la Tormenta',
     definition: 'Capacidad para gestionar emociones difíciles, mantener el equilibrio en momentos de tensión y responder con serenidad frente a la incertidumbre o el conflicto.',
     items: [
       { id: 'dim1_item1', text: 'Suelo mantener la calma cuando las cosas se complican.' },
@@ -28,7 +28,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim2',
-    name: 'Mente Abierta, Cambio Ágil (Flexibilidad Mental y Adaptabilidad)',
+    name: 'Mente Abierta, Cambio Ágil',
     definition: 'Capacidad para abrirse a nuevas ideas, aceptar el cambio como parte natural de la vida y adaptarse mentalmente a escenarios inciertos o inesperados.',
     items: [
       { id: 'dim2_item1', text: 'Me entusiasma aprender cosas nuevas, incluso si desafían lo que ya sé.' },
@@ -41,7 +41,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim3',
-    name: 'Foco y Constancia (Autorregulación y Responsabilidad)',
+    name: 'Foco y Constancia',
     definition: 'Capacidad de organizarse, mantenerse disciplinado/a y cumplir con lo que uno se propone, incluso cuando requiere esfuerzo o perseverancia.',
     items: [
       { id: 'dim3_item1', text: 'Suelo cumplir mis objetivos aunque me cuesten.' },
@@ -54,7 +54,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim4',
-    name: 'Voz Propia (Autoafirmación y Expresión Personal)',
+    name: 'Voz Propia',
     definition: 'Capacidad de expresar opiniones, necesidades y límites de forma clara y segura, manteniendo el respeto por uno mismo y por los demás.',
     items: [
       { id: 'dim4_item1', text: 'Me siento con derecho a expresar lo que necesito, aunque sea incómodo.' },
@@ -67,7 +67,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim5',
-    name: 'Puentes que Conectan (Empatía y Conexión Interpersonal)',
+    name: 'Puentes que Conectan',
     definition: 'Capacidad de ponerse en el lugar del otro, construir vínculos saludables y actuar desde la comprensión y el respeto mutuo.',
     items: [
       { id: 'dim5_item1', text: 'Me interesa entender cómo se sienten las personas que me rodean.' },
@@ -80,7 +80,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim6',
-    name: 'Espejo Interior (Insight y Autoconciencia)',
+    name: 'Espejo Interior',
     definition: 'Capacidad de observarse a uno mismo, reconocer patrones emocionales y conductuales y comprender cómo afectan a la vida personal y profesional.',
     items: [
       { id: 'dim6_item1', text: 'Reflexiono con frecuencia sobre lo que siento y por qué.' },
@@ -93,7 +93,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim7',
-    name: 'Norte Vital (Propósito Vital y Dirección Personal)',
+    name: 'Norte Vital',
     definition: 'Claridad sobre lo que uno quiere lograr en la vida, conexión con los propios valores y motivación para avanzar hacia metas significativas.',
     items: [
       { id: 'dim7_item1', text: 'Tengo claro qué es importante para mí en la vida.' },
@@ -106,7 +106,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim8',
-    name: 'Fortaleza Activa (Estilo de Afrontamiento)',
+    name: 'Fortaleza Activa',
     definition: 'Estilo de enfrentar los desafíos con determinación, capacidad de adaptación y actitud constructiva ante las dificultades.',
     items: [
       { id: 'dim8_item1', text: 'Cuando tengo un problema, busco cómo solucionarlo sin quedarme estancado/a.' },
@@ -119,7 +119,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim9',
-    name: 'Brújula Ética (Integridad y Coherencia Ética)',
+    name: 'Brújula Ética',
     definition: 'Capacidad de actuar de acuerdo con valores personales sólidos, ser coherente entre lo que se piensa, se siente y se hace, y tener sensibilidad ética en las decisiones.',
     items: [
       { id: 'dim9_item1', text: 'Intento actuar con integridad, incluso cuando no es lo más fácil.' },
@@ -132,7 +132,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim10',
-    name: 'Raíz Propia (Responsabilidad Personal y Aceptación Consciente)',
+    name: 'Raíz Propia',
     definition: 'Capacidad de reconocer el papel que uno tiene en las situaciones que atraviesa, asumir la parte de responsabilidad sin caer en la culpa, y actuar desde la aceptación y el compromiso con el cambio.',
     items: [
       { id: 'dim10_item1', text: 'Reconozco cuándo he contribuido a que algo no salga como esperaba.' },
@@ -145,7 +145,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim11',
-    name: 'Red de Apoyo Consciente (Apoyo Social Percibido)',
+    name: 'Red de Apoyo Consciente',
     definition: 'Grado en que la persona percibe tener apoyo emocional, instrumental y profesional disponible tanto en su vida personal como laboral. Evalúa la sensación de sentirse acompañado/a, comprendido/a y respaldado/a por otros.',
     items: [
       { id: 'dim11_item1', text: 'Siento que tengo personas en mi vida con las que puedo contar cuando lo necesito.' },
@@ -158,7 +158,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
   },
   {
     id: 'dim12',
-    name: 'Valor Reconocido (Percepción de Valoración en el Trabajo)',
+    name: 'Valor Reconocido',
     definition: 'Grado en que el individuo siente que su labor, esfuerzo y presencia son valorados y reconocidos por su entorno laboral.',
     items: [
       { id: 'dim12_item1', text: 'En mi trabajo, siento que lo que hago importa.' },
@@ -173,11 +173,11 @@ export const assessmentDimensions: AssessmentDimension[] = [
 
 // Re-export likertOptions from here for consistency, if QuestionnaireForm needs it
 export const likertOptions = [
-  { value: 1, label: 'Frown', description: 'Nunca o Casi Nunca / Muy Mal' },
-  { value: 2, label: 'Annoyed', description: 'A Veces / Mal' },
-  { value: 3, label: 'Meh', description: 'Regularmente / Regular' },
-  { value: 4, label: 'Smile', description: 'Frecuentemente / Bien' },
-  { value: 5, label: 'Laugh', description: 'Siempre o Casi Siempre / Muy Bien' },
+  { value: 1, label: 'Frown', description: 'Totalmente en desacuerdo' },
+  { value: 2, label: 'Annoyed', description: 'En desacuerdo' },
+  { value: 3, label: 'Meh', description: 'Ni de acuerdo ni en desacuerdo' },
+  { value: 4, label: 'Smile', description: 'De acuerdo' },
+  { value: 5, label: 'Laugh', description: 'Totalmente de acuerdo' },
 ];
 
     
