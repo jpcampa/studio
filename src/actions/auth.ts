@@ -76,21 +76,27 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
   console.log("RegisterUser action: Validation successful. Preparing for external API call.");
 
   try {
-    const emailToEncrypt = { value: email };
+    const userDetailsToEncrypt = {
+      name,
+      email,
+      ageRange: ageRange || null, // Ensure optional fields are explicitly null if not provided
+      gender: gender || null,
+      initialEmotionalState: initialEmotionalState || null,
+    };
     const passwordToEncrypt = { value: password };
 
-    const encryptedEmailPayload = encryptDataAES(emailToEncrypt);
+    const encryptedUserDetailsPayload = encryptDataAES(userDetailsToEncrypt);
     const encryptedPasswordPayload = encryptDataAES(passwordToEncrypt);
 
-    const finalEncryptedEmailForUrl = encodeURIComponent(encryptedEmailPayload);
+    const finalEncryptedUserDetailsForUrl = encodeURIComponent(encryptedUserDetailsPayload);
     const finalEncryptedPasswordForUrl = encodeURIComponent(encryptedPasswordPayload);
     
     const apiKey = "4463";
     const type = "registro";
     const baseUrl = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php";
     
-    const generatedApiUrl = `${baseUrl}?apikey=${apiKey}&tipo=${type}&usuario=${finalEncryptedEmailForUrl}&password=${finalEncryptedPasswordForUrl}`;
-    console.log("RegisterUser action: Constructed API URL (for server logging):", generatedApiUrl);
+    const generatedApiUrl = `${baseUrl}?apikey=${apiKey}&tipo=${type}&usuario=${finalEncryptedUserDetailsForUrl}&password=${finalEncryptedPasswordForUrl}`;
+    console.log("RegisterUser action: Constructed API URL with bundled user details (for server logging):", generatedApiUrl);
 
     console.log("RegisterUser action: Attempting to call external API...");
     const apiResponse = await fetch(generatedApiUrl);
@@ -122,9 +128,10 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
 
     if (apiResult.status === "OK") {
       console.log("RegisterUser action: External API reported 'OK'. Registration successful. User should now log in.");
+      // User is not created or returned here; redirection to login is handled by the form component
       return { 
         message: "¡Registro completado! Ahora puedes iniciar sesión.", 
-        user: null, // User is not returned, login is a separate step
+        user: null, 
       };
     } else if (apiResult.status === "NOOK") {
       console.error("RegisterUser action: External API reported 'NOOK'. Message:", apiResult.message);
