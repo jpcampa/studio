@@ -37,6 +37,7 @@ const AIResponseSchema = z.object({
   feedback: z.string().min(1).describe('A summary of the assessment results in Spanish.'),
 });
 
+// Schema for the part of the input related to prompt template data (answers, item details)
 const PromptTemplateInputSchema = z.object({
   answers: z.record(z.string(), z.number().min(1).max(5)),
   itemDetails: z.record(z.string(), z.object({
@@ -47,16 +48,25 @@ const PromptTemplateInputSchema = z.object({
 });
 type PromptTemplateInput = z.infer<typeof PromptTemplateInputSchema>;
 
+// NEW: Schema for the input to the flow itself, combining prompt input and dimension names
+const FlowInternalInputSchema = z.object({
+  promptData: PromptTemplateInputSchema,
+  allDimensionNames: z.array(z.string()),
+});
+export type FlowInternalInput = z.infer<typeof FlowInternalInputSchema>;
+
+
+// Schema for the data passed to the Handlebars template for the prompt
 const PromptHandlebarsInputSchema = z.object({
   itemsTextArray: z.array(z.string()).describe('An array of strings, each representing a formatted question and answer with its dimension context.'),
-  dimensionNames: z.array(z.string()).describe('An array of all dimension names for reference.'),
+  dimensionNamesForPrompt: z.array(z.string()).describe('An array of all dimension names for reference within the prompt.'),
 });
 type PromptHandlebarsInput = z.infer<typeof PromptHandlebarsInputSchema>;
 
 
 export async function initialAssessment(input: InitialAssessmentInput): Promise<InitialAssessmentOutput> {
   const itemDetails: Record<string, { text: string, dimensionName: string, isInverse?: boolean }> = {};
-  const dimensionNames: string[] = [];
+  const dimensionNames: string[] = []; // This will be the list of actual dimension names
   assessmentDimensions.forEach(dim => {
     dimensionNames.push(dim.name);
     dim.items.forEach(item => {
@@ -72,8 +82,13 @@ export async function initialAssessment(input: InitialAssessmentInput): Promise<
     answers: input.answers,
     itemDetails: itemDetails,
   };
-  console.log("InitialAssessmentFlow: Input to flow (PromptTemplateInput) (first 1000 chars):", JSON.stringify(promptFlowInput, null, 2).substring(0,1000) + "...");
-  return initialAssessmentFlow(promptFlowInput, dimensionNames);
+  
+  const flowEntryPointInput: FlowInternalInput = { // This object matches FlowInternalInputSchema
+    promptData: promptFlowInput,
+    allDimensionNames: dimensionNames, // Pass the populated dimensionNames array
+  };
+  console.log("InitialAssessment Function: Calling flow with flowEntryPointInput (first 1000 chars):", JSON.stringify(flowEntryPointInput, null, 2).substring(0,1000) + "...");
+  return initialAssessmentFlow(flowEntryPointInput); // Calling the flow with a single object
 }
 
 const prompt = ai.definePrompt({
@@ -93,7 +108,7 @@ Based on all these item responses, please perform the following tasks IN SPANISH
 
 1.  **Emotional Profile (emotionalProfileJSON)**: For each of the 12 psychological dimensions listed below, provide a NUMERIC score from 1.0 to 5.0 (you can use one decimal place, e.g., 3.5) representing the user's current standing in that dimension. This score must be based on an integrated analysis of all items belonging to that dimension, considering any inverse scoring.
     **Crucially, the value for 'emotionalProfileJSON' MUST BE A STRING containing a valid JSON object where keys are the full dimension names (e.g., "Calma en la Tormenta (Regulación Emocional y Estrés)") and values are your NUMERIC scores (1.0-5.0) for each. Ensure all 12 dimensions are present as keys in this JSON string.**
-    Dimension Names: {{#each dimensionNames}} "{{this}}"{{#unless @last}}, {{/unless}}{{/each}}.
+    Dimension Names: {{#each dimensionNamesForPrompt}} "{{this}}"{{#unless @last}}, {{/unless}}{{/each}}.
     Example for the 'emotionalProfileJSON' string field: "{\\"Calma en la Tormenta (Regulación Emocional y Estrés)\\": 3.2, \\"Mente Abierta, Cambio Ágil (Flexibilidad Mental y Adaptabilidad)\\": 4.5, \\"Foco y Constancia (Autorregulación y Responsabilidad)\\": 2.8, \\"Voz Propia (Autoafirmación y Expresión Personal)\\": 4.1, \\"Puentes que Conectan (Empatía y Conexión Interpersonal)\\": 3.0, \\"Espejo Interior (Insight y Autoconciencia)\\": 3.7, \\"Norte Vital (Propósito Vital y Dirección Personal)\\": 4.0, \\"Fortaleza Activa (Estilo de Afrontamiento)\\": 3.3, \\"Brújula Ética (Integridad y Coherencia Ética)\\": 4.6, \\"Raíz Propia (Responsabilidad Personal y Aceptación Consciente)\\": 2.5, \\"Red de Apoyo Consciente (Apoyo Social Percibido)\\": 3.8, \\"Valor Reconocido (Percepción de Valoración en el Trabajo)\\": 4.2}"
 
 2.  **Priority Areas (priorityAreas)**: Identify EXACTLY 3 psychological dimensions (using their full names as provided in the input context, e.g., "Foco y Constancia (Autorregulación y Responsabilidad)") that you consider priority areas for the user to focus on for their development or well-being. These should be areas where improvement would be most beneficial, or where current scores (considering item inversions) suggest a significant need for attention. This field must be an array of 3 strings.
@@ -101,24 +116,27 @@ Based on all these item responses, please perform the following tasks IN SPANISH
 3.  **Feedback (feedback)**: Provide a concise (2-3 paragraphs), empathetic, and constructive overall summary of the assessment. This feedback must be encouraging, acknowledge potential strengths, and gently highlight areas for growth based on the profile. Avoid overly technical jargon. Frame it as a starting point for self-discovery. This field must be a non-empty string.
 
 Ensure your entire response is a single, valid JSON object. Do not include any text outside of this JSON structure.
-The \\\`emotionalProfileJSON\\\` field MUST BE A JSON STRING.
+The \`emotionalProfileJSON\` field MUST BE A JSON STRING.
 `,
 });
 
-// The flow now accepts dimensionNames as a second parameter
 const initialAssessmentFlow = ai.defineFlow(
   {
     name: 'initialAssessmentFlow',
-    inputSchema: PromptTemplateInputSchema, // Flow's external input
-    outputSchema: InitialAssessmentOutputSchema, // Flow's output to the application
+    inputSchema: FlowInternalInputSchema, // Flow expects this schema
+    outputSchema: InitialAssessmentOutputSchema,
   },
-  async (flowInput: PromptTemplateInput, dimensionNames: string[]): Promise<InitialAssessmentOutput> => {
-    console.log('InitialAssessmentFlow START: Received flowInput (PromptTemplateInput) (first 1000 chars):', JSON.stringify(flowInput, null, 2).substring(0, 1000) + '...');
-    console.log('InitialAssessmentFlow: Received dimensionNames:', dimensionNames);
+  // Flow implementation takes a single argument matching FlowInternalInputSchema
+  async (flowActualInput: FlowInternalInput): Promise<InitialAssessmentOutput> => {
+    console.log('InitialAssessmentFlow START: Received flowActualInput (FlowInternalInput) (first 1000 chars):', JSON.stringify(flowActualInput, null, 2).substring(0, 1000) + '...');
+    
+    // Destructure the single input object
+    const { promptData, allDimensionNames } = flowActualInput; 
+    console.log('InitialAssessmentFlow: Extracted allDimensionNames from flowActualInput:', allDimensionNames); // Crucial log
 
     const itemsTextArray: string[] = [];
-    const currentAnswers = flowInput.answers;
-    const currentItemDetails = flowInput.itemDetails;
+    const currentAnswers = promptData.answers;
+    const currentItemDetails = promptData.itemDetails;
 
     for (const itemId in currentAnswers) {
       if (Object.prototype.hasOwnProperty.call(currentAnswers, itemId)) {
@@ -133,10 +151,15 @@ const initialAssessmentFlow = ai.defineFlow(
         }
       }
     }
-    const handlebarsInput: PromptHandlebarsInput = { itemsTextArray, dimensionNames };
-    console.log('InitialAssessmentFlow: Prepared handlebarsInput (PromptHandlebarsInput) (first 1000 chars):', JSON.stringify(handlebarsInput, null, 2).substring(0,1000) + "...");
+    
+    // Prepare input for the prompt using the extracted dimension names
+    const handlebarsInputForPrompt: PromptHandlebarsInput = { 
+        itemsTextArray, 
+        dimensionNamesForPrompt: allDimensionNames // Use extracted names
+    };
+    console.log('InitialAssessmentFlow: Prepared handlebarsInputForPrompt (PromptHandlebarsInput) (first 1000 chars):', JSON.stringify(handlebarsInputForPrompt, null, 2).substring(0,1000) + "...");
 
-    const {output: aiResponse} = await prompt(handlebarsInput);
+    const {output: aiResponse} = await prompt(handlebarsInputForPrompt); // Pass correct object to prompt
     console.log('InitialAssessmentFlow: Received RAW aiResponse from prompt (IMPORTANT FOR DEBUGGING JSON):', JSON.stringify(aiResponse, null, 2));
 
     if (!aiResponse) {
@@ -163,28 +186,34 @@ const initialAssessmentFlow = ai.defineFlow(
       parsedEmotionalProfile = JSON.parse(aiResponse.emotionalProfileJSON);
       console.log('InitialAssessmentFlow: Successfully parsed emotionalProfileJSON. Parsed object:', JSON.stringify(parsedEmotionalProfile, null, 2));
 
-      // Validate that parsedEmotionalProfile is Record<string, number> and scores are within 1-5
       const validationResult = z.record(z.string(), z.number().min(1).max(5)).safeParse(parsedEmotionalProfile);
       if (!validationResult.success) {
         console.error("InitialAssessmentFlow Error: Parsed emotionalProfileJSON does not match Record<string, number> with scores 1-5:", validationResult.error.flatten(), "Original JSON String:", aiResponse.emotionalProfileJSON, "Parsed Object for Zod:", parsedEmotionalProfile);
         throw new Error('El perfil emocional devuelto por la IA no tiene el formato de mapa de puntuaciones numéricas esperado (1-5) o los nombres de las dimensiones no son strings.');
       }
-      parsedEmotionalProfile = validationResult.data; // Use validated data
+      parsedEmotionalProfile = validationResult.data; 
       if (Object.keys(parsedEmotionalProfile).length === 0) {
         console.error('InitialAssessmentFlow Error: Parsed emotionalProfile is an empty object.', parsedEmotionalProfile);
         throw new Error('El perfil emocional devuelto por la IA está vacío.');
       }
-      // Ensure all dimension names are present as keys (optional, depends on strictness)
-      if (dimensionNames.some(dn => !(dn in parsedEmotionalProfile))) {
-        console.warn('InitialAssessmentFlow Warning: Not all expected dimensions were found in AI emotional profile. Missing ones will not have scores.', 
-          'Expected:', dimensionNames, 'Received keys:', Object.keys(parsedEmotionalProfile));
-        // Depending on requirements, you could throw an error here or fill missing ones with a default.
-        // For now, we proceed with what was returned.
-      }
-
     } catch (e: any) {
-      console.error("InitialAssessmentFlow Error: Failed to parse emotionalProfileJSON string from AI response. Raw JSON string was:", `"${aiResponse.emotionalProfileJSON}"`, "Error message:", e.message, "Stack:", e.stack);
-      throw new Error(`La IA devolvió un perfil emocional en formato JSON inválido. El JSON recibido fue: "${aiResponse.emotionalProfileJSON}". Error de parseo: ${e.message}`);
+      console.error("InitialAssessmentFlow Error: Failed to parse or validate emotionalProfileJSON. Raw JSON string was:", `"${aiResponse.emotionalProfileJSON}"`, "Error message:", e.message, "Stack:", e.stack);
+      // El error e.message aquí SÍ será del JSON.parse o la validación Zod.
+      throw new Error(`La IA devolvió un perfil emocional en formato JSON inválido o con estructura incorrecta. El JSON recibido fue: "${aiResponse.emotionalProfileJSON}". Error: ${e.message}`);
+    }
+
+    // Moved this check outside the try...catch for JSON parsing
+    // Check if allDimensionNames is a valid array before using .some()
+    console.log('InitialAssessmentFlow: Checking allDimensionNames before .some() call. Value:', allDimensionNames, 'Is Array:', Array.isArray(allDimensionNames));
+    if (Array.isArray(allDimensionNames) && allDimensionNames.length > 0) {
+        if (allDimensionNames.some(dn => !(dn in parsedEmotionalProfile))) {
+            console.warn('InitialAssessmentFlow Warning: Not all expected dimensions were found in AI emotional profile. Missing ones will not have scores.', 
+            'Expected (allDimensionNames):', allDimensionNames, 'Received keys (from parsedEmotionalProfile):', Object.keys(parsedEmotionalProfile));
+            // Depending on requirements, you could throw an error here or fill missing ones with a default.
+            // For now, we proceed with what was returned.
+        }
+    } else {
+        console.warn('InitialAssessmentFlow Warning: allDimensionNames is not a valid array or is empty. Skipping check for all dimensions in profile. Value of allDimensionNames:', allDimensionNames);
     }
 
     const finalOutput: InitialAssessmentOutput = {
@@ -199,3 +228,5 @@ const initialAssessmentFlow = ai.defineFlow(
     
 
       
+
+    
