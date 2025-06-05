@@ -11,14 +11,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, Palette, Trash2, AlertTriangle, ToggleRight, ToggleLeft } from 'lucide-react';
+import { Loader2, Save, Palette, Trash2, AlertTriangle, ToggleRight, ToggleLeft, ShieldAlert } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
 import { Separator } from '@/components/ui/separator';
-import { useFeatureFlag } from '@/contexts/FeatureFlagContext'; // Import useFeatureFlag
+import { useFeatureFlag } from '@/contexts/FeatureFlagContext';
+import Link from 'next/link';
 
-// Use a specific email for 'jpcampa' for testing purposes.
-// In a real app, this might be based on user roles or other criteria.
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
 
 export default function SettingsPage() {
@@ -26,7 +25,7 @@ export default function SettingsPage() {
   const { user, updateUser, loading: userLoading } = useUser();
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
-  const { isEmotionalDashboardEnabled, toggleEmotionalDashboard } = useFeatureFlag(); // Consume FeatureFlagContext
+  const { isEmotionalDashboardEnabled, toggleEmotionalDashboard } = useFeatureFlag();
 
   const [name, setName] = useState('');
   const [ageRange, setAgeRange] = useState('');
@@ -78,9 +77,7 @@ export default function SettingsPage() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      // In a real app, this would call a Firebase function or backend endpoint
-      // For simulation, we update UserContext which updates localStorage
-      const updatedUser = await updateUser({ name, ageRange, gender });
+      await updateUser({ name, ageRange, gender });
       toast({
         title: "Configuración Guardada",
         description: "Tus cambios han sido guardados exitosamente.",
@@ -232,26 +229,43 @@ export default function SettingsPage() {
           <Separator className="my-10" />
 
           <div>
-            <h3 className="text-xl font-semibold text-destructive flex items-center mb-3">
-                <AlertTriangle className="mr-2 h-5 w-5" />
+            <h3 className="text-xl font-semibold text-muted-foreground flex items-center mb-3">
+                <AlertTriangle className="mr-2 h-5 w-5 text-amber-500" />
                 {t.devUtilitiesTitle}
             </h3>
             <CardDescription className="mb-4">
                 Estas opciones son para fines de desarrollo y pueden afectar tu experiencia. Úsalas con precaución.
             </CardDescription>
             <div className="space-y-3">
-              <Button variant="destructive" onClick={handleClearEntries}>
+              <Button variant="outline" onClick={handleClearEntries} className="border-amber-500 text-amber-600 hover:bg-amber-50 hover:text-amber-700">
                 <Trash2 className="mr-2 h-4 w-4" />
                 {t.clearEmotionalEntriesButton}
               </Button>
 
               {isDeveloper && (
-                <Button variant="outline" onClick={handleToggleEmotionalDashboard}>
+                <Button variant="outline" onClick={handleToggleEmotionalDashboard} className="border-amber-500 text-amber-600 hover:bg-amber-50 hover:text-amber-700">
                   {isEmotionalDashboardEnabled ? <ToggleLeft className="mr-2 h-4 w-4" /> : <ToggleRight className="mr-2 h-4 w-4" />}
                   {isEmotionalDashboardEnabled ? t.deactivateEmotionalDashboardButton : t.activateEmotionalDashboardButton}
                 </Button>
               )}
             </div>
+          </div>
+
+          <Separator className="my-10" />
+
+          <div>
+            <h3 className="text-xl font-semibold text-destructive flex items-center mb-3">
+              <ShieldAlert className="mr-2 h-5 w-5" />
+              {t.deleteAccountSectionTitle}
+            </h3>
+            <CardDescription className="mb-4">
+              {t.deleteAccountWarningMessage.split('.')[0]}. {/* Show only first sentence here */}
+            </CardDescription>
+            <Button variant="destructive" asChild>
+              <Link href="/settings/delete-account">
+                {t.deleteAccountButtonLabel}
+              </Link>
+            </Button>
           </div>
 
         </CardContent>
@@ -264,3 +278,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    

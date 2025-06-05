@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 import { encryptDataAES, decryptDataAES } from "@/lib/encryption";
+import { UserProvider, useUser } from "@/contexts/UserContext"; // Assuming useUser can be used server-side, or we pass user object
 
 // Define the User interface that actions will deal with
 // This should be compatible with the User interface in UserContext
@@ -35,18 +36,10 @@ const loginSchema = z.object({
   password: z.string().min(1, "La contraseña es requerida."),
 });
 
-// Schema for the expected user data from the API on successful login
-// 'name' and 'email' fields in the API's 'data' object are themselves objects
-// like: { value: "ENCRYPTED_JSON_STRING" }
-// The ENCRYPTED_JSON_STRING, when decrypted, yields the actual name/email string.
 const ApiLoginSuccessDataSchema = z.object({
   id: z.string().min(1, "El ID de usuario de la API no puede estar vacío."),
-  name: z.object({
-    value: z.string().min(1, "El valor encriptado del nombre en la API no puede estar vacío.")
-  }),
-  email: z.object({
-    value: z.string().min(1, "El valor encriptado del email en la API no puede estar vacío.")
-  }),
+  name: z.object({ value: z.string().min(1, "El valor encriptado del nombre en la API no puede estar vacío.") }),
+  email: z.object({ value: z.string().min(1, "El valor encriptado del email en la API no puede estar vacío.") }),
   ageRange: z.string().nullable().optional(),
   gender: z.string().nullable().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).nullable().optional(),
@@ -71,10 +64,10 @@ export type RegisterState = {
 interface ExternalApiResponse {
   status: "OK" | "NOOK";
   message: string;
-  data: any; // Can be user details object or null
+  data: any; 
 }
 
-const API_TIMEOUT_MS = 15000; // 15 seconds
+const API_TIMEOUT_MS = 15000; 
 const API_BASE_URL = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php";
 const API_KEY = "4463";
 
@@ -101,7 +94,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
   const userId = crypto.randomUUID(); 
 
   const userDetailsToEncrypt = {
-    id: userId, // Include the generated ID
+    id: userId, 
     name,
     email,
     ageRange: ageRange || null,
@@ -326,14 +319,13 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
           console.log("LoginUser action: Decrypted email result:", actualEmail);
           
           if (!actualName || !actualEmail) {
-            console.warn("LoginUser action: Failed to decrypt name/email from API response or decrypted data is not a string. Name:", actualName, "Email:", actualEmail, "Encrypted Name Value used:", validatedApiUserData.data.name.value, "Encrypted Email Value used:", validatedApiUserData.data.email.value);
-            
             let errorDetail = "";
             if (!actualName && !actualEmail) errorDetail = "Falló la desencriptación del nombre y el email.";
             else if (!actualName) errorDetail = "Falló la desencriptación del nombre.";
             else errorDetail = "Falló la desencriptación del email.";
             
             const fullErrorMessage = `No se pudieron procesar los detalles del usuario. ${errorDetail} Esto puede deberse a una discrepancia en las claves de encriptación o a datos corruptos desde el servidor. Revisa la consola del servidor para más detalles de la desencriptación.`;
+            console.warn("LoginUser action: Decryption failed or result not string. Name used:", validatedApiUserData.data.name.value, "Email used:", validatedApiUserData.data.email.value, "Decrypted Name:", actualName, "Decrypted Email:", actualEmail);
 
             return {
               message: "Error al procesar datos de usuario del servicio externo.",
@@ -416,5 +408,145 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     };
   }
 }
+
+export type DeleteAccountState = {
+  errors?: {
+    _form?: string[];
+    email?: string[]; // For potential Zod validation if we add it
+  };
+  message?: string | null;
+  success?: boolean;
+  debugDeleteApiUrl?: string;
+};
+
+const deleteUserPayloadSchema = z.object({
+  email: z.string().email("El correo electrónico proporcionado no es válido."),
+});
+
+export async function deleteUserAccount(
+  userEmail: string, // Pass user email directly
+  prevState: DeleteAccountState 
+  // formData is not used here as we get email directly
+): Promise<DeleteAccountState> {
+  console.log(`DeleteUserAccount action: Initiated for email: ${userEmail}.`);
+
+  const validatedEmail = deleteUserPayloadSchema.safeParse({ email: userEmail });
+  if (!validatedEmail.success) {
+      console.warn("DeleteUserAccount action: Invalid email provided to action.", validatedEmail.error.flatten().fieldErrors);
+      return {
+          errors: validatedEmail.error.flatten().fieldErrors,
+          message: "Error interno: el correo electrónico para la baja no es válido.",
+          success: false,
+      };
+  }
+  
+  const emailToDelete = validatedEmail.data.email;
+
+  const deletePayloadToEncrypt = { email: emailToDelete };
+  let encryptedDeletePayload;
+  try {
+    encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt);
+  } catch (encError: any) {
+    console.error("DeleteUserAccount action: Error during encryption:", encError);
+    return { 
+        message: "Error interno al preparar los datos para la baja.",
+        errors: { _form: ["No se pudieron encriptar los datos para la baja de forma segura."] },
+        success: false,
+    };
+  }
+
+  const finalEncryptedPayloadForUrl = encodeURIComponent(encryptedDeletePayload);
+  const type = "baja";
+  const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedPayloadForUrl}`;
+  console.log("DeleteUserAccount action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_DELETE_PAYLOAD`);
+
+  try {
+    console.log("DeleteUserAccount action: Attempting to call external API. URL:", generatedApiUrl.substring(0,150) + "...");
+    const signal = AbortSignal.timeout(API_TIMEOUT_MS);
+    const apiResponse = await fetch(generatedApiUrl, { signal });
+
+    let responseText = "";
+    try {
+        responseText = await apiResponse.text();
+        console.log("DeleteUserAccount action: External API call status:", apiResponse.status, "Raw Response Text:", responseText);
+    } catch (textError: any) {
+        console.warn(`DeleteUserAccount action: External API call failed or could not read text. Status: ${apiResponse.status}. Error reading text:`, textError.message);
+        return {
+            message: `Error del servicio de baja (HTTP ${apiResponse.status}): No se pudo leer la respuesta.`,
+            errors: { _form: [`El servicio de baja devolvió un error (HTTP ${apiResponse.status}) y no se pudo leer el cuerpo. Inténtalo más tarde.`] },
+            success: false,
+            debugDeleteApiUrl: generatedApiUrl,
+        };
+    }
+
+    if (!apiResponse.ok) {
+      console.warn(`DeleteUserAccount action: External API call failed. Status: ${apiResponse.status}. Response: ${responseText}`);
+      return {
+        message: `Error del servicio de baja (HTTP ${apiResponse.status}): ${responseText.substring(0,100)}`,
+        errors: { _form: [`El servicio de baja devolvió un error (HTTP ${apiResponse.status}). Inténtalo más tarde.`] },
+        success: false,
+        debugDeleteApiUrl: generatedApiUrl,
+      };
+    }
+
+    let apiResult: ExternalApiResponse;
+    try {
+      apiResult = JSON.parse(responseText);
+      console.log("DeleteUserAccount action: Parsed API Response JSON:", apiResult);
+    } catch (jsonError: any) {
+      console.warn("DeleteUserAccount action: Failed to parse JSON response from external API.", jsonError, "Raw text was:", responseText);
+      return {
+        message: "Error al procesar la respuesta del servicio de baja. Respuesta no válida.",
+        errors: { _form: ["El servicio de baja devolvió una respuesta inesperada."] },
+        success: false,
+        debugDeleteApiUrl: generatedApiUrl,
+      };
+    }
+
+    if (apiResult.status === "OK") {
+      console.log("DeleteUserAccount action: External API reported 'OK'. User deletion successful in backend.");
+      // Frontend logout and redirection will be handled by the component calling this action
+      return { 
+        message: "Tu cuenta ha sido eliminada exitosamente del sistema.", 
+        success: true,
+        debugDeleteApiUrl: generatedApiUrl,
+      };
+    } else if (apiResult.status === "NOOK") {
+      console.warn("DeleteUserAccount action: External API reported 'NOOK'. Message:", apiResult.message);
+      return {
+        message: apiResult.message || "El servicio externo no pudo completar la baja.",
+        errors: { _form: [apiResult.message || "No se pudo eliminar la cuenta con el servicio externo."] },
+        success: false,
+        debugDeleteApiUrl: generatedApiUrl,
+      };
+    } else {
+      console.warn("DeleteUserAccount action: External API reported an unknown status.", apiResult);
+      return {
+        message: "Respuesta desconocida del servicio de baja externo.",
+        errors: { _form: ["El servicio externo devolvió un estado inesperado para la baja."] },
+        success: false,
+        debugDeleteApiUrl: generatedApiUrl,
+      };
+    }
+
+  } catch (error: any) {
+    console.warn("DeleteUserAccount action: Error during external API call or processing:", error);
+    let errorMessage = "Ocurrió un error inesperado durante la baja de la cuenta.";
+
+    if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
+        errorMessage = "No se pudo conectar con el servicio de baja (tiempo de espera agotado).";
+        console.warn("DeleteUserAccount action: API call timed out after", API_TIMEOUT_MS, "ms.");
+    } else if (error.message && error.message.includes('fetch failed')) { 
+        errorMessage = "Fallo en la comunicación con el servicio de baja. Verifica tu conexión o el estado del servicio externo.";
+    }
     
-// decodeWithNoise function has been removed from here.
+    return {
+      message: errorMessage,
+      errors: { _form: [errorMessage] },
+      success: false,
+      debugDeleteApiUrl: generatedApiUrl,
+    };
+  }
+}
+
+    

@@ -114,6 +114,19 @@ export const t = {
   deactivateEmotionalDashboardButton: "Desactivar Dashboard Emocional",
   emotionalDashboardActivated: "Dashboard Emocional activado.",
   emotionalDashboardDeactivated: "Dashboard Emocional desactivado.",
+  // Delete Account
+  deleteAccountSectionTitle: "Zona de Peligro",
+  deleteAccountButtonLabel: "Dar de baja mi cuenta",
+  deleteAccountPageTitle: "Confirmar Baja de Cuenta",
+  deleteAccountWarningTitle: "¡Atención! Estás a punto de eliminar tu cuenta.",
+  deleteAccountWarningMessage: "Esta acción es irreversible. Todos tus datos, incluyendo tu perfil, progreso en rutas, registros emocionales y cualquier otra información asociada a tu cuenta, serán eliminados permanentemente del sistema. No podrás recuperarlos una vez que confirmes la baja.",
+  deleteAccountConfirmationPrompt: "¿Estás seguro/a de que deseas proceder con la baja definitiva de tu cuenta?",
+  confirmDeleteAccountButton: "Sí, eliminar mi cuenta permanentemente",
+  cancelDeleteAccountButton: "Cancelar, mantener mi cuenta",
+  deleteAccountSuccessTitle: "Cuenta Eliminada",
+  deleteAccountSuccessMessage: "Tu cuenta ha sido eliminada exitosamente. Esperamos verte de nuevo.",
+  deleteAccountErrorTitle: "Error al Eliminar Cuenta",
+  deleteAccountErrorMessage: "No se pudo eliminar tu cuenta en este momento. Por favor, inténtalo de nuevo más tarde o contacta con soporte.",
   // Age Ranges
   age_under_18: "Menor de 18",
   age_18_24: "18-24",
@@ -198,3 +211,5 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
+
+    
