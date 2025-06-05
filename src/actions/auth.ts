@@ -36,11 +36,17 @@ const loginSchema = z.object({
 });
 
 // Schema for the expected user data from the API on successful login
-// Name and email will be encrypted strings from the API.
+// 'name' and 'email' fields in the API's 'data' object are themselves objects
+// like: { value: "ENCRYPTED_JSON_STRING" }
+// The ENCRYPTED_JSON_STRING, when decrypted, yields the actual name/email string.
 const ApiLoginSuccessDataSchema = z.object({
   id: z.string().min(1, "El ID de usuario de la API no puede estar vacío."),
-  name: z.string().min(1, "El nombre de usuario encriptado de la API no puede estar vacío."), // Encrypted string
-  email: z.string().email({ message: "El formato del email encriptado de la API es inválido." }), // Encrypted string, but Zod will validate its basic string format
+  name: z.object({
+    value: z.string().min(1, "El valor encriptado del nombre en la API no puede estar vacío.")
+  }),
+  email: z.object({
+    value: z.string().min(1, "El valor encriptado del email en la API no puede estar vacío.")
+  }),
   ageRange: z.string().nullable().optional(),
   gender: z.string().nullable().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).nullable().optional(),
@@ -95,7 +101,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
   const userId = crypto.randomUUID(); 
 
   const userDetailsToEncrypt = {
-    id: userId,
+    id: userId, // Include the generated ID
     name,
     email,
     ageRange: ageRange || null,
@@ -237,7 +243,6 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
   const { email, password } = validatedFields.data;
   console.log(`LoginUser action: Validation successful for email: ${email}. Preparing for external API call.`);
 
-  // For login, the 'usuario' parameter sent to API should be an object containing the email, then encrypted.
   const loginDetailsToEncrypt = { email: email };
   const passwordToEncrypt = { value: password };
 
@@ -308,40 +313,35 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     if (apiResult.status === "OK") {
       if (apiResult.data) {
         const validatedApiUserData = ApiLoginSuccessDataSchema.safeParse(apiResult.data);
+        
         if (validatedApiUserData.success) {
-          // Decrypt name and email
-          const decryptedNameObj = decryptDataAES(validatedApiUserData.data.name);
-          const actualName = (decryptedNameObj && typeof decryptedNameObj === 'object' && 'value' in decryptedNameObj && typeof decryptedNameObj.value === 'string') 
-                             ? decryptedNameObj.value 
-                             : null;
+          // validatedApiUserData.data.name.value is the ENCRYPTED JSON STRING for name
+          // validatedApiUserData.data.email.value is the ENCRYPTED JSON STRING for email
+          
+          const decryptedName = decryptDataAES(validatedApiUserData.data.name.value);
+          const actualName = (decryptedName && typeof decryptedName === 'string') ? decryptedName : null;
 
-          const decryptedEmailObj = decryptDataAES(validatedApiUserData.data.email);
-          const actualEmail = (decryptedEmailObj && typeof decryptedEmailObj === 'object' && 'value' in decryptedEmailObj && typeof decryptedEmailObj.value === 'string') 
-                              ? decryptedEmailObj.value 
-                              : null;
+          const decryptedEmail = decryptDataAES(validatedApiUserData.data.email.value);
+          const actualEmail = (decryptedEmail && typeof decryptedEmail === 'string') ? decryptedEmail : null;
           
           if (!actualName || !actualEmail) {
-            console.warn("LoginUser action: Failed to decrypt name/email from API response or decrypted data has unexpected structure. Name Obj:", decryptedNameObj, "Email Obj:", decryptedEmailObj);
+            console.warn("LoginUser action: Failed to decrypt name/email from API response or decrypted data is not a string. Name:", actualName, "Email:", actualEmail, "Encrypted Name Value:", validatedApiUserData.data.name.value, "Encrypted Email Value:", validatedApiUserData.data.email.value);
             return {
               message: "Error al procesar datos de usuario del servicio externo.",
-              errors: { _form: ["No se pudieron desencriptar los detalles críticos del usuario (nombre/email)."] },
+              errors: { _form: ["No se pudieron desencriptar los detalles críticos del usuario (nombre/email) o el formato fue incorrecto."] },
               user: null,
               debugLoginApiUrl: generatedApiUrl,
             };
           }
-          // Basic check to ensure decrypted email matches input email for security/consistency.
-          // This assumes the API returns the *same* email that was used for login, now decrypted.
+          
           if (actualEmail.toLowerCase() !== email.toLowerCase()) {
             console.warn(`LoginUser action: Decrypted email (${actualEmail}) does not match login email (${email}). Potential issue.`);
-             // Depending on policy, you might want to fail here, or log and proceed.
-             // For now, proceed but log it.
           }
-
 
           const userFromApi: ActionUser = {
             id: validatedApiUserData.data.id,
-            name: actualName,
-            email: actualEmail, // Use decrypted email
+            name: actualName, // Use decrypted string
+            email: actualEmail, // Use decrypted string
             ageRange: validatedApiUserData.data.ageRange || null,
             gender: validatedApiUserData.data.gender || null,
             initialEmotionalState: validatedApiUserData.data.initialEmotionalState || null,
@@ -353,7 +353,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             debugLoginApiUrl: generatedApiUrl,
           };
         } else {
-          console.warn("LoginUser action: External API reported 'OK' but user data from API is invalid/incomplete after initial Zod validation.", validatedApiUserData.error.flatten().fieldErrors, "Received data:", apiResult.data);
+          console.warn("LoginUser action: External API reported 'OK' but user data from API is invalid/incomplete after Zod validation.", validatedApiUserData.error.flatten().fieldErrors, "Received data:", apiResult.data);
           return {
             message: "Respuesta de inicio de sesión incompleta o inválida del servicio externo (post-validación Zod).",
             errors: { _form: ["El servicio externo devolvió datos de usuario que no pasaron la validación de formato: " + JSON.stringify(validatedApiUserData.error.flatten().fieldErrors)] },
@@ -407,5 +407,4 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     };
   }
 }
-
     
