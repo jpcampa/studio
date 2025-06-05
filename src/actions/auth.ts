@@ -66,7 +66,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
   );
 
   if (!validatedFields.success) {
-    console.error("RegisterUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
+    console.warn("RegisterUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Error de validación en los datos ingresados.",
@@ -78,7 +78,10 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
 
   console.log("RegisterUser action: Validation successful. Preparing for external API call.");
   
+  const userId = crypto.randomUUID(); // Generate UUID for the new user
+
   const userDetailsToEncrypt = {
+    id: userId, // Include the generated ID
     name,
     email,
     ageRange: ageRange || null,
@@ -110,7 +113,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     
     if (!apiResponse.ok) {
       const errorText = await apiResponse.text().catch(() => "No se pudo leer el cuerpo del error.");
-      console.error(`RegisterUser action: External API call failed. Status: ${apiResponse.status}. Response: ${errorText}`);
+      console.warn(`RegisterUser action: External API call failed. Status: ${apiResponse.status}. Response: ${errorText}`);
       return {
         message: `Error del servicio externo (HTTP ${apiResponse.status}): ${errorText.substring(0,100)}`,
         errors: { _form: [`El servicio de registro devolvió un error (HTTP ${apiResponse.status}). Inténtalo más tarde.`] },
@@ -121,14 +124,12 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
 
     let apiResult: ExternalApiResponse;
     try {
-      const responseText = await apiResponse.text(); // Read as text first for better error diagnosis
+      const responseText = await apiResponse.text(); 
       console.log("RegisterUser action: External API call successful. Raw Response Text:", responseText);
       apiResult = JSON.parse(responseText);
       console.log("RegisterUser action: Parsed API Response JSON:", apiResult);
     } catch (jsonError: any) {
-      console.error("RegisterUser action: Failed to parse JSON response from external API.", jsonError);
-      // const responseTextForError = await apiResponse.text().catch(() => "No se pudo leer la respuesta de texto tras error JSON."); // Already read
-      // console.error("RegisterUser action: Raw text response from API (re-read attempt - might fail):", responseTextForError);
+      console.warn("RegisterUser action: Failed to parse JSON response from external API.", jsonError);
       return {
         message: "Error al procesar la respuesta del servicio de registro. Respuesta no válida.",
         errors: { _form: ["El servicio de registro devolvió una respuesta inesperada. Inténtalo más tarde."] },
@@ -141,11 +142,11 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       console.log("RegisterUser action: External API reported 'OK'. Registration successful. User should now log in.");
       return { 
         message: "¡Registro completado! Ahora puedes iniciar sesión.", 
-        user: null, 
+        user: null, // User is null because they need to log in separately
         debugApiUrl: generatedApiUrl,
       };
     } else if (apiResult.status === "NOOK") {
-      console.error("RegisterUser action: External API reported 'NOOK'. Message:", apiResult.message);
+      console.warn("RegisterUser action: External API reported 'NOOK'. Message:", apiResult.message);
       return {
         message: apiResult.message || "El servicio de registro externo indicó un problema.",
         errors: { _form: [apiResult.message || "No se pudo completar el registro con el servicio externo."] },
@@ -153,7 +154,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
         debugApiUrl: generatedApiUrl,
       };
     } else {
-      console.error("RegisterUser action: External API reported an unknown status.", apiResult);
+      console.warn("RegisterUser action: External API reported an unknown status.", apiResult);
       return {
         message: "Respuesta desconocida del servicio de registro externo.",
         errors: { _form: ["El servicio de registro externo devolvió un estado inesperado."] },
@@ -163,14 +164,13 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     }
 
   } catch (error: any) {
-    console.error("RegisterUser action: Error during external API call or processing:", error);
+    console.warn("RegisterUser action: Error during external API call or processing:", error);
     let errorMessage = "Ocurrió un error inesperado durante el registro.";
 
     if (error.name === 'AbortError') {
         errorMessage = "No se pudo conectar con el servicio de registro (tiempo de espera agotado).";
-        console.error("RegisterUser action: API call timed out after", API_TIMEOUT_MS, "ms.");
+        console.warn("RegisterUser action: API call timed out after", API_TIMEOUT_MS, "ms.");
     } else if (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT') { 
-        // This might still be caught if AbortSignal.timeout is not effective or another connect timeout happens
         errorMessage = "No se pudo conectar con el servicio de registro (tiempo de espera agotado - UND_ERR_CONNECT_TIMEOUT).";
     } else if (error.message && error.message.includes('fetch failed')) { 
         errorMessage = "Fallo en la comunicación con el servicio de registro. Verifica tu conexión o el estado del servicio externo.";
@@ -180,7 +180,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       message: errorMessage,
       errors: { _form: [errorMessage] },
       user: null,
-      debugApiUrl: generatedApiUrl, // Include URL even on error for debugging
+      debugApiUrl: generatedApiUrl, 
     };
   }
 }
@@ -204,7 +204,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
   );
 
   if (!validatedFields.success) {
-    console.error("Simulated LoginUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
+    console.warn("Simulated LoginUser action: Validation failed.", validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Error de validación.",
@@ -214,27 +214,29 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
   const { email, password } = validatedFields.data;
   console.log(`Simulated LoginUser action: Validation successful for email: ${email}.`);
 
+  // For now, we'll simulate a successful login for any non-empty password
+  // and derive a name from the email. In a real app, you'd verify against a backend.
   if (email === 'user@example.com' && password === 'password123') {
     const user: ActionUser = {
-      id: 'simulated-id-1',
+      id: 'simulated-id-1', // Consistent ID for this test user
       name: 'Usuarie Ejemplo',
       email: 'user@example.com',
-      ageRange: "25_34",
-      gender: "prefer_not_to_say",
-      initialEmotionalState: 3,
+      ageRange: "25_34", // Example data
+      gender: "prefer_not_to_say", // Example data
+      initialEmotionalState: 3, // Example data
     };
     console.log("Simulated LoginUser action: Hardcoded user login successful.");
     return { message: "Inicio de sesión exitoso.", user };
   } else {
-    console.log(`Simulated LoginUser action: Attempting login for non-hardcoded user: ${email}`);
+    // Simulate login for any other user
     const simulatedName = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const user: ActionUser = {
-      id: crypto.randomUUID(), 
+      id: crypto.randomUUID(), // Generate a new ID for dynamically "logged in" users
       name: simulatedName,
       email: email,
-      ageRange: "18_24", 
-      gender: "other", 
-      initialEmotionalState: Math.floor(Math.random() * 5) + 1, 
+      ageRange: "18_24", // Default example data
+      gender: "other", // Default example data
+      initialEmotionalState: Math.floor(Math.random() * 5) + 1, // Random default
     };
     console.log("Simulated LoginUser action: Dynamic user login successful.", user);
     return { message: "Inicio de sesión exitoso.", user };
