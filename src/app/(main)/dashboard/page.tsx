@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { useUser } from "@/contexts/UserContext";
+import { useUser, type User } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { DashboardSummaryCard } from "@/components/dashboard/DashboardSummaryCard";
 import { ChartPlaceholder } from "@/components/dashboard/ChartPlaceholder";
@@ -19,12 +19,16 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2 } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
 import { Alert, AlertDescription } from "@/components/ui/alert"; 
 import { encryptDataAES, decryptDataAES } from "@/lib/encryption"; 
+import { useActivePath } from "@/contexts/ActivePathContext";
+import { type ActivePathDetails as StoredActivePathDetails, getCompletedModules } from "@/lib/progressStore";
+import { pathsData, type Path as AppPathData } from "@/data/pathsData";
+
 
 interface ProcessedChartDataPoint {
   date: string; 
@@ -32,6 +36,23 @@ interface ProcessedChartDataPoint {
   emotionLabel: string;
   fullDate: string; 
 }
+
+interface PathProgressInfo {
+  pathId: string;
+  pathTitle: string;
+  totalModules: number;
+  completedModulesCount: number;
+  progressPercentage: number;
+  isCompleted: boolean;
+}
+
+interface UserActivitySummary {
+  user: User | null;
+  emotionalEntries: EmotionalEntry[];
+  activePath: StoredActivePathDetails | null;
+  allPathsProgress: PathProgressInfo[];
+}
+
 
 const moodScoreMapping: Record<string, number> = {
   alegria: 5,
@@ -55,14 +76,15 @@ export default function DashboardPage() {
   const { user } = useUser();
   const { toast } = useToast();
   const { isEmotionalDashboardEnabled } = useFeatureFlag(); 
+  const { activePath: currentActivePath } = useActivePath();
   
   const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
-  const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
+  const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   
-  const [currentUserDisplay, setCurrentUserDisplay] = useState<string | null>(null);
-  const [encryptedUserDataForTest, setEncryptedUserDataForTest] = useState<string | null>(null);
+  const [userActivityForDisplay, setUserActivityForDisplay] = useState<string | null>(null);
+  const [encryptedUserActivityForTest, setEncryptedUserActivityForTest] = useState<string | null>(null);
   const [decryptedDataForTest, setDecryptedDataForTest] = useState<string | null>(null);
   const [lastGeneratedRegisterApiUrl, setLastGeneratedRegisterApiUrl] = useState<string | null>(null);
   const [lastGeneratedLoginApiUrl, setLastGeneratedLoginApiUrl] = useState<string | null>(null);
@@ -78,7 +100,7 @@ export default function DashboardPage() {
       console.log("DashboardPage: Initial Load (Emotional Dashboard Enabled) - loadedAllEntries:", loadedAllEntries);
 
       setRecentEntries(loadedRecentEntries);
-      setAllEntries(loadedAllEntries);
+      setAllEntriesForChart(loadedAllEntries);
 
       if (loadedRecentEntries.length > 0) {
         const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
@@ -87,18 +109,15 @@ export default function DashboardPage() {
         }
       }
 
-      // Load debug URLs from sessionStorage
       const storedRegisterUrl = sessionStorage.getItem(SESSION_STORAGE_REGISTER_URL_KEY);
-      console.log("DashboardPage: Attempting to read register URL from sessionStorage. Found:", storedRegisterUrl);
       if (storedRegisterUrl) setLastGeneratedRegisterApiUrl(storedRegisterUrl);
 
       const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
-      console.log("DashboardPage: Attempting to read login URL from sessionStorage. Found:", storedLoginUrl);
       if (storedLoginUrl) setLastGeneratedLoginApiUrl(storedLoginUrl);
 
     } else {
       setRecentEntries([]);
-      setAllEntries([]);
+      setAllEntriesForChart([]);
       setLastEmotion(null);
       setLastGeneratedRegisterApiUrl(null);
       setLastGeneratedLoginApiUrl(null);
@@ -107,22 +126,50 @@ export default function DashboardPage() {
   }, [t, isEmotionalDashboardEnabled]); 
 
   useEffect(() => {
-    console.log("DashboardPage: Encrypt User Data Test Value useEffect running. Current user:", user);
+    console.log("DashboardPage: User Activity Summary useEffect running. Current user:", user, "Current Active Path:", currentActivePath);
     if (user && isEmotionalDashboardEnabled) {
+      const allEmotionalEntries = getEmotionalEntries();
+      const allPathsProgressData = pathsData.map((appPath: AppPathData): PathProgressInfo => {
+        const completedModuleIdsSet = getCompletedModules(appPath.id);
+        const completedModulesCount = completedModuleIdsSet.size;
+        const totalModules = appPath.modules.length;
+        const progressPercentage = totalModules > 0 ? Math.round((completedModulesCount / totalModules) * 100) : 0;
+        return {
+          pathId: appPath.id,
+          pathTitle: appPath.title,
+          totalModules,
+          completedModulesCount,
+          progressPercentage,
+          isCompleted: progressPercentage === 100 && totalModules > 0,
+        };
+      });
+
+      const summary: UserActivitySummary = {
+        user,
+        emotionalEntries: allEmotionalEntries,
+        activePath: currentActivePath,
+        allPathsProgress: allPathsProgressData,
+      };
+
+      setUserActivityForDisplay(JSON.stringify(summary, null, 2));
+      console.log('DashboardPage - User Activity Summary (for display):', summary);
+
       try {
-        const encryptedString = encryptDataAES(user);
-        console.log('DashboardPage - Encrypted User Data for Test (encryptDataAES output):', encryptedString);
-        setEncryptedUserDataForTest(encryptedString);
+        const encryptedString = encryptDataAES(summary);
+        console.log('DashboardPage - Encrypted User Activity Summary for Test (encryptDataAES output):', encryptedString);
+        setEncryptedUserActivityForTest(encryptedString);
       } catch (error) {
-        console.error("Error encrypting user data for test display:", error);
-        setEncryptedUserDataForTest("Error durante la encriptación de los datos de usuario para prueba.");
+        console.error("Error encrypting user activity summary for test display:", error);
+        setEncryptedUserActivityForTest("Error durante la encriptación de los datos de actividad del usuario para prueba.");
       }
     } else if (isEmotionalDashboardEnabled) {
-      setEncryptedUserDataForTest("No hay datos de usuario para encriptar.");
+      setUserActivityForDisplay("No hay datos de usuario para construir el resumen de actividad.");
+      setEncryptedUserActivityForTest("No hay datos de usuario para encriptar.");
     } else {
-      setEncryptedUserDataForTest(null);
+      setUserActivityForDisplay(null);
+      setEncryptedUserActivityForTest(null);
     }
-  }, [user, isEmotionalDashboardEnabled]); 
+  }, [user, currentActivePath, isEmotionalDashboardEnabled, pathsData]); // Added pathsData
 
   useEffect(() => {
     if (isEmotionalDashboardEnabled) {
@@ -140,24 +187,15 @@ export default function DashboardPage() {
     }
   }, [isEmotionalDashboardEnabled]);
 
-  useEffect(() => {
-    if (user && isEmotionalDashboardEnabled) {
-      console.log("DashboardPage: Current user data for display:", user);
-      setCurrentUserDisplay(JSON.stringify(user, null, 2));
-    } else if (!isEmotionalDashboardEnabled) {
-      setCurrentUserDisplay(null); 
-    }
-  }, [user, isEmotionalDashboardEnabled]);
-
 
   const chartData = useMemo(() => {
-    if (!isEmotionalDashboardEnabled || !allEntries || allEntries.length === 0) {
+    if (!isEmotionalDashboardEnabled || !allEntriesForChart || allEntriesForChart.length === 0) {
       console.log("DashboardPage: No entries for chartData calculation or dashboard disabled.");
       return [];
     }
-    console.log("DashboardPage: Recalculating chartData. allEntries count:", allEntries.length);
+    console.log("DashboardPage: Recalculating chartData. allEntriesForChart count:", allEntriesForChart.length);
 
-    const processedData = allEntries
+    const processedData = allEntriesForChart
       .map(entry => ({
         ...entry,
         timestampDate: new Date(entry.timestamp), 
@@ -176,7 +214,7 @@ export default function DashboardPage() {
       });
     console.log("DashboardPage: Processed chartData:", processedData);
     return processedData;
-  }, [allEntries, t, isEmotionalDashboardEnabled]);
+  }, [allEntriesForChart, t, isEmotionalDashboardEnabled]);
 
 
   const handleEmotionalEntrySubmit = (data: { situation: string; emotion: string }) => {
@@ -186,12 +224,32 @@ export default function DashboardPage() {
     const newEntry = addEmotionalEntry(data);
     
     setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); 
-    setAllEntries(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+    setAllEntriesForChart(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
 
     const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
     if (lastRegisteredEmotionDetails) {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
     }
+
+    // Trigger re-calculation of user activity summary
+     if (user) {
+      const allEmotionalEntries = getEmotionalEntries(); // Re-fetch all entries
+      const allPathsProgressData = pathsData.map((appPath: AppPathData): PathProgressInfo => {
+        const completedModuleIdsSet = getCompletedModules(appPath.id);
+        return {
+          pathId: appPath.id,
+          pathTitle: appPath.title,
+          totalModules: appPath.modules.length,
+          completedModulesCount: completedModuleIdsSet.size,
+          progressPercentage: appPath.modules.length > 0 ? Math.round((completedModuleIdsSet.size / appPath.modules.length) * 100) : 0,
+          isCompleted: (appPath.modules.length > 0 && completedModuleIdsSet.size === appPath.modules.length),
+        };
+      });
+      const summary: UserActivitySummary = { user, emotionalEntries: allEmotionalEntries, activePath: currentActivePath, allPathsProgress: allPathsProgressData };
+      setUserActivityForDisplay(JSON.stringify(summary, null, 2));
+      setEncryptedUserActivityForTest(encryptDataAES(summary));
+    }
+
 
     toast({
       title: t.emotionalEntrySavedTitle,
@@ -301,32 +359,32 @@ export default function DashboardPage() {
             <div className="mt-6 p-4 border rounded-lg bg-muted/20 text-left max-w-2xl mx-auto space-y-4 shadow">
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                  <UserCircle2 className="mr-2 h-4 w-4" />
-                  Datos del Usuario Actual (para prueba):
+                  <Activity className="mr-2 h-4 w-4" />
+                  Resumen de Actividad del Usuario (para prueba):
                 </p>
-                {currentUserDisplay ? (
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{currentUserDisplay}</code>
+                {userActivityForDisplay ? (
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
+                    <code>{userActivityForDisplay}</code>
                   </pre>
                 ) : (
-                  <p className="text-xs italic text-muted-foreground">[Datos de usuario no disponibles o cargando...]</p>
+                  <p className="text-xs italic text-muted-foreground">[Resumen de actividad no disponible o cargando...]</p>
                 )}
               </div>
               <Separator />
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Lock className="mr-2 h-4 w-4" />
-                  Datos de Usuario Actual Encriptados (para prueba):
+                  Resumen de Actividad Encriptado (para prueba):
                 </p>
-                {encryptedUserDataForTest ? (
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{encryptedUserDataForTest}</code>
+                {encryptedUserActivityForTest ? (
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
+                    <code>{encryptedUserActivityForTest}</code>
                   </pre>
                 ) : (
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Esto es para verificar la función <code>encryptDataAES(currentUserObject)</code>.
+                  Esto es para verificar la función <code>encryptDataAES(userActivitySummaryObject)</code>.
                 </p>
               </div>
               <Separator />
@@ -447,5 +505,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
