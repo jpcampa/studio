@@ -42,7 +42,7 @@ const ApiLoginSuccessDataSchema = z.object({
   email: z.string().email("El email de la API es inválido."),
   ageRange: z.string().nullable().optional(),
   gender: z.string().nullable().optional(),
-  initialEmotionalState: z.number().min(1).max(5).nullable().optional(),
+  initialEmotionalState: z.coerce.number().min(1).max(5).nullable().optional(), // Changed to z.coerce.number()
 });
 
 export type RegisterState = {
@@ -83,6 +83,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Error de validación en los datos ingresados.",
       user: null,
+      debugApiUrl: undefined,
     };
   }
   
@@ -227,7 +228,8 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Error de validación.",
-      user: null
+      user: null,
+      debugLoginApiUrl: undefined,
     };
   }
 
@@ -246,7 +248,8 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     return { 
         message: "Error interno al preparar los datos para el inicio de sesión.",
         errors: { _form: ["No se pudieron encriptar las credenciales de forma segura."] },
-        user: null 
+        user: null,
+        debugLoginApiUrl: undefined,
     };
   }
 
