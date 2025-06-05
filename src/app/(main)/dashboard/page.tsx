@@ -19,7 +19,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2 } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
@@ -45,6 +45,8 @@ const moodScoreMapping: Record<string, number> = {
 };
 
 const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"+qlG7LRW9es5HVkyZb5qBw==","data":"XGFYeXI0c1YgbLsx0n1atZ1iEvvWztRUnCmHQmeSwtnG70CJC6OUq7qrCOP830RGaV15IqJtp13co1fEUnirCH6W4CDarwqQnBGstSwsTAA="}';
+const SESSION_STORAGE_REGISTER_URL_KEY = 'workwell-debug-register-url';
+const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
 
 
 export default function DashboardPage() {
@@ -58,9 +60,13 @@ export default function DashboardPage() {
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntries, setAllEntries] = useState<EmotionalEntry[]>([]);
+  
+  const [currentUserDisplay, setCurrentUserDisplay] = useState<string | null>(null);
   const [encryptedUserDataForTest, setEncryptedUserDataForTest] = useState<string | null>(null);
   const [decryptedDataForTest, setDecryptedDataForTest] = useState<string | null>(null);
-  const [currentUserDisplay, setCurrentUserDisplay] = useState<string | null>(null);
+  const [lastGeneratedRegisterApiUrl, setLastGeneratedRegisterApiUrl] = useState<string | null>(null);
+  const [lastGeneratedLoginApiUrl, setLastGeneratedLoginApiUrl] = useState<string | null>(null);
+
 
   useEffect(() => {
     console.log("DashboardPage: Initial Load useEffect running. Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
@@ -80,10 +86,22 @@ export default function DashboardPage() {
           setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
         }
       }
+
+      // Load debug URLs from sessionStorage
+      const storedRegisterUrl = sessionStorage.getItem(SESSION_STORAGE_REGISTER_URL_KEY);
+      console.log("DashboardPage: Attempting to read register URL from sessionStorage. Found:", storedRegisterUrl);
+      if (storedRegisterUrl) setLastGeneratedRegisterApiUrl(storedRegisterUrl);
+
+      const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
+      console.log("DashboardPage: Attempting to read login URL from sessionStorage. Found:", storedLoginUrl);
+      if (storedLoginUrl) setLastGeneratedLoginApiUrl(storedLoginUrl);
+
     } else {
       setRecentEntries([]);
       setAllEntries([]);
       setLastEmotion(null);
+      setLastGeneratedRegisterApiUrl(null);
+      setLastGeneratedLoginApiUrl(null);
     }
     console.log("DashboardPage: Initial Load useEffect finished.");
   }, [t, isEmotionalDashboardEnabled]); 
@@ -182,6 +200,12 @@ export default function DashboardPage() {
     setIsEntryDialogOpen(false); 
     console.log("DashboardPage: Emotional entry submitted and states updated.");
   };
+
+  const handleClearDebugUrl = (key: string, setter: React.Dispatch<React.SetStateAction<string | null>>) => {
+    sessionStorage.removeItem(key);
+    setter(null);
+    toast({ title: "URL de prueba eliminada", description: `La URL para ${key === SESSION_STORAGE_REGISTER_URL_KEY ? 'registro' : 'login'} ha sido eliminada de sessionStorage.` });
+  };
   
   console.log("DashboardPage: Rendering JSX. User:", user?.name, "Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
 
@@ -274,7 +298,7 @@ export default function DashboardPage() {
               </DialogContent>
             </Dialog>
             
-            <div className="mt-6 p-4 border rounded-lg bg-muted/20 text-left max-w-xl mx-auto space-y-4 shadow">
+            <div className="mt-6 p-4 border rounded-lg bg-muted/20 text-left max-w-2xl mx-auto space-y-4 shadow">
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <UserCircle2 className="mr-2 h-4 w-4" />
@@ -322,6 +346,35 @@ export default function DashboardPage() {
                   Esto es para verificar <code>decryptDataAES</code> con una cadena predefinida.
                 </p>
               </div>
+              <Separator />
+               {lastGeneratedRegisterApiUrl && (
+                <div>
+                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                    <ShieldQuestion className="mr-2 h-4 w-4" />
+                    Última URL de Registro Generada (para prueba):
+                  </p>
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{lastGeneratedRegisterApiUrl}</code>
+                  </pre>
+                  <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_REGISTER_URL_KEY, setLastGeneratedRegisterApiUrl)} className="mt-2">
+                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL de Registro
+                  </Button>
+                </div>
+               )}
+               {lastGeneratedLoginApiUrl && (
+                <div>
+                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                    <ShieldQuestion className="mr-2 h-4 w-4" />
+                    Última URL de Login Generada (para prueba):
+                  </p>
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{lastGeneratedLoginApiUrl}</code>
+                  </pre>
+                  <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_LOGIN_URL_KEY, setLastGeneratedLoginApiUrl)} className="mt-2">
+                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL de Login
+                  </Button>
+                </div>
+               )}
             </div>
           </section>
 
@@ -394,9 +447,5 @@ export default function DashboardPage() {
     </div>
   );
 }
-    
 
     
-
-      
-

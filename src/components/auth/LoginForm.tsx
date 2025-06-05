@@ -10,16 +10,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
-import { loginUser, type LoginState, type ActionUser } from "@/actions/auth"; // Import LoginState and ActionUser
-import { useUser, type User as ContextUser } from "@/contexts/UserContext"; // Import User from context for type consistency
+import { loginUser, type LoginState } from "@/actions/auth"; 
+import { useUser, type User as ContextUser } from "@/contexts/UserContext"; 
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldQuestion } from "lucide-react";
 
-const initialState: LoginState = { // Use LoginState type from actions
+const initialState: LoginState = { 
   message: null,
   errors: {},
   user: null,
+  debugLoginApiUrl: undefined,
 };
 
 function SubmitButton() {
@@ -35,7 +36,7 @@ function SubmitButton() {
 export function LoginForm() {
   const t = useTranslations();
   const { toast } = useToast();
-  const { user: contextUser, loading: userLoading, login: loginContext } = useUser(); // Get login from context
+  const { user: contextUser, loading: userLoading, login: loginContext } = useUser(); 
   const router = useRouter();
   const [state, formAction] = useActionState(loginUser, initialState);
 
@@ -44,18 +45,20 @@ export function LoginForm() {
     if (!userLoading && contextUser) {
       console.log("LoginForm: User detected (from UserContext), redirecting to /dashboard");
       router.push("/dashboard");
-    } else {
-      console.log("LoginForm: No user in UserContext or still loading, not redirecting. Conditions: !userLoading =", !userLoading, "contextUser =", !!contextUser);
     }
   }, [contextUser, userLoading, router]);
 
   useEffect(() => {
     console.log("LoginForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
+    
+    if (state.debugLoginApiUrl) {
+      console.log("LoginForm: Saving debugLoginApiUrl to sessionStorage:", state.debugLoginApiUrl);
+      sessionStorage.setItem('workwell-debug-login-url', state.debugLoginApiUrl);
+    }
+
     if (state.message) {
       if (state.message === "Inicio de sesión exitoso." && state.user) {
-        // Ensure the user object from action is compatible with UserContext's User type
-        // This might require casting or ensuring ActionUser and ContextUser are structurally compatible
-        loginContext(state.user as ContextUser); // Call context's login method
+        loginContext(state.user as ContextUser); 
         toast({
           title: t.login,
           description: state.message,
@@ -63,23 +66,27 @@ export function LoginForm() {
         console.log("LoginForm: Server action reported successful login. User set in context.");
         // Redirection is handled by the other useEffect monitoring contextUser
       } else if (state.message !== "Inicio de sesión exitoso.") {
-        // Handle login failures or other messages
-        toast({
-          title: t.loginFailed,
-          description: state.message,
-          variant: "destructive",
-        });
-        console.error("LoginForm: Server action reported login failure or other message. Message:", state.message);
+        // Handle login failures or other messages if no specific field errors will be shown
+        if (!state.errors || Object.keys(state.errors).length === 0 || (state.errors._form && state.errors._form.length > 0)) {
+          toast({
+            title: t.loginFailed,
+            description: state.errors?._form ? state.errors._form[0] : state.message,
+            variant: "destructive",
+          });
+        }
+        console.warn("LoginForm: Server action reported login failure or other message. Message:", state.message, "Errors:", state.errors);
       }
     }
-    if (state.errors && Object.keys(state.errors).length > 0) {
-      console.error("LoginForm: Server action reported validation errors:", state.errors);
+
+    // Display toasts for specific field errors if they exist and no general _form error message was already shown
+    if (state.errors && (!state.errors._form || state.errors._form.length === 0)) {
+      console.warn("LoginForm: Server action reported validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
-        if (Array.isArray(fieldErrors)) {
+        if (key !== '_form' && Array.isArray(fieldErrors)) {
           fieldErrors.forEach(error => {
-            if (typeof error === 'string') {
+            if (typeof error === 'string') { 
               toast({
-                title: `Error en ${key === '_form' ? 'formulario' : key}`,
+                title: `Error en ${t[key as keyof typeof t] || key}`,
                 description: error,
                 variant: "destructive",
               });
@@ -116,7 +123,7 @@ export function LoginForm() {
           <div>
             <Label htmlFor="email">{t.email}</Label>
             <Input id="email" name="email" type="email" placeholder="tu@ejemplo.com" required />
-            {state.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
+            {state.errors?.email && <p className="text-sm text-destructive pt-1">{state.errors.email[0]}</p>}
           </div>
           <div>
             <div className="flex items-center justify-between">
@@ -126,11 +133,27 @@ export function LoginForm() {
               </Link>
             </div>
             <Input id="password" name="password" type="password" required />
-            {state.errors?.password && <p className="text-sm text-destructive">{state.errors.password[0]}</p>}
+            {state.errors?.password && <p className="text-sm text-destructive pt-1">{state.errors.password[0]}</p>}
           </div>
-          {state.errors?._form && <p className="text-sm text-destructive">{state.errors._form[0]}</p>}
-          {state.message && state.message !== "Inicio de sesión exitoso." && !state.errors?.password && !state.errors?.email && !state.errors?._form && (
-            <p className="text-sm text-destructive">{state.message}</p>
+          
+          {state.errors?._form && (
+            <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.errors._form[0]}</p>
+          )}
+          
+          {state.message && state.message !== "Inicio de sesión exitoso." && !state.user && (!state.errors || Object.keys(state.errors).length === 0) && (
+            <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
+          )}
+
+          {state.debugLoginApiUrl && (
+            <div className="mt-4 p-3 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg shadow">
+              <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 flex items-center mb-1">
+                <ShieldQuestion className="mr-2 h-4 w-4" />
+                Debug: URL de API de Login Generada
+              </p>
+              <pre className="text-xs text-yellow-600 dark:text-yellow-400 overflow-x-auto whitespace-pre-wrap break-all bg-yellow-100 dark:bg-yellow-800/30 p-2 rounded-md shadow-inner">
+                <code>{state.debugLoginApiUrl}</code>
+              </pre>
+            </div>
           )}
           <SubmitButton />
         </form>
@@ -146,3 +169,5 @@ export function LoginForm() {
     </Card>
   );
 }
+
+    
