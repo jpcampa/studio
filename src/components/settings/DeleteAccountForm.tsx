@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect, FormEvent } from "react"; // Added useEffect and FormEvent
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -9,7 +9,7 @@ import { useTranslations } from "@/lib/translations";
 import { deleteUserAccount, type DeleteAccountState } from "@/actions/auth";
 import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, ShieldQuestion } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,17 +26,21 @@ const initialState: DeleteAccountState = {
   message: null,
   errors: {},
   success: false,
+  debugDeleteApiUrl: undefined,
 };
+
+const SESSION_STORAGE_DELETE_URL_KEY = 'workwell-debug-delete-url';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   const t = useTranslations();
   return (
     <Button
-      type="submit"
+      type="submit" // Changed from "button" to "submit"
       variant="destructive"
       className="w-full"
       disabled={pending}
+      // onClick is removed as form submission handles it
     >
       {pending ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -54,96 +58,135 @@ export function DeleteAccountForm() {
   const { user, logout, loading: userLoading } = useUser();
   const router = useRouter();
 
-  // Wrapper for deleteUserAccount to pass the email
   const deleteUserAccountWithEmail = deleteUserAccount.bind(null, user?.email || "");
   
   const [state, formAction] = useActionState(deleteUserAccountWithEmail, initialState);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+  const [lastGeneratedDeleteApiUrl, setLastGeneratedDeleteApiUrl] = useState<string | null>(null);
 
+  useEffect(() => {
+    const storedUrl = sessionStorage.getItem(SESSION_STORAGE_DELETE_URL_KEY);
+    if (storedUrl) {
+      setLastGeneratedDeleteApiUrl(storedUrl);
+    }
+  }, []);
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Open the alert dialog for final confirmation before calling the formAction
-    setIsAlertDialogOpen(true);
-  };
+  useEffect(() => {
+    if (state.debugDeleteApiUrl) {
+      sessionStorage.setItem(SESSION_STORAGE_DELETE_URL_KEY, state.debugDeleteApiUrl);
+      setLastGeneratedDeleteApiUrl(state.debugDeleteApiUrl);
+    }
 
-  const handleConfirmDeletion = () => {
-    document.getElementById("actual-delete-form")?.requestSubmit();
-  };
-
-
-  if (state.success && state.message) {
-    toast({
-      title: t.deleteAccountSuccessTitle,
-      description: state.message,
-    });
-    logout(); // Clear user from context and localStorage
-    router.push('/login'); // Redirect to login
-    // Reset state or prevent further rendering if needed
-    return null; 
-  }
-
-  if (!state.success && state.message && (!state.errors || Object.keys(state.errors).length === 0)) {
-    toast({
-      title: t.deleteAccountErrorTitle,
-      description: state.message,
-      variant: "destructive",
-    });
-     // Reset message to prevent re-toasting on re-render
-    state.message = null;
-  }
-  
-  if (state.errors?._form) {
-     toast({
+    if (state.success && state.message) {
+      toast({
+        title: t.deleteAccountSuccessTitle,
+        description: state.message,
+      });
+      logout(); 
+      router.push('/login'); 
+    } else if (!state.success && state.message && (!state.errors || Object.keys(state.errors).length === 0)) {
+      toast({
         title: t.deleteAccountErrorTitle,
-        description: state.errors._form[0],
+        description: state.message,
         variant: "destructive",
       });
-      state.errors._form = undefined; // Clear to prevent re-toast
-  }
+      // Consider not clearing the message here to allow it to be shown with the debug URL
+      // state.message = null; 
+    } else if (state.errors?._form) {
+       toast({
+          title: t.deleteAccountErrorTitle,
+          description: state.errors._form[0],
+          variant: "destructive",
+        });
+        // state.errors._form = undefined; 
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, logout, router, toast, t]); // Removed state.message, state.errors to avoid loop with toast resetting
 
+  const handleFormSubmitWrapper = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent default form submission
+    setIsAlertDialogOpen(true); // Open the dialog for confirmation
+  };
+
+  const actualFormSubmit = () => {
+    // Programmatically submit the form by its ID
+    const form = document.getElementById("actual-delete-form") as HTMLFormElement | null;
+    if (form) {
+      form.requestSubmit();
+    }
+    setIsAlertDialogOpen(false); // Close dialog after initiating submit
+  };
+  
+  const handleClearDebugUrl = () => {
+    sessionStorage.removeItem(SESSION_STORAGE_DELETE_URL_KEY);
+    setLastGeneratedDeleteApiUrl(null);
+    toast({ title: "URL de prueba eliminada", description: "La URL para la baja ha sido eliminada de sessionStorage." });
+  };
 
   if (userLoading) {
     return <div className="flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   }
 
   if (!user) {
-    // Should not happen if page is protected by layout, but good for safety
     router.push('/login');
     return null;
   }
   
   return (
-    <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
-      <form action={formAction} id="actual-delete-form">
-        <AlertDialogTrigger asChild>
-          <Button
-            variant="destructive"
-            className="w-full"
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            {t.confirmDeleteAccountButton} 
+    <>
+      {/* Form now wraps the AlertDialogTrigger and is submitted programmatically */}
+      <form onSubmit={handleFormSubmitWrapper} id="actual-delete-form" action={formAction}>
+        <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
+          <AlertDialogTrigger asChild>
+            <Button
+              type="submit" // This button now triggers the form's onSubmit, which opens the dialog
+              variant="destructive"
+              className="w-full"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              {t.confirmDeleteAccountButton} 
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t.deleteAccountPageTitle}</AlertDialogTitle>
+              <AlertDialogDescription className="max-h-[calc(100vh-20rem)] overflow-y-auto pr-2">
+                {t.deleteAccountWarningMessage}
+                <br/><br/>
+                <strong>{t.deleteAccountConfirmationPrompt}</strong>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t.cancelDeleteAccountButton}</AlertDialogCancel>
+              {/* AlertDialogAction now calls actualFormSubmit */}
+              <AlertDialogAction onClick={actualFormSubmit} asChild>
+                 {/* The SubmitButton component is now directly used here */}
+                 {/* We need to use a standard Button here, and the formAction will be handled by the form itself */}
+                 <Button variant="destructive" className="w-full" disabled={useFormStatus().pending}>
+                    {useFormStatus().pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+                    {t.confirmDeleteAccountButton}
+                 </Button>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </form> {/* Form tag ends here */}
+
+      {/* Debug URL display section */}
+      {lastGeneratedDeleteApiUrl && (
+        <div className="mt-6 p-4 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg shadow-md">
+          <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 flex items-center mb-2">
+            <ShieldQuestion className="mr-2 h-5 w-5" />
+            Debug: URL de API de Baja Generada
+          </p>
+          <pre className="text-xs text-yellow-600 dark:text-yellow-400 overflow-x-auto whitespace-pre-wrap break-all bg-yellow-100 dark:bg-yellow-800/30 p-3 rounded-md shadow-inner">
+            <code>{lastGeneratedDeleteApiUrl}</code>
+          </pre>
+          <Button variant="outline" size="sm" onClick={handleClearDebugUrl} className="mt-3 border-yellow-500 text-yellow-600 hover:bg-yellow-100 dark:hover:bg-yellow-800/50">
+            <Trash2 className="mr-2 h-4 w-4" /> Limpiar URL de Baja
           </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t.deleteAccountPageTitle}</AlertDialogTitle>
-            <AlertDialogDescription className="max-h-[calc(100vh-20rem)] overflow-y-auto pr-2"> {/* Added max-h and overflow */}
-              {t.deleteAccountWarningMessage}
-              <br/><br/>
-              <strong>{t.deleteAccountConfirmationPrompt}</strong>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t.cancelDeleteAccountButton}</AlertDialogCancel>
-            {/* This button now submits the form */}
-            <AlertDialogAction asChild>
-                 <SubmitButton />
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </form>
-    </AlertDialog>
+        </div>
+      )}
+    </>
   );
 }
-
