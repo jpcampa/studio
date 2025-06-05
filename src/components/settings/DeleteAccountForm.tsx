@@ -68,49 +68,7 @@ export function DeleteAccountForm() {
   };
 
   const handleConfirmDeletion = () => {
-    // Create a FormData object (even if empty, it's expected by useActionState's formAction)
-    // or directly call the action if it's adapted.
-    // For simplicity with useActionState, we can submit an empty form.
-    const formData = new FormData(); 
-    // This will trigger the formAction bound with useActionState
-    // It seems useActionState is designed more for form elements.
-    // Let's try calling the action directly and managing state.
-    
-    // Re-thinking: for useActionState, the form should be submitted.
-    // So, the button in AlertDialogAction should actually submit the form.
-    // This means the actual form submission logic will live within the form itself,
-    // and the AlertDialog is just a gate.
-    // The component needs to handle the `action` prop of the form.
-
-    // Correction: `formAction` is called when the form is submitted.
-    // The AlertDialog's "Confirm" should trigger the form submission.
-    // This can be done by having a hidden submit button inside the form,
-    // and clicking it programmatically, or by making the AlertDialogAction
-    // of type="submit" and associating it with the form.
-
-    // Let's simplify: The form itself will call the action.
-    // The AlertDialog will be triggered *before* submitting the form.
-    // The `SubmitButton` component will be the AlertDialogTrigger.
-    // The actual form submission will happen when "Confirm" is clicked in the dialog.
-    // This means the `formAction` will be called correctly.
-    
-    // The `form` tag itself is what `useActionState` uses.
-    // We just need to ensure the actual submission happens via the confirm button.
-    // The `SubmitButton` component from `useFormStatus` will reflect the pending state
-    // *after* the `formAction` is invoked.
-
-    // The current `SubmitButton` will be inside the `AlertDialogTrigger`.
-    // The `AlertDialogAction` will perform the actual submission.
-    
-    // No, this is getting complicated. Let's stick to a simple form with its own submit button.
-    // The AlertDialog will wrap the actual submit button.
-    
-    // If the form submission is triggered by the main button which in turn is gated by the dialog,
-    // `formAction` will be executed.
-
-    // The `formAction` needs to be called. The `SubmitButton` uses `useFormStatus`.
-    // Let's refine this.
-    document.getElementById("hidden-delete-form")?.requestSubmit();
+    document.getElementById("actual-delete-form")?.requestSubmit();
   };
 
 
@@ -162,16 +120,15 @@ export function DeleteAccountForm() {
           <Button
             variant="destructive"
             className="w-full"
-            // onClick={() => setIsAlertDialogOpen(true)} // Dialog is controlled
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            {t.confirmDeleteAccountButton}
+            {t.confirmDeleteAccountButton} 
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t.deleteAccountPageTitle}</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="max-h-[calc(100vh-20rem)] overflow-y-auto pr-2"> {/* Added max-h and overflow */}
               {t.deleteAccountWarningMessage}
               <br/><br/>
               <strong>{t.deleteAccountConfirmationPrompt}</strong>
@@ -190,4 +147,3 @@ export function DeleteAccountForm() {
   );
 }
 
-    
