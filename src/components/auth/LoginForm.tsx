@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react"; // Added useState
 import { useFormStatus } from "react-dom";
 import { useActionState } from "react";
 import Link from "next/link";
@@ -10,13 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
-import { loginUser, type LoginState } from "@/actions/auth"; 
-import { useUser, type User as ContextUser } from "@/contexts/UserContext"; 
+import { loginUser, type LoginState } from "@/actions/auth";
+import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, ShieldQuestion } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldQuestion } from "lucide-react"; // Added Eye, EyeOff
 
-const initialState: LoginState = { 
+const initialState: LoginState = {
   message: null,
   errors: {},
   user: null,
@@ -36,9 +36,12 @@ function SubmitButton() {
 export function LoginForm() {
   const t = useTranslations();
   const { toast } = useToast();
-  const { user: contextUser, loading: userLoading, login: loginContext } = useUser(); 
+  const { user: contextUser, loading: userLoading, login: loginContext } = useUser();
   const router = useRouter();
   const [state, formAction] = useActionState(loginUser, initialState);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
 
   useEffect(() => {
     console.log("LoginForm useEffect (Mount/UserUpdate): contextUser:", contextUser, "userLoading:", userLoading);
@@ -58,15 +61,13 @@ export function LoginForm() {
 
     if (state.message) {
       if (state.message === "Inicio de sesión exitoso." && state.user) {
-        loginContext(state.user as ContextUser); 
+        loginContext(state.user as ContextUser);
         toast({
           title: t.login,
           description: state.message,
         });
         console.log("LoginForm: Server action reported successful login. User set in context.");
-        // Redirection is handled by the other useEffect monitoring contextUser
       } else if (state.message !== "Inicio de sesión exitoso.") {
-        // Handle login failures or other messages if no specific field errors will be shown
         if (!state.errors || Object.keys(state.errors).length === 0 || (state.errors._form && state.errors._form.length > 0)) {
           toast({
             title: t.loginFailed,
@@ -78,13 +79,12 @@ export function LoginForm() {
       }
     }
 
-    // Display toasts for specific field errors if they exist and no general _form error message was already shown
     if (state.errors && (!state.errors._form || state.errors._form.length === 0)) {
       console.warn("LoginForm: Server action reported validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
         if (key !== '_form' && Array.isArray(fieldErrors)) {
           fieldErrors.forEach(error => {
-            if (typeof error === 'string') { 
+            if (typeof error === 'string') {
               toast({
                 title: `Error en ${t[key as keyof typeof t] || key}`,
                 description: error,
@@ -132,14 +132,32 @@ export function LoginForm() {
                 {t.forgotPassword}
               </Link>
             </div>
-            <Input id="password" name="password" type="password" required />
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                className="pr-10" // Add padding to make space for the icon
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm" // smaller icon button
+                className="absolute inset-y-0 right-0 flex items-center justify-center h-full px-3 text-muted-foreground hover:text-primary"
+                onClick={toggleShowPassword}
+                aria-label={showPassword ? t.hidePassword : t.showPassword}
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </Button>
+            </div>
             {state.errors?.password && <p className="text-sm text-destructive pt-1">{state.errors.password[0]}</p>}
           </div>
-          
+
           {state.errors?._form && (
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.errors._form[0]}</p>
           )}
-          
+
           {state.message && state.message !== "Inicio de sesión exitoso." && !state.user && (!state.errors || Object.keys(state.errors).length === 0) && (
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
           )}
@@ -169,5 +187,3 @@ export function LoginForm() {
     </Card>
   );
 }
-
-    

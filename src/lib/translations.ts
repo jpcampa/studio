@@ -16,6 +16,8 @@ export const t = {
   logout: "Cerrar Sesión",
   email: "Correo Electrónico",
   password: "Contraseña",
+  showPassword: "Mostrar contraseña",
+  hidePassword: "Ocultar contraseña",
   name: "Nombre",
   ageRange: "Rango de Edad",
   ageRangePlaceholder: "Selecciona tu rango de edad",
@@ -138,16 +140,16 @@ export const t = {
   dashboardGreeting: "Así va tu camino",
   quickSummary: "Resumen Rápido",
   currentWellbeing: "Tu Bienestar Hoy",
-  wellbeingPlaceholder: "Estable", 
+  wellbeingPlaceholder: "Estable",
   wellbeingDescription: "Basado en tu último registro.",
   progressSinceLast: "Tu Progreso",
-  progressPlaceholder: "+0%", 
+  progressPlaceholder: "+0%",
   progressDescription: "Desde la última evaluación.",
   inFocus: "En Foco",
-  inFocusPlaceholder: "Autoconocimiento", 
+  inFocusPlaceholder: "Autoconocimiento",
   inFocusDescription: "Área actual de desarrollo.",
   nextStep: "Siguiente Paso",
-  nextStepPlaceholder: "Ruta de Autoestima", 
+  nextStepPlaceholder: "Ruta de Autoestima",
   nextStepDescription: "Recomendado para ti.",
   emotionalRegistry: "Registro Emocional",
   registerEmotion: "✨ Registrar Emoción",
@@ -196,4 +198,3 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
-

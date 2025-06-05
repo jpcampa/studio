@@ -316,12 +316,12 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         
         if (validatedApiUserData.success) {
           console.log("LoginUser action: Input for name decryption:", validatedApiUserData.data.name.value);
-          const decryptedName = decryptDataAES(validatedApiUserData.data.name.value);
+          const decryptedName = ((validatedApiUserData.data.name.value));
           const actualName = (decryptedName && typeof decryptedName === 'string') ? decryptedName : null;
           console.log("LoginUser action: Decrypted name result:", actualName);
 
           console.log("LoginUser action: Input for email decryption:", validatedApiUserData.data.email.value);
-          const decryptedEmail = decryptDataAES(validatedApiUserData.data.email.value);
+          const decryptedEmail = ((validatedApiUserData.data.email.value));
           const actualEmail = (decryptedEmail && typeof decryptedEmail === 'string') ? decryptedEmail : null;
           console.log("LoginUser action: Decrypted email result:", actualEmail);
           
@@ -417,3 +417,5 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
   }
 }
     
+
+
