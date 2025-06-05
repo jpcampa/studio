@@ -315,20 +315,29 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         const validatedApiUserData = ApiLoginSuccessDataSchema.safeParse(apiResult.data);
         
         if (validatedApiUserData.success) {
-          // validatedApiUserData.data.name.value is the ENCRYPTED JSON STRING for name
-          // validatedApiUserData.data.email.value is the ENCRYPTED JSON STRING for email
-          
+          console.log("LoginUser action: Input for name decryption:", validatedApiUserData.data.name.value);
           const decryptedName = decryptDataAES(validatedApiUserData.data.name.value);
           const actualName = (decryptedName && typeof decryptedName === 'string') ? decryptedName : null;
+          console.log("LoginUser action: Decrypted name result:", actualName);
 
+          console.log("LoginUser action: Input for email decryption:", validatedApiUserData.data.email.value);
           const decryptedEmail = decryptDataAES(validatedApiUserData.data.email.value);
           const actualEmail = (decryptedEmail && typeof decryptedEmail === 'string') ? decryptedEmail : null;
+          console.log("LoginUser action: Decrypted email result:", actualEmail);
           
           if (!actualName || !actualEmail) {
-            console.warn("LoginUser action: Failed to decrypt name/email from API response or decrypted data is not a string. Name:", actualName, "Email:", actualEmail, "Encrypted Name Value:", validatedApiUserData.data.name.value, "Encrypted Email Value:", validatedApiUserData.data.email.value);
+            console.warn("LoginUser action: Failed to decrypt name/email from API response or decrypted data is not a string. Name:", actualName, "Email:", actualEmail, "Encrypted Name Value used:", validatedApiUserData.data.name.value, "Encrypted Email Value used:", validatedApiUserData.data.email.value);
+            
+            let errorDetail = "";
+            if (!actualName && !actualEmail) errorDetail = "Falló la desencriptación del nombre y el email.";
+            else if (!actualName) errorDetail = "Falló la desencriptación del nombre.";
+            else errorDetail = "Falló la desencriptación del email.";
+            
+            const fullErrorMessage = `No se pudieron procesar los detalles del usuario. ${errorDetail} Esto puede deberse a una discrepancia en las claves de encriptación o a datos corruptos desde el servidor. Revisa la consola del servidor para más detalles de la desencriptación.`;
+
             return {
               message: "Error al procesar datos de usuario del servicio externo.",
-              errors: { _form: ["No se pudieron desencriptar los detalles críticos del usuario (nombre/email) o el formato fue incorrecto."] },
+              errors: { _form: [fullErrorMessage] },
               user: null,
               debugLoginApiUrl: generatedApiUrl,
             };
@@ -340,8 +349,8 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 
           const userFromApi: ActionUser = {
             id: validatedApiUserData.data.id,
-            name: actualName, // Use decrypted string
-            email: actualEmail, // Use decrypted string
+            name: actualName, 
+            email: actualEmail, 
             ageRange: validatedApiUserData.data.ageRange || null,
             gender: validatedApiUserData.data.gender || null,
             initialEmotionalState: validatedApiUserData.data.initialEmotionalState || null,
