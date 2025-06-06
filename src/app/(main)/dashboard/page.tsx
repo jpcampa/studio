@@ -68,6 +68,8 @@ const moodScoreMapping: Record<string, number> = {
 const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"+qlG7LRW9es5HVkyZb5qBw==","data":"XGFYeXI0c1YgbLsx0n1atZ1iEvvWztRUnCmHQmeSwtnG70CJC6OUq7qrCOP830RGaV15IqJtp13co1fEUnirCH6W4CDarwqQnBGstSwsTAA="}';
 const SESSION_STORAGE_REGISTER_URL_KEY = 'workwell-debug-register-url';
 const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
+const API_BASE_URL_FOR_DEBUG = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php"; // Duplicated from auth.ts for dashboard debug display only
+const API_KEY_FOR_DEBUG = "4463"; // Duplicated from auth.ts for dashboard debug display only
 
 
 export default function DashboardPage() {
@@ -88,6 +90,7 @@ export default function DashboardPage() {
   const [decryptedDataForTest, setDecryptedDataForTest] = useState<string | null>(null);
   const [lastGeneratedRegisterApiUrl, setLastGeneratedRegisterApiUrl] = useState<string | null>(null);
   const [lastGeneratedLoginApiUrl, setLastGeneratedLoginApiUrl] = useState<string | null>(null);
+  const [debugDeleteApiUrlForDisplay, setDebugDeleteApiUrlForDisplay] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -115,15 +118,35 @@ export default function DashboardPage() {
       const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
       if (storedLoginUrl) setLastGeneratedLoginApiUrl(storedLoginUrl);
 
+      // Simulate delete URL generation for debug display if user is available
+      if (user && user.email) {
+        try {
+            const deletePayloadToEncrypt = { email: user.email };
+            const encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt);
+            const finalEncryptedPayloadForUrl = encodeURIComponent(encryptedDeletePayload);
+            const type = "baja";
+            const generatedDeleteUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&usuario=${finalEncryptedPayloadForUrl}`;
+            setDebugDeleteApiUrlForDisplay(generatedDeleteUrl);
+            console.log("DashboardPage: Generated simulated delete URL for display:", generatedDeleteUrl.substring(0,150) + "...");
+        } catch (error) {
+            console.error("DashboardPage: Error generating simulated delete URL for display:", error);
+            setDebugDeleteApiUrlForDisplay("Error generando URL de baja simulada.");
+        }
+      } else {
+        setDebugDeleteApiUrlForDisplay(null);
+      }
+
+
     } else {
       setRecentEntries([]);
       setAllEntriesForChart([]);
       setLastEmotion(null);
       setLastGeneratedRegisterApiUrl(null);
       setLastGeneratedLoginApiUrl(null);
+      setDebugDeleteApiUrlForDisplay(null);
     }
     console.log("DashboardPage: Initial Load useEffect finished.");
-  }, [t, isEmotionalDashboardEnabled]); 
+  }, [t, isEmotionalDashboardEnabled, user]); 
 
   useEffect(() => {
     console.log("DashboardPage: User Activity Summary useEffect running. Current user:", user, "Current Active Path:", currentActivePath);
@@ -169,7 +192,7 @@ export default function DashboardPage() {
       setUserActivityForDisplay(null);
       setEncryptedUserActivityForTest(null);
     }
-  }, [user, currentActivePath, isEmotionalDashboardEnabled, pathsData]); // Added pathsData
+  }, [user, currentActivePath, isEmotionalDashboardEnabled, pathsData]); 
 
   useEffect(() => {
     if (isEmotionalDashboardEnabled) {
@@ -431,6 +454,20 @@ export default function DashboardPage() {
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_LOGIN_URL_KEY, setLastGeneratedLoginApiUrl)} className="mt-2">
                     <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL de Login
                   </Button>
+                </div>
+               )}
+               {debugDeleteApiUrlForDisplay && (
+                <div>
+                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                    <ShieldQuestion className="mr-2 h-4 w-4" />
+                    URL de API de Baja (Simulada para Depuración):
+                  </p>
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{debugDeleteApiUrlForDisplay}</code>
+                  </pre>
+                   <p className="text-xs mt-2 text-muted-foreground">
+                    Generada al cargar el dashboard si el usuario está logueado. No se persiste en sessionStorage ni tiene botón de limpiar.
+                  </p>
                 </div>
                )}
             </div>

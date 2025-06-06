@@ -161,9 +161,11 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
 
     if (apiResult.status === "OK") {
       console.log("RegisterUser action: External API reported 'OK'. Registration successful. User should now log in.");
+      // For V1, after successful registration, prompt user to log in.
+      // We are not auto-logging in or creating a local session directly from registration.
       return { 
         message: "¡Registro completado! Ahora puedes iniciar sesión.", 
-        user: null, 
+        user: null, // No user object returned on register to force login
         debugApiUrl: generatedApiUrl,
       };
     } else if (apiResult.status === "NOOK") {
@@ -309,14 +311,14 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         
         if (validatedApiUserData.success) {
           console.log("LoginUser action: Input for name decryption:", validatedApiUserData.data.name.value);
-          const decryptedName = decryptDataAES(validatedApiUserData.data.name.value);
-          const actualName = (decryptedName && typeof decryptedName === 'string') ? decryptedName : null;
-          console.log("LoginUser action: Decrypted name result:", actualName);
+          const decryptedNameObject = decryptDataAES(validatedApiUserData.data.name.value);
+          const actualName = (decryptedNameObject && typeof decryptedNameObject === 'object' && 'name' in decryptedNameObject) ? (decryptedNameObject as {name: string}).name : null;
+          console.log("LoginUser action: Decrypted name result from object:", actualName);
 
           console.log("LoginUser action: Input for email decryption:", validatedApiUserData.data.email.value);
-          const decryptedEmail = decryptDataAES(validatedApiUserData.data.email.value);
-          const actualEmail = (decryptedEmail && typeof decryptedEmail === 'string') ? decryptedEmail : null;
-          console.log("LoginUser action: Decrypted email result:", actualEmail);
+          const decryptedEmailObject = decryptDataAES(validatedApiUserData.data.email.value);
+          const actualEmail = (decryptedEmailObject && typeof decryptedEmailObject === 'object' && 'email' in decryptedEmailObject) ? (decryptedEmailObject as {email: string}).email : null;
+          console.log("LoginUser action: Decrypted email result from object:", actualEmail);
           
           if (!actualName || !actualEmail) {
             let errorDetail = "";
@@ -412,7 +414,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 export type DeleteAccountState = {
   errors?: {
     _form?: string[];
-    email?: string[]; // For potential Zod validation if we add it
+    email?: string[]; 
   };
   message?: string | null;
   success?: boolean;
@@ -424,9 +426,8 @@ const deleteUserPayloadSchema = z.object({
 });
 
 export async function deleteUserAccount(
-  userEmail: string, // Pass user email directly
+  userEmail: string, 
   prevState: DeleteAccountState 
-  // formData is not used here as we get email directly
 ): Promise<DeleteAccountState> {
   console.log(`DeleteUserAccount action: Initiated for email: ${userEmail}.`);
 
@@ -437,6 +438,7 @@ export async function deleteUserAccount(
           errors: validatedEmail.error.flatten().fieldErrors,
           message: "Error interno: el correo electrónico para la baja no es válido.",
           success: false,
+          debugDeleteApiUrl: undefined,
       };
   }
   
@@ -452,6 +454,7 @@ export async function deleteUserAccount(
         message: "Error interno al preparar los datos para la baja.",
         errors: { _form: ["No se pudieron encriptar los datos para la baja de forma segura."] },
         success: false,
+        debugDeleteApiUrl: undefined,
     };
   }
 
@@ -460,6 +463,7 @@ export async function deleteUserAccount(
   const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedPayloadForUrl}`;
   console.log("DeleteUserAccount action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_DELETE_PAYLOAD`);
 
+  // START: Reverted: Block for actual API call is now active again
   try {
     console.log("DeleteUserAccount action: Attempting to call external API. URL:", generatedApiUrl.substring(0,150) + "...");
     const signal = AbortSignal.timeout(API_TIMEOUT_MS);
@@ -505,7 +509,6 @@ export async function deleteUserAccount(
 
     if (apiResult.status === "OK") {
       console.log("DeleteUserAccount action: External API reported 'OK'. User deletion successful in backend.");
-      // Frontend logout and redirection will be handled by the component calling this action
       return { 
         message: "Tu cuenta ha sido eliminada exitosamente del sistema.", 
         success: true,
@@ -547,6 +550,5 @@ export async function deleteUserAccount(
       debugDeleteApiUrl: generatedApiUrl,
     };
   }
+  // END: Reverted block
 }
-
-    
