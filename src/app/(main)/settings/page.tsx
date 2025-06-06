@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, Palette, Trash2, AlertTriangle, ToggleRight, ToggleLeft, ShieldAlert } from 'lucide-react';
+import { Loader2, Save, Palette, Trash2, AlertTriangle, ToggleRight, ToggleLeft, ShieldAlert, KeyRound } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
 import { Separator } from '@/components/ui/separator';
@@ -125,11 +125,13 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-primary">{t.settingsTitle}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-10">
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div>
-                <CardDescription className="mb-4">{t.personalInformation}</CardDescription>
-                <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">{t.personalInformation}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div>
                     <Label htmlFor="name">{t.name}</Label>
                     <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
@@ -157,12 +159,22 @@ export default function SettingsPage() {
                     </SelectContent>
                     </Select>
                 </div>
-                </div>
-            </div>
+              </CardContent>
+              <CardFooter>
+                <Button type="submit" disabled={isSaving || userLoading} className="w-full md:w-auto">
+                  {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  {t.saveChanges}
+                </Button>
+              </CardFooter>
+            </Card>
+          </form>
 
-            <div className="space-y-4 border-t pt-8">
-              <h3 className="text-xl font-semibold text-accent flex items-center"><Palette className="mr-2 h-5 w-5" />{t.themeSettingsTitle}</h3>
-              <CardDescription>{t.selectThemePrompt}</CardDescription>
+          <Card>
+            <CardHeader>
+                <CardTitle className="text-xl flex items-center"><Palette className="mr-2 h-5 w-5" />{t.themeSettingsTitle}</CardTitle>
+                <CardDescription>{t.selectThemePrompt}</CardDescription>
+            </CardHeader>
+            <CardContent>
               <Select value={theme} onValueChange={setTheme}>
                 <SelectTrigger id="themeSelector">
                   <SelectValue placeholder={t.selectThemePrompt} />
@@ -175,20 +187,28 @@ export default function SettingsPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="space-y-4 border-t pt-8">
-              <h3 className="text-xl font-semibold text-accent">{t.language}</h3>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+                <CardTitle className="text-xl">{t.language}</CardTitle>
+            </CardHeader>
+            <CardContent>
               <Select value={language} onValueChange={setLanguage} disabled>
                 <SelectTrigger id="language"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="es">Español</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="space-y-4 border-t pt-8">
-              <h3 className="text-xl font-semibold text-accent">{t.notificationPreferences}</h3>
+          <Card>
+            <CardHeader>
+                <CardTitle className="text-xl">{t.notificationPreferences}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
                <div className="flex items-center justify-between rounded-lg border p-4">
                 <Label htmlFor="dailyCheckIn" className="flex flex-col space-y-1">
                   <span>Check-in Emocional Diario</span>
@@ -216,27 +236,34 @@ export default function SettingsPage() {
                 </Label>
                 <Switch id="motivationalQuotes" checked={motivationalQuotes} onCheckedChange={setMotivationalQuotes} />
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="border-t pt-8">
-                <Button type="submit" disabled={isSaving || userLoading} className="w-full md:w-auto">
-                {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                {t.saveChanges}
+          <Card>
+            <CardHeader>
+                <CardTitle className="text-xl flex items-center"><KeyRound className="mr-2 h-5 w-5" />{t.securitySettings}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Button variant="outline" asChild>
+                  <Link href="/settings/change-password">
+                    {t.changePasswordButtonLabel}
+                  </Link>
                 </Button>
-            </div>
-          </form>
+            </CardContent>
+          </Card>
 
-          <Separator className="my-10" />
 
-          <div>
-            <h3 className="text-xl font-semibold text-muted-foreground flex items-center mb-3">
-                <AlertTriangle className="mr-2 h-5 w-5 text-amber-500" />
-                {t.devUtilitiesTitle}
-            </h3>
-            <CardDescription className="mb-4">
-                Estas opciones son para fines de desarrollo y pueden afectar tu experiencia. Úsalas con precaución.
-            </CardDescription>
-            <div className="space-y-3">
+          <Card>
+            <CardHeader>
+                <CardTitle className="text-xl flex items-center text-amber-600 dark:text-amber-500">
+                    <AlertTriangle className="mr-2 h-5 w-5" />
+                    {t.devUtilitiesTitle}
+                </CardTitle>
+                <CardDescription>
+                    Estas opciones son para fines de desarrollo y pueden afectar tu experiencia. Úsalas con precaución.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
               <Button variant="outline" onClick={handleClearEntries} className="border-amber-500 text-amber-600 hover:bg-amber-50 hover:text-amber-700">
                 <Trash2 className="mr-2 h-4 w-4" />
                 {t.clearEmotionalEntriesButton}
@@ -248,25 +275,27 @@ export default function SettingsPage() {
                   {isEmotionalDashboardEnabled ? t.deactivateEmotionalDashboardButton : t.activateEmotionalDashboardButton}
                 </Button>
               )}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <Separator className="my-10" />
-
-          <div>
-            <h3 className="text-xl font-semibold text-destructive flex items-center mb-3">
-              <ShieldAlert className="mr-2 h-5 w-5" />
-              {t.deleteAccountSectionTitle}
-            </h3>
-            <CardDescription className="mb-4">
-              {t.deleteAccountWarningMessage.split('.')[0]}. {/* Show only first sentence here */}
-            </CardDescription>
-            <Button variant="destructive" asChild>
-              <Link href="/settings/delete-account">
-                {t.deleteAccountButtonLabel}
-              </Link>
-            </Button>
-          </div>
+          <Card className="border-destructive">
+            <CardHeader className="bg-destructive/5 dark:bg-destructive/10">
+                <CardTitle className="text-xl flex items-center text-destructive">
+                    <ShieldAlert className="mr-2 h-5 w-5" />
+                    {t.deleteAccountSectionTitle}
+                </CardTitle>
+                <CardDescription className="text-destructive/90">
+                {t.deleteAccountWarningMessage.split('.')[0]}.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Button variant="destructive" asChild>
+                <Link href="/settings/delete-account">
+                    {t.deleteAccountButtonLabel}
+                </Link>
+                </Button>
+            </CardContent>
+          </Card>
 
         </CardContent>
         <CardFooter>
@@ -278,5 +307,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-    

@@ -114,6 +114,17 @@ export const t = {
   deactivateEmotionalDashboardButton: "Desactivar Dashboard Emocional",
   emotionalDashboardActivated: "Dashboard Emocional activado.",
   emotionalDashboardDeactivated: "Dashboard Emocional desactivado.",
+  // Change Password
+  changePasswordTitle: "Cambiar Contraseña",
+  changePasswordButtonLabel: "Cambiar Contraseña",
+  newPasswordLabel: "Nueva Contraseña",
+  confirmNewPasswordLabel: "Confirmar Nueva Contraseña",
+  passwordsDoNotMatchError: "Las contraseñas no coinciden.",
+  passwordChangedSuccessTitle: "Contraseña Cambiada",
+  passwordChangedSuccessMessage: "Tu contraseña ha sido actualizada exitosamente.",
+  passwordChangeErrorTitle: "Error al Cambiar Contraseña",
+  securitySettings: "Seguridad de la Cuenta",
+
   // Delete Account
   deleteAccountSectionTitle: "Zona de Peligro",
   deleteAccountButtonLabel: "Dar de baja mi cuenta",
@@ -211,5 +222,3 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
-
-    

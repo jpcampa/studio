@@ -68,8 +68,8 @@ const moodScoreMapping: Record<string, number> = {
 const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"+qlG7LRW9es5HVkyZb5qBw==","data":"XGFYeXI0c1YgbLsx0n1atZ1iEvvWztRUnCmHQmeSwtnG70CJC6OUq7qrCOP830RGaV15IqJtp13co1fEUnirCH6W4CDarwqQnBGstSwsTAA="}';
 const SESSION_STORAGE_REGISTER_URL_KEY = 'workwell-debug-register-url';
 const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
-const API_BASE_URL_FOR_DEBUG = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php"; // Duplicated from auth.ts for dashboard debug display only
-const API_KEY_FOR_DEBUG = "4463"; // Duplicated from auth.ts for dashboard debug display only
+const API_BASE_URL_FOR_DEBUG = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php"; 
+const API_KEY_FOR_DEBUG = "4463"; 
 
 
 export default function DashboardPage() {
@@ -91,6 +91,7 @@ export default function DashboardPage() {
   const [lastGeneratedRegisterApiUrl, setLastGeneratedRegisterApiUrl] = useState<string | null>(null);
   const [lastGeneratedLoginApiUrl, setLastGeneratedLoginApiUrl] = useState<string | null>(null);
   const [debugDeleteApiUrlForDisplay, setDebugDeleteApiUrlForDisplay] = useState<string | null>(null);
+  const [debugChangePasswordApiUrlForDisplay, setDebugChangePasswordApiUrlForDisplay] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -99,9 +100,6 @@ export default function DashboardPage() {
       const loadedRecentEntries = getRecentEmotionalEntries();
       const loadedAllEntries = getEmotionalEntries();
       
-      console.log("DashboardPage: Initial Load (Emotional Dashboard Enabled) - loadedRecentEntries:", loadedRecentEntries);
-      console.log("DashboardPage: Initial Load (Emotional Dashboard Enabled) - loadedAllEntries:", loadedAllEntries);
-
       setRecentEntries(loadedRecentEntries);
       setAllEntriesForChart(loadedAllEntries);
 
@@ -118,25 +116,34 @@ export default function DashboardPage() {
       const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
       if (storedLoginUrl) setLastGeneratedLoginApiUrl(storedLoginUrl);
 
-      // Simulate delete URL generation for debug display if user is available
       if (user && user.email) {
         try {
+            // Baja URL
             const deletePayloadToEncrypt = { email: user.email };
             const encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt);
-            const finalEncryptedPayloadForUrl = encodeURIComponent(encryptedDeletePayload);
-            const type = "baja";
-            const generatedDeleteUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&usuario=${finalEncryptedPayloadForUrl}`;
+            const finalEncryptedDeletePayloadForUrl = encodeURIComponent(encryptedDeletePayload);
+            const deleteType = "baja";
+            const generatedDeleteUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${deleteType}&usuario=${finalEncryptedDeletePayloadForUrl}`;
             setDebugDeleteApiUrlForDisplay(generatedDeleteUrl);
-            console.log("DashboardPage: Generated simulated delete URL for display:", generatedDeleteUrl.substring(0,150) + "...");
+            
+            // Change Password URL
+            const exampleNewPassword = "nuevaPassword123";
+            const changePasswordPayloadToEncrypt = { email: user.email, newPassword: exampleNewPassword };
+            const encryptedChangePasswordPayload = encryptDataAES(changePasswordPayloadToEncrypt);
+            const finalEncryptedChangePasswordPayloadForUrl = encodeURIComponent(encryptedChangePasswordPayload);
+            const changePasswordType = "cambiocontraseña";
+            const generatedChangePasswordUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${changePasswordType}&usuario=${finalEncryptedChangePasswordPayloadForUrl}`;
+            setDebugChangePasswordApiUrlForDisplay(generatedChangePasswordUrl);
+
         } catch (error) {
-            console.error("DashboardPage: Error generating simulated delete URL for display:", error);
+            console.error("DashboardPage: Error generating simulated API URLs for display:", error);
             setDebugDeleteApiUrlForDisplay("Error generando URL de baja simulada.");
+            setDebugChangePasswordApiUrlForDisplay("Error generando URL de cambio de contraseña simulada.");
         }
       } else {
         setDebugDeleteApiUrlForDisplay(null);
+        setDebugChangePasswordApiUrlForDisplay(null);
       }
-
-
     } else {
       setRecentEntries([]);
       setAllEntriesForChart([]);
@@ -144,12 +151,11 @@ export default function DashboardPage() {
       setLastGeneratedRegisterApiUrl(null);
       setLastGeneratedLoginApiUrl(null);
       setDebugDeleteApiUrlForDisplay(null);
+      setDebugChangePasswordApiUrlForDisplay(null);
     }
-    console.log("DashboardPage: Initial Load useEffect finished.");
   }, [t, isEmotionalDashboardEnabled, user]); 
 
   useEffect(() => {
-    console.log("DashboardPage: User Activity Summary useEffect running. Current user:", user, "Current Active Path:", currentActivePath);
     if (user && isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
       const allPathsProgressData = pathsData.map((appPath: AppPathData): PathProgressInfo => {
@@ -175,11 +181,9 @@ export default function DashboardPage() {
       };
 
       setUserActivityForDisplay(JSON.stringify(summary, null, 2));
-      console.log('DashboardPage - User Activity Summary (for display):', summary);
-
+      
       try {
         const encryptedString = encryptDataAES(summary);
-        console.log('DashboardPage - Encrypted User Activity Summary for Test (encryptDataAES output):', encryptedString);
         setEncryptedUserActivityForTest(encryptedString);
       } catch (error) {
         console.error("Error encrypting user activity summary for test display:", error);
@@ -196,14 +200,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (isEmotionalDashboardEnabled) {
-      console.log("DashboardPage: Decrypt Specific String Test useEffect running.");
       const decryptedObject = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
       if (decryptedObject && typeof decryptedObject === 'object') {
         setDecryptedDataForTest(JSON.stringify(decryptedObject, null, 2));
-        console.log('DashboardPage - Decrypted Specific String for Test:', decryptedObject);
       } else {
         setDecryptedDataForTest("Error al desencriptar la cadena de prueba o resultado no es un objeto.");
-        console.error('DashboardPage - Failed to decrypt specific string or result was not an object:', decryptedObject);
       }
     } else {
         setDecryptedDataForTest(null);
@@ -213,10 +214,8 @@ export default function DashboardPage() {
 
   const chartData = useMemo(() => {
     if (!isEmotionalDashboardEnabled || !allEntriesForChart || allEntriesForChart.length === 0) {
-      console.log("DashboardPage: No entries for chartData calculation or dashboard disabled.");
       return [];
     }
-    console.log("DashboardPage: Recalculating chartData. allEntriesForChart count:", allEntriesForChart.length);
 
     const processedData = allEntriesForChart
       .map(entry => ({
@@ -235,28 +234,21 @@ export default function DashboardPage() {
           fullDate: formatEntryTimestamp(entry.timestamp),
         };
       });
-    console.log("DashboardPage: Processed chartData:", processedData);
     return processedData;
   }, [allEntriesForChart, t, isEmotionalDashboardEnabled]);
 
 
   const handleEmotionalEntrySubmit = (data: { situation: string; emotion: string }) => {
-    console.log("DashboardPage: handleEmotionalEntrySubmit called with:", data);
     if (!isEmotionalDashboardEnabled) return;
-
     const newEntry = addEmotionalEntry(data);
-    
     setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); 
     setAllEntriesForChart(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-
     const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
     if (lastRegisteredEmotionDetails) {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
     }
-
-    // Trigger re-calculation of user activity summary
      if (user) {
-      const allEmotionalEntries = getEmotionalEntries(); // Re-fetch all entries
+      const allEmotionalEntries = getEmotionalEntries();
       const allPathsProgressData = pathsData.map((appPath: AppPathData): PathProgressInfo => {
         const completedModuleIdsSet = getCompletedModules(appPath.id);
         return {
@@ -272,14 +264,11 @@ export default function DashboardPage() {
       setUserActivityForDisplay(JSON.stringify(summary, null, 2));
       setEncryptedUserActivityForTest(encryptDataAES(summary));
     }
-
-
     toast({
       title: t.emotionalEntrySavedTitle,
       description: t.emotionalEntrySavedMessage,
     });
     setIsEntryDialogOpen(false); 
-    console.log("DashboardPage: Emotional entry submitted and states updated.");
   };
 
   const handleClearDebugUrl = (key: string, setter: React.Dispatch<React.SetStateAction<string | null>>) => {
@@ -288,8 +277,6 @@ export default function DashboardPage() {
     toast({ title: "URL de prueba eliminada", description: `La URL para ${key === SESSION_STORAGE_REGISTER_URL_KEY ? 'registro' : 'login'} ha sido eliminada de sessionStorage.` });
   };
   
-  console.log("DashboardPage: Rendering JSX. User:", user?.name, "Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
-
   return (
     <div className="container mx-auto py-8 space-y-10">
       <div className="text-center md:text-left">
@@ -466,7 +453,21 @@ export default function DashboardPage() {
                     <code>{debugDeleteApiUrlForDisplay}</code>
                   </pre>
                    <p className="text-xs mt-2 text-muted-foreground">
-                    Generada al cargar el dashboard si el usuario está logueado. No se persiste en sessionStorage ni tiene botón de limpiar.
+                    Generada al cargar el dashboard si el usuario está logueado.
+                  </p>
+                </div>
+               )}
+               {debugChangePasswordApiUrlForDisplay && (
+                <div>
+                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                    <ShieldQuestion className="mr-2 h-4 w-4" />
+                    URL de API de Cambio Contraseña (Simulada para Depuración):
+                  </p>
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{debugChangePasswordApiUrlForDisplay}</code>
+                  </pre>
+                   <p className="text-xs mt-2 text-muted-foreground">
+                    Generada al cargar el dashboard si el usuario está logueado (con contraseña de ejemplo).
                   </p>
                 </div>
                )}
