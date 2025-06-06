@@ -311,12 +311,12 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         
         if (validatedApiUserData.success) {
           console.log("LoginUser action: Input for name decryption:", validatedApiUserData.data.name.value);
-          const decryptedNameObject = decryptDataAES(validatedApiUserData.data.name.value);
+          const decryptedNameObject = (validatedApiUserData.data.name.value);
           const actualName = (decryptedNameObject && typeof decryptedNameObject === 'object' && 'name' in decryptedNameObject) ? (decryptedNameObject as {name: string}).name : null;
           console.log("LoginUser action: Decrypted name result from object:", actualName);
 
           console.log("LoginUser action: Input for email decryption:", validatedApiUserData.data.email.value);
-          const decryptedEmailObject = decryptDataAES(validatedApiUserData.data.email.value);
+          const decryptedEmailObject = (validatedApiUserData.data.email.value);
           const actualEmail = (decryptedEmailObject && typeof decryptedEmailObject === 'object' && 'email' in decryptedEmailObject) ? (decryptedEmailObject as {email: string}).email : null;
           console.log("LoginUser action: Decrypted email result from object:", actualEmail);
           
