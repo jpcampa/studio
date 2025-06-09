@@ -29,7 +29,7 @@ const initialState: DeleteAccountState = {
   debugDeleteApiUrl: undefined,
 };
 
-const SESSION_STORAGE_DELETE_URL_KEY = 'workwell-debug-delete-url';
+// const SESSION_STORAGE_DELETE_URL_KEY = 'workwell-debug-delete-url'; // No longer needed for display
 
 function ActualSubmitButton() {
   const { pending } = useFormStatus();
@@ -52,14 +52,14 @@ export function DeleteAccountForm() {
   
   const [state, formAction] = useActionState(deleteUserAccountWithEmail, initialState);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
-  const [persistedDebugUrl, setPersistedDebugUrl] = useState<string | null>(null);
+  // const [persistedDebugUrl, setPersistedDebugUrl] = useState<string | null>(null); // No longer needed for display
 
-  useEffect(() => {
-    const storedUrl = sessionStorage.getItem(SESSION_STORAGE_DELETE_URL_KEY);
-    if (storedUrl) {
-      setPersistedDebugUrl(storedUrl);
-    }
-  }, []);
+  // useEffect(() => { // No longer needed for display
+  //   const storedUrl = sessionStorage.getItem(SESSION_STORAGE_DELETE_URL_KEY);
+  //   if (storedUrl) {
+  //     setPersistedDebugUrl(storedUrl);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (!state) return;
@@ -67,8 +67,9 @@ export function DeleteAccountForm() {
     console.log("DeleteAccountForm: Received state from server action:", JSON.stringify(state, null, 2));
     
     if (state.debugDeleteApiUrl) {
-      sessionStorage.setItem(SESSION_STORAGE_DELETE_URL_KEY, state.debugDeleteApiUrl);
-      setPersistedDebugUrl(state.debugDeleteApiUrl); 
+      // Still save to session storage for potential debugging, but don't display it.
+      sessionStorage.setItem('workwell-debug-delete-url', state.debugDeleteApiUrl);
+      // setPersistedDebugUrl(state.debugDeleteApiUrl); // No longer needed for display
     }
 
     if (state.success && state.message) {
@@ -76,11 +77,10 @@ export function DeleteAccountForm() {
         title: t.deleteAccountSuccessTitle,
         description: state.message,
       });
-      // Wait 2 seconds for the toast to be visible before logging out and redirecting
       setTimeout(() => {
         logout(); 
         router.push('/login'); 
-      }, 2000); // Changed from 1500 to 2000
+      }, 2000);
     } else if (state.message && !state.success) { 
       let errorTitle = t.deleteAccountErrorTitle;
       let errorMessage = state.message;
@@ -116,11 +116,11 @@ export function DeleteAccountForm() {
     setIsAlertDialogOpen(false);
   };
   
-  const handleClearDebugUrl = () => {
-    sessionStorage.removeItem(SESSION_STORAGE_DELETE_URL_KEY);
-    setPersistedDebugUrl(null); 
-    toast({ title: "URL de prueba eliminada", description: "La URL para la baja ha sido eliminada de sessionStorage." });
-  };
+  // const handleClearDebugUrl = () => { // No longer needed for display
+  //   sessionStorage.removeItem(SESSION_STORAGE_DELETE_URL_KEY);
+  //   setPersistedDebugUrl(null); 
+  //   toast({ title: "URL de prueba eliminada", description: "La URL para la baja ha sido eliminada de sessionStorage." });
+  // };
 
   if (userLoading) {
     return <div className="flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -131,7 +131,7 @@ export function DeleteAccountForm() {
     return null;
   }
   
-  const displayDebugUrl = state.debugDeleteApiUrl || persistedDebugUrl;
+  // const displayDebugUrl = state.debugDeleteApiUrl || persistedDebugUrl; // No longer displayed
 
   return (
     <>
@@ -178,6 +178,7 @@ export function DeleteAccountForm() {
          <p className="mt-4 text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md text-center">{state.message}</p>
       )}
 
+      {/* REMOVED DEBUG URL DISPLAY SECTION 
       {displayDebugUrl && (
         <div className="mt-6 p-4 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg shadow-md">
           <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 flex items-center mb-2">
@@ -192,6 +193,7 @@ export function DeleteAccountForm() {
           </Button>
         </div>
       )}
+      */}
     </>
   );
 }
