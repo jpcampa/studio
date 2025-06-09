@@ -448,28 +448,32 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 export type DeleteAccountState = {
   errors?: {
     _form?: string[];
-    email?: string[];
+    email?: string[]; // Although email comes from context, schema might check it if passed in future
   };
   message?: string | null;
   success?: boolean;
   debugDeleteApiUrl?: string;
 };
 
+// Schema if we were to validate email passed to the action, currently email is from context.
 const deleteUserPayloadSchema = z.object({
   email: z.string().email("El correo electrónico proporcionado no es válido."),
 });
 
 export async function deleteUserAccount(
-  userEmail: string,
-  prevState: DeleteAccountState
+  userEmail: string, // Email is passed directly from the calling component/context
+  prevState: DeleteAccountState,
+  // formData: FormData - No formData needed if email is passed directly
 ): Promise<DeleteAccountState> {
   console.log(`DeleteUserAccount action: Initiated for email: ${userEmail}.`);
 
+  // Validate the email if necessary (e.g., ensure it's not empty/malformed)
+  // This is more of a server-side sanity check
   const validatedEmail = deleteUserPayloadSchema.safeParse({ email: userEmail });
   if (!validatedEmail.success) {
       console.warn("DeleteUserAccount action: Invalid email provided to action.", validatedEmail.error.flatten().fieldErrors);
       return {
-          errors: validatedEmail.error.flatten().fieldErrors,
+          errors: { _form: [t.deleteAccountErrorMessage], email: validatedEmail.error.flatten().fieldErrors.email },
           message: "Error interno: el correo electrónico para la baja no es válido.",
           success: false,
           debugDeleteApiUrl: undefined,
@@ -543,15 +547,16 @@ export async function deleteUserAccount(
     if (apiResult.status === "OK") {
       console.log("DeleteUserAccount action: External API reported 'OK'. User deletion successful in backend.");
       return {
-        message: "Tu cuenta ha sido eliminada exitosamente del sistema.",
+        message: t.deleteAccountSuccessMessage,
         success: true,
+        errors: {},
         debugDeleteApiUrl: generatedApiUrl,
       };
     } else if (apiResult.status === "NOOK") {
       console.warn("DeleteUserAccount action: External API reported 'NOOK'. Message:", apiResult.message);
       return {
-        message: apiResult.message || "El servicio externo no pudo completar la baja.",
-        errors: { _form: [apiResult.message || "No se pudo eliminar la cuenta con el servicio externo."] },
+        message: apiResult.message || t.deleteAccountErrorMessage,
+        errors: { _form: [apiResult.message || t.deleteAccountErrorMessage] },
         success: false,
         debugDeleteApiUrl: generatedApiUrl,
       };
@@ -630,7 +635,7 @@ export async function changePassword(
     console.warn("ChangePassword action: Validation failed.", validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: t.validationError, // General validation error message
+      message: t.validationError, 
       success: false,
       debugChangePasswordApiUrl: undefined,
     };
@@ -706,8 +711,8 @@ export async function changePassword(
       return {
         message: t.passwordChangedSuccessMessage,
         success: true,
+        errors: {}, 
         debugChangePasswordApiUrl: generatedApiUrl,
-        errors: {}, // Clear previous errors on success
       };
     } else if (apiResult.status === "NOOK") {
       console.warn("ChangePassword action: External API reported 'NOOK'. Message:", apiResult.message);

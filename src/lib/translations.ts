@@ -122,12 +122,12 @@ export const t = {
   confirmNewPasswordLabel: "Confirmar Nueva Contraseña",
   passwordsDoNotMatchError: "Las contraseñas no coinciden.",
   passwordChangedSuccessTitle: "Contraseña Cambiada",
-  passwordChangedSuccessMessage: "Tu contraseña ha sido actualizada exitosamente.",
+  passwordChangedSuccessMessage: "Tu contraseña ha sido actualizada exitosamente. Serás redirigido para iniciar sesión.",
   passwordChangeErrorTitle: "Error al Cambiar Contraseña",
   passwordTooShortError: "La nueva contraseña debe tener al menos 6 caracteres.",
   passwordChangeGenericError: "No se pudo cambiar la contraseña. Inténtalo de nuevo.",
   userEmailMissingError: "No se pudo obtener el email del usuario para el cambio de contraseña.",
-  validationError: "Error de validación.", // Used by changePasswordSchema if general validation fails
+  validationError: "Error de validación.",
   securitySettings: "Seguridad de la Cuenta",
 
   // Delete Account
@@ -140,7 +140,7 @@ export const t = {
   confirmDeleteAccountButton: "Sí, eliminar mi cuenta permanentemente",
   cancelDeleteAccountButton: "Cancelar, mantener mi cuenta",
   deleteAccountSuccessTitle: "Cuenta Eliminada",
-  deleteAccountSuccessMessage: "Tu cuenta ha sido eliminada exitosamente. Esperamos verte de nuevo.",
+  deleteAccountSuccessMessage: "Tu cuenta ha sido eliminada exitosamente. Serás redirigido.",
   deleteAccountErrorTitle: "Error al Eliminar Cuenta",
   deleteAccountErrorMessage: "No se pudo eliminar tu cuenta en este momento. Por favor, inténtalo de nuevo más tarde o contacta con soporte.",
   // Age Ranges
