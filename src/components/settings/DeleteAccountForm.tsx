@@ -76,17 +76,17 @@ export function DeleteAccountForm() {
         title: t.deleteAccountSuccessTitle,
         description: state.message,
       });
-      // Wait a bit for the toast to be visible before logging out and redirecting
+      // Wait 2 seconds for the toast to be visible before logging out and redirecting
       setTimeout(() => {
         logout(); 
         router.push('/login'); 
-      }, 1500);
-    } else if (state.message && !state.success) { // Only show error toast if not successful
+      }, 2000); // Changed from 1500 to 2000
+    } else if (state.message && !state.success) { 
       let errorTitle = t.deleteAccountErrorTitle;
       let errorMessage = state.message;
       if (state.errors?._form?.length) {
         errorMessage = state.errors._form[0];
-      } else if (state.errors?.email?.length) { // Though email error is less likely here
+      } else if (state.errors?.email?.length) { 
          errorTitle = t.errorOccurred;
          errorMessage = state.errors.email[0];
       }
@@ -97,7 +97,6 @@ export function DeleteAccountForm() {
         variant: "destructive",
       });
     } else if (!state.success && state.errors && Object.keys(state.errors).length > 0 && !state.errors._form?.length) {
-      // Fallback for field errors if no state.message or _form error (less likely for this action)
       if (state.errors.email?.length) {
           toast({ title: t.errorOccurred, description: state.errors.email[0], variant: "destructive" });
       }
@@ -105,21 +104,13 @@ export function DeleteAccountForm() {
   }, [state, logout, router, toast, t]);
   
   const handleDialogTrigger = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault(); // Prevent any default form submission if this button were inside a form
+    event.preventDefault(); 
     setIsAlertDialogOpen(true); 
   };
 
-  // This is the function that will be called when the user confirms in the dialog
   const handleConfirmDelete = () => {
-     // Programmatically submit the form
-     // This will ensure useFormStatus().pending is true for ActualSubmitButton
     const form = document.getElementById("actual-delete-form") as HTMLFormElement | null;
     if (form) {
-        // Instead of form.requestSubmit(), directly call formAction
-        // This is because requestSubmit() might not work as expected with useActionState
-        // if the button triggering it is not the direct submit button of THAT form.
-        // However, since ActualSubmitButton IS the submit button, this should be fine.
-        // Let's keep requestSubmit for now as it's more standard for triggering <form action>
         form.requestSubmit();
     }
     setIsAlertDialogOpen(false);
@@ -136,7 +127,7 @@ export function DeleteAccountForm() {
   }
 
   if (!user) {
-    router.push('/login'); // Should not happen if layout protects page, but good fallback
+    router.push('/login'); 
     return null;
   }
   
@@ -144,13 +135,7 @@ export function DeleteAccountForm() {
 
   return (
     <>
-      {/* This is the actual form that will be submitted by the dialog's confirm button */}
       <form id="actual-delete-form" action={formAction} className="hidden">
-        {/* We can add a visually hidden submit button here if needed for some browsers,
-            but requestSubmit() on the form itself should work.
-            The ActualSubmitButton below will be used inside the dialog, but its
-            formaction is effectively tied to this form via useActionState.
-        */}
       </form>
 
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
@@ -159,7 +144,7 @@ export function DeleteAccountForm() {
             onClick={handleDialogTrigger}
             variant="destructive"
             className="w-full"
-            disabled={useFormStatus().pending} // Disable if an action is already pending (outer form context)
+            disabled={useFormStatus().pending} 
           >
             <Trash2 className="mr-2 h-4 w-4" />
             {t.deleteAccountButtonLabel} 
@@ -176,10 +161,8 @@ export function DeleteAccountForm() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t.cancelDeleteAccountButton}</AlertDialogCancel>
-            {/* This AlertDialogAction will now effectively submit the form through handleConfirmDelete */}
             <AlertDialogAction onClick={handleConfirmDelete} asChild>
-               {/* ActualSubmitButton will pick up pending state from the formAction it's part of */}
-              <form action={formAction}> {/* Wrap button in a form to correctly use useFormStatus */}
+              <form action={formAction}> 
                 <ActualSubmitButton />
               </form>
             </AlertDialogAction>
