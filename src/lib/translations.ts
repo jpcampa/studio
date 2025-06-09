@@ -131,7 +131,7 @@ export const t = {
   securitySettings: "Seguridad de la Cuenta",
 
   // Delete Account
-  deleteAccountSectionTitle: "Zona de Peligro",
+  deleteAccountSectionTitle: "Borrar mi usuario", // Changed from "Borrar mi cuenta"
   deleteAccountButtonLabel: "Dar de baja mi cuenta",
   deleteAccountPageTitle: "Confirmar Baja de Cuenta",
   deleteAccountWarningTitle: "¡Atención! Estás a punto de eliminar tu cuenta.",
