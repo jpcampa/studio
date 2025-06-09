@@ -6,7 +6,7 @@ import CryptoJS from "crypto-js";
 const SECRET_KEY = "0123456789abcdef0123456789abcdef"; // 32 bytes
 
 // --- FLAG TO CONTROL GLOBAL AES ENCRYPTION ---
-const ENCRYPTION_ENABLED = false; // SET TO false TO DISABLE GLOBAL AES ENCRYPTION
+const ENCRYPTION_ENABLED = true; // SET TO true TO ENABLE GLOBAL AES ENCRYPTION
 // ---
 
 export function encryptDataAES(data: object): string {
@@ -147,3 +147,4 @@ export function forceDecryptStringAES(encryptedStringJson: string): string | nul
     return null;
   }
 }
+
