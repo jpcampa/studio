@@ -83,6 +83,7 @@ export default function DashboardPage() {
   const [debugDeleteApiUrl, setDebugDeleteApiUrl] = useState<string | null>(null);
   const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
   const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null);
+  const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
 
 
   const generateApiUrlWithParams = (type: string, params: Record<string, any>): string => {
@@ -96,10 +97,10 @@ export default function DashboardPage() {
   };
 
   const generateUserActivityApiUrl = (activitySummary: UserActivitySummary, userIdFromContext?: string | null): string => {
+    console.log("DashboardPage (generateUserActivityApiUrl): Received userIdFromContext:", userIdFromContext);
     const jsonPayloadForDatosActividad = encryptDataAES(activitySummary); // activitySummary contains { ID: encryptedUserCtxId, emotionalEntries: ... }
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
     console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad):", url.substring(0, 200) + "...");
-    console.log("DashboardPage (generateUserActivityApiUrl): ID de usuario del contexto para parámetro userID:", userIdFromContext);
 
     if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
       console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es válido. Procediendo a encriptar para parámetro userID.");
@@ -155,10 +156,10 @@ export default function DashboardPage() {
         setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
       }
       
-      const currentUserEmail = user?.email; // User from UserContext
-      if (currentUserEmail) {
-        setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: currentUserEmail } }));
-        setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: currentUserEmail, newPassword: "nuevaPassword123" } }));
+      const currentUserEmailForSetup = user?.email; // User from UserContext
+      if (currentUserEmailForSetup) {
+        setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: currentUserEmailForSetup } }));
+        setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: currentUserEmailForSetup, newPassword: "nuevaPassword123" } }));
       } else {
         setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
         setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
@@ -179,6 +180,11 @@ export default function DashboardPage() {
   useEffect(() => {
     let activitySummaryForUrlGeneration: UserActivitySummary | null = null;
 
+    console.log("DashboardPage (Activity Summary UE): Full user object from UserContext:", JSON.stringify(user, null, 2));
+    const userIdFromContext = user?.id; // Get user.id from UserContext
+    console.log("DashboardPage (Activity Summary UE): User ID from UserContext (for summary.ID and &userID= param):", userIdFromContext, "(Type:", typeof userIdFromContext, ")");
+    setRawUserIdForDebug(userIdFromContext || null); // Store raw ID for display
+
     if (isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
       
@@ -186,10 +192,6 @@ export default function DashboardPage() {
         emotionalEntries: allEmotionalEntries,
       };
       
-      console.log("DashboardPage (Activity Summary UE): Current user object from UserContext:", JSON.stringify(user, null, 2));
-      const userIdFromContext = user?.id; // Get user.id from UserContext
-      console.log("DashboardPage (Activity Summary UE): User ID from UserContext (for summary.ID and &userID= param):", userIdFromContext, "(Type:", typeof userIdFromContext, ")");
-
       if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
         console.log("DashboardPage (Activity Summary UE): User ID from UserContext is valid. Encrypting for summary.ID.");
         const encryptedIdForSummary = forceEncryptStringAES(userIdFromContext);
@@ -197,7 +199,6 @@ export default function DashboardPage() {
         summary.ID = encryptedIdForSummary; 
       } else {
         console.log("DashboardPage (Activity Summary UE): User ID from UserContext is NOT valid for encryption. 'ID' field will be omitted from summary. User object:", user);
-        // summary.ID remains undefined, so it won't be included in JSON.stringify if omitted
       }
 
       activitySummaryForUrlGeneration = summary;
@@ -212,14 +213,14 @@ export default function DashboardPage() {
       }
       
       console.log("DashboardPage (useEffect for API URL): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
-      setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); // Pass user.id from UserContext
+      setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); 
     } else {
       setUserActivityForDisplay(null);
       setOutputOfEncryptFunctionForTest(null);
       setDebugUserActivityApiUrl(null);
     }
 
-  }, [isEmotionalDashboardEnabled, user, currentActivePath, t]); // Added t for emotionOptions dependency, and user for userIdFromContext
+  }, [isEmotionalDashboardEnabled, user, currentActivePath, t]); 
 
 
   useEffect(() => {
@@ -277,9 +278,8 @@ export default function DashboardPage() {
     const allEmotionalEntries = getEmotionalEntries();
     const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
     
-    console.log("DashboardPage (handleEmotionalEntrySubmit): Current user object from UserContext:", JSON.stringify(user, null, 2));
-    const userIdFromContext = user?.id; // Get user.id from UserContext
-    console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext (for summary.ID and &userID= param):", userIdFromContext);
+    const userIdFromContext = user?.id; 
+    console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext:", userIdFromContext);
 
     if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
       console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext is valid. Encrypting for summary.ID.");
@@ -291,7 +291,7 @@ export default function DashboardPage() {
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
     setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); 
     console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
-    setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); // Pass user.id from UserContext
+    setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); 
 
 
     toast({
@@ -397,6 +397,16 @@ export default function DashboardPage() {
             </Dialog>
             
             <div className="mt-6 p-4 border rounded-lg bg-muted/20 text-left max-w-2xl mx-auto space-y-4 shadow">
+              <div>
+                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                  <UserCircle2 className="mr-2 h-4 w-4" />
+                  ID de Usuario del Contexto (RAW):
+                </p>
+                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                  <code>{rawUserIdForDebug || "No disponible o cargando..."}</code>
+                </pre>
+              </div>
+              <Separator />
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
