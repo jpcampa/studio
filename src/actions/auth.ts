@@ -2,7 +2,7 @@
 "use server";
 
 import { z } from "zod";
-import { encryptDataAES, decryptDataAES } from "@/lib/encryption";
+import { encryptDataAES, decryptDataAES, forceDecryptStringAES } from "@/lib/encryption";
 import { UserProvider, useUser } from "@/contexts/UserContext"; // Assuming useUser can be used server-side, or we pass user object
 import { t } from "@/lib/translations"; // Import translations for error messages
 
@@ -39,7 +39,7 @@ const loginSchema = z.object({
 
 // Updated schema for the API response *data* part
 const ApiLoginSuccessDataSchema = z.object({
-  id: z.string().min(1, "El ID de usuario de la API no puede estar vacío."),
+  id: z.string().min(1, "El ID de usuario de la API no puede estar vacío.").describe("El ID del usuario, que podría estar encriptado como un string JSON {'iv':'...','data':'...'}"),
   name: z.object({
     value: z.string().min(1, "El valor encriptado/raw del nombre en la API no puede estar vacío.")
   }).describe("Contiene el nombre, posiblemente encriptado como un string JSON {'value':'nombreEncriptado'} o {'value':'nombreDirecto'} si la encriptación está desactivada."),
@@ -101,7 +101,8 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
   const userId = crypto.randomUUID();
 
   const userDetailsToEncrypt = {
-    id: userId,
+    id: userId, // For registration, we might send a newly generated ID or an encrypted one.
+                // If API expects the ID itself to be pre-encrypted, this needs forceEncryptStringAES(userId)
     name,
     email,
     ageRange: ageRange || null,
@@ -174,11 +175,9 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
 
     if (apiResult.status === "OK") {
       console.log("RegisterUser action: External API reported 'OK'. Registration successful. User should now log in.");
-      // For V1, after successful registration, prompt user to log in.
-      // We are not auto-logging in or creating a local session directly from registration.
       return {
         message: t.registrationSuccessLoginPrompt,
-        user: null, // No user object returned on register to force login
+        user: null, 
         debugApiUrl: generatedApiUrl,
       };
     } else if (apiResult.status === "NOOK") {
@@ -326,6 +325,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 
           let actualName: string | null = null;
           let actualEmail: string | null = null;
+          let actualId: string | null = null;
 
           // Decrypt and extract Name
           const rawNameFromApi = validatedApiUserData.data.name.value;
@@ -353,14 +353,29 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             console.warn("LoginUser action: Failed to extract email. Decrypted payload was not an object with a 'value' string property. Payload:", decryptedEmailPayload);
           }
 
-          if (!actualName || !actualEmail) {
-            let errorDetail = "";
-            if (!actualName && !actualEmail) errorDetail = "Falló la extracción del nombre y el email tras la desencriptación.";
-            else if (!actualName) errorDetail = "Falló la extracción del nombre tras la desencriptación.";
-            else errorDetail = "Falló la extracción del email tras la desencriptación.";
+          // Decrypt and extract User ID
+          const rawIdFromApi = validatedApiUserData.data.id;
+          console.log("LoginUser action: Raw ID value from API:", rawIdFromApi);
+          // Assuming rawIdFromApi is a string JSON like {"iv":"...", "data":"..."}
+          const decryptedId = forceDecryptStringAES(rawIdFromApi);
+          if (decryptedId) {
+            actualId = decryptedId;
+            console.log("LoginUser action: Successfully decrypted ID:", actualId);
+          } else {
+            console.warn("LoginUser action: Failed to decrypt ID from API. Using raw value as fallback. Raw ID was:", rawIdFromApi);
+            actualId = rawIdFromApi; // Fallback to using the (potentially encrypted) ID as is
+          }
 
-            const fullErrorMessage = `No se pudieron procesar los detalles del usuario. ${errorDetail} Esto puede deberse a una estructura de datos inesperada o a un fallo en la desencriptación. Revisa la consola del servidor para más detalles.`;
-            console.warn("LoginUser action: Extraction failed. Decrypted Name Payload:", decryptedNamePayload, "Decrypted Email Payload:", decryptedEmailPayload, "Extracted Name:", actualName, "Extracted Email:", actualEmail);
+
+          if (!actualName || !actualEmail || !actualId) {
+            let errorDetail = "";
+            if (!actualName) errorDetail += "nombre ";
+            if (!actualEmail) errorDetail += "email ";
+            if (!actualId) errorDetail += "ID ";
+            errorDetail = errorDetail.trim().replace(/ /g, ', ');
+
+            const fullErrorMessage = `No se pudieron procesar los detalles del usuario. Falló la extracción o desencriptación de: ${errorDetail}. Esto puede deberse a una estructura de datos inesperada o a un fallo en la desencriptación. Revisa la consola del servidor para más detalles.`;
+            console.warn("LoginUser action: Extraction/Decryption failed. Name:", actualName, "Email:", actualEmail, "ID:", actualId);
 
             return {
               message: "Error al procesar datos de usuario del servicio externo.",
@@ -375,14 +390,14 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
           }
 
           const userFromApi: ActionUser = {
-            id: validatedApiUserData.data.id,
+            id: actualId,
             name: actualName,
             email: actualEmail,
             ageRange: validatedApiUserData.data.ageRange || null,
             gender: validatedApiUserData.data.gender || null,
             initialEmotionalState: validatedApiUserData.data.initialEmotionalState || null,
           };
-          console.log("LoginUser action: External API reported 'OK', data validated, name/email extracted. Login successful.");
+          console.log("LoginUser action: External API reported 'OK', data validated, fields extracted/decrypted. Login successful.");
           return {
             message: "Inicio de sesión exitoso.",
             user: userFromApi,
@@ -448,27 +463,23 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 export type DeleteAccountState = {
   errors?: {
     _form?: string[];
-    email?: string[]; // Although email comes from context, schema might check it if passed in future
+    email?: string[]; 
   };
   message?: string | null;
   success?: boolean;
   debugDeleteApiUrl?: string;
 };
 
-// Schema if we were to validate email passed to the action, currently email is from context.
 const deleteUserPayloadSchema = z.object({
   email: z.string().email("El correo electrónico proporcionado no es válido."),
 });
 
 export async function deleteUserAccount(
-  userEmail: string, // Email is passed directly from the calling component/context
+  userEmail: string, 
   prevState: DeleteAccountState,
-  // formData: FormData - No formData needed if email is passed directly
 ): Promise<DeleteAccountState> {
   console.log(`DeleteUserAccount action: Initiated for email: ${userEmail}.`);
 
-  // Validate the email if necessary (e.g., ensure it's not empty/malformed)
-  // This is more of a server-side sanity check
   const validatedEmail = deleteUserPayloadSchema.safeParse({ email: userEmail });
   if (!validatedEmail.success) {
       console.warn("DeleteUserAccount action: Invalid email provided to action.", validatedEmail.error.flatten().fieldErrors);
@@ -607,7 +618,7 @@ const changePasswordSchema = z.object({
   confirmNewPassword: z.string().min(6, t.passwordTooShortError),
 }).refine(data => data.newPassword === data.confirmNewPassword, {
   message: t.passwordsDoNotMatchError,
-  path: ["confirmNewPassword"], // Error on the confirmation field
+  path: ["confirmNewPassword"], 
 });
 
 export async function changePassword(
@@ -751,3 +762,4 @@ export async function changePassword(
     };
   }
 }
+
