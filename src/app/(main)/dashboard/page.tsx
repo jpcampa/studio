@@ -93,6 +93,7 @@ export default function DashboardPage() {
   const [debugLoginApiUrl, setDebugLoginApiUrl] = useState<string | null>(null);
   const [debugDeleteApiUrl, setDebugDeleteApiUrl] = useState<string | null>(null);
   const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
+  const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -115,14 +116,13 @@ export default function DashboardPage() {
       const generateUrl = (type: string, params: Record<string, any>): string => {
         const encodedParams = Object.entries(params)
           .map(([key, valueObj]) => {
-            const payloadString = encryptDataAES(valueObj); // Devuelve JSON string
+            const payloadString = encryptDataAES(valueObj); 
             return `${key}=${encodeURIComponent(payloadString)}`;
           })
           .join('&');
         return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
       };
       
-      // Registro URL
       const storedRegisterUrl = sessionStorage.getItem(SESSION_STORAGE_REGISTER_URL_KEY);
       if (storedRegisterUrl) {
         setDebugRegisterApiUrl(storedRegisterUrl);
@@ -137,7 +137,6 @@ export default function DashboardPage() {
         setDebugRegisterApiUrl(generateUrl("registro", registerParams));
       }
 
-      // Login URL
       const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
       if (storedLoginUrl) {
         setDebugLoginApiUrl(storedLoginUrl);
@@ -149,17 +148,11 @@ export default function DashboardPage() {
         setDebugLoginApiUrl(generateUrl("login", loginParams));
       }
 
-      // Baja URL
       if (user && user.email) {
         setDebugDeleteApiUrl(generateUrl("baja", { usuario: { email: user.email } }));
-      } else {
-        setDebugDeleteApiUrl(generateUrl("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
-      }
-      
-      // Cambio Contraseña URL
-      if (user && user.email) {
         setDebugChangePasswordApiUrl(generateUrl("cambiocontraseña", { usuario: { email: user.email, newPassword: "nuevaPassword123" } }));
       } else {
+        setDebugDeleteApiUrl(generateUrl("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
         setDebugChangePasswordApiUrl(generateUrl("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
       }
 
@@ -171,10 +164,13 @@ export default function DashboardPage() {
       setDebugLoginApiUrl(null);
       setDebugDeleteApiUrl(null);
       setDebugChangePasswordApiUrl(null);
+      setDebugUserActivityApiUrl(null);
     }
   }, [t, isEmotionalDashboardEnabled, user]); 
 
   useEffect(() => {
+    let activitySummaryForUrlGeneration: UserActivitySummary | null = null;
+
     if (user && isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
       const allPathsProgressData = pathsData.map((appPath: AppPathData): PathProgressInfo => {
@@ -198,7 +194,7 @@ export default function DashboardPage() {
         activePath: currentActivePath,
         allPathsProgress: allPathsProgressData,
       };
-
+      activitySummaryForUrlGeneration = summary;
       setUserActivityForDisplay(JSON.stringify(summary, null, 2));
       
       try {
@@ -215,6 +211,23 @@ export default function DashboardPage() {
       setUserActivityForDisplay(null);
       setOutputOfEncryptFunctionForTest(null);
     }
+
+    // Generate User Activity API URL
+    if (activitySummaryForUrlGeneration && isEmotionalDashboardEnabled) {
+      const generateActivityUrl = (type: string, params: Record<string, any>): string => {
+        const encodedParams = Object.entries(params)
+          .map(([key, valueObj]) => {
+            const payloadString = encryptDataAES(valueObj); 
+            return `${key}=${encodeURIComponent(payloadString)}`;
+          })
+          .join('&');
+        return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
+      };
+      setDebugUserActivityApiUrl(generateActivityUrl("guardaractividad", { datosactividad: activitySummaryForUrlGeneration }));
+    } else {
+      setDebugUserActivityApiUrl(null);
+    }
+
   }, [user, currentActivePath, isEmotionalDashboardEnabled, pathsData]); 
 
   useEffect(() => {
@@ -284,6 +297,16 @@ export default function DashboardPage() {
       const summary: UserActivitySummary = { user, emotionalEntries: allEmotionalEntries, activePath: currentActivePath, allPathsProgress: allPathsProgressData };
       setUserActivityForDisplay(JSON.stringify(summary, null, 2));
       setOutputOfEncryptFunctionForTest(encryptDataAES(summary));
+
+      // Regenerate User Activity API URL as well
+      const generateActivityUrl = (type: string, params: Record<string, any>): string => {
+        const encodedParams = Object.entries(params)
+          .map(([key, valueObj]) => `${key}=${encodeURIComponent(encryptDataAES(valueObj))}`)
+          .join('&');
+        return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
+      };
+      setDebugUserActivityApiUrl(generateActivityUrl("guardaractividad", { datosactividad: summary }));
+
     }
     toast({
       title: t.emotionalEntrySavedTitle,
@@ -294,7 +317,7 @@ export default function DashboardPage() {
 
   const handleClearDebugUrl = (key: string, setter: React.Dispatch<React.SetStateAction<string | null>>, exampleUrlGenerator: () => string) => {
     sessionStorage.removeItem(key);
-    setter(exampleUrlGenerator()); // Regenerate example URL
+    setter(exampleUrlGenerator()); 
     toast({ title: "URL de prueba eliminada de SessionStorage", description: `Se ha regenerado la URL de ejemplo para ${key === SESSION_STORAGE_REGISTER_URL_KEY ? 'registro' : 'login'}.` });
   };
   
@@ -451,7 +474,8 @@ export default function DashboardPage() {
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_REGISTER_URL_KEY, setDebugRegisterApiUrl, () => {
                      const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
                      const registerParams = { usuario: exampleRegisterUser, name: { value: exampleRegisterUser.name }, email: { value: exampleRegisterUser.email }, password: { value: "PasswordDeRegistro123" }};
-                     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=registro&${Object.entries(registerParams).map(([k,v]) => `${k}=${encodeURIComponent(encryptDataAES(v))}`).join('&')}`;
+                     const generateUrl = (type: string, params: Record<string, any>): string => `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(encryptDataAES(v))}`).join('&')}`;
+                     return generateUrl("registro", registerParams);
                   })} className="mt-2">
                     <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
                   </Button>
@@ -471,7 +495,8 @@ export default function DashboardPage() {
                   </p>
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_LOGIN_URL_KEY, setDebugLoginApiUrl, () => {
                     const loginParams = { usuario: { email: "login@ejemplo.com" }, password: { value: "PasswordDeLogin123" } };
-                    return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=login&${Object.entries(loginParams).map(([k,v]) => `${k}=${encodeURIComponent(encryptDataAES(v))}`).join('&')}`;
+                    const generateUrl = (type: string, params: Record<string, any>): string => `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(encryptDataAES(v))}`).join('&')}`;
+                    return generateUrl("login", loginParams);
                   })} className="mt-2">
                     <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
                   </Button>
@@ -502,6 +527,20 @@ export default function DashboardPage() {
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
                     Nota: El parámetro `usuario` contiene un string JSON (encriptación AES desactivada). Generada usando el email del usuario actual (y contraseña de ejemplo) o datos de ejemplo si no hay sesión.
+                  </p>
+                </div>
+               )}
+               {debugUserActivityApiUrl && (
+                <div>
+                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                    <ShieldQuestion className="mr-2 h-4 w-4" />
+                    URL de API para Guardar Actividad de Usuario (Depuración - Payload es JSON):
+                  </p>
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{debugUserActivityApiUrl}</code>
+                  </pre>
+                   <p className="text-xs mt-1 text-muted-foreground">
+                    Nota: El parámetro `datosactividad` contiene un string JSON con el resumen completo de actividad del usuario (encriptación AES desactivada).
                   </p>
                 </div>
                )}
