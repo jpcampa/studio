@@ -1,15 +1,15 @@
 
 "use client";
 
-import { useActionState, useState, useEffect, type FormEvent } from "react";
-import { useFormStatus } from "react-dom";
+import { useActionState, useState, useEffect } from "react";
+// useFormStatus ya no es necesario aquí directamente si gestionamos la carga manualmente para este botón
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
 import { deleteUserAccount, type DeleteAccountState } from "@/actions/auth";
 import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2, ShieldQuestion } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,19 +29,6 @@ const initialState: DeleteAccountState = {
   debugDeleteApiUrl: undefined,
 };
 
-// const SESSION_STORAGE_DELETE_URL_KEY = 'workwell-debug-delete-url'; // No longer needed for display
-
-function ActualSubmitButton() {
-  const { pending } = useFormStatus();
-  const t = useTranslations();
-  return (
-    <Button variant="destructive" className="w-full" disabled={pending} type="submit">
-      {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
-      {t.confirmDeleteAccountButton}
-    </Button>
-  );
-}
-
 export function DeleteAccountForm() {
   const t = useTranslations();
   const { toast } = useToast();
@@ -52,24 +39,16 @@ export function DeleteAccountForm() {
   
   const [state, formAction] = useActionState(deleteUserAccountWithEmail, initialState);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
-  // const [persistedDebugUrl, setPersistedDebugUrl] = useState<string | null>(null); // No longer needed for display
-
-  // useEffect(() => { // No longer needed for display
-  //   const storedUrl = sessionStorage.getItem(SESSION_STORAGE_DELETE_URL_KEY);
-  //   if (storedUrl) {
-  //     setPersistedDebugUrl(storedUrl);
-  //   }
-  // }, []);
+  const [isSubmittingAction, setIsSubmittingAction] = useState(false); // Estado de carga manual
 
   useEffect(() => {
     if (!state) return;
+    setIsSubmittingAction(false); // Resetear estado de carga cuando la acción termine
 
     console.log("DeleteAccountForm: Received state from server action:", JSON.stringify(state, null, 2));
     
     if (state.debugDeleteApiUrl) {
-      // Still save to session storage for potential debugging, but don't display it.
       sessionStorage.setItem('workwell-debug-delete-url', state.debugDeleteApiUrl);
-      // setPersistedDebugUrl(state.debugDeleteApiUrl); // No longer needed for display
     }
 
     if (state.success && state.message) {
@@ -80,7 +59,7 @@ export function DeleteAccountForm() {
       setTimeout(() => {
         logout(); 
         router.push('/login'); 
-      }, 2000);
+      }, 2000); // Espera 2 segundos
     } else if (state.message && !state.success) { 
       let errorTitle = t.deleteAccountErrorTitle;
       let errorMessage = state.message;
@@ -103,25 +82,20 @@ export function DeleteAccountForm() {
     }
   }, [state, logout, router, toast, t]);
   
-  const handleDialogTrigger = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDialogTriggerClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault(); 
     setIsAlertDialogOpen(true); 
   };
 
-  const handleConfirmDelete = () => {
-    const form = document.getElementById("actual-delete-form") as HTMLFormElement | null;
-    if (form) {
-        form.requestSubmit();
-    }
-    setIsAlertDialogOpen(false);
+  const handleConfirmDeleteAction = async () => {
+    setIsSubmittingAction(true);
+    // Pasamos un FormData vacío porque la acción deleteUserAccount no lo usa directamente,
+    // pero formAction (de useActionState) espera un FormData.
+    await formAction(new FormData());
+    // No necesitamos setIsSubmittingAction(false) aquí, el useEffect lo hará.
+    setIsAlertDialogOpen(false); // Cierra el diálogo después de iniciar la acción.
   };
   
-  // const handleClearDebugUrl = () => { // No longer needed for display
-  //   sessionStorage.removeItem(SESSION_STORAGE_DELETE_URL_KEY);
-  //   setPersistedDebugUrl(null); 
-  //   toast({ title: "URL de prueba eliminada", description: "La URL para la baja ha sido eliminada de sessionStorage." });
-  // };
-
   if (userLoading) {
     return <div className="flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   }
@@ -131,20 +105,19 @@ export function DeleteAccountForm() {
     return null;
   }
   
-  // const displayDebugUrl = state.debugDeleteApiUrl || persistedDebugUrl; // No longer displayed
-
   return (
     <>
-      <form id="actual-delete-form" action={formAction} className="hidden">
-      </form>
-
+      {/* El formulario real que usa la acción del servidor ya no necesita estar visible o manipulado directamente aquí.
+          formAction se llama programáticamente. */}
+      
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
         <AlertDialogTrigger asChild>
           <Button
-            onClick={handleDialogTrigger}
+            onClick={handleDialogTriggerClick}
             variant="destructive"
             className="w-full"
-            disabled={useFormStatus().pending} 
+            // El estado pendiente del formulario general no aplica aquí directamente,
+            // usamos isSubmittingAction para el botón de confirmación.
           >
             <Trash2 className="mr-2 h-4 w-4" />
             {t.deleteAccountButtonLabel} 
@@ -160,11 +133,14 @@ export function DeleteAccountForm() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t.cancelDeleteAccountButton}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} asChild>
-              <form action={formAction}> 
-                <ActualSubmitButton />
-              </form>
+            <AlertDialogCancel disabled={isSubmittingAction}>{t.cancelDeleteAccountButton}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmDeleteAction} 
+              disabled={isSubmittingAction}
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground" // Aseguramos estilos de botón destructivo
+            >
+              {isSubmittingAction ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+              {t.confirmDeleteAccountButton}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -177,23 +153,6 @@ export function DeleteAccountForm() {
       {state.message && !state.success && !state.errors?._form?.length && (
          <p className="mt-4 text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md text-center">{state.message}</p>
       )}
-
-      {/* REMOVED DEBUG URL DISPLAY SECTION 
-      {displayDebugUrl && (
-        <div className="mt-6 p-4 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg shadow-md">
-          <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 flex items-center mb-2">
-            <ShieldQuestion className="mr-2 h-5 w-5" />
-            Debug: URL de API de Baja Generada
-          </p>
-          <pre className="text-xs text-yellow-600 dark:text-yellow-400 overflow-x-auto whitespace-pre-wrap break-all bg-yellow-100 dark:bg-yellow-800/30 p-3 rounded-md shadow-inner">
-            <code>{displayDebugUrl}</code>
-          </pre>
-          <Button variant="outline" size="sm" onClick={handleClearDebugUrl} className="mt-3 border-yellow-500 text-yellow-600 hover:bg-yellow-100 dark:hover:bg-yellow-800/50">
-            <Trash2 className="mr-2 h-4 w-4" /> Limpiar URL de Depuración Persistente
-          </Button>
-        </div>
-      )}
-      */}
     </>
   );
 }
