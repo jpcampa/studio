@@ -38,7 +38,7 @@ interface ProcessedChartDataPoint {
 }
 
 interface UserActivitySummary {
-  ID?: string | null; // User ID from UserContext, value will be the result of forceEncryptStringAES.
+  ID?: string | null; // User ID, value will be the result of forceEncryptStringAES.
   emotionalEntries: EmotionalEntry[];
 }
 
@@ -177,18 +177,26 @@ export default function DashboardPage() {
       setDebugChangePasswordApiUrl(null);
       setDebugUserActivityApiUrl(null);
     }
-  }, [t, isEmotionalDashboardEnabled, user]); 
+  }, [t, isEmotionalDashboardEnabled, user]); // user dependency is important here
 
   useEffect(() => {
-    let activitySummaryForUrlGeneration: UserActivitySummary | null = null;
+    // This useEffect handles updates based on user, activePath, etc.
+    // It's crucial that 'user' from UserContext is stable and loaded before this runs with user data.
+    console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
+    console.log("DashboardPage (Activity Summary UE): currentActivePath:", currentActivePath ? currentActivePath.id : "null");
 
-    console.log("DashboardPage (Activity Summary UE): Current user object from context:", JSON.stringify(user, null, 2));
-    setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
+    if (!user || !user.id) {
+      console.warn("DashboardPage (Activity Summary UE): User or user.id is not available. Skipping user activity summary and URL generation. User:", user);
+      setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o con ID faltante.");
+      setUserActivityForDisplay("No se pudo generar el resumen de actividad: falta ID de usuario.");
+      setOutputOfEncryptFunctionForTest(null);
+      setDebugUserActivityApiUrl("No se pudo generar la URL de actividad: falta ID de usuario.");
+      return; // Exit early if user or user.id is not available
+    }
 
-    const userIdFromContext = user?.id; 
-    console.log("DashboardPage (Activity Summary UE): User ID from UserContext (for summary.ID and &userID= param):", userIdFromContext, "(Type:", typeof userIdFromContext, ")");
-    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", user?.id);
-
+    setRawUserObjectForDebug(JSON.stringify(user, null, 2));
+    const userIdFromContext = user.id; // We've confirmed user and user.id exist
+    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
 
     if (isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
@@ -197,16 +205,12 @@ export default function DashboardPage() {
         emotionalEntries: allEmotionalEntries,
       };
       
-      if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
-        console.log("DashboardPage (Activity Summary UE): User ID from UserContext is valid. Encrypting for summary.ID.");
-        const encryptedIdForSummary = forceEncryptStringAES(userIdFromContext);
-        console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for summary.ID:", encryptedIdForSummary);
-        summary.ID = encryptedIdForSummary; 
-      } else {
-        console.log("DashboardPage (Activity Summary UE): User ID from UserContext is NOT valid for encryption for summary.ID. 'ID' field will be omitted from summary. User object:", user);
-      }
-
-      activitySummaryForUrlGeneration = summary;
+      // This part is for the 'ID' field INSIDE the 'datosactividad' JSON payload
+      console.log("DashboardPage (Activity Summary UE): User ID from UserContext is valid. Encrypting for summary.ID:", userIdFromContext);
+      const encryptedIdForSummaryJson = forceEncryptStringAES(userIdFromContext);
+      console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for summary.ID:", encryptedIdForSummaryJson);
+      summary.ID = encryptedIdForSummaryJson; 
+      
       setUserActivityForDisplay(JSON.stringify(summary, null, 2)); 
       
       try {
@@ -217,6 +221,7 @@ export default function DashboardPage() {
         setOutputOfEncryptFunctionForTest("Error durante el procesamiento de los datos de actividad del usuario para prueba.");
       }
       
+      // This part is for the separate '&userID=' URL parameter
       console.log("DashboardPage (useEffect for API URL): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
       setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); 
     } else {
@@ -224,8 +229,8 @@ export default function DashboardPage() {
       setOutputOfEncryptFunctionForTest(null);
       setDebugUserActivityApiUrl(null);
     }
-
-  }, [isEmotionalDashboardEnabled, user, currentActivePath, t]); 
+    console.log("DashboardPage (Activity Summary UE): END.");
+  }, [isEmotionalDashboardEnabled, user, currentActivePath, t, generateUserActivityApiUrl]); // Added generateUserActivityApiUrl to dependencies
 
 
   useEffect(() => {
@@ -272,6 +277,19 @@ export default function DashboardPage() {
 
   const handleEmotionalEntrySubmit = (data: { situation: string; emotion: string }) => {
     if (!isEmotionalDashboardEnabled) return;
+
+    // Ensure user and user.id are available before proceeding
+    if (!user || !user.id) {
+      toast({
+        title: "Error de Usuario",
+        description: "No se pudo identificar al usuario. Intenta recargar la página o iniciar sesión de nuevo.",
+        variant: "destructive",
+      });
+      console.warn("DashboardPage (handleEmotionalEntrySubmit): User or user.id not available. Cannot submit entry or update activity URLs.");
+      return;
+    }
+    const userIdFromContext = user.id;
+
     const newEntry = addEmotionalEntry(data);
     setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); 
     setAllEntriesForChart(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
@@ -283,15 +301,8 @@ export default function DashboardPage() {
     const allEmotionalEntries = getEmotionalEntries();
     const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
     
-    const userIdFromContext = user?.id; 
     console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext:", userIdFromContext);
-
-    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
-      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext is valid. Encrypting for summary.ID.");
-      summary.ID = forceEncryptStringAES(userIdFromContext); 
-    } else {
-      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext is NOT valid for encryption for summary.ID. 'ID' field will be omitted. User object:", user);
-    }
+    summary.ID = forceEncryptStringAES(userIdFromContext); 
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
     setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); 

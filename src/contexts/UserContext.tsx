@@ -33,68 +33,81 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("UserContext: useEffect to load from localStorage mounting.");
+    console.log("UserContext: useEffect[initialLoad] - Mounting. Attempting to load user from localStorage.");
+    setLoading(true); // Ensure loading is true at the start of the effect
     try {
       const storedEncryptedUser = localStorage.getItem(SIMULATED_USER_KEY);
       if (storedEncryptedUser) {
-        console.log("UserContext: Found data in localStorage. Attempting decryption.");
+        console.log("UserContext: useEffect[initialLoad] - Found data in localStorage. Attempting decryption.");
         const decryptedUser = decryptDataAES(storedEncryptedUser);
-        if (decryptedUser) {
+        if (decryptedUser && typeof decryptedUser === 'object' && 'id' in decryptedUser) {
           setUser(decryptedUser as User);
-          console.log("UserContext: User decrypted and set from localStorage:", decryptedUser);
+          console.log("UserContext: useEffect[initialLoad] - User DECRYPTED and SET from localStorage:", decryptedUser);
         } else {
-          console.warn("UserContext: Failed to decrypt user from localStorage or data was invalid. Clearing invalid storage.");
-          localStorage.removeItem(SIMULATED_USER_KEY); // Remove invalid/corrupted data
+          setUser(null); // Explicitly set to null if decryption fails or data is invalid
+          console.warn("UserContext: useEffect[initialLoad] - Failed to decrypt user or data was invalid. Clearing invalid storage. User set to null.");
+          localStorage.removeItem(SIMULATED_USER_KEY);
         }
       } else {
-        console.log("UserContext: No user data found in localStorage.");
+        setUser(null); // Explicitly set to null if no user data in storage
+        console.log("UserContext: useEffect[initialLoad] - No user data found in localStorage. User set to null.");
       }
     } catch (error) {
-      console.error("UserContext: Error during initial user load from localStorage:", error);
-      localStorage.removeItem(SIMULATED_USER_KEY); // Clear potentially corrupted data
+      setUser(null); // Explicitly set to null on error
+      console.error("UserContext: useEffect[initialLoad] - Error during initial user load from localStorage:", error);
+      localStorage.removeItem(SIMULATED_USER_KEY);
     } finally {
+      console.log("UserContext: useEffect[initialLoad] - FINALLY block. Setting loading to false.");
       setLoading(false);
-      console.log("UserContext: Initial load finished. Loading set to false.");
     }
   }, []);
 
   const login = useCallback((userData: User) => {
-    console.log("UserContext: login function called with:", userData);
+    console.log("UserContext: login function CALLED with userData:", JSON.stringify(userData, null, 2));
+    if (!userData || !userData.id) {
+      console.error("UserContext: login function - Invalid userData provided (null or missing id). Aborting login.");
+      return;
+    }
     try {
       const encryptedUserData = encryptDataAES(userData);
       localStorage.setItem(SIMULATED_USER_KEY, encryptedUserData);
-      setUser(userData); // Set user state after successful encryption and storage
-      console.log("UserContext: User encrypted and saved to localStorage.");
-    } catch (error) {
-      console.error("UserContext: Error encrypting/saving user to localStorage:", error);
-      // Decide on error handling: maybe don't set user if storage fails? For now, we set it.
       setUser(userData);
+      setLoading(false); // User is now logged in, so not loading
+      console.log("UserContext: login function - User encrypted, saved to localStorage, and SET in context. Loading set to false.");
+    } catch (error) {
+      console.error("UserContext: login function - Error encrypting/saving user to localStorage:", error);
+      // Potentially set user even if storage fails, or handle error more gracefully
+      setUser(userData);
+      setLoading(false);
     }
   }, []);
 
   const logout = useCallback(() => {
-    console.log("UserContext: logout function called.");
+    console.log("UserContext: logout function CALLED.");
     setUser(null);
+    setLoading(false); // Not loading, as user is now definitively null
     try {
       localStorage.removeItem(SIMULATED_USER_KEY);
-      console.log("UserContext: User removed from localStorage.");
+      console.log("UserContext: logout function - User removed from localStorage.");
     } catch (error) {
-      console.error("UserContext: Error removing user from localStorage:", error);
+      console.error("UserContext: logout function - Error removing user from localStorage:", error);
     }
     router.push('/login');
   }, [router]);
 
   const updateUser = useCallback(async (updatedData: Partial<Pick<User, 'name' | 'ageRange' | 'gender'>>) => {
-    console.log("UserContext: updateUser called with:", updatedData);
+    console.log("UserContext: updateUser CALLED with updatedData:", updatedData);
     
     let finalUserToStore: User | null = null;
 
     setUser(prevUser => {
       if (prevUser) {
         const newUser = { ...prevUser, ...updatedData };
-        finalUserToStore = newUser; // Capture for storage
+        finalUserToStore = newUser;
+        console.log("UserContext: updateUser - New user object for context:", JSON.stringify(newUser, null, 2));
         return newUser;
       }
+      console.log("UserContext: updateUser - prevUser was null, not updating.");
       return null;
     });
 
@@ -102,13 +115,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
       try {
         const encryptedUser = encryptDataAES(finalUserToStore);
         localStorage.setItem(SIMULATED_USER_KEY, encryptedUser);
-        console.log("UserContext: User updated, encrypted, and saved in localStorage:", finalUserToStore);
+        console.log("UserContext: updateUser - User updated, encrypted, and SAVED in localStorage.");
       } catch (error) {
-        console.error("UserContext: Error encrypting/saving updated user in localStorage:", error);
+        console.error("UserContext: updateUser - Error encrypting/saving updated user in localStorage:", error);
       }
     }
     return Promise.resolve();
   }, []);
+
+  // Log context state changes for easier debugging
+  useEffect(() => {
+    console.log("UserContext: STATE CHANGE - User:", JSON.stringify(user, null, 2), "Loading:", loading);
+  }, [user, loading]);
 
   return (
     <UserContext.Provider value={{ user, login, logout, loading, updateUser }}>
