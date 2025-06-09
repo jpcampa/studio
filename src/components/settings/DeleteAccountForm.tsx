@@ -126,7 +126,7 @@ export function DeleteAccountForm() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t.deleteAccountPageTitle}</AlertDialogTitle>
-            <AlertDialogDescription className="max-h-[calc(100vh-20rem)] overflow-y-auto pr-2">
+            <AlertDialogDescription className="max-h-[calc(100vh-20rem)] overflow-y-auto pr-2 break-words">
               {t.deleteAccountWarningMessage}
               <br/><br/>
               <strong>{t.deleteAccountConfirmationPrompt}</strong>
