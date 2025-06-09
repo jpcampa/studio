@@ -5,7 +5,7 @@ import CryptoJS from "crypto-js";
 const SECRET_KEY = "0123456789abcdef0123456789abcdef"; // 32 bytes
 
 // --- FLAG TO CONTROL AES ENCRYPTION ---
-const ENCRYPTION_ENABLED = true; // SET TO true TO RE-ENABLE AES ENCRYPTION, false TO DISABLE
+const ENCRYPTION_ENABLED = false; // SET TO false TO DISABLE AES ENCRYPTION
 // ---
 
 export function encryptDataAES(data: object): string {

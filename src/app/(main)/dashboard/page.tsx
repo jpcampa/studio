@@ -86,8 +86,8 @@ export default function DashboardPage() {
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   
   const [userActivityForDisplay, setUserActivityForDisplay] = useState<string | null>(null);
-  const [encryptedUserActivityForTest, setEncryptedUserActivityForTest] = useState<string | null>(null);
-  const [decryptedDataForTest, setDecryptedDataForTest] = useState<string | null>(null);
+  const [outputOfEncryptFunctionForTest, setOutputOfEncryptFunctionForTest] = useState<string | null>(null);
+  const [outputOfDecryptFunctionForTest, setOutputOfDecryptFunctionForTest] = useState<string | null>(null);
   const [lastGeneratedRegisterApiUrl, setLastGeneratedRegisterApiUrl] = useState<string | null>(null);
   const [lastGeneratedLoginApiUrl, setLastGeneratedLoginApiUrl] = useState<string | null>(null);
   const [debugDeleteApiUrlForDisplay, setDebugDeleteApiUrlForDisplay] = useState<string | null>(null);
@@ -120,7 +120,7 @@ export default function DashboardPage() {
         try {
             // Baja URL
             const deletePayloadToEncrypt = { email: user.email };
-            const encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt);
+            const encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt); // Will be plain JSON if encryption is off
             const finalEncryptedDeletePayloadForUrl = encodeURIComponent(encryptedDeletePayload);
             const deleteType = "baja";
             const generatedDeleteUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${deleteType}&usuario=${finalEncryptedDeletePayloadForUrl}`;
@@ -129,7 +129,7 @@ export default function DashboardPage() {
             // Change Password URL
             const exampleNewPassword = "nuevaPassword123";
             const changePasswordPayloadToEncrypt = { email: user.email, newPassword: exampleNewPassword };
-            const encryptedChangePasswordPayload = encryptDataAES(changePasswordPayloadToEncrypt);
+            const encryptedChangePasswordPayload = encryptDataAES(changePasswordPayloadToEncrypt); // Will be plain JSON if encryption is off
             const finalEncryptedChangePasswordPayloadForUrl = encodeURIComponent(encryptedChangePasswordPayload);
             const changePasswordType = "cambiocontraseña";
             const generatedChangePasswordUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${changePasswordType}&usuario=${finalEncryptedChangePasswordPayloadForUrl}`;
@@ -183,31 +183,35 @@ export default function DashboardPage() {
       setUserActivityForDisplay(JSON.stringify(summary, null, 2));
       
       try {
-        const encryptedString = encryptDataAES(summary);
-        setEncryptedUserActivityForTest(encryptedString);
+        // encryptDataAES will return plain JSON string if ENCRYPTION_ENABLED = false
+        const outputOfEncryptCall = encryptDataAES(summary);
+        setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
       } catch (error) {
-        console.error("Error encrypting user activity summary for test display:", error);
-        setEncryptedUserActivityForTest("Error durante la encriptación de los datos de actividad del usuario para prueba.");
+        console.error("Error processing user activity summary for test display:", error);
+        setOutputOfEncryptFunctionForTest("Error durante el procesamiento de los datos de actividad del usuario para prueba.");
       }
     } else if (isEmotionalDashboardEnabled) {
       setUserActivityForDisplay("No hay datos de usuario para construir el resumen de actividad.");
-      setEncryptedUserActivityForTest("No hay datos de usuario para encriptar.");
+      setOutputOfEncryptFunctionForTest("No hay datos de usuario para procesar.");
     } else {
       setUserActivityForDisplay(null);
-      setEncryptedUserActivityForTest(null);
+      setOutputOfEncryptFunctionForTest(null);
     }
   }, [user, currentActivePath, isEmotionalDashboardEnabled, pathsData]); 
 
   useEffect(() => {
     if (isEmotionalDashboardEnabled) {
-      const decryptedObject = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
-      if (decryptedObject && typeof decryptedObject === 'object') {
-        setDecryptedDataForTest(JSON.stringify(decryptedObject, null, 2));
+      // decryptDataAES will try to parse JSON if ENCRYPTION_ENABLED = false
+      const decryptedObjectOrString = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
+      if (typeof decryptedObjectOrString === 'object' && decryptedObjectOrString !== null) {
+        setOutputOfDecryptFunctionForTest(JSON.stringify(decryptedObjectOrString, null, 2));
+      } else if (typeof decryptedObjectOrString === 'string') {
+        setOutputOfDecryptFunctionForTest(decryptedObjectOrString);
       } else {
-        setDecryptedDataForTest("Error al desencriptar la cadena de prueba o resultado no es un objeto.");
+        setOutputOfDecryptFunctionForTest("Error al procesar la cadena de prueba o resultado no esperado.");
       }
     } else {
-        setDecryptedDataForTest(null);
+        setOutputOfDecryptFunctionForTest(null);
     }
   }, [isEmotionalDashboardEnabled]);
 
@@ -262,7 +266,7 @@ export default function DashboardPage() {
       });
       const summary: UserActivitySummary = { user, emotionalEntries: allEmotionalEntries, activePath: currentActivePath, allPathsProgress: allPathsProgressData };
       setUserActivityForDisplay(JSON.stringify(summary, null, 2));
-      setEncryptedUserActivityForTest(encryptDataAES(summary));
+      setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); // Will return plain JSON if encryption is off
     }
     toast({
       title: t.emotionalEntrySavedTitle,
@@ -370,7 +374,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
-                  Resumen de Actividad del Usuario (para prueba):
+                  Resumen de Actividad del Usuario (Datos Crudos):
                 </p>
                 {userActivityForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
@@ -384,34 +388,34 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Lock className="mr-2 h-4 w-4" />
-                  Resumen de Actividad Encriptado (para prueba):
+                  Prueba de Función `encryptDataAES` (Encriptación DESACTIVADA):
                 </p>
-                {encryptedUserActivityForTest ? (
+                {outputOfEncryptFunctionForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
-                    <code>{encryptedUserActivityForTest}</code>
+                    <code>{outputOfEncryptFunctionForTest}</code>
                   </pre>
                 ) : (
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Esto es para verificar la función <code>encryptDataAES(userActivitySummaryObject)</code>.
+                  Con la encriptación DESACTIVADA, <code>encryptDataAES(userActivitySummaryObject)</code> devuelve directamente el objeto como cadena JSON.
                 </p>
               </div>
               <Separator />
                <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <KeyRound className="mr-2 h-4 w-4" />
-                  Resultado Desencriptación de Cadena Específica (para prueba):
+                  Prueba de Función `decryptDataAES` (Encriptación DESACTIVADA):
                 </p>
-                {decryptedDataForTest ? (
+                {outputOfDecryptFunctionForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{decryptedDataForTest}</code>
+                    <code>{outputOfDecryptFunctionForTest}</code>
                   </pre>
                 ) : (
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Esto es para verificar <code>decryptDataAES</code> con una cadena predefinida.
+                  Con la encriptación DESACTIVADA, <code>decryptDataAES(cadenaPredefinida)</code> intenta parsear la cadena como JSON. Si es JSON válido (como la cadena de prueba), devuelve el objeto parseado. Si no, devuelve la cadena original.
                 </p>
               </div>
               <Separator />
@@ -419,7 +423,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    Última URL de Registro Generada (para prueba):
+                    Última URL de Registro Generada (para prueba - la encriptación del payload depende del flag):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{lastGeneratedRegisterApiUrl}</code>
@@ -433,7 +437,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    Última URL de Login Generada (para prueba):
+                    Última URL de Login Generada (para prueba - la encriptación del payload depende del flag):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{lastGeneratedLoginApiUrl}</code>
@@ -447,7 +451,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Baja (Simulada para Depuración):
+                    URL de API de Baja (Simulada para Depuración - la encriptación del payload depende del flag):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugDeleteApiUrlForDisplay}</code>
@@ -461,7 +465,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Cambio Contraseña (Simulada para Depuración):
+                    URL de API de Cambio Contraseña (Simulada para Depuración - la encriptación del payload depende del flag):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugChangePasswordApiUrlForDisplay}</code>
