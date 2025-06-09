@@ -177,7 +177,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       // For V1, after successful registration, prompt user to log in.
       // We are not auto-logging in or creating a local session directly from registration.
       return {
-        message: "¡Registro completado! Ahora puedes iniciar sesión.",
+        message: t.registrationSuccessLoginPrompt,
         user: null, // No user object returned on register to force login
         debugApiUrl: generatedApiUrl,
       };
@@ -618,6 +618,7 @@ export async function changePassword(
       errors: { _form: [t.userEmailMissingError] },
       message: t.userEmailMissingError,
       success: false,
+      debugChangePasswordApiUrl: undefined,
     };
   }
 
@@ -631,6 +632,7 @@ export async function changePassword(
       errors: validatedFields.error.flatten().fieldErrors,
       message: t.validationError, // General validation error message
       success: false,
+      debugChangePasswordApiUrl: undefined,
     };
   }
 
@@ -647,6 +649,7 @@ export async function changePassword(
       message: "Error interno al preparar los datos para el cambio de contraseña.",
       errors: { _form: ["No se pudieron encriptar los datos de forma segura."] },
       success: false,
+      debugChangePasswordApiUrl: undefined,
     };
   }
 
@@ -704,6 +707,7 @@ export async function changePassword(
         message: t.passwordChangedSuccessMessage,
         success: true,
         debugChangePasswordApiUrl: generatedApiUrl,
+        errors: {}, // Clear previous errors on success
       };
     } else if (apiResult.status === "NOOK") {
       console.warn("ChangePassword action: External API reported 'NOOK'. Message:", apiResult.message);

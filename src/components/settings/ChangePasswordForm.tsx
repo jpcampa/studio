@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useActionState, useState, useEffect, type FormEvent } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,6 @@ const initialState: ChangePasswordState = {
 
 const SESSION_STORAGE_CHANGE_PASSWORD_URL_KEY = 'workwell-debug-change-password-url';
 
-
 function SubmitButton() {
   const { pending } = useFormStatus();
   const t = useTranslations();
@@ -40,7 +39,6 @@ export function ChangePasswordForm() {
   const { user, loading: userLoading } = useUser();
   const router = useRouter();
 
-  // Bind userEmail to the action
   const changePasswordWithEmail = changePassword.bind(null, user?.email || "");
   const [state, formAction] = useActionState(changePasswordWithEmail, initialState);
   
@@ -56,6 +54,12 @@ export function ChangePasswordForm() {
   }, []);
 
   useEffect(() => {
+    if (!state) {
+        console.warn("ChangePasswordForm: state from useActionState is null or undefined.");
+        return; 
+    }
+    console.log("ChangePasswordForm: Received state from server action:", JSON.stringify(state, null, 2));
+
     if (state.debugChangePasswordApiUrl) {
       sessionStorage.setItem(SESSION_STORAGE_CHANGE_PASSWORD_URL_KEY, state.debugChangePasswordApiUrl);
       setPersistedDebugUrl(state.debugChangePasswordApiUrl);
@@ -67,48 +71,53 @@ export function ChangePasswordForm() {
           title: t.passwordChangedSuccessTitle,
           description: state.message,
         });
-        // Optionally, redirect or clear form here
-        // router.push("/settings"); 
+        // Optionally, clear form or redirect
+        // e.g., router.push("/settings");
       } else {
-        // Show general form error if present
-        if (state.errors?._form && state.errors._form.length > 0) {
+        // Prioritize _form errors for a general toast
+        if (state.errors?._form?.length) {
           toast({
             title: t.passwordChangeErrorTitle,
             description: state.errors._form[0],
             variant: "destructive",
           });
-        } 
-        // Show field-specific errors (if not already covered by _form error toast)
-        // This handles cases where Zod validation provides specific messages for fields.
-        else if (!state.errors?._form || state.errors._form.length === 0) {
-            let specificErrorShown = false;
-            if (state.errors?.newPassword?.[0]) {
-                 toast({ title: t.errorOccurred, description: state.errors.newPassword[0], variant: "destructive" });
-                 specificErrorShown = true;
-            }
-            if (state.errors?.confirmNewPassword?.[0]) {
-                 toast({ title: t.errorOccurred, description: state.errors.confirmNewPassword[0], variant: "destructive" });
-                 specificErrorShown = true;
-            }
-            // If there's a general message and no specific field errors were shown by toast, show the general message.
-            if (!specificErrorShown && state.message !== t.validationError ) { // t.validationError is a general Zod message
-                 toast({ title: t.passwordChangeErrorTitle, description: state.message, variant: "destructive"});
-            }
+        } else {
+          // If no _form error, check for specific field errors (Zod errors)
+          let specificErrorToasted = false;
+          if (state.errors?.newPassword?.length) {
+             toast({ title: t.errorOccurred, description: state.errors.newPassword[0], variant: "destructive" });
+             specificErrorToasted = true;
+          }
+          if (state.errors?.confirmNewPassword?.length) {
+             toast({ title: t.errorOccurred, description: state.errors.confirmNewPassword[0], variant: "destructive" });
+             specificErrorToasted = true;
+          }
+          // If no Zod/field error was toasted and there's a general error message (e.g., API error not covered by _form)
+          if (!specificErrorToasted && state.message !== t.validationError) { 
+             toast({ title: t.passwordChangeErrorTitle, description: state.message, variant: "destructive"});
+          }
         }
       }
+    } else if (state.errors && Object.keys(state.errors).length > 0 && !state.errors._form?.length) {
+        // This handles cases where there are only field errors (Zod) and no state.message.
+        if (state.errors?.newPassword?.length) {
+            toast({ title: t.errorOccurred, description: state.errors.newPassword[0], variant: "destructive" });
+        }
+        if (state.errors?.confirmNewPassword?.length) {
+            toast({ title: t.errorOccurred, description: state.errors.confirmNewPassword[0], variant: "destructive" });
+        }
     }
   }, [state, toast, t, router]);
-
 
   if (userLoading && !user) {
     return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
-  if (!user) { // Should be redirected by layout if not loading and no user, but as a safeguard
+  if (!user) { 
     router.push('/login');
     return null;
   }
 
-  const displayDebugUrl = state.debugChangePasswordApiUrl || persistedDebugUrl;
+  const displayDebugUrl = state?.debugChangePasswordApiUrl || persistedDebugUrl;
 
   return (
     <form action={formAction} className="space-y-6">
@@ -122,7 +131,7 @@ export function ChangePasswordForm() {
             required
             minLength={6}
             className="pr-10"
-            aria-describedby={state.errors?.newPassword ? "newPassword-error" : undefined}
+            aria-describedby={state?.errors?.newPassword ? "newPassword-error" : undefined}
           />
           <Button
             type="button"
@@ -135,7 +144,7 @@ export function ChangePasswordForm() {
             {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           </Button>
         </div>
-        {state.errors?.newPassword && <p id="newPassword-error" className="text-sm text-destructive pt-1">{state.errors.newPassword[0]}</p>}
+        {state?.errors?.newPassword && <p id="newPassword-error" className="text-sm text-destructive pt-1">{state.errors.newPassword[0]}</p>}
       </div>
       <div>
         <Label htmlFor="confirmNewPassword">{t.confirmNewPasswordLabel}</Label>
@@ -147,7 +156,7 @@ export function ChangePasswordForm() {
             required
             minLength={6}
             className="pr-10"
-            aria-describedby={state.errors?.confirmNewPassword ? "confirmNewPassword-error" : undefined}
+            aria-describedby={state?.errors?.confirmNewPassword ? "confirmNewPassword-error" : undefined}
           />
           <Button
             type="button"
@@ -160,15 +169,16 @@ export function ChangePasswordForm() {
             {showConfirmNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           </Button>
         </div>
-        {state.errors?.confirmNewPassword && <p id="confirmNewPassword-error" className="text-sm text-destructive pt-1">{state.errors.confirmNewPassword[0]}</p>}
+        {state?.errors?.confirmNewPassword && <p id="confirmNewPassword-error" className="text-sm text-destructive pt-1">{state.errors.confirmNewPassword[0]}</p>}
       </div>
       
-      {state.errors?._form && (
+      {/* Display general form-level errors (_form) if they exist */}
+      {state?.errors?._form && (
         <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.errors._form[0]}</p>
       )}
 
-      {/* Display general message if it's an error and not already handled by field errors */}
-       {state.message && !state.success && (!state.errors || Object.keys(state.errors).length === 0 || (!state.errors._form && !state.errors.newPassword && !state.errors.confirmNewPassword)) && (
+      {/* Display general message if it's an error, not covered by _form, and not a Zod validation message already handled by field-specific toasts */}
+       {state?.message && !state.success && !state.errors?._form?.length && state.message !== t.validationError && (
         <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
       )}
 

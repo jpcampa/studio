@@ -1,3 +1,4 @@
+
 // For V1, directly use Spanish. This structure allows easy replacement with a full i18n solution.
 // All text literals should be sourced from here.
 
@@ -113,6 +114,7 @@ export const t = {
   deactivateEmotionalDashboardButton: "Desactivar Dashboard Emocional",
   emotionalDashboardActivated: "Dashboard Emocional activado.",
   emotionalDashboardDeactivated: "Dashboard Emocional desactivado.",
+  
   // Change Password
   changePasswordTitle: "Cambiar Contraseña",
   changePasswordButtonLabel: "Cambiar Contraseña",
@@ -125,6 +127,7 @@ export const t = {
   passwordTooShortError: "La nueva contraseña debe tener al menos 6 caracteres.",
   passwordChangeGenericError: "No se pudo cambiar la contraseña. Inténtalo de nuevo.",
   userEmailMissingError: "No se pudo obtener el email del usuario para el cambio de contraseña.",
+  validationError: "Error de validación.", // Used by changePasswordSchema if general validation fails
   securitySettings: "Seguridad de la Cuenta",
 
   // Delete Account
