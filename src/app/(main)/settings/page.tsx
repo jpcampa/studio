@@ -288,7 +288,7 @@ export default function SettingsPage() {
                 {t.deleteAccountWarningMessage.split('.')[0]}.
                 </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="bg-destructive/5 dark:bg-destructive/10">
                 <Button variant="destructive" asChild>
                 <Link href="/settings/delete-account">
                     {t.deleteAccountButtonLabel}
