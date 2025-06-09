@@ -1,4 +1,3 @@
-
 // For V1, directly use Spanish. This structure allows easy replacement with a full i18n solution.
 // All text literals should be sourced from here.
 
@@ -123,6 +122,9 @@ export const t = {
   passwordChangedSuccessTitle: "Contraseña Cambiada",
   passwordChangedSuccessMessage: "Tu contraseña ha sido actualizada exitosamente.",
   passwordChangeErrorTitle: "Error al Cambiar Contraseña",
+  passwordTooShortError: "La nueva contraseña debe tener al menos 6 caracteres.",
+  passwordChangeGenericError: "No se pudo cambiar la contraseña. Inténtalo de nuevo.",
+  userEmailMissingError: "No se pudo obtener el email del usuario para el cambio de contraseña.",
   securitySettings: "Seguridad de la Cuenta",
 
   // Delete Account

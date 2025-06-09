@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { encryptDataAES, decryptDataAES } from "@/lib/encryption";
 import { UserProvider, useUser } from "@/contexts/UserContext"; // Assuming useUser can be used server-side, or we pass user object
+import { t } from "@/lib/translations"; // Import translations for error messages
 
 // Define the User interface that actions will deal with
 // This should be compatible with the User interface in UserContext
@@ -496,7 +497,6 @@ export async function deleteUserAccount(
   const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedPayloadForUrl}`;
   console.log("DeleteUserAccount action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_DELETE_PAYLOAD`);
 
-  // --- START: BLOCK TO COMMENT OUT FOR SIMULATION ---
   try {
     console.log("DeleteUserAccount action: Attempting to call external API. URL:", generatedApiUrl.substring(0,150) + "...");
     const signal = AbortSignal.timeout(API_TIMEOUT_MS);
@@ -583,18 +583,162 @@ export async function deleteUserAccount(
       debugDeleteApiUrl: generatedApiUrl,
     };
   }
-  // --- END: BLOCK TO COMMENT OUT FOR SIMULATION ---
+}
 
-  /*
-  // --- START: SIMULATION BLOCK (UNCOMMENT FOR SIMULATION) ---
-  // Simulate successful URL generation but no API call
-  console.log("DeleteUserAccount action: SIMULATION MODE - API call skipped.");
-  return {
-    message: "SIMULACIÓN: Baja no procesada. Mostrando URL generada para depuración.",
-    success: false, // It's not a real success
-    errors: {},
-    debugDeleteApiUrl: generatedApiUrl,
+// --- Change Password ---
+export type ChangePasswordState = {
+  errors?: {
+    newPassword?: string[];
+    confirmNewPassword?: string[];
+    _form?: string[];
   };
-  // --- END: SIMULATION BLOCK ---
-  */
+  message?: string | null;
+  success?: boolean;
+  debugChangePasswordApiUrl?: string;
+};
+
+const changePasswordSchema = z.object({
+  newPassword: z.string().min(6, t.passwordTooShortError),
+  confirmNewPassword: z.string().min(6, t.passwordTooShortError),
+}).refine(data => data.newPassword === data.confirmNewPassword, {
+  message: t.passwordsDoNotMatchError,
+  path: ["confirmNewPassword"], // Error on the confirmation field
+});
+
+export async function changePassword(
+  userEmail: string,
+  prevState: ChangePasswordState,
+  formData: FormData
+): Promise<ChangePasswordState> {
+  console.log(`ChangePassword action: Initiated for email: ${userEmail}.`);
+
+  if (!userEmail) {
+    console.warn("ChangePassword action: User email not provided to action.");
+    return {
+      errors: { _form: [t.userEmailMissingError] },
+      message: t.userEmailMissingError,
+      success: false,
+    };
+  }
+
+  const validatedFields = changePasswordSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  );
+
+  if (!validatedFields.success) {
+    console.warn("ChangePassword action: Validation failed.", validatedFields.error.flatten().fieldErrors);
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: t.validationError, // General validation error message
+      success: false,
+    };
+  }
+
+  const { newPassword } = validatedFields.data;
+  console.log("ChangePassword action: Validation successful. Preparing for external API call.");
+
+  const changePasswordPayloadToEncrypt = { email: userEmail, newPassword: newPassword };
+  let encryptedChangePasswordPayload;
+  try {
+    encryptedChangePasswordPayload = encryptDataAES(changePasswordPayloadToEncrypt);
+  } catch (encError: any) {
+    console.error("ChangePassword action: Error during encryption:", encError);
+    return {
+      message: "Error interno al preparar los datos para el cambio de contraseña.",
+      errors: { _form: ["No se pudieron encriptar los datos de forma segura."] },
+      success: false,
+    };
+  }
+
+  const finalEncryptedPayloadForUrl = encodeURIComponent(encryptedChangePasswordPayload);
+  const type = "cambiocontraseña";
+  const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedPayloadForUrl}`;
+  console.log("ChangePassword action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_CHANGE_PASSWORD_PAYLOAD`);
+
+  try {
+    console.log("ChangePassword action: Attempting to call external API. URL:", generatedApiUrl.substring(0, 150) + "...");
+    const signal = AbortSignal.timeout(API_TIMEOUT_MS);
+    const apiResponse = await fetch(generatedApiUrl, { signal });
+
+    let responseText = "";
+    try {
+      responseText = await apiResponse.text();
+      console.log("ChangePassword action: External API call status:", apiResponse.status, "Raw Response Text:", responseText);
+    } catch (textError: any) {
+      console.warn(`ChangePassword action: External API call failed or could not read text. Status: ${apiResponse.status}. Error reading text:`, textError.message);
+      return {
+        message: `Error del servicio de cambio de contraseña (HTTP ${apiResponse.status}): No se pudo leer la respuesta.`,
+        errors: { _form: [`El servicio de cambio de contraseña devolvió un error (HTTP ${apiResponse.status}) y no se pudo leer el cuerpo. Inténtalo más tarde.`] },
+        success: false,
+        debugChangePasswordApiUrl: generatedApiUrl,
+      };
+    }
+
+    if (!apiResponse.ok) {
+      console.warn(`ChangePassword action: External API call failed. Status: ${apiResponse.status}. Response: ${responseText}`);
+      return {
+        message: `Error del servicio de cambio de contraseña (HTTP ${apiResponse.status}): ${responseText.substring(0, 100)}`,
+        errors: { _form: [`El servicio de cambio de contraseña devolvió un error (HTTP ${apiResponse.status}). Inténtalo más tarde.`] },
+        success: false,
+        debugChangePasswordApiUrl: generatedApiUrl,
+      };
+    }
+
+    let apiResult: ExternalApiResponse;
+    try {
+      apiResult = JSON.parse(responseText);
+      console.log("ChangePassword action: Parsed API Response JSON:", apiResult);
+    } catch (jsonError: any) {
+      console.warn("ChangePassword action: Failed to parse JSON response from external API.", jsonError, "Raw text was:", responseText);
+      return {
+        message: "Error al procesar la respuesta del servicio de cambio de contraseña. Respuesta no válida.",
+        errors: { _form: ["El servicio de cambio de contraseña devolvió una respuesta inesperada."] },
+        success: false,
+        debugChangePasswordApiUrl: generatedApiUrl,
+      };
+    }
+
+    if (apiResult.status === "OK") {
+      console.log("ChangePassword action: External API reported 'OK'. Password change successful.");
+      return {
+        message: t.passwordChangedSuccessMessage,
+        success: true,
+        debugChangePasswordApiUrl: generatedApiUrl,
+      };
+    } else if (apiResult.status === "NOOK") {
+      console.warn("ChangePassword action: External API reported 'NOOK'. Message:", apiResult.message);
+      return {
+        message: apiResult.message || t.passwordChangeGenericError,
+        errors: { _form: [apiResult.message || t.passwordChangeGenericError] },
+        success: false,
+        debugChangePasswordApiUrl: generatedApiUrl,
+      };
+    } else {
+      console.warn("ChangePassword action: External API reported an unknown status.", apiResult);
+      return {
+        message: "Respuesta desconocida del servicio de cambio de contraseña.",
+        errors: { _form: ["El servicio de cambio de contraseña devolvió un estado inesperado."] },
+        success: false,
+        debugChangePasswordApiUrl: generatedApiUrl,
+      };
+    }
+
+  } catch (error: any) {
+    console.warn("ChangePassword action: Error during external API call or processing:", error);
+    let errorMessage = "Ocurrió un error inesperado durante el cambio de contraseña.";
+
+    if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
+      errorMessage = "No se pudo conectar con el servicio de cambio de contraseña (tiempo de espera agotado).";
+      console.warn("ChangePassword action: API call timed out after", API_TIMEOUT_MS, "ms.");
+    } else if (error.message && error.message.includes('fetch failed')) {
+      errorMessage = "Fallo en la comunicación con el servicio de cambio de contraseña. Verifica tu conexión o el estado del servicio externo.";
+    }
+
+    return {
+      message: errorMessage,
+      errors: { _form: [errorMessage] },
+      success: false,
+      debugChangePasswordApiUrl: generatedApiUrl,
+    };
+  }
 }
