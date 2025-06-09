@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useUser } from "@/contexts/UserContext";
@@ -62,9 +62,9 @@ const API_KEY_FOR_DEBUG = "4463";
 
 
 export default function DashboardPage() {
-  console.log("DashboardPage: Component rendering or re-rendering.");
+  // console.log("DashboardPage: Component rendering or re-rendering.");
   const t = useTranslations();
-  const { user } = useUser(); // User from UserContext
+  const { user } = useUser(); 
   const { toast } = useToast();
   const { isEmotionalDashboardEnabled } = useFeatureFlag(); 
   const { activePath: currentActivePath } = useActivePath();
@@ -96,29 +96,29 @@ export default function DashboardPage() {
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
   };
 
-  const generateUserActivityApiUrl = (activitySummary: UserActivitySummary, userIdFromContext?: string | null): string => {
-    console.log("DashboardPage (generateUserActivityApiUrl): Received activitySummary for datosactividad:", JSON.stringify(activitySummary).substring(0,200) + "...");
-    console.log("DashboardPage (generateUserActivityApiUrl): Received userIdFromContext for &userID= param:", userIdFromContext);
+  const generateUserActivityApiUrl = useCallback((activitySummary: UserActivitySummary, currentUserId?: string | null): string => {
+    // console.log("DashboardPage (generateUserActivityApiUrl): Received activitySummary for datosactividad:", JSON.stringify(activitySummary).substring(0,200) + "...");
+    // console.log("DashboardPage (generateUserActivityApiUrl): Received currentUserId for &userID= param:", currentUserId);
     
     const jsonPayloadForDatosActividad = encryptDataAES(activitySummary); 
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
-    console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad):", url.substring(0, 200) + "...");
+    // console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad):", url.substring(0, 200) + "...");
 
-    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es válido. Procediendo a encriptar para parámetro userID.");
-      const encryptedDirectUserId = forceEncryptStringAES(userIdFromContext);
-      console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdFromContext (parámetro userID):", encryptedDirectUserId);
+    if (currentUserId && typeof currentUserId === 'string' && currentUserId.trim() !== '') {
+      // console.log("DashboardPage (generateUserActivityApiUrl): currentUserId es válido. Procediendo a encriptar para parámetro userID.");
+      const encryptedDirectUserId = forceEncryptStringAES(currentUserId);
+      // console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para currentUserId (parámetro userID):", encryptedDirectUserId);
       url += `&userID=${encodeURIComponent(encryptedDirectUserId)}`;
-      console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
+      // console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
     } else {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdFromContext:", userIdFromContext);
+      // console.log("DashboardPage (generateUserActivityApiUrl): currentUserId es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de currentUserId:", currentUserId);
     }
     return url;
-  };
+  }, []);
 
 
   useEffect(() => {
-    console.log("DashboardPage: Initial Load useEffect running. Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
+    // console.log("DashboardPage: Initial Load useEffect running. Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
     if (isEmotionalDashboardEnabled) {
       const loadedRecentEntries = getRecentEmotionalEntries();
       const loadedAllEntries = getEmotionalEntries();
@@ -177,26 +177,17 @@ export default function DashboardPage() {
       setDebugChangePasswordApiUrl(null);
       setDebugUserActivityApiUrl(null);
     }
-  }, [t, isEmotionalDashboardEnabled, user]); // user dependency is important here
+  }, [t, isEmotionalDashboardEnabled, user]); 
 
   useEffect(() => {
-    // This useEffect handles updates based on user, activePath, etc.
-    // It's crucial that 'user' from UserContext is stable and loaded before this runs with user data.
-    console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
-    console.log("DashboardPage (Activity Summary UE): currentActivePath:", currentActivePath ? currentActivePath.id : "null");
+    // console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
+    // console.log("DashboardPage (Activity Summary UE): currentActivePath:", currentActivePath ? currentActivePath.id : "null");
+    // console.log("DashboardPage (Activity Summary UE DEBUG): User object from context (para todo el payload):", user);
+    const userIdFromContext = user?.id;
+    // console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
 
-    if (!user || !user.id) {
-      console.warn("DashboardPage (Activity Summary UE): User or user.id is not available. Skipping user activity summary and URL generation. User:", user);
-      setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o con ID faltante.");
-      setUserActivityForDisplay("No se pudo generar el resumen de actividad: falta ID de usuario.");
-      setOutputOfEncryptFunctionForTest(null);
-      setDebugUserActivityApiUrl("No se pudo generar la URL de actividad: falta ID de usuario.");
-      return; // Exit early if user or user.id is not available
-    }
 
-    setRawUserObjectForDebug(JSON.stringify(user, null, 2));
-    const userIdFromContext = user.id; // We've confirmed user and user.id exist
-    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
+    setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
 
     if (isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
@@ -205,11 +196,14 @@ export default function DashboardPage() {
         emotionalEntries: allEmotionalEntries,
       };
       
-      // This part is for the 'ID' field INSIDE the 'datosactividad' JSON payload
-      console.log("DashboardPage (Activity Summary UE): User ID from UserContext is valid. Encrypting for summary.ID:", userIdFromContext);
-      const encryptedIdForSummaryJson = forceEncryptStringAES(userIdFromContext);
-      console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for summary.ID:", encryptedIdForSummaryJson);
-      summary.ID = encryptedIdForSummaryJson; 
+      if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
+        // console.log("DashboardPage (Activity Summary UE): User ID from UserContext is valid. Encrypting for summary.ID:", userIdFromContext);
+        const encryptedIdForSummaryJson = forceEncryptStringAES(userIdFromContext);
+        // console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for summary.ID:", encryptedIdForSummaryJson);
+        summary.ID = encryptedIdForSummaryJson; 
+      } else {
+         // console.log("DashboardPage (Activity Summary UE): userIdFromContext is null, empty, or not a string. Field 'ID' will be omitted from summary. Value:", userIdFromContext);
+      }
       
       setUserActivityForDisplay(JSON.stringify(summary, null, 2)); 
       
@@ -221,16 +215,15 @@ export default function DashboardPage() {
         setOutputOfEncryptFunctionForTest("Error durante el procesamiento de los datos de actividad del usuario para prueba.");
       }
       
-      // This part is for the separate '&userID=' URL parameter
-      console.log("DashboardPage (useEffect for API URL): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
+      // console.log("DashboardPage (useEffect for API URL): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
       setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); 
     } else {
       setUserActivityForDisplay(null);
       setOutputOfEncryptFunctionForTest(null);
       setDebugUserActivityApiUrl(null);
     }
-    console.log("DashboardPage (Activity Summary UE): END.");
-  }, [isEmotionalDashboardEnabled, user, currentActivePath, t, generateUserActivityApiUrl]); // Added generateUserActivityApiUrl to dependencies
+    // console.log("DashboardPage (Activity Summary UE): END.");
+  }, [isEmotionalDashboardEnabled, user, currentActivePath, t, generateUserActivityApiUrl]); 
 
 
   useEffect(() => {
@@ -278,14 +271,13 @@ export default function DashboardPage() {
   const handleEmotionalEntrySubmit = (data: { situation: string; emotion: string }) => {
     if (!isEmotionalDashboardEnabled) return;
 
-    // Ensure user and user.id are available before proceeding
     if (!user || !user.id) {
       toast({
         title: "Error de Usuario",
         description: "No se pudo identificar al usuario. Intenta recargar la página o iniciar sesión de nuevo.",
         variant: "destructive",
       });
-      console.warn("DashboardPage (handleEmotionalEntrySubmit): User or user.id not available. Cannot submit entry or update activity URLs.");
+      // console.warn("DashboardPage (handleEmotionalEntrySubmit): User or user.id not available. Cannot submit entry or update activity URLs.");
       return;
     }
     const userIdFromContext = user.id;
@@ -301,12 +293,12 @@ export default function DashboardPage() {
     const allEmotionalEntries = getEmotionalEntries();
     const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
     
-    console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext:", userIdFromContext);
+    // console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext:", userIdFromContext);
     summary.ID = forceEncryptStringAES(userIdFromContext); 
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
     setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); 
-    console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
+    // console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
     setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); 
 
 
@@ -630,4 +622,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
