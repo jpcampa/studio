@@ -39,7 +39,7 @@ interface ProcessedChartDataPoint {
 
 // Updated to include an ID (now encrypted) and only emotionalEntries
 interface UserActivitySummary {
-  ID?: string | null; // User ID, value will be the result of forceEncryptStringAES
+  ID?: string | null; // User ID, value will be the result of forceEncryptStringAES. Optional.
   emotionalEntries: EmotionalEntry[];
 }
 
@@ -87,10 +87,9 @@ export default function DashboardPage() {
 
 
   const generateApiUrlWithParams = (type: string, params: Record<string, any>): string => {
-    // For these general debug URLs, params are objects that encryptDataAES will stringify (since global encryption is off)
     const encodedParams = Object.entries(params)
       .map(([key, valueObj]) => {
-        const payloadString = encryptDataAES(valueObj); // Results in JSON string
+        const payloadString = encryptDataAES(valueObj); 
         return `${key}=${encodeURIComponent(payloadString)}`;
       })
       .join('&');
@@ -98,8 +97,6 @@ export default function DashboardPage() {
   };
 
   const generateUserActivityApiUrl = (activitySummary: UserActivitySummary): string => {
-    // activitySummary is { ID: "encrypted_json_string_id", emotionalEntries: [...] }
-    // encryptDataAES will stringify this entire activitySummary object.
     const jsonPayloadForDatosActividad = encryptDataAES(activitySummary);
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
   };
@@ -177,21 +174,20 @@ export default function DashboardPage() {
       };
       
       console.log("DashboardPage (Activity Summary UE): Current user object from context:", JSON.stringify(user, null, 2));
-      if (user?.id) {
+      if (user?.id && typeof user.id === 'string' && user.id.trim() !== '') {
         console.log("DashboardPage (Activity Summary UE): User ID found:", user.id, "Type:", typeof user.id);
         const encryptedIdString = forceEncryptStringAES(user.id);
         console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for user.id:", encryptedIdString);
-        summary.ID = encryptedIdString; // Use 'ID' as the key
+        summary.ID = encryptedIdString; // Use 'ID' as the key. Will only be added if user.id is valid.
       } else {
-        console.log("DashboardPage (Activity Summary UE): User ID NOT found for encryption. User object:", user);
-        summary.ID = null;
+        console.log("DashboardPage (Activity Summary UE): User ID NOT found or invalid for encryption. User object:", user);
+        // summary.ID remains undefined (or null if explicitly set to null previously, but we prefer to omit the key)
       }
 
       activitySummaryForUrlGeneration = summary;
       setUserActivityForDisplay(JSON.stringify(summary, null, 2)); 
       
       try {
-        // For testing the global encryptDataAES function (which is now just JSON.stringify)
         const outputOfEncryptCall = encryptDataAES(summary); 
         setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
       } catch (error) {
@@ -209,7 +205,7 @@ export default function DashboardPage() {
       setDebugUserActivityApiUrl(null);
     }
 
-  }, [isEmotionalDashboardEnabled, user, currentActivePath]); // Removed pathsData as it's not directly used for summary generation
+  }, [isEmotionalDashboardEnabled, user, currentActivePath]); 
 
 
   useEffect(() => {
@@ -268,14 +264,13 @@ export default function DashboardPage() {
     const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
     
     console.log("DashboardPage (handleEmotionalEntrySubmit): Current user object from context:", JSON.stringify(user, null, 2));
-    if (user?.id) {
+    if (user?.id && typeof user.id === 'string' && user.id.trim() !== '') {
       console.log("DashboardPage (handleEmotionalEntrySubmit): User ID found:", user.id, "Type:", typeof user.id);
       const encryptedIdString = forceEncryptStringAES(user.id);
       console.log("DashboardPage (handleEmotionalEntrySubmit): forceEncryptStringAES output for user.id:", encryptedIdString);
-      summary.ID = encryptedIdString; // Use 'ID' as the key
+      summary.ID = encryptedIdString; 
     } else {
-      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID NOT found for encryption. User object:", user);
-      summary.ID = null;
+      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID NOT found or invalid for encryption. User object:", user);
     }
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
@@ -389,7 +384,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
-                  Resumen de Actividad (JSON para API - Campo 'ID' Encriptado):
+                  Resumen de Actividad (JSON para API - Campo 'ID' Encriptado si está disponible):
                 </p>
                 {userActivityForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
@@ -399,7 +394,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Resumen de actividad no disponible o cargando...]</p>
                 )}
                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El campo <code>ID</code> contiene un string JSON (con 'iv' y 'data') que es el ID del usuario encriptado con AES. El resto de los datos (registros emocionales) están en texto plano.
+                    Nota: El campo <code>ID</code> (si está presente) contiene un string JSON (con 'iv' y 'data') que es el ID del usuario encriptado con AES. Los registros emocionales (<code>emotionalEntries</code>) están en texto plano. Si el ID del usuario no está disponible, el campo <code>ID</code> se omitirá.
                   </p>
               </div>
               <Separator />
@@ -417,7 +412,7 @@ export default function DashboardPage() {
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
                   Con la encriptación GLOBAL DESACTIVADA, <code>encryptDataAES(objeto)</code> devuelve directamente el objeto como cadena JSON.
-                  En el caso del resumen de actividad, el campo <code>ID</code> dentro del objeto ya fue pre-encriptado por <code>forceEncryptStringAES</code> (resultando en un string JSON).
+                  En el caso del resumen de actividad, el campo <code>ID</code> dentro del objeto ya fue pre-encriptado por <code>forceEncryptStringAES</code> (resultando en un string JSON), si el ID de usuario estaba disponible.
                 </p>
               </div>
               <Separator />
@@ -517,7 +512,7 @@ export default function DashboardPage() {
                     <code>{debugUserActivityApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON. Dentro de este JSON, el campo <code>ID</code> es un string JSON que representa el ID del usuario encriptado (AES con IV y datos cifrados). El resto (<code>emotionalEntries</code>) está en texto plano.
+                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON. Dentro de este JSON, el campo <code>ID</code> (si está presente) es un string JSON que representa el ID del usuario encriptado (AES con IV y datos cifrados). El resto (<code>emotionalEntries</code>) está en texto plano. Si el ID del usuario no está disponible, la clave <code>ID</code> se omitirá.
                   </p>
                 </div>
                )}
