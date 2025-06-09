@@ -111,16 +111,60 @@ export default function DashboardPage() {
       }
 
       const storedRegisterUrl = sessionStorage.getItem(SESSION_STORAGE_REGISTER_URL_KEY);
-      if (storedRegisterUrl) setLastGeneratedRegisterApiUrl(storedRegisterUrl);
+      if (storedRegisterUrl) {
+        setLastGeneratedRegisterApiUrl(storedRegisterUrl);
+      } else {
+        // Generate and set example register URL if not found in sessionStorage
+        const exampleRegisterUser = {
+          id: `ejemplo-id-${crypto.randomUUID().substring(0,8)}`, // More unique example ID
+          name: "Usuario De Ejemplo",
+          email: "registro@ejemplo.com",
+          ageRange: "25_34",
+          gender: "female",
+          initialEmotionalState: 4,
+        };
+        const exampleRegisterPassword = { value: "PasswordDeRegistro123" };
+        const exampleRegisterName = { value: exampleRegisterUser.name }; // For the 'name' param
+        const exampleRegisterEmail = { value: exampleRegisterUser.email }; // For the 'email' param
+  
+        const userDetailsPayloadString = encryptDataAES(exampleRegisterUser);
+        const passwordPayloadString = encryptDataAES(exampleRegisterPassword);
+        const namePayloadString = encryptDataAES(exampleRegisterName);
+        const emailPayloadString = encryptDataAES(exampleRegisterEmail);
+  
+        const finalEncryptedUserDetailsForUrl = encodeURIComponent(userDetailsPayloadString);
+        const finalEncryptedPasswordForUrl = encodeURIComponent(passwordPayloadString);
+        const finalEncryptedNameForUrl = encodeURIComponent(namePayloadString);
+        const finalEncryptedEmailForUrl = encodeURIComponent(emailPayloadString);
+        
+        const type = "registro";
+        const generatedExampleRegisterUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&usuario=${finalEncryptedUserDetailsForUrl}&name=${finalEncryptedNameForUrl}&email=${finalEncryptedEmailForUrl}&password=${finalEncryptedPasswordForUrl}`;
+        setLastGeneratedRegisterApiUrl(generatedExampleRegisterUrl);
+      }
 
       const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
-      if (storedLoginUrl) setLastGeneratedLoginApiUrl(storedLoginUrl);
+      if (storedLoginUrl) {
+        setLastGeneratedLoginApiUrl(storedLoginUrl);
+      } else {
+        // Generate and set example login URL if not found in sessionStorage
+        const exampleLoginDetails = { email: "login@ejemplo.com" };
+        const exampleLoginPassword = { value: "PasswordDeLogin123" };
+        
+        const loginDetailsPayloadString = encryptDataAES(exampleLoginDetails);
+        const passwordPayloadString = encryptDataAES(exampleLoginPassword);
+
+        const finalEncryptedLoginDetailsForUrl = encodeURIComponent(loginDetailsPayloadString);
+        const finalEncryptedPasswordForUrl = encodeURIComponent(passwordPayloadString);
+        const type = "login";
+        const generatedExampleLoginUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&usuario=${finalEncryptedLoginDetailsForUrl}&password=${finalEncryptedPasswordForUrl}`;
+        setLastGeneratedLoginApiUrl(generatedExampleLoginUrl);
+      }
 
       if (user && user.email) {
         try {
             // Baja URL
             const deletePayloadToEncrypt = { email: user.email };
-            const encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt); // Will be plain JSON if encryption is off
+            const encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt); 
             const finalEncryptedDeletePayloadForUrl = encodeURIComponent(encryptedDeletePayload);
             const deleteType = "baja";
             const generatedDeleteUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${deleteType}&usuario=${finalEncryptedDeletePayloadForUrl}`;
@@ -129,7 +173,7 @@ export default function DashboardPage() {
             // Change Password URL
             const exampleNewPassword = "nuevaPassword123";
             const changePasswordPayloadToEncrypt = { email: user.email, newPassword: exampleNewPassword };
-            const encryptedChangePasswordPayload = encryptDataAES(changePasswordPayloadToEncrypt); // Will be plain JSON if encryption is off
+            const encryptedChangePasswordPayload = encryptDataAES(changePasswordPayloadToEncrypt); 
             const finalEncryptedChangePasswordPayloadForUrl = encodeURIComponent(encryptedChangePasswordPayload);
             const changePasswordType = "cambiocontraseña";
             const generatedChangePasswordUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${changePasswordType}&usuario=${finalEncryptedChangePasswordPayloadForUrl}`;
@@ -277,7 +321,7 @@ export default function DashboardPage() {
 
   const handleClearDebugUrl = (key: string, setter: React.Dispatch<React.SetStateAction<string | null>>) => {
     sessionStorage.removeItem(key);
-    setter(null);
+    setter(null); // Clear state to trigger re-generation of example URL if needed
     toast({ title: "URL de prueba eliminada", description: `La URL para ${key === SESSION_STORAGE_REGISTER_URL_KEY ? 'registro' : 'login'} ha sido eliminada de sessionStorage.` });
   };
   
@@ -398,7 +442,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Con la encriptación DESACTIVADA, <code>encryptDataAES(userActivitySummaryObject)</code> devuelve directamente el objeto como cadena JSON.
+                  Con la encriptación DESACTIVADA, <code>encryptDataAES(objeto)</code> devuelve directamente el objeto como cadena JSON.
                 </p>
               </div>
               <Separator />
@@ -415,7 +459,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Con la encriptación DESACTIVADA, <code>decryptDataAES(cadenaPredefinida)</code> intenta parsear la cadena como JSON. Si es JSON válido (como la cadena de prueba), devuelve el objeto parseado. Si no, devuelve la cadena original.
+                  Con la encriptación DESACTIVADA, <code>decryptDataAES(cadena)</code> intenta parsear la cadena como JSON. Si es JSON válido, devuelve el objeto. Si no (ej. una cadena simple o un JSON malformado), devuelve la cadena original o `null` si el parseo falla críticamente.
                 </p>
               </div>
               <Separator />
@@ -423,13 +467,16 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    Última URL de Registro Generada (para prueba - la encriptación del payload depende del flag):
+                    URL de Registro (Depuración - Payloads son JSON):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{lastGeneratedRegisterApiUrl}</code>
                   </pre>
+                  <p className="text-xs mt-1 text-muted-foreground">
+                    Nota: Los parámetros `usuario`, `name`, `email`, `password` contienen strings JSON (encriptación AES desactivada).
+                  </p>
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_REGISTER_URL_KEY, setLastGeneratedRegisterApiUrl)} className="mt-2">
-                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL de Registro
+                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
                   </Button>
                 </div>
                )}
@@ -437,13 +484,16 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    Última URL de Login Generada (para prueba - la encriptación del payload depende del flag):
+                    URL de Login (Depuración - Payloads son JSON):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{lastGeneratedLoginApiUrl}</code>
                   </pre>
+                   <p className="text-xs mt-1 text-muted-foreground">
+                    Nota: Los parámetros `usuario` y `password` contienen strings JSON (encriptación AES desactivada).
+                  </p>
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_LOGIN_URL_KEY, setLastGeneratedLoginApiUrl)} className="mt-2">
-                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL de Login
+                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
                   </Button>
                 </div>
                )}
@@ -451,13 +501,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Baja (Simulada para Depuración - la encriptación del payload depende del flag):
+                    URL de API de Baja (Depuración - Payload es JSON):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugDeleteApiUrlForDisplay}</code>
                   </pre>
-                   <p className="text-xs mt-2 text-muted-foreground">
-                    Generada al cargar el dashboard si el usuario está logueado.
+                   <p className="text-xs mt-1 text-muted-foreground">
+                    Nota: El parámetro `usuario` contiene un string JSON (encriptación AES desactivada). Generada al cargar el dashboard si hay usuario.
                   </p>
                 </div>
                )}
@@ -465,13 +515,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Cambio Contraseña (Simulada para Depuración - la encriptación del payload depende del flag):
+                    URL de API de Cambio Contraseña (Depuración - Payload es JSON):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugChangePasswordApiUrlForDisplay}</code>
                   </pre>
-                   <p className="text-xs mt-2 text-muted-foreground">
-                    Generada al cargar el dashboard si el usuario está logueado (con contraseña de ejemplo).
+                   <p className="text-xs mt-1 text-muted-foreground">
+                    Nota: El parámetro `usuario` contiene un string JSON (encriptación AES desactivada). Generada al cargar el dashboard si hay usuario (con contraseña de ejemplo).
                   </p>
                 </div>
                )}
@@ -547,3 +597,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
