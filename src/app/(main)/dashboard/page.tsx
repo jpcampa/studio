@@ -83,7 +83,7 @@ export default function DashboardPage() {
   const [debugDeleteApiUrl, setDebugDeleteApiUrl] = useState<string | null>(null);
   const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
   const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null);
-  const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
+  const [rawUserObjectForDebug, setRawUserObjectForDebug] = useState<string | null>(null);
 
 
   const generateApiUrlWithParams = (type: string, params: Record<string, any>): string => {
@@ -180,11 +180,12 @@ export default function DashboardPage() {
   useEffect(() => {
     let activitySummaryForUrlGeneration: UserActivitySummary | null = null;
 
-    console.log("DashboardPage (Activity Summary UE): Full user object from UserContext:", JSON.stringify(user, null, 2));
-    const userIdFromContext = user?.id; // Get user.id from UserContext
-    console.log("DashboardPage (Activity Summary UE): User ID from UserContext (for summary.ID and &userID= param):", userIdFromContext, "(Type:", typeof userIdFromContext, ")");
-    setRawUserIdForDebug(userIdFromContext || null); // Store raw ID for display
+    console.log("DashboardPage (Activity Summary UE): Current user object from context:", JSON.stringify(user, null, 2));
+    setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
 
+    const userIdFromContext = user?.id; 
+    console.log("DashboardPage (Activity Summary UE): User ID from UserContext (for summary.ID and &userID= param):", userIdFromContext, "(Type:", typeof userIdFromContext, ")");
+    
     if (isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
       
@@ -400,10 +401,10 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <UserCircle2 className="mr-2 h-4 w-4" />
-                  ID de Usuario del Contexto (RAW):
+                  User Object del Contexto (RAW):
                 </p>
-                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                  <code>{rawUserIdForDebug || "No disponible o cargando..."}</code>
+                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
+                  <code>{rawUserObjectForDebug || "No disponible o cargando..."}</code>
                 </pre>
               </div>
               <Separator />
@@ -614,3 +615,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
