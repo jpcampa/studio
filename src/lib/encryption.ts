@@ -1,11 +1,12 @@
 
 import CryptoJS from "crypto-js";
 
-// SECRET_KEY is still defined but will only be used if ENCRYPTION_ENABLED is true.
+// SECRET_KEY is still defined but will only be used if ENCRYPTION_ENABLED is true
+// or by functions that force encryption like forceEncryptStringAES.
 const SECRET_KEY = "0123456789abcdef0123456789abcdef"; // 32 bytes
 
-// --- FLAG TO CONTROL AES ENCRYPTION ---
-const ENCRYPTION_ENABLED = false; // SET TO false TO DISABLE AES ENCRYPTION
+// --- FLAG TO CONTROL GLOBAL AES ENCRYPTION ---
+const ENCRYPTION_ENABLED = false; // SET TO false TO DISABLE GLOBAL AES ENCRYPTION
 // ---
 
 export function encryptDataAES(data: object): string {
@@ -38,7 +39,6 @@ export function decryptDataAES(payloadString: string): object | string | null {
       return JSON.parse(payloadString);
     } catch (e) {
       // payloadString was not a valid JSON string, return it as is.
-      // This handles cases where a plain string (not JSON encoded) is passed.
       return payloadString;
     }
   }
@@ -47,51 +47,103 @@ export function decryptDataAES(payloadString: string): object | string | null {
   let parsedPayload: any;
 
   try {
-    // The payloadString is expected to be a JSON string containing 'iv' and 'data'
     parsedPayload = JSON.parse(payloadString);
   } catch (e) {
-    // If payloadString is not valid JSON, it cannot be our encrypted structure.
-    console.warn("AES Decryption (Encryption ON): Input string is not valid JSON. Cannot decrypt.", payloadString, e);
-    return null; // Or, depending on desired behavior, you could return payloadString itself if you expect mixed content.
+    console.warn("AES Decryption (Global Encryption ON): Input string is not valid JSON. Cannot decrypt.", payloadString, e);
+    return null;
   }
 
-  // Check if it has the structure of our encrypted payload
   if (parsedPayload && typeof parsedPayload === 'object' &&
       typeof parsedPayload.iv === 'string' && typeof parsedPayload.data === 'string') {
     try {
       const iv = CryptoJS.enc.Base64.parse(parsedPayload.iv);
       const decrypted = CryptoJS.AES.decrypt(
-        parsedPayload.data, // This is the Base64 encoded ciphertext
+        parsedPayload.data,
         CryptoJS.enc.Utf8.parse(SECRET_KEY),
         { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
       );
       const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
 
       if (!decryptedString) {
-        console.error("AES Decryption (Encryption ON): Decrypted string is empty. Possible key mismatch or data corruption. Original encrypted data:", parsedPayload.data);
+        console.error("AES Decryption (Global Encryption ON): Decrypted string is empty. Possible key mismatch or data corruption. Original encrypted data:", parsedPayload.data);
         return null;
       }
-      // The decrypted string must also be valid JSON (representing the original object)
       try {
         return JSON.parse(decryptedString);
       } catch (jsonParseError) {
-        console.error("AES Decryption (Encryption ON): Failed to parse decrypted string as JSON.", decryptedString, jsonParseError);
-        return null;
+        console.error("AES Decryption (Global Encryption ON): Failed to parse decrypted string as JSON.", decryptedString, jsonParseError);
+        // If it's not JSON, it might be a simple string, return as is.
+        // Or, if expecting JSON and it's not, return null or throw error based on stricter needs.
+        return decryptedString; 
       }
     } catch (decryptionProcessError) {
-      console.error("AES Decryption (Encryption ON): Error during the decryption process.", decryptionProcessError);
+      console.error("AES Decryption (Global Encryption ON): Error during the decryption process.", decryptionProcessError);
       return null;
     }
   } else {
-    // If encryption is ON, but the payload doesn't match the expected encrypted structure.
-    // This path handles the scenario from the original code where it might be an unencrypted user object already.
      if (parsedPayload && typeof parsedPayload === 'object' && parsedPayload !== null) {
-      if ('id' in parsedPayload || 'email' in parsedPayload || 'name' in parsedPayload) { // Added 'name' for more robustness
-        console.warn("AES Decryption (Encryption ON): Payload does not match encrypted structure but looks like user data. Returning as is.", parsedPayload);
+      if ('id' in parsedPayload || 'email' in parsedPayload || 'name' in parsedPayload) {
+        console.warn("AES Decryption (Global Encryption ON): Payload does not match encrypted structure but looks like user data. Returning as is.", parsedPayload);
         return parsedPayload;
       }
     }
-    console.warn("AES Decryption (Encryption ON): Payload is JSON but not recognized as encrypted structure or valid user data.", parsedPayload);
+    console.warn("AES Decryption (Global Encryption ON): Payload is JSON but not recognized as encrypted structure or valid user data.", parsedPayload);
+    return null;
+  }
+}
+
+/**
+ * Forces AES encryption for a given string value, regardless of ENCRYPTION_ENABLED.
+ * Returns a JSON string: '{"iv":"<base64_iv>", "data":"<base64_ciphertext>"}'.
+ */
+export function forceEncryptStringAES(value: string): string {
+  const iv = CryptoJS.lib.WordArray.random(16); // 16 bytes IV
+  const encrypted = CryptoJS.AES.encrypt(
+    value, // Encrypt the raw string directly
+    CryptoJS.enc.Utf8.parse(SECRET_KEY),
+    { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+  );
+  return JSON.stringify({
+    iv: CryptoJS.enc.Base64.stringify(iv),
+    data: encrypted.toString(), // This is already Base64
+  });
+}
+
+/**
+ * Forces AES decryption for a string previously encrypted with forceEncryptStringAES.
+ * Expects a JSON string: '{"iv":"<base64_iv>", "data":"<base64_ciphertext>"}'.
+ * Returns the original decrypted string, or null on error.
+ */
+export function forceDecryptStringAES(encryptedStringJson: string): string | null {
+  let parsedPayload: any;
+  try {
+    parsedPayload = JSON.parse(encryptedStringJson);
+  } catch (e) {
+    console.error("Force Decryption: Input string is not valid JSON.", encryptedStringJson, e);
+    return null;
+  }
+
+  if (parsedPayload && typeof parsedPayload.iv === 'string' && typeof parsedPayload.data === 'string') {
+    try {
+      const iv = CryptoJS.enc.Base64.parse(parsedPayload.iv);
+      const decrypted = CryptoJS.AES.decrypt(
+        parsedPayload.data,
+        CryptoJS.enc.Utf8.parse(SECRET_KEY),
+        { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+      );
+      const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
+      if (!decryptedString) {
+        // This can happen if the key is wrong or data corrupted
+        console.error("Force Decryption: Decrypted string is empty.");
+        return null;
+      }
+      return decryptedString;
+    } catch (decryptionError) {
+      console.error("Force Decryption: Error during decryption process.", decryptionError);
+      return null;
+    }
+  } else {
+    console.error("Force Decryption: Payload does not match expected encrypted structure {iv, data}.");
     return null;
   }
 }
