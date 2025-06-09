@@ -39,7 +39,7 @@ interface ProcessedChartDataPoint {
 
 // Updated to include an optional encryptedUserId and only emotionalEntries
 interface UserActivitySummary {
-  encryptedUserId?: string | null; // Will hold the AES encrypted user ID as a JSON string '{"iv": "...", "data": "..."}'
+  encryptedUserId?: string | null; 
   emotionalEntries: EmotionalEntry[];
 }
 
@@ -89,7 +89,6 @@ export default function DashboardPage() {
   const generateDebugApiUrl = (type: string, params: Record<string, any>): string => {
     const encodedParams = Object.entries(params)
       .map(([key, valueObj]) => {
-        // encryptDataAES (with ENCRYPTION_ENABLED = false) will JSON.stringify valueObj
         const payloadString = encryptDataAES(valueObj); 
         return `${key}=${encodeURIComponent(payloadString)}`;
       })
@@ -98,30 +97,18 @@ export default function DashboardPage() {
   };
 
   const generateUserActivityApiUrl = (activitySummary: UserActivitySummary): string => {
-    // For datosactividad, the 'activitySummary' object itself is passed to encryptDataAES,
-    // which (with ENCRYPTION_ENABLED = false) will JSON.stringify it.
-    // The 'encryptedUserId' field within activitySummary will ALREADY be an encrypted JSON string
-    // due to forceEncryptStringAES.
     const payloadString = encryptDataAES({ datosactividad: activitySummary });
-    const encodedPayload = encodeURIComponent(payloadString);
-    // We need to manually construct this URL because 'datosactividad' is the key for the entire summary.
-    // The structure is slightly different from other debug URLs where each param is individually processed.
-    
-    // The payloadString for "datosactividad" from encryptDataAES (ENCRYPTION_ENABLED=false) will be
-    // JSON.stringify({ datosactividad: activitySummary })
-    // e.g. '{"datosactividad":{"encryptedUserId":"{\"iv\":...}", "emotionalEntries":[]}}'
-    // We need to extract the inner object to be the value of the 'datosactividad' query param.
     let finalPayloadForUrl = "";
     try {
         const parsedOuter = JSON.parse(payloadString);
         if (parsedOuter && typeof parsedOuter.datosactividad !== 'undefined') {
             finalPayloadForUrl = JSON.stringify(parsedOuter.datosactividad);
         } else {
-            finalPayloadForUrl = JSON.stringify(activitySummary); // Fallback
+            finalPayloadForUrl = JSON.stringify(activitySummary); 
         }
     } catch (e) {
         console.error("Error parsing/restructuring activitySummary for URL", e);
-        finalPayloadForUrl = JSON.stringify(activitySummary); // Fallback
+        finalPayloadForUrl = JSON.stringify(activitySummary); 
     }
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(finalPayloadForUrl)}`;
   };
@@ -197,17 +184,22 @@ export default function DashboardPage() {
       const summary: UserActivitySummary = {
         emotionalEntries: allEmotionalEntries,
       };
+      
+      console.log("DashboardPage (Activity Summary UE): Current user object from context:", JSON.stringify(user, null, 2));
       if (user?.id) {
-        summary.encryptedUserId = forceEncryptStringAES(user.id);
+        console.log("DashboardPage (Activity Summary UE): User ID found:", user.id, "Type:", typeof user.id);
+        const encryptedIdString = forceEncryptStringAES(user.id);
+        console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for user.id:", encryptedIdString);
+        summary.encryptedUserId = encryptedIdString;
       } else {
+        console.log("DashboardPage (Activity Summary UE): User ID NOT found for encryption. User object:", user);
         summary.encryptedUserId = null;
       }
 
       activitySummaryForUrlGeneration = summary;
-      setUserActivityForDisplay(JSON.stringify(summary, null, 2)); // This will show encryptedUserId as a JSON string
+      setUserActivityForDisplay(JSON.stringify(summary, null, 2)); 
       
       try {
-        // encryptDataAES (with ENCRYPTION_ENABLED = false) will just JSON.stringify 'summary'
         const outputOfEncryptCall = encryptDataAES(summary);
         setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
       } catch (error) {
@@ -282,14 +274,20 @@ export default function DashboardPage() {
 
     const allEmotionalEntries = getEmotionalEntries();
     const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
+    
+    console.log("DashboardPage (handleEmotionalEntrySubmit): Current user object from context:", JSON.stringify(user, null, 2));
     if (user?.id) {
-      summary.encryptedUserId = forceEncryptStringAES(user.id);
+      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID found:", user.id, "Type:", typeof user.id);
+      const encryptedIdString = forceEncryptStringAES(user.id);
+      console.log("DashboardPage (handleEmotionalEntrySubmit): forceEncryptStringAES output for user.id:", encryptedIdString);
+      summary.encryptedUserId = encryptedIdString;
     } else {
+      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID NOT found for encryption. User object:", user);
       summary.encryptedUserId = null;
     }
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
-    setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); // Again, encryptDataAES with ENCRYPTION_ENABLED=false will stringify
+    setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); 
     setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary));
 
 
@@ -409,7 +407,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Resumen de actividad no disponible o cargando...]</p>
                 )}
                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: `encryptedUserId` es un string JSON que contiene el ID del usuario encriptado con AES. El resto de los datos (registros emocionales) están en texto plano.
+                    Nota: `encryptedUserId` es un string JSON que contiene el ID del usuario encriptado con AES (IV y datos cifrados). El resto de los datos (registros emocionales) están en texto plano.
                   </p>
               </div>
               <Separator />
@@ -427,7 +425,7 @@ export default function DashboardPage() {
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
                   Con la encriptación GLOBAL DESACTIVADA, <code>encryptDataAES(objeto)</code> devuelve directamente el objeto como cadena JSON.
-                  En el caso del resumen de actividad, el campo `encryptedUserId` dentro del objeto ya fue pre-encriptado por `forceEncryptStringAES`.
+                  En el caso del resumen de actividad, el campo `encryptedUserId` dentro del objeto ya fue pre-encriptado por `forceEncryptStringAES` (resultando en un string JSON).
                 </p>
               </div>
               <Separator />
@@ -444,7 +442,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Con la encriptación GLOBAL DESACTIVADA, <code>decryptDataAES(cadena)</code> intenta parsear la cadena como JSON. Si es JSON válido, devuelve el objeto. Si no, devuelve la cadena original.
+                  Con la encriptación GLOBAL DESACTIVADA, <code>decryptDataAES(cadena)</code> intenta parsear la cadena como JSON. Si es JSON válido, devuelve el objeto. Si no (ej. es un string encriptado con IV/data), lo devuelve tal cual si no es JSON.
                 </p>
               </div>
               <Separator />
@@ -521,13 +519,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API para Guardar Actividad (Depuración):
+                    URL de API para Guardar Actividad (Solo Registros Emocionales - Depuración - Payload es JSON):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugUserActivityApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro `datosactividad` contiene un string JSON. Dentro de este JSON, `encryptedUserId` es un string JSON que representa el ID del usuario encriptado (AES). El resto (`emotionalEntries`) está en texto plano.
+                    Nota: El parámetro `datosactividad` contiene un string JSON. Dentro de este JSON, `encryptedUserId` es un string JSON que representa el ID del usuario encriptado (AES con IV y datos cifrados). El resto (`emotionalEntries`) está en texto plano.
                   </p>
                 </div>
                )}
