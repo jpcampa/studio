@@ -97,8 +97,10 @@ export default function DashboardPage() {
   };
 
   const generateUserActivityApiUrl = (activitySummary: UserActivitySummary, userIdFromContext?: string | null): string => {
-    console.log("DashboardPage (generateUserActivityApiUrl): Received userIdFromContext:", userIdFromContext);
-    const jsonPayloadForDatosActividad = encryptDataAES(activitySummary); // activitySummary contains { ID: encryptedUserCtxId, emotionalEntries: ... }
+    console.log("DashboardPage (generateUserActivityApiUrl): Received activitySummary for datosactividad:", JSON.stringify(activitySummary).substring(0,200) + "...");
+    console.log("DashboardPage (generateUserActivityApiUrl): Received userIdFromContext for &userID= param:", userIdFromContext);
+    
+    const jsonPayloadForDatosActividad = encryptDataAES(activitySummary); 
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
     console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad):", url.substring(0, 200) + "...");
 
@@ -156,7 +158,7 @@ export default function DashboardPage() {
         setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
       }
       
-      const currentUserEmailForSetup = user?.email; // User from UserContext
+      const currentUserEmailForSetup = user?.email; 
       if (currentUserEmailForSetup) {
         setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: currentUserEmailForSetup } }));
         setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: currentUserEmailForSetup, newPassword: "nuevaPassword123" } }));
@@ -185,7 +187,9 @@ export default function DashboardPage() {
 
     const userIdFromContext = user?.id; 
     console.log("DashboardPage (Activity Summary UE): User ID from UserContext (for summary.ID and &userID= param):", userIdFromContext, "(Type:", typeof userIdFromContext, ")");
-    
+    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", user?.id);
+
+
     if (isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
       
@@ -199,7 +203,7 @@ export default function DashboardPage() {
         console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for summary.ID:", encryptedIdForSummary);
         summary.ID = encryptedIdForSummary; 
       } else {
-        console.log("DashboardPage (Activity Summary UE): User ID from UserContext is NOT valid for encryption. 'ID' field will be omitted from summary. User object:", user);
+        console.log("DashboardPage (Activity Summary UE): User ID from UserContext is NOT valid for encryption for summary.ID. 'ID' field will be omitted from summary. User object:", user);
       }
 
       activitySummaryForUrlGeneration = summary;
@@ -286,7 +290,7 @@ export default function DashboardPage() {
       console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext is valid. Encrypting for summary.ID.");
       summary.ID = forceEncryptStringAES(userIdFromContext); 
     } else {
-      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext is NOT valid for encryption. 'ID' field will be omitted. User object:", user);
+      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext is NOT valid for encryption for summary.ID. 'ID' field will be omitted. User object:", user);
     }
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
@@ -616,4 +620,3 @@ export default function DashboardPage() {
   );
 }
 
-    
