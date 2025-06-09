@@ -48,10 +48,7 @@ export default function SettingsPage() {
   }, [user]);
 
   useEffect(() => {
-    const currentDate = new Date();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = currentDate.getFullYear();
-    setAppVersion(`B-0.6-${month}-${year}`);
+    setAppVersion(`B-0.9-06-2025`);
   }, []);
 
   const ageRanges = [
