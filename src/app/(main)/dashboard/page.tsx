@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { useUser, type User } from "@/contexts/UserContext";
+import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { DashboardSummaryCard } from "@/components/dashboard/DashboardSummaryCard";
 import { ChartPlaceholder } from "@/components/dashboard/ChartPlaceholder";
@@ -37,20 +37,9 @@ interface ProcessedChartDataPoint {
   fullDate: string; 
 }
 
-interface PathProgressInfo {
-  pathId: string;
-  pathTitle: string;
-  totalModules: number;
-  completedModulesCount: number;
-  progressPercentage: number;
-  isCompleted: boolean;
-}
-
+// Actualizado para solo incluir registros emocionales por ahora
 interface UserActivitySummary {
-  user: User | null;
   emotionalEntries: EmotionalEntry[];
-  activePath: StoredActivePathDetails | null;
-  allPathsProgress: PathProgressInfo[];
 }
 
 
@@ -171,28 +160,11 @@ export default function DashboardPage() {
   useEffect(() => {
     let activitySummaryForUrlGeneration: UserActivitySummary | null = null;
 
-    if (user && isEmotionalDashboardEnabled) {
+    if (isEmotionalDashboardEnabled) { // Ya no depende de `user` directamente para la actividad
       const allEmotionalEntries = getEmotionalEntries();
-      const allPathsProgressData = pathsData.map((appPath: AppPathData): PathProgressInfo => {
-        const completedModuleIdsSet = getCompletedModules(appPath.id);
-        const completedModulesCount = completedModuleIdsSet.size;
-        const totalModules = appPath.modules.length;
-        const progressPercentage = totalModules > 0 ? Math.round((completedModulesCount / totalModules) * 100) : 0;
-        return {
-          pathId: appPath.id,
-          pathTitle: appPath.title,
-          totalModules,
-          completedModulesCount,
-          progressPercentage,
-          isCompleted: progressPercentage === 100 && totalModules > 0,
-        };
-      });
-
+      
       const summary: UserActivitySummary = {
-        user,
         emotionalEntries: allEmotionalEntries,
-        activePath: currentActivePath,
-        allPathsProgress: allPathsProgressData,
       };
       activitySummaryForUrlGeneration = summary;
       setUserActivityForDisplay(JSON.stringify(summary, null, 2));
@@ -204,9 +176,6 @@ export default function DashboardPage() {
         console.error("Error processing user activity summary for test display:", error);
         setOutputOfEncryptFunctionForTest("Error durante el procesamiento de los datos de actividad del usuario para prueba.");
       }
-    } else if (isEmotionalDashboardEnabled) {
-      setUserActivityForDisplay("No hay datos de usuario para construir el resumen de actividad.");
-      setOutputOfEncryptFunctionForTest("No hay datos de usuario para procesar.");
     } else {
       setUserActivityForDisplay(null);
       setOutputOfEncryptFunctionForTest(null);
@@ -228,7 +197,7 @@ export default function DashboardPage() {
       setDebugUserActivityApiUrl(null);
     }
 
-  }, [user, currentActivePath, isEmotionalDashboardEnabled, pathsData]); 
+  }, [isEmotionalDashboardEnabled, currentActivePath]); // currentActivePath ya no es necesario aquí para emotionalEntries
 
   useEffect(() => {
     if (isEmotionalDashboardEnabled) {
@@ -281,33 +250,21 @@ export default function DashboardPage() {
     if (lastRegisteredEmotionDetails) {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
     }
-     if (user) {
-      const allEmotionalEntries = getEmotionalEntries();
-      const allPathsProgressData = pathsData.map((appPath: AppPathData): PathProgressInfo => {
-        const completedModuleIdsSet = getCompletedModules(appPath.id);
-        return {
-          pathId: appPath.id,
-          pathTitle: appPath.title,
-          totalModules: appPath.modules.length,
-          completedModulesCount: completedModuleIdsSet.size,
-          progressPercentage: appPath.modules.length > 0 ? Math.round((completedModuleIdsSet.size / appPath.modules.length) * 100) : 0,
-          isCompleted: (appPath.modules.length > 0 && completedModuleIdsSet.size === appPath.modules.length),
-        };
-      });
-      const summary: UserActivitySummary = { user, emotionalEntries: allEmotionalEntries, activePath: currentActivePath, allPathsProgress: allPathsProgressData };
-      setUserActivityForDisplay(JSON.stringify(summary, null, 2));
-      setOutputOfEncryptFunctionForTest(encryptDataAES(summary));
 
-      // Regenerate User Activity API URL as well
-      const generateActivityUrl = (type: string, params: Record<string, any>): string => {
-        const encodedParams = Object.entries(params)
-          .map(([key, valueObj]) => `${key}=${encodeURIComponent(encryptDataAES(valueObj))}`)
-          .join('&');
-        return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
-      };
-      setDebugUserActivityApiUrl(generateActivityUrl("guardaractividad", { datosactividad: summary }));
+    const allEmotionalEntries = getEmotionalEntries();
+    const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
+    setUserActivityForDisplay(JSON.stringify(summary, null, 2));
+    setOutputOfEncryptFunctionForTest(encryptDataAES(summary));
 
-    }
+    const generateActivityUrl = (type: string, params: Record<string, any>): string => {
+      const encodedParams = Object.entries(params)
+        .map(([key, valueObj]) => `${key}=${encodeURIComponent(encryptDataAES(valueObj))}`)
+        .join('&');
+      return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
+    };
+    setDebugUserActivityApiUrl(generateActivityUrl("guardaractividad", { datosactividad: summary }));
+
+
     toast({
       title: t.emotionalEntrySavedTitle,
       description: t.emotionalEntrySavedMessage,
@@ -414,7 +371,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
-                  Resumen de Actividad del Usuario (Datos Crudos):
+                  Resumen de Actividad (Solo Registros Emocionales - Datos Crudos):
                 </p>
                 {userActivityForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
@@ -534,13 +491,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API para Guardar Actividad de Usuario (Depuración - Payload es JSON):
+                    URL de API para Guardar Actividad (Solo Registros Emocionales - Depuración - Payload es JSON):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugUserActivityApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro `datosactividad` contiene un string JSON con el resumen completo de actividad del usuario (encriptación AES desactivada).
+                    Nota: El parámetro `datosactividad` contiene un string JSON solo con los registros emocionales (encriptación AES desactivada).
                   </p>
                 </div>
                )}
@@ -616,4 +573,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
 
