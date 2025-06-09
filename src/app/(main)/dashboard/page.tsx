@@ -37,7 +37,7 @@ interface ProcessedChartDataPoint {
   fullDate: string; 
 }
 
-// Updated to include an ID (now encrypted) and only emotionalEntries
+// Updated: `ID` is optional and will contain the forceEncryptStringAES output.
 interface UserActivitySummary {
   ID?: string | null; // User ID, value will be the result of forceEncryptStringAES. Optional.
   emotionalEntries: EmotionalEntry[];
@@ -89,6 +89,7 @@ export default function DashboardPage() {
   const generateApiUrlWithParams = (type: string, params: Record<string, any>): string => {
     const encodedParams = Object.entries(params)
       .map(([key, valueObj]) => {
+        // encryptDataAES (with ENCRYPTION_ENABLED=false) will JSON.stringify valueObj
         const payloadString = encryptDataAES(valueObj); 
         return `${key}=${encodeURIComponent(payloadString)}`;
       })
@@ -97,6 +98,7 @@ export default function DashboardPage() {
   };
 
   const generateUserActivityApiUrl = (activitySummary: UserActivitySummary): string => {
+    // encryptDataAES (with ENCRYPTION_ENABLED=false) will JSON.stringify activitySummary
     const jsonPayloadForDatosActividad = encryptDataAES(activitySummary);
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
   };
@@ -124,10 +126,10 @@ export default function DashboardPage() {
       } else {
         const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
         const registerParams = {
-          usuario: exampleRegisterUser,
-          name: { value: exampleRegisterUser.name },
-          email: { value: exampleRegisterUser.email },
-          password: { value: "PasswordDeRegistro123" }
+          usuario: exampleRegisterUser, // This will be JSON.stringified
+          name: { value: exampleRegisterUser.name }, // This will be JSON.stringified
+          email: { value: exampleRegisterUser.email }, // This will be JSON.stringified
+          password: { value: "PasswordDeRegistro123" } // This will be JSON.stringified
         };
         setDebugRegisterApiUrl(generateApiUrlWithParams("registro", registerParams));
       }
@@ -137,8 +139,8 @@ export default function DashboardPage() {
         setDebugLoginApiUrl(storedLoginUrl);
       } else {
         const loginParams = {
-          usuario: { email: "login@ejemplo.com" },
-          password: { value: "PasswordDeLogin123" }
+          usuario: { email: "login@ejemplo.com" }, // This will be JSON.stringified
+          password: { value: "PasswordDeLogin123" } // This will be JSON.stringified
         };
         setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
       }
@@ -171,6 +173,7 @@ export default function DashboardPage() {
       
       const summary: UserActivitySummary = {
         emotionalEntries: allEmotionalEntries,
+        // ID will be added below if user.id exists
       };
       
       console.log("DashboardPage (Activity Summary UE): Current user object from context:", JSON.stringify(user, null, 2));
@@ -178,16 +181,17 @@ export default function DashboardPage() {
         console.log("DashboardPage (Activity Summary UE): User ID found:", user.id, "Type:", typeof user.id);
         const encryptedIdString = forceEncryptStringAES(user.id);
         console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for user.id:", encryptedIdString);
-        summary.ID = encryptedIdString; // Use 'ID' as the key. Will only be added if user.id is valid.
+        summary.ID = encryptedIdString; // Assign the encrypted ID string to the ID field
       } else {
-        console.log("DashboardPage (Activity Summary UE): User ID NOT found or invalid for encryption. User object:", user);
-        // summary.ID remains undefined (or null if explicitly set to null previously, but we prefer to omit the key)
+        console.log("DashboardPage (Activity Summary UE): User ID NOT found or invalid for encryption. 'ID' field will be omitted from summary. User object:", user);
+        // The 'ID' field will be omitted if user.id is not valid, so summary.ID remains undefined.
       }
 
       activitySummaryForUrlGeneration = summary;
       setUserActivityForDisplay(JSON.stringify(summary, null, 2)); 
       
       try {
+        // encryptDataAES will now just JSON.stringify `summary`
         const outputOfEncryptCall = encryptDataAES(summary); 
         setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
       } catch (error) {
@@ -270,11 +274,11 @@ export default function DashboardPage() {
       console.log("DashboardPage (handleEmotionalEntrySubmit): forceEncryptStringAES output for user.id:", encryptedIdString);
       summary.ID = encryptedIdString; 
     } else {
-      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID NOT found or invalid for encryption. User object:", user);
+      console.log("DashboardPage (handleEmotionalEntrySubmit): User ID NOT found or invalid for encryption. 'ID' field will be omitted. User object:", user);
     }
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
-    setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); 
+    setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); // encryptDataAES just stringifies
     setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary));
 
 
@@ -384,7 +388,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
-                  Resumen de Actividad (JSON para API - Campo 'ID' Encriptado si está disponible):
+                  Resumen de Actividad para API (Campo 'ID' Encriptado si está disponible):
                 </p>
                 {userActivityForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
@@ -394,7 +398,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Resumen de actividad no disponible o cargando...]</p>
                 )}
                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El campo <code>ID</code> (si está presente) contiene un string JSON (con 'iv' y 'data') que es el ID del usuario encriptado con AES. Los registros emocionales (<code>emotionalEntries</code>) están en texto plano. Si el ID del usuario no está disponible, el campo <code>ID</code> se omitirá.
+                    Nota: El campo <code>ID</code> (si está presente) contiene un string JSON (con 'iv' y 'data') que es el ID del usuario encriptado con AES. Los registros emocionales (<code>emotionalEntries</code>) están en texto plano. Si el ID del usuario no está disponible, el campo <code>ID</code> se omitirá del JSON.
                   </p>
               </div>
               <Separator />
@@ -412,7 +416,7 @@ export default function DashboardPage() {
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
                   Con la encriptación GLOBAL DESACTIVADA, <code>encryptDataAES(objeto)</code> devuelve directamente el objeto como cadena JSON.
-                  En el caso del resumen de actividad, el campo <code>ID</code> dentro del objeto ya fue pre-encriptado por <code>forceEncryptStringAES</code> (resultando en un string JSON), si el ID de usuario estaba disponible.
+                  En el caso del resumen de actividad, el campo <code>ID</code> dentro del objeto (si existe) ya fue pre-encriptado por <code>forceEncryptStringAES</code> (resultando en un string JSON).
                 </p>
               </div>
               <Separator />
@@ -506,7 +510,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API para Guardar Actividad (Depuración - Payload 'datosactividad' es JSON):
+                     URL de API para Guardar Actividad (Campo 'ID' Encriptado si existe - Depuración):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugUserActivityApiUrl}</code>
