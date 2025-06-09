@@ -36,14 +36,20 @@ const loginSchema = z.object({
   password: z.string().min(1, "La contraseña es requerida."),
 });
 
+// Updated schema for the API response *data* part
 const ApiLoginSuccessDataSchema = z.object({
   id: z.string().min(1, "El ID de usuario de la API no puede estar vacío."),
-  name: z.object({ value: z.string().min(1, "El valor encriptado del nombre en la API no puede estar vacío.") }),
-  email: z.object({ value: z.string().min(1, "El valor encriptado del email en la API no puede estar vacío.") }),
+  name: z.object({
+    value: z.string().min(1, "El valor encriptado/raw del nombre en la API no puede estar vacío.")
+  }).describe("Contiene el nombre, posiblemente encriptado como un string JSON {'value':'nombreEncriptado'} o {'value':'nombreDirecto'} si la encriptación está desactivada."),
+  email: z.object({
+    value: z.string().min(1, "El valor encriptado/raw del email en la API no puede estar vacío.")
+  }).describe("Contiene el email, similar estructura que el nombre."),
   ageRange: z.string().nullable().optional(),
   gender: z.string().nullable().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).nullable().optional(),
 });
+
 
 export type RegisterState = {
   errors?: {
@@ -64,10 +70,10 @@ export type RegisterState = {
 interface ExternalApiResponse {
   status: "OK" | "NOOK";
   message: string;
-  data: any; 
+  data: any;
 }
 
-const API_TIMEOUT_MS = 15000; 
+const API_TIMEOUT_MS = 15000;
 const API_BASE_URL = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php";
 const API_KEY = "4463";
 
@@ -86,15 +92,15 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       debugApiUrl: undefined,
     };
   }
-  
+
   const { name, email, password, ageRange, gender, initialEmotionalState } = validatedFields.data;
 
   console.log("RegisterUser action: Validation successful. Preparing for external API call.");
-  
-  const userId = crypto.randomUUID(); 
+
+  const userId = crypto.randomUUID();
 
   const userDetailsToEncrypt = {
-    id: userId, 
+    id: userId,
     name,
     email,
     ageRange: ageRange || null,
@@ -102,25 +108,31 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     initialEmotionalState: initialEmotionalState || null,
   };
   const passwordToEncrypt = { value: password };
+  const nameToEncrypt = { value: name };
+  const emailToEncrypt = { value: email };
 
   const encryptedUserDetailsPayload = encryptDataAES(userDetailsToEncrypt);
   const encryptedPasswordPayload = encryptDataAES(passwordToEncrypt);
+  const encryptedNamedPayload = encryptDataAES(nameToEncrypt);
+  const encryptedEmailPayload = encryptDataAES(emailToEncrypt);
 
   const finalEncryptedUserDetailsForUrl = encodeURIComponent(encryptedUserDetailsPayload);
+  const finalEncryptedNameForUrl = encodeURIComponent(encryptedNamedPayload);
+  const finalEncryptedEmailForUrl = encodeURIComponent(encryptedEmailPayload);
   const finalEncryptedPasswordForUrl = encodeURIComponent(encryptedPasswordPayload);
-  
+
   const type = "registro";
-  
-  const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedUserDetailsForUrl}&password=${finalEncryptedPasswordForUrl}`;
+
+  const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedUserDetailsForUrl}&name=${finalEncryptedNameForUrl}&email=${finalEncryptedEmailForUrl}&password=${finalEncryptedPasswordForUrl}`;
   console.log("RegisterUser action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_DETAILS&password=ENCRYPTED_PASSWORD`);
 
 
   try {
     console.log("RegisterUser action: Attempting to call external API. URL:", generatedApiUrl.substring(0,150) + "...");
-    
+
     const signal = AbortSignal.timeout(API_TIMEOUT_MS);
     const apiResponse = await fetch(generatedApiUrl, { signal });
-    
+
     let responseText = "";
     try {
         responseText = await apiResponse.text();
@@ -163,8 +175,8 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
       console.log("RegisterUser action: External API reported 'OK'. Registration successful. User should now log in.");
       // For V1, after successful registration, prompt user to log in.
       // We are not auto-logging in or creating a local session directly from registration.
-      return { 
-        message: "¡Registro completado! Ahora puedes iniciar sesión.", 
+      return {
+        message: "¡Registro completado! Ahora puedes iniciar sesión.",
         user: null, // No user object returned on register to force login
         debugApiUrl: generatedApiUrl,
       };
@@ -193,15 +205,15 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = "No se pudo conectar con el servicio de registro (tiempo de espera agotado).";
         console.warn("RegisterUser action: API call timed out after", API_TIMEOUT_MS, "ms.");
-    } else if (error.message && error.message.includes('fetch failed')) { 
+    } else if (error.message && error.message.includes('fetch failed')) {
         errorMessage = "Fallo en la comunicación con el servicio de registro. Verifica tu conexión o el estado del servicio externo.";
     }
-    
+
     return {
       message: errorMessage,
       errors: { _form: [errorMessage] },
       user: null,
-      debugApiUrl: generatedApiUrl, 
+      debugApiUrl: generatedApiUrl,
     };
   }
 }
@@ -247,7 +259,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     encryptedPasswordPayload = encryptDataAES(passwordToEncrypt);
   } catch (encError: any) {
     console.error("LoginUser action: Error during encryption:", encError);
-    return { 
+    return {
         message: "Error interno al preparar los datos para el inicio de sesión.",
         errors: { _form: ["No se pudieron encriptar las credenciales de forma segura."] },
         user: null,
@@ -257,7 +269,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 
   const finalEncryptedLoginDetailsForUrl = encodeURIComponent(encryptedLoginDetailsPayload);
   const finalEncryptedPasswordForUrl = encodeURIComponent(encryptedPasswordPayload);
-  
+
   const type = "login";
   const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedLoginDetailsForUrl}&password=${finalEncryptedPasswordForUrl}`;
   console.log("LoginUser action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_EMAIL_DETAILS&password=ENCRYPTED_PASSWORD`);
@@ -308,26 +320,46 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     if (apiResult.status === "OK") {
       if (apiResult.data) {
         const validatedApiUserData = ApiLoginSuccessDataSchema.safeParse(apiResult.data);
-        
         if (validatedApiUserData.success) {
-          console.log("LoginUser action: Input for name decryption:", validatedApiUserData.data.name.value);
-          const decryptedNameObject = (validatedApiUserData.data.name.value);
-          const actualName = (decryptedNameObject && typeof decryptedNameObject === 'object' && 'name' in decryptedNameObject) ? (decryptedNameObject as {name: string}).name : null;
-          console.log("LoginUser action: Decrypted name result from object:", actualName);
+          console.log("LoginUser action: API user data validated successfully by Zod:", JSON.stringify(validatedApiUserData.data, null, 2));
 
-          console.log("LoginUser action: Input for email decryption:", validatedApiUserData.data.email.value);
-          const decryptedEmailObject = (validatedApiUserData.data.email.value);
-          const actualEmail = (decryptedEmailObject && typeof decryptedEmailObject === 'object' && 'email' in decryptedEmailObject) ? (decryptedEmailObject as {email: string}).email : null;
-          console.log("LoginUser action: Decrypted email result from object:", actualEmail);
-          
+          let actualName: string | null = null;
+          let actualEmail: string | null = null;
+
+          // Decrypt and extract Name
+          const rawNameFromApi = validatedApiUserData.data.name.value;
+          console.log("LoginUser action: Raw name value from API:", rawNameFromApi);
+          const decryptedNamePayload = decryptDataAES(rawNameFromApi);
+          console.log("LoginUser action: Decrypted name payload:", JSON.stringify(decryptedNamePayload, null, 2), "(Type:", typeof decryptedNamePayload, ")");
+
+          if (decryptedNamePayload && typeof decryptedNamePayload === 'object' && 'value' in decryptedNamePayload && typeof (decryptedNamePayload as { value: unknown }).value === 'string') {
+            actualName = (decryptedNamePayload as { value: string }).value;
+            console.log("LoginUser action: Successfully extracted name:", actualName);
+          } else {
+            console.warn("LoginUser action: Failed to extract name. Decrypted payload was not an object with a 'value' string property. Payload:", decryptedNamePayload);
+          }
+
+          // Decrypt and extract Email
+          const rawEmailFromApi = validatedApiUserData.data.email.value;
+          console.log("LoginUser action: Raw email value from API:", rawEmailFromApi);
+          const decryptedEmailPayload = decryptDataAES(rawEmailFromApi);
+          console.log("LoginUser action: Decrypted email payload:", JSON.stringify(decryptedEmailPayload, null, 2), "(Type:", typeof decryptedEmailPayload, ")");
+
+          if (decryptedEmailPayload && typeof decryptedEmailPayload === 'object' && 'value' in decryptedEmailPayload && typeof (decryptedEmailPayload as { value: unknown }).value === 'string') {
+            actualEmail = (decryptedEmailPayload as { value: string }).value;
+            console.log("LoginUser action: Successfully extracted email:", actualEmail);
+          } else {
+            console.warn("LoginUser action: Failed to extract email. Decrypted payload was not an object with a 'value' string property. Payload:", decryptedEmailPayload);
+          }
+
           if (!actualName || !actualEmail) {
             let errorDetail = "";
-            if (!actualName && !actualEmail) errorDetail = "Falló la desencriptación del nombre y el email.";
-            else if (!actualName) errorDetail = "Falló la desencriptación del nombre.";
-            else errorDetail = "Falló la desencriptación del email.";
-            
-            const fullErrorMessage = `No se pudieron procesar los detalles del usuario. ${errorDetail} Esto puede deberse a una discrepancia en las claves de encriptación o a datos corruptos desde el servidor. Revisa la consola del servidor para más detalles de la desencriptación.`;
-            console.warn("LoginUser action: Decryption failed or result not string. Name used:", validatedApiUserData.data.name.value, "Email used:", validatedApiUserData.data.email.value, "Decrypted Name:", actualName, "Decrypted Email:", actualEmail);
+            if (!actualName && !actualEmail) errorDetail = "Falló la extracción del nombre y el email tras la desencriptación.";
+            else if (!actualName) errorDetail = "Falló la extracción del nombre tras la desencriptación.";
+            else errorDetail = "Falló la extracción del email tras la desencriptación.";
+
+            const fullErrorMessage = `No se pudieron procesar los detalles del usuario. ${errorDetail} Esto puede deberse a una estructura de datos inesperada o a un fallo en la desencriptación. Revisa la consola del servidor para más detalles.`;
+            console.warn("LoginUser action: Extraction failed. Decrypted Name Payload:", decryptedNamePayload, "Decrypted Email Payload:", decryptedEmailPayload, "Extracted Name:", actualName, "Extracted Email:", actualEmail);
 
             return {
               message: "Error al procesar datos de usuario del servicio externo.",
@@ -336,22 +368,22 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
               debugLoginApiUrl: generatedApiUrl,
             };
           }
-          
+
           if (actualEmail.toLowerCase() !== email.toLowerCase()) {
             console.warn(`LoginUser action: Decrypted email (${actualEmail}) does not match login email (${email}). Potential issue.`);
           }
 
           const userFromApi: ActionUser = {
             id: validatedApiUserData.data.id,
-            name: actualName, 
-            email: actualEmail, 
+            name: actualName,
+            email: actualEmail,
             ageRange: validatedApiUserData.data.ageRange || null,
             gender: validatedApiUserData.data.gender || null,
             initialEmotionalState: validatedApiUserData.data.initialEmotionalState || null,
           };
-          console.log("LoginUser action: External API reported 'OK', data validated, name/email decrypted. Login successful.");
-          return { 
-            message: "Inicio de sesión exitoso.", 
+          console.log("LoginUser action: External API reported 'OK', data validated, name/email extracted. Login successful.");
+          return {
+            message: "Inicio de sesión exitoso.",
             user: userFromApi,
             debugLoginApiUrl: generatedApiUrl,
           };
@@ -381,6 +413,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         user: null,
         debugLoginApiUrl: generatedApiUrl,
       };
+
     } else {
       console.warn("LoginUser action: External API reported an unknown status.", apiResult);
       return {
@@ -398,10 +431,10 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
     if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = "No se pudo conectar con el servicio de inicio de sesión (tiempo de espera agotado).";
         console.warn("LoginUser action: API call timed out after", API_TIMEOUT_MS, "ms.");
-    } else if (error.message && error.message.includes('fetch failed')) { 
+    } else if (error.message && error.message.includes('fetch failed')) {
         errorMessage = "Fallo en la comunicación con el servicio de inicio de sesión. Verifica tu conexión o el estado del servicio externo.";
     }
-    
+
     return {
       message: errorMessage,
       errors: { _form: [errorMessage] },
@@ -414,7 +447,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 export type DeleteAccountState = {
   errors?: {
     _form?: string[];
-    email?: string[]; 
+    email?: string[];
   };
   message?: string | null;
   success?: boolean;
@@ -426,8 +459,8 @@ const deleteUserPayloadSchema = z.object({
 });
 
 export async function deleteUserAccount(
-  userEmail: string, 
-  prevState: DeleteAccountState 
+  userEmail: string,
+  prevState: DeleteAccountState
 ): Promise<DeleteAccountState> {
   console.log(`DeleteUserAccount action: Initiated for email: ${userEmail}.`);
 
@@ -441,7 +474,7 @@ export async function deleteUserAccount(
           debugDeleteApiUrl: undefined,
       };
   }
-  
+
   const emailToDelete = validatedEmail.data.email;
 
   const deletePayloadToEncrypt = { email: emailToDelete };
@@ -450,7 +483,7 @@ export async function deleteUserAccount(
     encryptedDeletePayload = encryptDataAES(deletePayloadToEncrypt);
   } catch (encError: any) {
     console.error("DeleteUserAccount action: Error during encryption:", encError);
-    return { 
+    return {
         message: "Error interno al preparar los datos para la baja.",
         errors: { _form: ["No se pudieron encriptar los datos para la baja de forma segura."] },
         success: false,
@@ -463,7 +496,7 @@ export async function deleteUserAccount(
   const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedPayloadForUrl}`;
   console.log("DeleteUserAccount action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_DELETE_PAYLOAD`);
 
-  // START: Reverted: Block for actual API call is now active again
+  // --- START: BLOCK TO COMMENT OUT FOR SIMULATION ---
   try {
     console.log("DeleteUserAccount action: Attempting to call external API. URL:", generatedApiUrl.substring(0,150) + "...");
     const signal = AbortSignal.timeout(API_TIMEOUT_MS);
@@ -509,8 +542,8 @@ export async function deleteUserAccount(
 
     if (apiResult.status === "OK") {
       console.log("DeleteUserAccount action: External API reported 'OK'. User deletion successful in backend.");
-      return { 
-        message: "Tu cuenta ha sido eliminada exitosamente del sistema.", 
+      return {
+        message: "Tu cuenta ha sido eliminada exitosamente del sistema.",
         success: true,
         debugDeleteApiUrl: generatedApiUrl,
       };
@@ -539,10 +572,10 @@ export async function deleteUserAccount(
     if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = "No se pudo conectar con el servicio de baja (tiempo de espera agotado).";
         console.warn("DeleteUserAccount action: API call timed out after", API_TIMEOUT_MS, "ms.");
-    } else if (error.message && error.message.includes('fetch failed')) { 
+    } else if (error.message && error.message.includes('fetch failed')) {
         errorMessage = "Fallo en la comunicación con el servicio de baja. Verifica tu conexión o el estado del servicio externo.";
     }
-    
+
     return {
       message: errorMessage,
       errors: { _form: [errorMessage] },
@@ -550,5 +583,18 @@ export async function deleteUserAccount(
       debugDeleteApiUrl: generatedApiUrl,
     };
   }
-  // END: Reverted block
+  // --- END: BLOCK TO COMMENT OUT FOR SIMULATION ---
+
+  /*
+  // --- START: SIMULATION BLOCK (UNCOMMENT FOR SIMULATION) ---
+  // Simulate successful URL generation but no API call
+  console.log("DeleteUserAccount action: SIMULATION MODE - API call skipped.");
+  return {
+    message: "SIMULACIÓN: Baja no procesada. Mostrando URL generada para depuración.",
+    success: false, // It's not a real success
+    errors: {},
+    debugDeleteApiUrl: generatedApiUrl,
+  };
+  // --- END: SIMULATION BLOCK ---
+  */
 }
