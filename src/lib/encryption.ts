@@ -4,9 +4,9 @@ import CryptoJS from "crypto-js";
 // SECRET_KEY is still defined but will only be used if ENCRYPTION_ENABLED is true.
 const SECRET_KEY = "0123456789abcdef0123456789abcdef"; // 32 bytes
 
-// --- TEMPORARY FLAG TO DISABLE ACTUAL ENCRYPTION ---
-const ENCRYPTION_ENABLED = false;
-// --- SET TO true TO RE-ENABLE AES ENCRYPTION ---
+// --- FLAG TO CONTROL AES ENCRYPTION ---
+const ENCRYPTION_ENABLED = true; // SET TO true TO RE-ENABLE AES ENCRYPTION, false TO DISABLE
+// ---
 
 export function encryptDataAES(data: object): string {
   if (!ENCRYPTION_ENABLED) {
