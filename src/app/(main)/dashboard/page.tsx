@@ -37,9 +37,9 @@ interface ProcessedChartDataPoint {
   fullDate: string; 
 }
 
-// Updated to include an optional encryptedUserId and only emotionalEntries
+// Updated to include an ID (now encrypted) and only emotionalEntries
 interface UserActivitySummary {
-  encryptedUserId?: string | null; 
+  ID?: string | null; // User ID, value will be the result of forceEncryptStringAES
   emotionalEntries: EmotionalEntry[];
 }
 
@@ -86,10 +86,11 @@ export default function DashboardPage() {
   const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null);
 
 
-  const generateDebugApiUrl = (type: string, params: Record<string, any>): string => {
+  const generateApiUrlWithParams = (type: string, params: Record<string, any>): string => {
+    // For these general debug URLs, params are objects that encryptDataAES will stringify (since global encryption is off)
     const encodedParams = Object.entries(params)
       .map(([key, valueObj]) => {
-        const payloadString = encryptDataAES(valueObj); 
+        const payloadString = encryptDataAES(valueObj); // Results in JSON string
         return `${key}=${encodeURIComponent(payloadString)}`;
       })
       .join('&');
@@ -97,20 +98,10 @@ export default function DashboardPage() {
   };
 
   const generateUserActivityApiUrl = (activitySummary: UserActivitySummary): string => {
-    const payloadString = encryptDataAES({ datosactividad: activitySummary });
-    let finalPayloadForUrl = "";
-    try {
-        const parsedOuter = JSON.parse(payloadString);
-        if (parsedOuter && typeof parsedOuter.datosactividad !== 'undefined') {
-            finalPayloadForUrl = JSON.stringify(parsedOuter.datosactividad);
-        } else {
-            finalPayloadForUrl = JSON.stringify(activitySummary); 
-        }
-    } catch (e) {
-        console.error("Error parsing/restructuring activitySummary for URL", e);
-        finalPayloadForUrl = JSON.stringify(activitySummary); 
-    }
-    return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(finalPayloadForUrl)}`;
+    // activitySummary is { ID: "encrypted_json_string_id", emotionalEntries: [...] }
+    // encryptDataAES will stringify this entire activitySummary object.
+    const jsonPayloadForDatosActividad = encryptDataAES(activitySummary);
+    return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
   };
 
 
@@ -141,7 +132,7 @@ export default function DashboardPage() {
           email: { value: exampleRegisterUser.email },
           password: { value: "PasswordDeRegistro123" }
         };
-        setDebugRegisterApiUrl(generateDebugApiUrl("registro", registerParams));
+        setDebugRegisterApiUrl(generateApiUrlWithParams("registro", registerParams));
       }
 
       const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
@@ -152,15 +143,15 @@ export default function DashboardPage() {
           usuario: { email: "login@ejemplo.com" },
           password: { value: "PasswordDeLogin123" }
         };
-        setDebugLoginApiUrl(generateDebugApiUrl("login", loginParams));
+        setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
       }
 
       if (user && user.email) {
-        setDebugDeleteApiUrl(generateDebugApiUrl("baja", { usuario: { email: user.email } }));
-        setDebugChangePasswordApiUrl(generateDebugApiUrl("cambiocontraseña", { usuario: { email: user.email, newPassword: "nuevaPassword123" } }));
+        setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: user.email } }));
+        setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: user.email, newPassword: "nuevaPassword123" } }));
       } else {
-        setDebugDeleteApiUrl(generateDebugApiUrl("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
-        setDebugChangePasswordApiUrl(generateDebugApiUrl("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
+        setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
+        setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
       }
 
     } else {
@@ -190,17 +181,18 @@ export default function DashboardPage() {
         console.log("DashboardPage (Activity Summary UE): User ID found:", user.id, "Type:", typeof user.id);
         const encryptedIdString = forceEncryptStringAES(user.id);
         console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for user.id:", encryptedIdString);
-        summary.encryptedUserId = encryptedIdString;
+        summary.ID = encryptedIdString; // Use 'ID' as the key
       } else {
         console.log("DashboardPage (Activity Summary UE): User ID NOT found for encryption. User object:", user);
-        summary.encryptedUserId = null;
+        summary.ID = null;
       }
 
       activitySummaryForUrlGeneration = summary;
       setUserActivityForDisplay(JSON.stringify(summary, null, 2)); 
       
       try {
-        const outputOfEncryptCall = encryptDataAES(summary);
+        // For testing the global encryptDataAES function (which is now just JSON.stringify)
+        const outputOfEncryptCall = encryptDataAES(summary); 
         setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
       } catch (error) {
         console.error("Error processing user activity summary for test display:", error);
@@ -217,7 +209,7 @@ export default function DashboardPage() {
       setDebugUserActivityApiUrl(null);
     }
 
-  }, [isEmotionalDashboardEnabled, user, currentActivePath]); 
+  }, [isEmotionalDashboardEnabled, user, currentActivePath]); // Removed pathsData as it's not directly used for summary generation
 
 
   useEffect(() => {
@@ -280,10 +272,10 @@ export default function DashboardPage() {
       console.log("DashboardPage (handleEmotionalEntrySubmit): User ID found:", user.id, "Type:", typeof user.id);
       const encryptedIdString = forceEncryptStringAES(user.id);
       console.log("DashboardPage (handleEmotionalEntrySubmit): forceEncryptStringAES output for user.id:", encryptedIdString);
-      summary.encryptedUserId = encryptedIdString;
+      summary.ID = encryptedIdString; // Use 'ID' as the key
     } else {
       console.log("DashboardPage (handleEmotionalEntrySubmit): User ID NOT found for encryption. User object:", user);
-      summary.encryptedUserId = null;
+      summary.ID = null;
     }
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
@@ -397,7 +389,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
-                  Resumen de Actividad (ID Usuario Encriptado, Registros Emocionales Crudos):
+                  Resumen de Actividad (JSON para API - Campo 'ID' Encriptado):
                 </p>
                 {userActivityForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
@@ -407,7 +399,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Resumen de actividad no disponible o cargando...]</p>
                 )}
                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: `encryptedUserId` es un string JSON que contiene el ID del usuario encriptado con AES (IV y datos cifrados). El resto de los datos (registros emocionales) están en texto plano.
+                    Nota: El campo <code>ID</code> contiene un string JSON (con 'iv' y 'data') que es el ID del usuario encriptado con AES. El resto de los datos (registros emocionales) están en texto plano.
                   </p>
               </div>
               <Separator />
@@ -425,7 +417,7 @@ export default function DashboardPage() {
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
                   Con la encriptación GLOBAL DESACTIVADA, <code>encryptDataAES(objeto)</code> devuelve directamente el objeto como cadena JSON.
-                  En el caso del resumen de actividad, el campo `encryptedUserId` dentro del objeto ya fue pre-encriptado por `forceEncryptStringAES` (resultando en un string JSON).
+                  En el caso del resumen de actividad, el campo <code>ID</code> dentro del objeto ya fue pre-encriptado por <code>forceEncryptStringAES</code> (resultando en un string JSON).
                 </p>
               </div>
               <Separator />
@@ -461,7 +453,7 @@ export default function DashboardPage() {
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_REGISTER_URL_KEY, setDebugRegisterApiUrl, () => {
                      const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
                      const registerParams = { usuario: exampleRegisterUser, name: { value: exampleRegisterUser.name }, email: { value: exampleRegisterUser.email }, password: { value: "PasswordDeRegistro123" }};
-                     return generateDebugApiUrl("registro", registerParams);
+                     return generateApiUrlWithParams("registro", registerParams);
                   })} className="mt-2">
                     <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
                   </Button>
@@ -481,7 +473,7 @@ export default function DashboardPage() {
                   </p>
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_LOGIN_URL_KEY, setDebugLoginApiUrl, () => {
                     const loginParams = { usuario: { email: "login@ejemplo.com" }, password: { value: "PasswordDeLogin123" } };
-                    return generateDebugApiUrl("login", loginParams);
+                    return generateApiUrlWithParams("login", loginParams);
                   })} className="mt-2">
                     <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
                   </Button>
@@ -519,13 +511,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API para Guardar Actividad (Solo Registros Emocionales - Depuración - Payload es JSON):
+                    URL de API para Guardar Actividad (Depuración - Payload 'datosactividad' es JSON):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugUserActivityApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro `datosactividad` contiene un string JSON. Dentro de este JSON, `encryptedUserId` es un string JSON que representa el ID del usuario encriptado (AES con IV y datos cifrados). El resto (`emotionalEntries`) está en texto plano.
+                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON. Dentro de este JSON, el campo <code>ID</code> es un string JSON que representa el ID del usuario encriptado (AES con IV y datos cifrados). El resto (<code>emotionalEntries</code>) está en texto plano.
                   </p>
                 </div>
                )}
