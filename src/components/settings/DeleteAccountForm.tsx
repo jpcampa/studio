@@ -2,7 +2,6 @@
 "use client";
 
 import { useActionState, useState, useEffect } from "react";
-// useFormStatus ya no es necesario aquí directamente si gestionamos la carga manualmente para este botón
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
@@ -39,11 +38,11 @@ export function DeleteAccountForm() {
   
   const [state, formAction] = useActionState(deleteUserAccountWithEmail, initialState);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
-  const [isSubmittingAction, setIsSubmittingAction] = useState(false); // Estado de carga manual
+  const [isSubmittingAction, setIsSubmittingAction] = useState(false);
 
   useEffect(() => {
     if (!state) return;
-    setIsSubmittingAction(false); // Resetear estado de carga cuando la acción termine
+    setIsSubmittingAction(false); 
 
     console.log("DeleteAccountForm: Received state from server action:", JSON.stringify(state, null, 2));
     
@@ -59,7 +58,7 @@ export function DeleteAccountForm() {
       setTimeout(() => {
         logout(); 
         router.push('/login'); 
-      }, 2000); // Espera 2 segundos
+      }, 2000); 
     } else if (state.message && !state.success) { 
       let errorTitle = t.deleteAccountErrorTitle;
       let errorMessage = state.message;
@@ -88,12 +87,19 @@ export function DeleteAccountForm() {
   };
 
   const handleConfirmDeleteAction = async () => {
+    if (!user?.email) {
+        toast({
+            title: "Error",
+            description: "No se pudo obtener el email del usuario.",
+            variant: "destructive",
+        });
+        setIsAlertDialogOpen(false);
+        return;
+    }
     setIsSubmittingAction(true);
-    // Pasamos un FormData vacío porque la acción deleteUserAccount no lo usa directamente,
-    // pero formAction (de useActionState) espera un FormData.
-    await formAction(new FormData());
+    await formAction(new FormData()); 
     // No necesitamos setIsSubmittingAction(false) aquí, el useEffect lo hará.
-    setIsAlertDialogOpen(false); // Cierra el diálogo después de iniciar la acción.
+    // setIsAlertDialogOpen(false); // Mantener abierto hasta que la acción termine y el useEffect reaccione
   };
   
   if (userLoading) {
@@ -107,8 +113,7 @@ export function DeleteAccountForm() {
   
   return (
     <>
-      {/* El formulario real que usa la acción del servidor ya no necesita estar visible o manipulado directamente aquí.
-          formAction se llama programáticamente. */}
+      {/* El formAction se llama programáticamente */}
       
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
         <AlertDialogTrigger asChild>
@@ -116,8 +121,6 @@ export function DeleteAccountForm() {
             onClick={handleDialogTriggerClick}
             variant="destructive"
             className="w-full"
-            // El estado pendiente del formulario general no aplica aquí directamente,
-            // usamos isSubmittingAction para el botón de confirmación.
           >
             <Trash2 className="mr-2 h-4 w-4" />
             {t.deleteAccountButtonLabel} 
@@ -126,18 +129,18 @@ export function DeleteAccountForm() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t.deleteAccountPageTitle}</AlertDialogTitle>
-            <AlertDialogDescription className="max-h-[calc(100vh-20rem)] overflow-y-auto pr-2 break-words">
+            <AlertDialogDescription className="w-full max-h-[calc(100vh-20rem)] overflow-y-auto pr-2 break-words">
               {t.deleteAccountWarningMessage}
               <br/><br/>
               <strong>{t.deleteAccountConfirmationPrompt}</strong>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isSubmittingAction}>{t.cancelDeleteAccountButton}</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setIsAlertDialogOpen(false)} disabled={isSubmittingAction}>{t.cancelDeleteAccountButton}</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleConfirmDeleteAction} 
               disabled={isSubmittingAction}
-              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground" // Aseguramos estilos de botón destructivo
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
             >
               {isSubmittingAction ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
               {t.confirmDeleteAccountButton}
