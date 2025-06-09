@@ -11,7 +11,7 @@ import { useTranslations } from "@/lib/translations";
 import { Eye, EyeOff, Loader2, Save, ShieldQuestion } from "lucide-react";
 import { changePassword, type ChangePasswordState } from "@/actions/auth";
 import { useUser } from "@/contexts/UserContext";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const initialState: ChangePasswordState = { 
   errors: {}, 
@@ -36,8 +36,8 @@ function SubmitButton() {
 export function ChangePasswordForm() {
   const t = useTranslations();
   const { toast } = useToast();
-  const { user, loading: userLoading } = useUser();
-  const router = useRouter();
+  const { user, loading: userLoading, logout } = useUser(); // Import logout
+  const router = useRouter(); // Initialize useRouter
 
   const changePasswordWithEmail = changePassword.bind(null, user?.email || "");
   const [state, formAction] = useActionState(changePasswordWithEmail, initialState);
@@ -65,41 +65,47 @@ export function ChangePasswordForm() {
       setPersistedDebugUrl(state.debugChangePasswordApiUrl);
     }
 
-    if (state.message) {
-      if (state.success) {
-        toast({
-          title: t.passwordChangedSuccessTitle,
-          description: state.message,
-        });
-        // Optionally, clear form or redirect
-        // e.g., router.push("/settings");
-      } else {
-        // Prioritize _form errors for a general toast
+    if (state.success && state.message) {
+      toast({
+        title: t.passwordChangedSuccessTitle,
+        description: state.message,
+      });
+      setTimeout(() => {
+        logout(); // Call logout from UserContext
+        router.push('/login'); // Redirect to login page
+      }, 2000); // Wait 2 seconds
+    } else if (state.message) {
+        let errorTitle = t.passwordChangeErrorTitle;
+        let errorMessage = state.message;
+        let errorVariant: "destructive" | "default" = "destructive";
+
         if (state.errors?._form?.length) {
-          toast({
-            title: t.passwordChangeErrorTitle,
-            description: state.errors._form[0],
-            variant: "destructive",
-          });
-        } else {
-          // If no _form error, check for specific field errors (Zod errors)
-          let specificErrorToasted = false;
-          if (state.errors?.newPassword?.length) {
-             toast({ title: t.errorOccurred, description: state.errors.newPassword[0], variant: "destructive" });
-             specificErrorToasted = true;
-          }
-          if (state.errors?.confirmNewPassword?.length) {
-             toast({ title: t.errorOccurred, description: state.errors.confirmNewPassword[0], variant: "destructive" });
-             specificErrorToasted = true;
-          }
-          // If no Zod/field error was toasted and there's a general error message (e.g., API error not covered by _form)
-          if (!specificErrorToasted && state.message !== t.validationError) { 
-             toast({ title: t.passwordChangeErrorTitle, description: state.message, variant: "destructive"});
-          }
+            errorMessage = state.errors._form[0];
+        } else if (state.errors?.newPassword?.length) {
+            errorTitle = t.errorOccurred; // More generic for field errors
+            errorMessage = state.errors.newPassword[0];
+        } else if (state.errors?.confirmNewPassword?.length) {
+            errorTitle = t.errorOccurred; // More generic for field errors
+            errorMessage = state.errors.confirmNewPassword[0];
+        } else if (state.message === t.validationError && (state.errors?.newPassword || state.errors?.confirmNewPassword)) {
+            // If it's a general validationError message but specific field errors were also present,
+            // they would have been shown as toasts above, so don't show this general one.
+            // This logic could be tricky; main goal is to avoid duplicate toasts for the same issue.
+            // Let's simplify: if there are specific field errors, they get their own toasts.
+            // If there's _form error, it gets a toast.
+            // If there's just state.message (and it's not success), it gets a toast.
         }
-      }
-    } else if (state.errors && Object.keys(state.errors).length > 0 && !state.errors._form?.length) {
-        // This handles cases where there are only field errors (Zod) and no state.message.
+        
+        // Show toast only if an error message is determined
+        if (!state.success) { // Ensures we only toast actual errors here
+            toast({
+                title: errorTitle,
+                description: errorMessage,
+                variant: errorVariant,
+            });
+        }
+    } else if (!state.success && state.errors && Object.keys(state.errors).length > 0) {
+        // Fallback for field errors if no state.message was set (e.g. only Zod errors)
         if (state.errors?.newPassword?.length) {
             toast({ title: t.errorOccurred, description: state.errors.newPassword[0], variant: "destructive" });
         }
@@ -107,7 +113,7 @@ export function ChangePasswordForm() {
             toast({ title: t.errorOccurred, description: state.errors.confirmNewPassword[0], variant: "destructive" });
         }
     }
-  }, [state, toast, t, router]);
+  }, [state, toast, t, router, logout]);
 
   if (userLoading && !user) {
     return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
@@ -172,13 +178,12 @@ export function ChangePasswordForm() {
         {state?.errors?.confirmNewPassword && <p id="confirmNewPassword-error" className="text-sm text-destructive pt-1">{state.errors.confirmNewPassword[0]}</p>}
       </div>
       
-      {/* Display general form-level errors (_form) if they exist */}
       {state?.errors?._form && (
         <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.errors._form[0]}</p>
       )}
 
-      {/* Display general message if it's an error, not covered by _form, and not a Zod validation message already handled by field-specific toasts */}
-       {state?.message && !state.success && !state.errors?._form?.length && state.message !== t.validationError && (
+       {state?.message && !state.success && !state.errors?._form?.length && state.message !== t.validationError && 
+        (!state.errors?.newPassword?.length && !state.errors?.confirmNewPassword?.length) && (
         <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
       )}
 
@@ -197,3 +202,4 @@ export function ChangePasswordForm() {
     </form>
   );
 }
+
