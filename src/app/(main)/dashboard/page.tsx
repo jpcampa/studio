@@ -19,7 +19,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send } from "lucide-react"; // Added Send
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
@@ -59,6 +59,7 @@ const SESSION_STORAGE_REGISTER_URL_KEY = 'workwell-debug-register-url';
 const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
 const API_BASE_URL_FOR_DEBUG = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php"; 
 const API_KEY_FOR_DEBUG = "4463"; 
+const API_TIMEOUT_MS_ACTIVITY = 10000; // Timeout for activity save
 
 
 export default function DashboardPage() {
@@ -96,22 +97,22 @@ export default function DashboardPage() {
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
   };
 
-  const generateUserActivityApiUrl = useCallback((activitySummary: UserActivitySummary, currentUserId?: string | null): string => {
+  const generateUserActivityApiUrl = useCallback((activitySummary: UserActivitySummary, userIdFromContext?: string | null): string => {
     // console.log("DashboardPage (generateUserActivityApiUrl): Received activitySummary for datosactividad:", JSON.stringify(activitySummary).substring(0,200) + "...");
-    // console.log("DashboardPage (generateUserActivityApiUrl): Received currentUserId for &userID= param:", currentUserId);
+    // console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdFromContext (para encriptar para param userID):", userIdFromContext);
     
     const jsonPayloadForDatosActividad = encryptDataAES(activitySummary); 
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
     // console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad):", url.substring(0, 200) + "...");
 
-    if (currentUserId && typeof currentUserId === 'string' && currentUserId.trim() !== '') {
-      // console.log("DashboardPage (generateUserActivityApiUrl): currentUserId es válido. Procediendo a encriptar para parámetro userID.");
-      const encryptedDirectUserId = forceEncryptStringAES(currentUserId);
-      // console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para currentUserId (parámetro userID):", encryptedDirectUserId);
+    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
+      // console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es válido. Procediendo a encriptar para parámetro userID.");
+      const encryptedDirectUserId = forceEncryptStringAES(userIdFromContext);
+      // console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdFromContext (parámetro userID):", encryptedDirectUserId);
       url += `&userID=${encodeURIComponent(encryptedDirectUserId)}`;
       // console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
     } else {
-      // console.log("DashboardPage (generateUserActivityApiUrl): currentUserId es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de currentUserId:", currentUserId);
+      // console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdFromContext:", userIdFromContext);
     }
     return url;
   }, []);
@@ -181,13 +182,26 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
-    // console.log("DashboardPage (Activity Summary UE): currentActivePath:", currentActivePath ? currentActivePath.id : "null");
-    // console.log("DashboardPage (Activity Summary UE DEBUG): User object from context (para todo el payload):", user);
     const userIdFromContext = user?.id;
     // console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
 
-
     setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
+
+    if (!isEmotionalDashboardEnabled) {
+      setUserActivityForDisplay(null);
+      setOutputOfEncryptFunctionForTest(null);
+      setDebugUserActivityApiUrl(null);
+      return;
+    }
+    
+    if (!user) {
+        // console.warn("DashboardPage (Activity Summary UE): User context is null. Skipping user activity summary and URL generation.");
+        setUserActivityForDisplay("Usuario no disponible. No se pueden generar datos de actividad.");
+        setOutputOfEncryptFunctionForTest("Usuario no disponible.");
+        setDebugUserActivityApiUrl(null);
+        return;
+    }
+
 
     if (isEmotionalDashboardEnabled) {
       const allEmotionalEntries = getEmotionalEntries();
@@ -268,7 +282,7 @@ export default function DashboardPage() {
   }, [allEntriesForChart, t, isEmotionalDashboardEnabled]);
 
 
-  const handleEmotionalEntrySubmit = (data: { situation: string; emotion: string }) => {
+  const handleEmotionalEntrySubmit = async (data: { situation: string; emotion: string }) => {
     if (!isEmotionalDashboardEnabled) return;
 
     if (!user || !user.id) {
@@ -293,20 +307,80 @@ export default function DashboardPage() {
     const allEmotionalEntries = getEmotionalEntries();
     const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
     
-    // console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext:", userIdFromContext);
-    summary.ID = forceEncryptStringAES(userIdFromContext); 
+    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
+        summary.ID = forceEncryptStringAES(userIdFromContext); 
+    }
     
     setUserActivityForDisplay(JSON.stringify(summary, null, 2));
     setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); 
-    // console.log("DashboardPage (handleEmotionalEntrySubmit): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
-    setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); 
-
+    
+    const currentActivityApiUrl = generateUserActivityApiUrl(summary, userIdFromContext);
+    setDebugUserActivityApiUrl(currentActivityApiUrl); 
 
     toast({
       title: t.emotionalEntrySavedTitle,
       description: t.emotionalEntrySavedMessage,
     });
     setIsEntryDialogOpen(false); 
+
+    // Send activity data to backend API
+    if (currentActivityApiUrl) {
+      console.log("DashboardPage (handleEmotionalEntrySubmit): Sending activity data to API:", currentActivityApiUrl.substring(0,150) + "...");
+      try {
+        const signal = AbortSignal.timeout(API_TIMEOUT_MS_ACTIVITY);
+        const response = await fetch(currentActivityApiUrl, { signal });
+        const responseText = await response.text();
+        if (response.ok) {
+          let apiResult;
+          try {
+            apiResult = JSON.parse(responseText);
+            if (apiResult.status === "OK") {
+              console.log("DashboardPage (handleEmotionalEntrySubmit): Activity saved successfully to API. Response:", apiResult);
+              toast({
+                title: "Actividad Sincronizada",
+                description: "Tu última entrada emocional ha sido guardada en el servidor.",
+                className: "bg-green-50 dark:bg-green-900/30 border-green-500",
+                duration: 3000,
+              });
+            } else {
+              console.warn("DashboardPage (handleEmotionalEntrySubmit): API reported 'NOOK' for activity save. Message:", apiResult.message, "Full Response:", apiResult);
+              toast({
+                title: "Error de Sincronización",
+                description: `La API indicó un problema al guardar la actividad: ${apiResult.message || 'Error desconocido.'}`,
+                variant: "destructive",
+              });
+            }
+          } catch (jsonError) {
+             console.warn("DashboardPage (handleEmotionalEntrySubmit): Failed to parse JSON response from activity save API. Raw text:", responseText, jsonError);
+             toast({
+                title: "Respuesta de Sincronización Inválida",
+                description: "La API de actividad devolvió una respuesta inesperada.",
+                variant: "destructive",
+              });
+          }
+        } else {
+          console.warn("DashboardPage (handleEmotionalEntrySubmit): Failed to save activity to API. Status:", response.status, "Response Text:", responseText);
+          toast({
+            title: "Error al Guardar Actividad",
+            description: `No se pudo guardar la actividad en el servidor (HTTP ${response.status}).`,
+            variant: "destructive",
+          });
+        }
+      } catch (error: any) {
+        let errorMessage = "Error de red al guardar la actividad.";
+        if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
+            errorMessage = "Tiempo de espera agotado al guardar la actividad en el servidor.";
+        }
+        console.error("DashboardPage (handleEmotionalEntrySubmit): Network error saving activity to API:", error);
+        toast({
+          title: "Error de Conexión",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
+    } else {
+      console.warn("DashboardPage (handleEmotionalEntrySubmit): No API URL generated for saving activity. Skipping fetch.");
+    }
   };
 
   const handleClearDebugUrl = (key: string, setter: React.Dispatch<React.SetStateAction<string | null>>, exampleUrlGenerator: () => string) => {
@@ -435,7 +509,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Lock className="mr-2 h-4 w-4" />
-                  Prueba de Función `encryptDataAES` (Encriptación GLOBAL DESACTIVADA):
+                  Prueba de Función `encryptDataAES` (Encriptación GLOBAL ACTIVADA):
                 </p>
                 {outputOfEncryptFunctionForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
@@ -445,7 +519,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Con la encriptación GLOBAL DESACTIVADA, <code>encryptDataAES(objeto)</code> devuelve directamente el objeto como cadena JSON.
+                  Con la encriptación GLOBAL ACTIVADA, <code>encryptDataAES(objeto)</code> devuelve un string JSON que contiene 'iv' y 'data' (la data encriptada con AES).
                   En el caso del resumen de actividad, el campo <code>ID</code> dentro del objeto (si existe) ya fue pre-encriptado por <code>forceEncryptStringAES</code> (resultando en un string JSON).
                 </p>
               </div>
@@ -453,7 +527,7 @@ export default function DashboardPage() {
                <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <KeyRound className="mr-2 h-4 w-4" />
-                  Prueba de Función `decryptDataAES` (Encriptación GLOBAL DESACTIVADA):
+                  Prueba de Función `decryptDataAES` (Encriptación GLOBAL ACTIVADA):
                 </p>
                 {outputOfDecryptFunctionForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
@@ -463,7 +537,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
                 <p className="text-xs mt-2 text-muted-foreground">
-                  Con la encriptación GLOBAL DESACTIVADA, <code>decryptDataAES(cadena)</code> intenta parsear la cadena como JSON. Si es JSON válido, devuelve el objeto. Si no (ej. es un string encriptado con IV/data), lo devuelve tal cual si no es JSON.
+                  Con la encriptación GLOBAL ACTIVADA, <code>decryptDataAES(cadena_encriptada_json)</code> intenta desencriptar la cadena (que debe ser un JSON con 'iv' y 'data') y luego parsear el resultado como JSON.
                 </p>
               </div>
               <Separator />
@@ -471,13 +545,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Registro (Depuración - Payloads son JSON):
+                    URL de API de Registro (Depuración - Payloads ENCRIPTADOS con AES):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugRegisterApiUrl}</code>
                   </pre>
                   <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Los parámetros `usuario`, `name`, `email`, `password` contienen strings JSON (encriptación global AES desactivada).
+                    Nota: Los parámetros `usuario`, `name`, `email`, `password` contienen strings JSON con 'iv' y 'data' (encriptación global AES activada).
                   </p>
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_REGISTER_URL_KEY, setDebugRegisterApiUrl, () => {
                      const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
@@ -492,13 +566,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Login (Depuración - Payloads son JSON):
+                    URL de API de Login (Depuración - Payloads ENCRIPTADOS con AES):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugLoginApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Los parámetros `usuario` y `password` contienen strings JSON (encriptación global AES desactivada).
+                    Nota: Los parámetros `usuario` y `password` contienen strings JSON con 'iv' y 'data' (encriptación global AES activada).
                   </p>
                   <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_LOGIN_URL_KEY, setDebugLoginApiUrl, () => {
                     const loginParams = { usuario: { email: "login@ejemplo.com" }, password: { value: "PasswordDeLogin123" } };
@@ -512,13 +586,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Baja (Depuración - Payload es JSON):
+                    URL de API de Baja (Depuración - Payload ENCRIPTADO con AES):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugDeleteApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro `usuario` contiene un string JSON (encriptación global AES desactivada). Generada usando el email del usuario actual o un ejemplo si no hay sesión.
+                    Nota: El parámetro `usuario` contiene un string JSON con 'iv' y 'data' (encriptación global AES activada). Generada usando el email del usuario actual o un ejemplo si no hay sesión.
                   </p>
                 </div>
                )}
@@ -526,13 +600,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Cambio Contraseña (Depuración - Payload es JSON):
+                    URL de API de Cambio Contraseña (Depuración - Payload ENCRIPTADO con AES):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugChangePasswordApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro `usuario` contiene un string JSON (encriptación global AES desactivada). Generada usando el email del usuario actual (y contraseña de ejemplo) o datos de ejemplo si no hay sesión.
+                    Nota: El parámetro `usuario` contiene un string JSON con 'iv' y 'data' (encriptación global AES activada). Generada usando el email del usuario actual (y contraseña de ejemplo) o datos de ejemplo si no hay sesión.
                   </p>
                 </div>
                )}
@@ -546,7 +620,7 @@ export default function DashboardPage() {
                     <code>{debugUserActivityApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON. Dentro de este, el campo <code>ID</code> (si está presente y el ID del usuario del contexto estaba disponible) es un string JSON que representa el ID del usuario encriptado (AES). El resto (<code>emotionalEntries</code>) está en texto plano. Adicionalmente, si el ID del usuario del contexto está disponible, se añade un parámetro <code>userID</code> a la URL con el ID del usuario del contexto encriptado directamente.
+                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON con 'iv' y 'data' (encriptación AES global activada). Dentro de este, el campo <code>ID</code> (si está presente) contiene el ID del usuario también encriptado con AES (doble encriptación efectiva del ID en este parámetro, pero la principal es la exterior de `datosactividad`). El parámetro <code>userID</code> (si está presente) contiene el ID del usuario encriptado una vez.
                   </p>
                 </div>
                )}
@@ -622,3 +696,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
