@@ -19,7 +19,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send } from "lucide-react"; // Added Send
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
@@ -37,9 +37,8 @@ interface ProcessedChartDataPoint {
   fullDate: string; 
 }
 
-interface UserActivitySummary {
-  ID?: string | null; // User ID, value will be the result of forceEncryptStringAES.
-  emotionalEntries: EmotionalEntry[];
+interface SingleEmotionalEntryActivity {
+  entry: EmotionalEntry;
 }
 
 
@@ -59,11 +58,10 @@ const SESSION_STORAGE_REGISTER_URL_KEY = 'workwell-debug-register-url';
 const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
 const API_BASE_URL_FOR_DEBUG = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php"; 
 const API_KEY_FOR_DEBUG = "4463"; 
-const API_TIMEOUT_MS_ACTIVITY = 10000; // Timeout for activity save
+const API_TIMEOUT_MS_ACTIVITY = 10000; 
 
 
 export default function DashboardPage() {
-  // console.log("DashboardPage: Component rendering or re-rendering.");
   const t = useTranslations();
   const { user } = useUser(); 
   const { toast } = useToast();
@@ -85,6 +83,7 @@ export default function DashboardPage() {
   const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
   const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null);
   const [rawUserObjectForDebug, setRawUserObjectForDebug] = useState<string | null>(null);
+  const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
 
 
   const generateApiUrlWithParams = (type: string, params: Record<string, any>): string => {
@@ -97,29 +96,29 @@ export default function DashboardPage() {
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
   };
 
-  const generateUserActivityApiUrl = useCallback((activitySummary: UserActivitySummary, userIdFromContext?: string | null): string => {
-    // console.log("DashboardPage (generateUserActivityApiUrl): Received activitySummary for datosactividad:", JSON.stringify(activitySummary).substring(0,200) + "...");
-    // console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdFromContext (para encriptar para param userID):", userIdFromContext);
+  const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
+    console.log("DashboardPage (generateUserActivityApiUrl): Generating URL for new entry:", JSON.stringify(newEntryData).substring(0,200) + "...");
+    console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdForUrlParam (para parámetro userID):", userIdForUrlParam);
     
-    const jsonPayloadForDatosActividad = encryptDataAES(activitySummary); 
+    const activityPayload: SingleEmotionalEntryActivity = { entry: newEntryData };
+    const jsonPayloadForDatosActividad = encryptDataAES(activityPayload); 
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
-    // console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad):", url.substring(0, 200) + "...");
+    console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad para nueva entrada):", url.substring(0, 200) + "...");
 
-    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
-      // console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es válido. Procediendo a encriptar para parámetro userID.");
-      const encryptedDirectUserId = forceEncryptStringAES(userIdFromContext);
-      // console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdFromContext (parámetro userID):", encryptedDirectUserId);
+    if (userIdForUrlParam && typeof userIdForUrlParam === 'string' && userIdForUrlParam.trim() !== '') {
+      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es válido. Procediendo a encriptar para parámetro userID.");
+      const encryptedDirectUserId = forceEncryptStringAES(userIdForUrlParam);
+      console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdForUrlParam (parámetro userID):", encryptedDirectUserId);
       url += `&userID=${encodeURIComponent(encryptedDirectUserId)}`;
-      // console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
+      console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
     } else {
-      // console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdFromContext:", userIdFromContext);
+      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdForUrlParam:", userIdForUrlParam);
     }
     return url;
   }, []);
 
 
   useEffect(() => {
-    // console.log("DashboardPage: Initial Load useEffect running. Emotional Dashboard Enabled:", isEmotionalDashboardEnabled);
     if (isEmotionalDashboardEnabled) {
       const loadedRecentEntries = getRecentEmotionalEntries();
       const loadedAllEntries = getEmotionalEntries();
@@ -181,11 +180,12 @@ export default function DashboardPage() {
   }, [t, isEmotionalDashboardEnabled, user]); 
 
   useEffect(() => {
-    // console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
+    console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
     const userIdFromContext = user?.id;
-    // console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
-
+    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
+    
     setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
+    setRawUserIdForDebug(userIdFromContext || null);
 
     if (!isEmotionalDashboardEnabled) {
       setUserActivityForDisplay(null);
@@ -195,49 +195,40 @@ export default function DashboardPage() {
     }
     
     if (!user) {
-        // console.warn("DashboardPage (Activity Summary UE): User context is null. Skipping user activity summary and URL generation.");
+        console.warn("DashboardPage (Activity Summary UE): User context is null. Skipping user activity summary and URL generation.");
         setUserActivityForDisplay("Usuario no disponible. No se pueden generar datos de actividad.");
         setOutputOfEncryptFunctionForTest("Usuario no disponible.");
         setDebugUserActivityApiUrl(null);
         return;
     }
 
-
-    if (isEmotionalDashboardEnabled) {
-      const allEmotionalEntries = getEmotionalEntries();
+    if (isEmotionalDashboardEnabled && recentEntries.length > 0) {
+      const exampleEntryForDisplay = recentEntries[0];
+      const examplePayload: SingleEmotionalEntryActivity = { entry: exampleEntryForDisplay };
       
-      const summary: UserActivitySummary = {
-        emotionalEntries: allEmotionalEntries,
-      };
-      
-      if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
-        // console.log("DashboardPage (Activity Summary UE): User ID from UserContext is valid. Encrypting for summary.ID:", userIdFromContext);
-        const encryptedIdForSummaryJson = forceEncryptStringAES(userIdFromContext);
-        // console.log("DashboardPage (Activity Summary UE): forceEncryptStringAES output for summary.ID:", encryptedIdForSummaryJson);
-        summary.ID = encryptedIdForSummaryJson; 
-      } else {
-         // console.log("DashboardPage (Activity Summary UE): userIdFromContext is null, empty, or not a string. Field 'ID' will be omitted from summary. Value:", userIdFromContext);
-      }
-      
-      setUserActivityForDisplay(JSON.stringify(summary, null, 2)); 
+      setUserActivityForDisplay(JSON.stringify(examplePayload, null, 2)); 
       
       try {
-        const outputOfEncryptCall = encryptDataAES(summary); 
+        const outputOfEncryptCall = encryptDataAES(examplePayload); 
         setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
       } catch (error) {
-        console.error("Error processing user activity summary for test display:", error);
-        setOutputOfEncryptFunctionForTest("Error durante el procesamiento de los datos de actividad del usuario para prueba.");
+        console.error("Error processing example activity payload for test display:", error);
+        setOutputOfEncryptFunctionForTest("Error durante el procesamiento del payload de ejemplo.");
       }
-      
-      // console.log("DashboardPage (useEffect for API URL): User ID from UserContext being passed to generateUserActivityApiUrl for &userID= param:", userIdFromContext);
-      setDebugUserActivityApiUrl(generateUserActivityApiUrl(summary, userIdFromContext)); 
+      setDebugUserActivityApiUrl(generateUserActivityApiUrl(exampleEntryForDisplay, userIdFromContext)); 
+    } else if (isEmotionalDashboardEnabled) {
+        const placeholderEntry: EmotionalEntry = { id: "ejemplo", situation: "Situación de ejemplo", emotion: "alegria", timestamp: new Date().toISOString()};
+        const examplePayload: SingleEmotionalEntryActivity = { entry: placeholderEntry };
+        setUserActivityForDisplay(JSON.stringify(examplePayload, null, 2));
+        setOutputOfEncryptFunctionForTest(encryptDataAES(examplePayload));
+        setDebugUserActivityApiUrl(generateUserActivityApiUrl(placeholderEntry, userIdFromContext));
     } else {
       setUserActivityForDisplay(null);
       setOutputOfEncryptFunctionForTest(null);
       setDebugUserActivityApiUrl(null);
     }
-    // console.log("DashboardPage (Activity Summary UE): END.");
-  }, [isEmotionalDashboardEnabled, user, currentActivePath, t, generateUserActivityApiUrl]); 
+    console.log("DashboardPage (Activity Summary UE): END.");
+  }, [isEmotionalDashboardEnabled, user, currentActivePath, t, generateUserActivityApiUrl, recentEntries]); 
 
 
   useEffect(() => {
@@ -291,12 +282,13 @@ export default function DashboardPage() {
         description: "No se pudo identificar al usuario. Intenta recargar la página o iniciar sesión de nuevo.",
         variant: "destructive",
       });
-      // console.warn("DashboardPage (handleEmotionalEntrySubmit): User or user.id not available. Cannot submit entry or update activity URLs.");
+      console.warn("DashboardPage (handleEmotionalEntrySubmit): User or user.id not available. Cannot submit entry or send to API.");
       return;
     }
     const userIdFromContext = user.id;
 
-    const newEntry = addEmotionalEntry(data);
+    const newEntry = addEmotionalEntry(data); 
+    
     setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); 
     setAllEntriesForChart(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
     const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
@@ -304,17 +296,12 @@ export default function DashboardPage() {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
     }
 
-    const allEmotionalEntries = getEmotionalEntries();
-    const summary: UserActivitySummary = { emotionalEntries: allEmotionalEntries };
+    const singleEntryPayload: SingleEmotionalEntryActivity = { entry: newEntry };
     
-    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
-        summary.ID = forceEncryptStringAES(userIdFromContext); 
-    }
+    setUserActivityForDisplay(JSON.stringify(singleEntryPayload, null, 2));
+    setOutputOfEncryptFunctionForTest(encryptDataAES(singleEntryPayload)); 
     
-    setUserActivityForDisplay(JSON.stringify(summary, null, 2));
-    setOutputOfEncryptFunctionForTest(encryptDataAES(summary)); 
-    
-    const currentActivityApiUrl = generateUserActivityApiUrl(summary, userIdFromContext);
+    const currentActivityApiUrl = generateUserActivityApiUrl(newEntry, userIdFromContext);
     setDebugUserActivityApiUrl(currentActivityApiUrl); 
 
     toast({
@@ -323,9 +310,8 @@ export default function DashboardPage() {
     });
     setIsEntryDialogOpen(false); 
 
-    // Send activity data to backend API
     if (currentActivityApiUrl) {
-      console.log("DashboardPage (handleEmotionalEntrySubmit): Sending activity data to API:", currentActivityApiUrl.substring(0,150) + "...");
+      console.log("DashboardPage (handleEmotionalEntrySubmit): Sending NEW emotional entry to API:", currentActivityApiUrl.substring(0,150) + "...");
       try {
         const signal = AbortSignal.timeout(API_TIMEOUT_MS_ACTIVITY);
         const response = await fetch(currentActivityApiUrl, { signal });
@@ -335,23 +321,23 @@ export default function DashboardPage() {
           try {
             apiResult = JSON.parse(responseText);
             if (apiResult.status === "OK") {
-              console.log("DashboardPage (handleEmotionalEntrySubmit): Activity saved successfully to API. Response:", apiResult);
+              console.log("DashboardPage (handleEmotionalEntrySubmit): New entry saved successfully to API. Response:", apiResult);
               toast({
-                title: "Actividad Sincronizada",
+                title: "Emoción Sincronizada",
                 description: "Tu última entrada emocional ha sido guardada en el servidor.",
                 className: "bg-green-50 dark:bg-green-900/30 border-green-500",
                 duration: 3000,
               });
             } else {
-              console.warn("DashboardPage (handleEmotionalEntrySubmit): API reported 'NOOK' for activity save. Message:", apiResult.message, "Full Response:", apiResult);
+              console.warn("DashboardPage (handleEmotionalEntrySubmit): API reported 'NOOK' for new entry save. Message:", apiResult.message, "Full Response:", apiResult);
               toast({
                 title: "Error de Sincronización",
-                description: `La API indicó un problema al guardar la actividad: ${apiResult.message || 'Error desconocido.'}`,
+                description: `La API indicó un problema al guardar la emoción: ${apiResult.message || 'Error desconocido.'}`,
                 variant: "destructive",
               });
             }
           } catch (jsonError) {
-             console.warn("DashboardPage (handleEmotionalEntrySubmit): Failed to parse JSON response from activity save API. Raw text:", responseText, jsonError);
+             console.warn("DashboardPage (handleEmotionalEntrySubmit): Failed to parse JSON response from new entry save API. Raw text:", responseText, jsonError);
              toast({
                 title: "Respuesta de Sincronización Inválida",
                 description: "La API de actividad devolvió una respuesta inesperada.",
@@ -359,19 +345,19 @@ export default function DashboardPage() {
               });
           }
         } else {
-          console.warn("DashboardPage (handleEmotionalEntrySubmit): Failed to save activity to API. Status:", response.status, "Response Text:", responseText);
+          console.warn("DashboardPage (handleEmotionalEntrySubmit): Failed to save new entry to API. Status:", response.status, "Response Text:", responseText);
           toast({
-            title: "Error al Guardar Actividad",
-            description: `No se pudo guardar la actividad en el servidor (HTTP ${response.status}).`,
+            title: "Error al Guardar Emoción",
+            description: `No se pudo guardar la emoción en el servidor (HTTP ${response.status}).`,
             variant: "destructive",
           });
         }
       } catch (error: any) {
-        let errorMessage = "Error de red al guardar la actividad.";
+        let errorMessage = "Error de red al guardar la emoción.";
         if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
-            errorMessage = "Tiempo de espera agotado al guardar la actividad en el servidor.";
+            errorMessage = "Tiempo de espera agotado al guardar la emoción en el servidor.";
         }
-        console.error("DashboardPage (handleEmotionalEntrySubmit): Network error saving activity to API:", error);
+        console.error("DashboardPage (handleEmotionalEntrySubmit): Network error saving new entry to API:", error);
         toast({
           title: "Error de Conexión",
           description: errorMessage,
@@ -379,7 +365,7 @@ export default function DashboardPage() {
         });
       }
     } else {
-      console.warn("DashboardPage (handleEmotionalEntrySubmit): No API URL generated for saving activity. Skipping fetch.");
+      console.warn("DashboardPage (handleEmotionalEntrySubmit): No API URL generated for saving new entry. Skipping fetch.");
     }
   };
 
@@ -488,28 +474,38 @@ export default function DashboardPage() {
                   <code>{rawUserObjectForDebug || "No disponible o cargando..."}</code>
                 </pre>
               </div>
+              <Separator/>
+              <div>
+                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                  <UserCircle2 className="mr-2 h-4 w-4" />
+                   ID de Usuario del Contexto (RAW):
+                </p>
+                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                  <code>{rawUserIdForDebug || "No disponible o cargando..."}</code>
+                </pre>
+              </div>
               <Separator />
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
-                  Payload JSON para 'datosactividad' (Campo 'ID' Encriptado opcionalmente):
+                  Payload JSON para 'datosactividad' (Nueva Entrada Emocional):
                 </p>
                 {userActivityForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
                     <code>{userActivityForDisplay}</code>
                   </pre>
                 ) : (
-                  <p className="text-xs italic text-muted-foreground">[Resumen de actividad no disponible o cargando...]</p>
+                  <p className="text-xs italic text-muted-foreground">[Payload de nueva entrada no disponible o cargando...]</p>
                 )}
                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El campo <code>ID</code> (si está presente y el ID del usuario del contexto estaba disponible) contiene un string JSON (con 'iv' y 'data') que es el ID del usuario encriptado con AES. Los registros emocionales (<code>emotionalEntries</code>) están en texto plano. Si el ID del usuario del contexto no estaba disponible, el campo <code>ID</code> se omitirá del JSON.
+                    Nota: Este payload contiene el objeto <code>{"{ entry: ... }"}</code> con la última entrada emocional registrada. Este objeto es el que se encripta y se envía en el parámetro <code>datosactividad</code>. El ID del usuario se envía por separado en el parámetro <code>userID</code> de la URL.
                   </p>
               </div>
               <Separator />
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Lock className="mr-2 h-4 w-4" />
-                  Prueba de Función `encryptDataAES` (Encriptación GLOBAL ACTIVADA):
+                  Resultado de `encryptDataAES` sobre el Payload de Nueva Entrada:
                 </p>
                 {outputOfEncryptFunctionForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
@@ -518,10 +514,6 @@ export default function DashboardPage() {
                 ) : (
                   <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
                 )}
-                <p className="text-xs mt-2 text-muted-foreground">
-                  Con la encriptación GLOBAL ACTIVADA, <code>encryptDataAES(objeto)</code> devuelve un string JSON que contiene 'iv' y 'data' (la data encriptada con AES).
-                  En el caso del resumen de actividad, el campo <code>ID</code> dentro del objeto (si existe) ya fue pre-encriptado por <code>forceEncryptStringAES</code> (resultando en un string JSON).
-                </p>
               </div>
               <Separator />
                <div>
@@ -614,13 +606,13 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                     <ShieldQuestion className="mr-2 h-4 w-4" />
-                     URL de API para Guardar Actividad (Depuración):
+                     URL de API para Guardar Actividad (Depuración - Nueva Entrada):
                   </p>
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                     <code>{debugUserActivityApiUrl}</code>
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON con 'iv' y 'data' (encriptación AES global activada). Dentro de este, el campo <code>ID</code> (si está presente) contiene el ID del usuario también encriptado con AES (doble encriptación efectiva del ID en este parámetro, pero la principal es la exterior de `datosactividad`). El parámetro <code>userID</code> (si está presente) contiene el ID del usuario encriptado una vez.
+                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON (con 'iv' y 'data') que es la encriptación AES del objeto <code>{"{ entry: ... }"}</code>. El parámetro <code>userID</code> (si está presente) contiene el ID del usuario encriptado directamente con AES. Esta URL se actualiza cada vez que se registra una nueva emoción.
                   </p>
                 </div>
                )}
@@ -696,5 +688,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
