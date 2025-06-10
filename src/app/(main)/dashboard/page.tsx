@@ -96,23 +96,27 @@ export default function DashboardPage() {
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
   };
 
-  const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
+  const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdFromContext?: string | null): string => {
     console.log("DashboardPage (generateUserActivityApiUrl): Generating URL for new entry:", JSON.stringify(newEntryData).substring(0,200) + "...");
-    console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdForUrlParam (para parámetro userID):", userIdForUrlParam);
+    console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdFromContext (para parámetro userID):", userIdFromContext);
     
     const activityPayload: SingleEmotionalEntryActivity = { entry: newEntryData };
     const jsonPayloadForDatosActividad = encryptDataAES(activityPayload); 
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
     console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad para nueva entrada):", url.substring(0, 200) + "...");
 
-    if (userIdForUrlParam && typeof userIdForUrlParam === 'string' && userIdForUrlParam.trim() !== '') {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es válido. Procediendo a encriptar para parámetro userID.");
-      const encryptedDirectUserId = forceEncryptStringAES(userIdForUrlParam);
-      console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdForUrlParam (parámetro userID):", encryptedDirectUserId);
-      url += `&userID=${encodeURIComponent(encryptedDirectUserId)}`;
-      console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
+    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
+      console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es válido. Procediendo a encriptar para parámetro userID.");
+      try {
+        const encryptedDirectUserId = forceEncryptStringAES(userIdFromContext);
+        console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdFromContext (parámetro userID):", encryptedDirectUserId);
+        url += `&userID=${encodeURIComponent(encryptedDirectUserId)}`;
+        console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
+      } catch (encError) {
+         console.error("DashboardPage (generateUserActivityApiUrl): Error encriptando userIdFromContext con forceEncryptStringAES:", encError);
+      }
     } else {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdForUrlParam:", userIdForUrlParam);
+      console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdFromContext:", userIdFromContext);
     }
     return url;
   }, []);
@@ -177,14 +181,15 @@ export default function DashboardPage() {
       setDebugChangePasswordApiUrl(null);
       setDebugUserActivityApiUrl(null);
     }
-  }, [t, isEmotionalDashboardEnabled, user]); 
+  }, [t, isEmotionalDashboardEnabled, user, generateApiUrlWithParams]); 
 
   useEffect(() => {
     console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
-    const userIdFromContext = user?.id;
-    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
     
     setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
+    
+    const userIdFromContext = user?.id;
+    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
     setRawUserIdForDebug(userIdFromContext || null);
 
     if (!isEmotionalDashboardEnabled) {
@@ -194,11 +199,11 @@ export default function DashboardPage() {
       return;
     }
     
-    if (!user) {
-        console.warn("DashboardPage (Activity Summary UE): User context is null. Skipping user activity summary and URL generation.");
-        setUserActivityForDisplay("Usuario no disponible. No se pueden generar datos de actividad.");
-        setOutputOfEncryptFunctionForTest("Usuario no disponible.");
-        setDebugUserActivityApiUrl(null);
+    if (!user || !user.id) { // Check specifically for user.id here as well for the example payload
+        console.warn("DashboardPage (Activity Summary UE): User context or user.id is null/undefined. Skipping user activity summary and URL generation for example payload.");
+        setUserActivityForDisplay("Usuario no disponible o ID de usuario faltante. No se pueden generar datos de actividad de ejemplo.");
+        setOutputOfEncryptFunctionForTest("Usuario no disponible o ID de usuario faltante.");
+        setDebugUserActivityApiUrl(null); // Don't generate a URL if no user.id
         return;
     }
 
@@ -353,13 +358,30 @@ export default function DashboardPage() {
           });
         }
       } catch (error: any) {
-        let errorMessage = "Error de red al guardar la emoción.";
+        let errorMessage = "Error de red al guardar la emoción. Verifica la consola del navegador para más detalles.";
+        let errorType = "NetworkError";
+
         if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
             errorMessage = "Tiempo de espera agotado al guardar la emoción en el servidor.";
+            errorType = "TimeoutError";
+        } else if (error instanceof TypeError && error.message.toLowerCase().includes('failed to fetch')) {
+            // This is often CORS or network path issue
+            errorMessage = "Fallo al contactar el servidor (Failed to fetch). Posible problema de CORS o red. Revisa la consola del navegador.";
+            errorType = "FetchSetupOrCORSError";
         }
-        console.error("DashboardPage (handleEmotionalEntrySubmit): Network error saving new entry to API:", error);
+        
+        // Enhanced console logging
+        console.error(`DashboardPage (handleEmotionalEntrySubmit): Error during API call to save new entry. Type: ${errorType}`);
+        console.error("Error Name:", error.name);
+        console.error("Error Message:", error.message);
+        if (error.stack) {
+          console.error("Error Stack:", error.stack);
+        }
+        console.error("Full Error Object:", error);
+        console.error("URL attempted:", currentActivityApiUrl);
+
         toast({
-          title: "Error de Conexión",
+          title: "Error de Conexión con API",
           description: errorMessage,
           variant: "destructive",
         });
