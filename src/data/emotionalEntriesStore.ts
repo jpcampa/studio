@@ -31,7 +31,6 @@ export function getEmotionalEntries(): EmotionalEntry[] {
 
 export function addEmotionalEntry(newEntryData: { situation: string; emotion: string }): EmotionalEntry {
   if (typeof window === "undefined") {
-    // Should not happen if called from client component, but good for safety
     const placeholderEntry: EmotionalEntry = {
         id: crypto.randomUUID(),
         ...newEntryData,
@@ -49,15 +48,29 @@ export function addEmotionalEntry(newEntryData: { situation: string; emotion: st
   };
 
   try {
-    const currentEntries = getEmotionalEntries(); // Already sorted newest first
+    const currentEntries = getEmotionalEntries(); 
     const updatedEntries = [newEntry, ...currentEntries].slice(0, MAX_ENTRIES_TO_STORE);
     localStorage.setItem(EMOTIONAL_ENTRIES_KEY, JSON.stringify(updatedEntries));
     return newEntry;
   } catch (error) {
     console.error("Error saving emotional entry to localStorage:", error);
-    return newEntry; // Return the new entry even if save failed, so UI can update
+    return newEntry; 
   }
 }
+
+export function overwriteEmotionalEntries(entries: EmotionalEntry[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    // Sort by timestamp descending (newest first) before storing
+    const sortedEntries = [...entries].sort((a, b) => parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime());
+    const entriesToStore = sortedEntries.slice(0, MAX_ENTRIES_TO_STORE);
+    localStorage.setItem(EMOTIONAL_ENTRIES_KEY, JSON.stringify(entriesToStore));
+    console.log("Emotional entries overwritten in localStorage with", entriesToStore.length, "entries.");
+  } catch (error) {
+    console.error("Error overwriting emotional entries in localStorage:", error);
+  }
+}
+
 
 export function getRecentEmotionalEntries(count: number = MAX_ENTRIES_TO_DISPLAY): EmotionalEntry[] {
     return getEmotionalEntries().slice(0, count);
@@ -81,3 +94,4 @@ export function clearAllEmotionalEntries(): void {
     console.error("Error clearing emotional entries from localStorage:", error);
   }
 }
+

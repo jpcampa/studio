@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react"; // Added useState
+import { useEffect, useState } from "react"; 
 import { useFormStatus } from "react-dom";
 import { useActionState } from "react";
 import Link from "next/link";
@@ -14,13 +14,14 @@ import { loginUser, type LoginState } from "@/actions/auth";
 import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Eye, EyeOff, ShieldQuestion } from "lucide-react"; // Added Eye, EyeOff
+import { Loader2, Eye, EyeOff, ShieldQuestion } from "lucide-react"; 
 
 const initialState: LoginState = {
   message: null,
   errors: {},
   user: null,
   debugLoginApiUrl: undefined,
+  fetchedEmotionalEntries: null,
 };
 
 function SubmitButton() {
@@ -39,7 +40,7 @@ export function LoginForm() {
   const { user: contextUser, loading: userLoading, login: loginContext } = useUser();
   const router = useRouter();
   const [state, formAction] = useActionState(loginUser, initialState);
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false); 
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
 
@@ -52,7 +53,7 @@ export function LoginForm() {
   }, [contextUser, userLoading, router]);
 
   useEffect(() => {
-    console.log("LoginForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2));
+    console.log("LoginForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2).substring(0, 500) + (JSON.stringify(state, null, 2).length > 500 ? "..." : ""));
     
     if (state.debugLoginApiUrl) {
       console.log("LoginForm: Saving debugLoginApiUrl to sessionStorage:", state.debugLoginApiUrl);
@@ -61,12 +62,15 @@ export function LoginForm() {
 
     if (state.message) {
       if (state.message === "Inicio de sesión exitoso." && state.user) {
-        loginContext(state.user as ContextUser);
+        loginContext({ 
+          user: state.user as ContextUser, 
+          entries: state.fetchedEmotionalEntries ?? null 
+        });
         toast({
           title: t.login,
           description: state.message,
         });
-        console.log("LoginForm: Server action reported successful login. User set in context.");
+        console.log("LoginForm: Server action reported successful login. User and emotional entries (if any) set in context.");
       } else if (state.message !== "Inicio de sesión exitoso.") {
         if (!state.errors || Object.keys(state.errors).length === 0 || (state.errors._form && state.errors._form.length > 0)) {
           toast({
@@ -138,12 +142,12 @@ export function LoginForm() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 required
-                className="pr-10" // Add padding to make space for the icon
+                className="pr-10" 
               />
               <Button
                 type="button"
                 variant="ghost"
-                size="sm" // smaller icon button
+                size="sm" 
                 className="absolute inset-y-0 right-0 flex items-center justify-center h-full px-3 text-muted-foreground hover:text-primary"
                 onClick={toggleShowPassword}
                 aria-label={showPassword ? t.hidePassword : t.showPassword}
@@ -187,3 +191,4 @@ export function LoginForm() {
     </Card>
   );
 }
+

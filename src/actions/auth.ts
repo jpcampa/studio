@@ -2,9 +2,10 @@
 "use server";
 
 import { z } from "zod";
-import { encryptDataAES, decryptDataAES, forceDecryptStringAES } from "@/lib/encryption";
+import { encryptDataAES, decryptDataAES, forceEncryptStringAES, forceDecryptStringAES } from "@/lib/encryption";
 import { UserProvider, useUser } from "@/contexts/UserContext"; // Assuming useUser can be used server-side, or we pass user object
 import { t } from "@/lib/translations"; // Import translations for error messages
+import type { EmotionalEntry } from "@/data/emotionalEntriesStore";
 
 // Define the User interface that actions will deal with
 // This should be compatible with the User interface in UserContext
@@ -71,12 +72,23 @@ export type RegisterState = {
 interface ExternalApiResponse {
   status: "OK" | "NOOK";
   message: string;
-  data: any;
+  data: any; // Can be various structures or an encrypted string
 }
 
 const API_TIMEOUT_MS = 15000;
-const API_BASE_URL = "http://workwell.hl1448.dinaserver.com/wp-content/programacion/wscontenido.php";
+const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY = "4463";
+
+const EmotionalEntrySchema = z.object({
+  id: z.string(),
+  situation: z.string(),
+  emotion: z.string(),
+  timestamp: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Timestamp must be a valid ISO date string",
+  }),
+});
+const FetchedEmotionalEntriesSchema = z.array(EmotionalEntrySchema);
+
 
 export async function registerUser(prevState: RegisterState, formData: FormData): Promise<RegisterState> {
   console.log("RegisterUser action: Initiated.");
@@ -101,8 +113,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
   const userId = crypto.randomUUID();
 
   const userDetailsToEncrypt = {
-    id: userId, // For registration, we might send a newly generated ID or an encrypted one.
-                // If API expects the ID itself to be pre-encrypted, this needs forceEncryptStringAES(userId)
+    id: userId, 
     name,
     email,
     ageRange: ageRange || null,
@@ -228,6 +239,7 @@ export type LoginState = {
   message?: string | null;
   user?: ActionUser | null;
   debugLoginApiUrl?: string;
+  fetchedEmotionalEntries?: EmotionalEntry[] | null;
 };
 
 
@@ -244,6 +256,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
       message: "Error de validación.",
       user: null,
       debugLoginApiUrl: undefined,
+      fetchedEmotionalEntries: null,
     };
   }
 
@@ -264,62 +277,66 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         errors: { _form: ["No se pudieron encriptar las credenciales de forma segura."] },
         user: null,
         debugLoginApiUrl: undefined,
+        fetchedEmotionalEntries: null,
     };
   }
 
   const finalEncryptedLoginDetailsForUrl = encodeURIComponent(encryptedLoginDetailsPayload);
   const finalEncryptedPasswordForUrl = encodeURIComponent(encryptedPasswordPayload);
 
-  const type = "login";
-  const generatedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=${finalEncryptedLoginDetailsForUrl}&password=${finalEncryptedPasswordForUrl}`;
-  console.log("LoginUser action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${type}&usuario=ENCRYPTED_EMAIL_DETAILS&password=ENCRYPTED_PASSWORD`);
+  const loginType = "login";
+  const generatedLoginApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${loginType}&usuario=${finalEncryptedLoginDetailsForUrl}&password=${finalEncryptedPasswordForUrl}`;
+  console.log("LoginUser action: Constructed API URL (for server logging):", `${API_BASE_URL}?apikey=${API_KEY}&tipo=${loginType}&usuario=ENCRYPTED_EMAIL_DETAILS&password=ENCRYPTED_PASSWORD`);
 
   try {
-    console.log("LoginUser action: Attempting to call external API. URL:", generatedApiUrl.substring(0,150) + "...");
-    const signal = AbortSignal.timeout(API_TIMEOUT_MS);
-    const apiResponse = await fetch(generatedApiUrl, { signal });
+    console.log("LoginUser action: Attempting to call external API. URL:", generatedLoginApiUrl.substring(0,150) + "...");
+    const loginSignal = AbortSignal.timeout(API_TIMEOUT_MS);
+    const loginApiResponse = await fetch(generatedLoginApiUrl, { signal: loginSignal });
 
-    let responseText = "";
+    let loginResponseText = "";
     try {
-        responseText = await apiResponse.text();
-        console.log("LoginUser action: External API call status:", apiResponse.status, "Raw Response Text:", responseText);
+        loginResponseText = await loginApiResponse.text();
+        console.log("LoginUser action: External API call status:", loginApiResponse.status, "Raw Response Text:", loginResponseText);
     } catch (textError: any) {
-        console.warn(`LoginUser action: External API call failed or could not read text. Status: ${apiResponse.status}. Error reading text:`, textError.message);
+        console.warn(`LoginUser action: External API call failed or could not read text. Status: ${loginApiResponse.status}. Error reading text:`, textError.message);
         return {
-            message: `Error del servicio de inicio de sesión (HTTP ${apiResponse.status}): No se pudo leer la respuesta.`,
-            errors: { _form: [`El servicio de inicio de sesión devolvió un error (HTTP ${apiResponse.status}) y no se pudo leer el cuerpo. Inténtalo más tarde.`] },
+            message: `Error del servicio de inicio de sesión (HTTP ${loginApiResponse.status}): No se pudo leer la respuesta.`,
+            errors: { _form: [`El servicio de inicio de sesión devolvió un error (HTTP ${loginApiResponse.status}) y no se pudo leer el cuerpo. Inténtalo más tarde.`] },
             user: null,
-            debugLoginApiUrl: generatedApiUrl,
+            debugLoginApiUrl: generatedLoginApiUrl,
+            fetchedEmotionalEntries: null,
         };
     }
 
-    if (!apiResponse.ok) {
-      console.warn(`LoginUser action: External API call failed. Status: ${apiResponse.status}. Response: ${responseText}`);
+    if (!loginApiResponse.ok) {
+      console.warn(`LoginUser action: External API call failed. Status: ${loginApiResponse.status}. Response: ${loginResponseText}`);
       return {
-        message: `Error del servicio de inicio de sesión (HTTP ${apiResponse.status}): ${responseText.substring(0,100)}`,
-        errors: { _form: [`El servicio de inicio de sesión devolvió un error (HTTP ${apiResponse.status}). Inténtalo más tarde.`] },
+        message: `Error del servicio de inicio de sesión (HTTP ${loginApiResponse.status}): ${loginResponseText.substring(0,100)}`,
+        errors: { _form: [`El servicio de inicio de sesión devolvió un error (HTTP ${loginApiResponse.status}). Inténtalo más tarde.`] },
         user: null,
-        debugLoginApiUrl: generatedApiUrl,
+        debugLoginApiUrl: generatedLoginApiUrl,
+        fetchedEmotionalEntries: null,
       };
     }
 
-    let apiResult: ExternalApiResponse;
+    let loginApiResult: ExternalApiResponse;
     try {
-      apiResult = JSON.parse(responseText);
-      console.log("LoginUser action: Parsed API Response JSON:", apiResult);
+      loginApiResult = JSON.parse(loginResponseText);
+      console.log("LoginUser action: Parsed API Response JSON:", loginApiResult);
     } catch (jsonError: any) {
-      console.warn("LoginUser action: Failed to parse JSON response from external API.", jsonError, "Raw text was:", responseText);
+      console.warn("LoginUser action: Failed to parse JSON response from external API.", jsonError, "Raw text was:", loginResponseText);
       return {
         message: "Error al procesar la respuesta del servicio de inicio de sesión. Respuesta no válida.",
         errors: { _form: ["El servicio de inicio de sesión devolvió una respuesta inesperada."] },
         user: null,
-        debugLoginApiUrl: generatedApiUrl,
+        debugLoginApiUrl: generatedLoginApiUrl,
+        fetchedEmotionalEntries: null,
       };
     }
 
-    if (apiResult.status === "OK") {
-      if (apiResult.data) {
-        const validatedApiUserData = ApiLoginSuccessDataSchema.safeParse(apiResult.data);
+    if (loginApiResult.status === "OK") {
+      if (loginApiResult.data) {
+        const validatedApiUserData = ApiLoginSuccessDataSchema.safeParse(loginApiResult.data);
         if (validatedApiUserData.success) {
           console.log("LoginUser action: API user data validated successfully by Zod:", JSON.stringify(validatedApiUserData.data, null, 2));
 
@@ -327,43 +344,24 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
           let actualEmail: string | null = null;
           let actualId: string | null = null;
 
-          // Decrypt and extract Name
           const rawNameFromApi = validatedApiUserData.data.name.value;
-          console.log("LoginUser action: Raw name value from API:", rawNameFromApi);
           const decryptedNamePayload = decryptDataAES(rawNameFromApi);
-          console.log("LoginUser action: Decrypted name payload:", JSON.stringify(decryptedNamePayload, null, 2), "(Type:", typeof decryptedNamePayload, ")");
-
           if (decryptedNamePayload && typeof decryptedNamePayload === 'object' && 'value' in decryptedNamePayload && typeof (decryptedNamePayload as { value: unknown }).value === 'string') {
             actualName = (decryptedNamePayload as { value: string }).value;
-            console.log("LoginUser action: Successfully extracted name:", actualName);
-          } else {
-            console.warn("LoginUser action: Failed to extract name. Decrypted payload was not an object with a 'value' string property. Payload:", decryptedNamePayload);
           }
 
-          // Decrypt and extract Email
           const rawEmailFromApi = validatedApiUserData.data.email.value;
-          console.log("LoginUser action: Raw email value from API:", rawEmailFromApi);
           const decryptedEmailPayload = decryptDataAES(rawEmailFromApi);
-          console.log("LoginUser action: Decrypted email payload:", JSON.stringify(decryptedEmailPayload, null, 2), "(Type:", typeof decryptedEmailPayload, ")");
-
           if (decryptedEmailPayload && typeof decryptedEmailPayload === 'object' && 'value' in decryptedEmailPayload && typeof (decryptedEmailPayload as { value: unknown }).value === 'string') {
             actualEmail = (decryptedEmailPayload as { value: string }).value;
-            console.log("LoginUser action: Successfully extracted email:", actualEmail);
-          } else {
-            console.warn("LoginUser action: Failed to extract email. Decrypted payload was not an object with a 'value' string property. Payload:", decryptedEmailPayload);
           }
-
-          // Decrypt and extract User ID
+          
           const rawIdFromApi = validatedApiUserData.data.id;
-          console.log("LoginUser action: Raw ID value from API:", rawIdFromApi);
-          // Assuming rawIdFromApi is a string JSON like {"iv":"...", "data":"..."}
-          const decryptedId = forceDecryptStringAES(rawIdFromApi);
+          const decryptedId = forceDecryptStringAES(rawIdFromApi); // ID is directly encrypted string
           if (decryptedId) {
             actualId = decryptedId;
-            console.log("LoginUser action: Successfully decrypted ID:", actualId);
           } else {
-            console.warn("LoginUser action: Failed to decrypt ID from API. Using raw value as fallback. Raw ID was:", rawIdFromApi);
-            actualId = rawIdFromApi; // Fallback to using the (potentially encrypted) ID as is
+            actualId = rawIdFromApi; // Fallback if decryption fails, though unlikely if encryption was successful
           }
 
 
@@ -373,20 +371,15 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             if (!actualEmail) errorDetail += "email ";
             if (!actualId) errorDetail += "ID ";
             errorDetail = errorDetail.trim().replace(/ /g, ', ');
-
-            const fullErrorMessage = `No se pudieron procesar los detalles del usuario. Falló la extracción o desencriptación de: ${errorDetail}. Esto puede deberse a una estructura de datos inesperada o a un fallo en la desencriptación. Revisa la consola del servidor para más detalles.`;
+            const fullErrorMessage = `No se pudieron procesar los detalles del usuario. Falló la extracción o desencriptación de: ${errorDetail}.`;
             console.warn("LoginUser action: Extraction/Decryption failed. Name:", actualName, "Email:", actualEmail, "ID:", actualId);
-
             return {
               message: "Error al procesar datos de usuario del servicio externo.",
               errors: { _form: [fullErrorMessage] },
               user: null,
-              debugLoginApiUrl: generatedApiUrl,
+              debugLoginApiUrl: generatedLoginApiUrl,
+              fetchedEmotionalEntries: null,
             };
-          }
-
-          if (actualEmail.toLowerCase() !== email.toLowerCase()) {
-            console.warn(`LoginUser action: Decrypted email (${actualEmail}) does not match login email (${email}). Potential issue.`);
           }
 
           const userFromApi: ActionUser = {
@@ -397,65 +390,110 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             gender: validatedApiUserData.data.gender || null,
             initialEmotionalState: validatedApiUserData.data.initialEmotionalState || null,
           };
-          console.log("LoginUser action: External API reported 'OK', data validated, fields extracted/decrypted. Login successful.");
+          console.log("LoginUser action: User login successful. Now fetching activities...");
+
+          // --- Fetch emotional activities ---
+          let fetchedEntries: EmotionalEntry[] | null = null;
+          try {
+            const encryptedUserIdForActivities = forceEncryptStringAES(actualId);
+            const activitiesType = "getactividades";
+            const activitiesApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${activitiesType}&usuario=${encodeURIComponent(encryptedUserIdForActivities)}`;
+            console.log("LoginUser action: Fetching activities from URL:", activitiesApiUrl.substring(0,150) + "...");
+
+            const activitiesSignal = AbortSignal.timeout(API_TIMEOUT_MS);
+            const activitiesResponse = await fetch(activitiesApiUrl, { signal: activitiesSignal });
+            const activitiesResponseText = await activitiesResponse.text();
+            console.log("LoginUser action: Activities API call status:", activitiesResponse.status, "Raw Response Text:", activitiesResponseText);
+
+            if (activitiesResponse.ok) {
+              const activitiesApiResult: ExternalApiResponse = JSON.parse(activitiesResponseText);
+              if (activitiesApiResult.status === "OK" && activitiesApiResult.data) {
+                const decryptedActivitiesData = decryptDataAES(activitiesApiResult.data as string); // Assuming data is an encrypted string
+                if (decryptedActivitiesData && Array.isArray(decryptedActivitiesData)) {
+                   const validationResult = FetchedEmotionalEntriesSchema.safeParse(decryptedActivitiesData);
+                   if (validationResult.success) {
+                     fetchedEntries = validationResult.data;
+                     console.log("LoginUser action: Successfully fetched and validated emotional entries:", fetchedEntries.length, "entries.");
+                   } else {
+                     console.warn("LoginUser action: Fetched emotional entries validation failed:", validationResult.error.flatten());
+                   }
+                } else {
+                  console.warn("LoginUser action: Decrypted activities data is not an array or is null. Data:", decryptedActivitiesData);
+                }
+              } else {
+                console.warn("LoginUser action: Activities API reported 'NOOK' or missing data. Message:", activitiesApiResult.message);
+              }
+            } else {
+              console.warn("LoginUser action: Failed to fetch activities. Status:", activitiesResponse.status, "Response:", activitiesResponseText);
+            }
+          } catch (activitiesError: any) {
+            console.error("LoginUser action: Error fetching/processing emotional activities:", activitiesError.message);
+            // Non-critical, login succeeds, but entries might be missing.
+          }
+          // --- End fetching emotional activities ---
+
           return {
             message: "Inicio de sesión exitoso.",
             user: userFromApi,
-            debugLoginApiUrl: generatedApiUrl,
+            debugLoginApiUrl: generatedLoginApiUrl,
+            fetchedEmotionalEntries: fetchedEntries,
           };
+
         } else {
-          console.warn("LoginUser action: External API reported 'OK' but user data from API is invalid/incomplete after Zod validation.", validatedApiUserData.error.flatten().fieldErrors, "Received data:", apiResult.data);
+          console.warn("LoginUser action: External API reported 'OK' but user data invalid.", validatedApiUserData.error.flatten().fieldErrors, "Data:", loginApiResult.data);
           return {
-            message: "Respuesta de inicio de sesión incompleta o inválida del servicio externo (post-validación Zod).",
-            errors: { _form: ["El servicio externo devolvió datos de usuario que no pasaron la validación de formato: " + JSON.stringify(validatedApiUserData.error.flatten().fieldErrors)] },
+            message: "Respuesta de inicio de sesión incompleta del servicio externo.",
+            errors: { _form: ["El servicio externo devolvió datos de usuario no válidos: " + JSON.stringify(validatedApiUserData.error.flatten().fieldErrors)] },
             user: null,
-            debugLoginApiUrl: generatedApiUrl,
+            debugLoginApiUrl: generatedLoginApiUrl,
+            fetchedEmotionalEntries: null,
           };
         }
       } else {
-         console.warn("LoginUser action: External API reported 'OK' but 'data' field is null or missing. Cannot complete login.");
+         console.warn("LoginUser action: External API reported 'OK' but 'data' is null/missing.");
           return {
             message: "El servicio de inicio de sesión no devolvió los datos del usuario.",
-            errors: { _form: ["El servicio externo no proporcionó la información necesaria para iniciar sesión."] },
+            errors: { _form: ["El servicio externo no proporcionó la información necesaria."] },
             user: null,
-            debugLoginApiUrl: generatedApiUrl,
+            debugLoginApiUrl: generatedLoginApiUrl,
+            fetchedEmotionalEntries: null,
           };
       }
-    } else if (apiResult.status === "NOOK") {
-      console.warn("LoginUser action: External API reported 'NOOK'. Message:", apiResult.message);
+    } else if (loginApiResult.status === "NOOK") {
+      console.warn("LoginUser action: External API reported 'NOOK'. Message:", loginApiResult.message);
       return {
-        message: apiResult.message || "Credenciales inválidas o error del servicio externo.",
-        errors: { _form: [apiResult.message || "No se pudo iniciar sesión con el servicio externo."] },
+        message: loginApiResult.message || "Credenciales inválidas o error del servicio.",
+        errors: { _form: [loginApiResult.message || "No se pudo iniciar sesión."] },
         user: null,
-        debugLoginApiUrl: generatedApiUrl,
+        debugLoginApiUrl: generatedLoginApiUrl,
+        fetchedEmotionalEntries: null,
       };
 
     } else {
-      console.warn("LoginUser action: External API reported an unknown status.", apiResult);
+      console.warn("LoginUser action: External API reported an unknown status.", loginApiResult);
       return {
         message: "Respuesta desconocida del servicio de inicio de sesión externo.",
         errors: { _form: ["El servicio externo devolvió un estado inesperado."] },
         user: null,
-        debugLoginApiUrl: generatedApiUrl,
+        debugLoginApiUrl: generatedLoginApiUrl,
+        fetchedEmotionalEntries: null,
       };
     }
 
   } catch (error: any) {
-    console.warn("LoginUser action: Error during external API call or processing:", error);
+    console.warn("LoginUser action: Error during API call or processing:", error);
     let errorMessage = "Ocurrió un error inesperado durante el inicio de sesión.";
-
     if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = "No se pudo conectar con el servicio de inicio de sesión (tiempo de espera agotado).";
-        console.warn("LoginUser action: API call timed out after", API_TIMEOUT_MS, "ms.");
     } else if (error.message && error.message.includes('fetch failed')) {
-        errorMessage = "Fallo en la comunicación con el servicio de inicio de sesión. Verifica tu conexión o el estado del servicio externo.";
+        errorMessage = "Fallo en la comunicación con el servicio de inicio de sesión.";
     }
-
     return {
       message: errorMessage,
       errors: { _form: [errorMessage] },
       user: null,
-      debugLoginApiUrl: generatedApiUrl,
+      debugLoginApiUrl: generatedLoginApiUrl,
+      fetchedEmotionalEntries: null,
     };
   }
 }
