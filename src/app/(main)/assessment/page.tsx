@@ -10,11 +10,26 @@ import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, TestTube2 } from 'lucide-react';
+import { RotateCcw, TestTube2, Link as LinkIcon, ShieldQuestion } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { assessmentDimensions } from '@/data/assessmentDimensions';
+import { encryptDataAES } from '@/lib/encryption'; // Import encryption utility
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
+
+// Constants for URL generation (mirroring auth.ts for now)
+// In a real scenario, these would be better managed, e.g., via environment variables or a shared config
+const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
+const API_KEY = "4463";
+
+
+interface AssessmentSavePayload {
+  userId: string;
+  rawAnswers: Record<string, number>;
+  aiInterpretation: InitialAssessmentOutput;
+  assessmentTimestamp: string;
+}
 
 export default function AssessmentPage() {
   const t = useTranslations();
@@ -23,9 +38,11 @@ export default function AssessmentPage() {
   const [assessmentResults, setAssessmentResults] = useState<InitialAssessmentOutput | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showQuestionnaire, setShowQuestionnaire] = useState(true);
+  const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null); // New state for the URL
 
   const handleSubmit = async (answers: Record<string, number>) => {
     setIsSubmitting(true);
+    setGeneratedSaveUrl(null); // Reset URL on new submission
     const result: ServerAssessmentResult = await submitAssessment(answers);
     setIsSubmitting(false);
 
@@ -36,6 +53,30 @@ export default function AssessmentPage() {
         title: "Evaluación Completada",
         description: "Tus resultados están listos.",
       });
+
+      // Generate the save URL
+      if (user && user.id) {
+        const assessmentTimestamp = new Date().toISOString();
+        const payloadToSave: AssessmentSavePayload = {
+          userId: user.id,
+          rawAnswers: answers,
+          aiInterpretation: result.data,
+          assessmentTimestamp: assessmentTimestamp,
+        };
+
+        try {
+          const encryptedPayload = encryptDataAES(payloadToSave);
+          const saveUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardarevaluacion&datosEvaluacion=${encodeURIComponent(encryptedPayload)}`;
+          setGeneratedSaveUrl(saveUrl);
+          console.log("Generated Assessment Save URL:", saveUrl);
+        } catch (encError) {
+          console.error("Error encrypting assessment payload:", encError);
+          setGeneratedSaveUrl(t.errorOccurred + " (encryption failed)");
+        }
+      } else {
+        setGeneratedSaveUrl(t.errorOccurred + " (User ID not available)");
+      }
+
     } else {
       toast({
         title: t.errorOccurred,
@@ -48,6 +89,7 @@ export default function AssessmentPage() {
   const handleRetakeAssessment = () => {
     setAssessmentResults(null);
     setShowQuestionnaire(true);
+    setGeneratedSaveUrl(null); // Clear URL when retaking
   };
 
   const handleDevSubmit = async () => {
@@ -64,8 +106,28 @@ export default function AssessmentPage() {
 
   if (!showQuestionnaire && assessmentResults) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-8 space-y-8">
         <AssessmentResultsDisplay results={assessmentResults} />
+        
+        {generatedSaveUrl && (
+           <Card className="mt-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
+            <CardHeader>
+              <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
+                <ShieldQuestion className="mr-2 h-5 w-5" />
+                {t.generatedAssessmentSaveUrlLabel || "URL de Guardado de Evaluación (Solo para Depuración)"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs text-muted-foreground mb-2">
+                Esta URL se genera para mostrar cómo se enviarían los datos. No se envía automáticamente.
+              </p>
+              <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                <code>{generatedSaveUrl}</code>
+              </pre>
+            </CardContent>
+          </Card>
+        )}
+
         <div className="mt-8 text-center">
           <Button onClick={handleRetakeAssessment} variant="outline">
             <RotateCcw className="mr-2 h-4 w-4" />

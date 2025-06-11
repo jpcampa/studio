@@ -73,6 +73,8 @@ export const t = {
   scoreLevelMedium: "Medio",
   scoreLevelHigh: "Alto",
   scoreLevelVeryHigh: "Muy Alto",
+  generatedAssessmentSaveUrlLabel: "URL de Guardado de Evaluación (Solo para Depuración)",
+
 
   // Paths
   pathsTitle: "Rutas de Desarrollo",
