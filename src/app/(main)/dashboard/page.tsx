@@ -73,7 +73,7 @@ export default function DashboardPage() {
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   
-  const [userActivityForDisplay, setUserActivityForDisplay] = useState<string | null>(null);
+  const [userActivityForDisplay, setUserActivityForDisplay] = useState<string | null>(null); // Stores the UNENCRYPTED { entry: newEntry } object as JSON string
   const [outputOfEncryptFunctionForTest, setOutputOfEncryptFunctionForTest] = useState<string | null>(null);
   const [outputOfDecryptFunctionForTest, setOutputOfDecryptFunctionForTest] = useState<string | null>(null);
   
@@ -81,7 +81,7 @@ export default function DashboardPage() {
   const [debugLoginApiUrl, setDebugLoginApiUrl] = useState<string | null>(null);
   const [debugDeleteApiUrl, setDebugDeleteApiUrl] = useState<string | null>(null);
   const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
-  const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null);
+  const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null); // Stores the full ENCRYPTED URL
   const [rawUserObjectForDebug, setRawUserObjectForDebug] = useState<string | null>(null);
   const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
 
@@ -301,11 +301,14 @@ export default function DashboardPage() {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
     }
 
+    // This now correctly holds the UNENCRYPTED payload for display
     const singleEntryPayload: SingleEmotionalEntryActivity = { entry: newEntry };
+    setUserActivityForDisplay(JSON.stringify(singleEntryPayload, null, 2)); 
     
-    setUserActivityForDisplay(JSON.stringify(singleEntryPayload, null, 2));
+    // This correctly holds the ENCRYPTED version of singleEntryPayload for display
     setOutputOfEncryptFunctionForTest(encryptDataAES(singleEntryPayload)); 
     
+    // This correctly generates the full URL with the ENCRYPTED singleEntryPayload and ENCRYPTED userID
     const currentActivityApiUrl = generateUserActivityApiUrl(newEntry, userIdFromContext);
     setDebugUserActivityApiUrl(currentActivityApiUrl); 
 
@@ -508,7 +511,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Activity className="mr-2 h-4 w-4" />
-                  Payload JSON para 'datosactividad' (Nueva Entrada Emocional):
+                  Payload JSON (Objeto <code>{"{ entry: ... }"}</code>) que se encriptará para 'datosactividad' (Nueva Entrada):
                 </p>
                 {userActivityForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
@@ -518,7 +521,7 @@ export default function DashboardPage() {
                   <p className="text-xs italic text-muted-foreground">[Payload de nueva entrada no disponible o cargando...]</p>
                 )}
                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Este payload contiene el objeto <code>{"{ entry: ... }"}</code> con la última entrada emocional registrada. Este objeto es el que se encripta y se envía en el parámetro <code>datosactividad</code>. El ID del usuario se envía por separado en el parámetro <code>userID</code> de la URL.
+                    Nota: Este es el objeto JSON que se pasa a <code>encryptDataAES</code> para generar el valor del parámetro <code>datosactividad</code> en la URL. La URL completa (con el payload encriptado y el <code>userID</code>) se muestra en otra sección de depuración si está disponible.
                   </p>
               </div>
               <Separator />
