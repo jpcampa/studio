@@ -833,8 +833,18 @@ export async function fetchUserActivities(
           console.log("fetchUserActivities: Successfully validated fetched/decrypted emotional entries:", validationResult.data.length, "entries.");
           return { success: true, entries: validationResult.data };
         } else {
-          console.warn("fetchUserActivities: Fetched/decrypted emotional entries validation failed:", validationResult.error.flatten());
-          return { success: false, error: "Datos de actividades recibidos no son válidos." };
+          const zodErrorDetails = validationResult.error.flatten();
+          let errorSummary = "Error de validación.";
+          if (zodErrorDetails.formErrors.length > 0) {
+            errorSummary = zodErrorDetails.formErrors.join(", ");
+          } else if (Object.keys(zodErrorDetails.fieldErrors).length > 0) {
+            // Take the first field error as an example
+            const firstFieldErrorKey = Object.keys(zodErrorDetails.fieldErrors)[0];
+            const firstFieldErrorMessage = (zodErrorDetails.fieldErrors as Record<string, string[]|undefined>)[firstFieldErrorKey]?.[0];
+            errorSummary = `Error en campo '${firstFieldErrorKey}': ${firstFieldErrorMessage}`;
+          }
+          console.warn("fetchUserActivities: Fetched/decrypted emotional entries validation failed:", zodErrorDetails);
+          return { success: false, error: `Datos de actividades recibidos no son válidos. Detalle: ${errorSummary.substring(0,150)} (Revise consola del servidor para más info)` };
         }
       } else {
          console.warn("fetchUserActivities: No valid array of entries obtained after processing API data.");
