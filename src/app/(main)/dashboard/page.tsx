@@ -86,7 +86,7 @@ export default function DashboardPage() {
   const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
 
 
-  const generateApiUrlWithParams = (type: string, params: Record<string, any>): string => {
+  const generateApiUrlWithParams = useCallback((type: string, params: Record<string, any>): string => {
     const encodedParams = Object.entries(params)
       .map(([key, valueObj]) => {
         const payloadString = encryptDataAES(valueObj); 
@@ -94,29 +94,29 @@ export default function DashboardPage() {
       })
       .join('&');
     return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
-  };
+  }, []);
 
-  const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdFromContext?: string | null): string => {
+  const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
     console.log("DashboardPage (generateUserActivityApiUrl): Generating URL for new entry:", JSON.stringify(newEntryData).substring(0,200) + "...");
-    console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdFromContext (para parámetro userID):", userIdFromContext);
+    console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdForUrlParam (para parámetro userID):", userIdForUrlParam);
     
     const activityPayload: SingleEmotionalEntryActivity = { entry: newEntryData };
     const jsonPayloadForDatosActividad = encryptDataAES(activityPayload); 
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
     console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad para nueva entrada):", url.substring(0, 200) + "...");
 
-    if (userIdFromContext && typeof userIdFromContext === 'string' && userIdFromContext.trim() !== '') {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es válido. Procediendo a encriptar para parámetro userID.");
+    if (userIdForUrlParam && typeof userIdForUrlParam === 'string' && userIdForUrlParam.trim() !== '') {
+      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es válido. Procediendo a encriptar para parámetro userID.");
       try {
-        const encryptedDirectUserId = forceEncryptStringAES(userIdFromContext);
-        console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdFromContext (parámetro userID):", encryptedDirectUserId);
+        const encryptedDirectUserId = forceEncryptStringAES(userIdForUrlParam);
+        console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdForUrlParam (parámetro userID):", encryptedDirectUserId);
         url += `&userID=${encodeURIComponent(encryptedDirectUserId)}`;
         console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
       } catch (encError) {
-         console.error("DashboardPage (generateUserActivityApiUrl): Error encriptando userIdFromContext con forceEncryptStringAES:", encError);
+         console.error("DashboardPage (generateUserActivityApiUrl): Error encriptando userIdForUrlParam con forceEncryptStringAES:", encError);
       }
     } else {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdFromContext es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdFromContext:", userIdFromContext);
+      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdForUrlParam:", userIdForUrlParam);
     }
     return url;
   }, []);
@@ -199,11 +199,11 @@ export default function DashboardPage() {
       return;
     }
     
-    if (!user || !user.id) { // Check specifically for user.id here as well for the example payload
+    if (!user || !user.id) { 
         console.warn("DashboardPage (Activity Summary UE): User context or user.id is null/undefined. Skipping user activity summary and URL generation for example payload.");
         setUserActivityForDisplay("Usuario no disponible o ID de usuario faltante. No se pueden generar datos de actividad de ejemplo.");
         setOutputOfEncryptFunctionForTest("Usuario no disponible o ID de usuario faltante.");
-        setDebugUserActivityApiUrl(null); // Don't generate a URL if no user.id
+        setDebugUserActivityApiUrl(null); 
         return;
     }
 
@@ -365,12 +365,10 @@ export default function DashboardPage() {
             errorMessage = "Tiempo de espera agotado al guardar la emoción en el servidor.";
             errorType = "TimeoutError";
         } else if (error instanceof TypeError && error.message.toLowerCase().includes('failed to fetch')) {
-            // This is often CORS or network path issue
             errorMessage = "Fallo al contactar el servidor (Failed to fetch). Posible problema de CORS o red. Revisa la consola del navegador.";
             errorType = "FetchSetupOrCORSError";
         }
         
-        // Enhanced console logging
         console.error(`DashboardPage (handleEmotionalEntrySubmit): Error during API call to save new entry. Type: ${errorType}`);
         console.error("Error Name:", error.name);
         console.error("Error Message:", error.message);
