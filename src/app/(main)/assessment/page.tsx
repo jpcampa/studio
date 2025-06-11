@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, TestTube2, Link as LinkIcon, ShieldQuestion } from 'lucide-react';
+import { RotateCcw, TestTube2, ShieldQuestion } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { assessmentDimensions } from '@/data/assessmentDimensions';
 import { encryptDataAES } from '@/lib/encryption'; // Import encryption utility
@@ -18,13 +18,13 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
 
-// Constants for URL generation (mirroring auth.ts for now)
-// In a real scenario, these would be better managed, e.g., via environment variables or a shared config
+// Constants for URL generation
 const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY = "4463";
 
 
 interface AssessmentSavePayload {
+  assessmentId: string; // Nuevo campo para el ID único de la evaluación
   userId: string;
   rawAnswers: Record<string, number>;
   aiInterpretation: InitialAssessmentOutput;
@@ -38,11 +38,11 @@ export default function AssessmentPage() {
   const [assessmentResults, setAssessmentResults] = useState<InitialAssessmentOutput | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showQuestionnaire, setShowQuestionnaire] = useState(true);
-  const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null); // New state for the URL
+  const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
 
   const handleSubmit = async (answers: Record<string, number>) => {
     setIsSubmitting(true);
-    setGeneratedSaveUrl(null); // Reset URL on new submission
+    setGeneratedSaveUrl(null); 
     const result: ServerAssessmentResult = await submitAssessment(answers);
     setIsSubmitting(false);
 
@@ -54,10 +54,12 @@ export default function AssessmentPage() {
         description: "Tus resultados están listos.",
       });
 
-      // Generate the save URL
       if (user && user.id) {
         const assessmentTimestamp = new Date().toISOString();
+        const assessmentId = crypto.randomUUID(); // Generar ID único para esta instancia de evaluación
+
         const payloadToSave: AssessmentSavePayload = {
+          assessmentId: assessmentId,
           userId: user.id,
           rawAnswers: answers,
           aiInterpretation: result.data,
@@ -65,6 +67,7 @@ export default function AssessmentPage() {
         };
 
         try {
+          console.log("Payload a encriptar para guardar evaluación:", payloadToSave);
           const encryptedPayload = encryptDataAES(payloadToSave);
           const saveUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardarevaluacion&datosEvaluacion=${encodeURIComponent(encryptedPayload)}`;
           setGeneratedSaveUrl(saveUrl);
@@ -89,14 +92,14 @@ export default function AssessmentPage() {
   const handleRetakeAssessment = () => {
     setAssessmentResults(null);
     setShowQuestionnaire(true);
-    setGeneratedSaveUrl(null); // Clear URL when retaking
+    setGeneratedSaveUrl(null); 
   };
 
   const handleDevSubmit = async () => {
     const randomAnswers: Record<string, number> = {};
     assessmentDimensions.forEach(dimension => {
       dimension.items.forEach(item => {
-        randomAnswers[item.id] = Math.floor(Math.random() * 5) + 1; // Random number between 1 and 5
+        randomAnswers[item.id] = Math.floor(Math.random() * 5) + 1; 
       });
     });
     await handleSubmit(randomAnswers);
@@ -119,7 +122,7 @@ export default function AssessmentPage() {
             </CardHeader>
             <CardContent>
               <p className="text-xs text-muted-foreground mb-2">
-                Esta URL se genera para mostrar cómo se enviarían los datos. No se envía automáticamente.
+                Esta URL se genera para mostrar cómo se enviarían los datos, incluyendo un `assessmentId` único. No se envía automáticamente.
               </p>
               <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
                 <code>{generatedSaveUrl}</code>
