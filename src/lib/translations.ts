@@ -132,7 +132,7 @@ export const t = {
   securitySettings: "Seguridad de la Cuenta",
 
   // Delete Account
-  deleteAccountSectionTitle: "Borrar mi usuario", // Changed from "Borrar mi cuenta"
+  deleteAccountSectionTitle: "Borrar mi usuario", 
   deleteAccountButtonLabel: "Dar de baja mi cuenta",
   deleteAccountPageTitle: "Confirmar Baja de Cuenta",
   deleteAccountWarningTitle: "¡Atención! Estás a punto de eliminar tu cuenta.",
@@ -216,10 +216,19 @@ export const t = {
   recentEmotionalEntriesTitle: "Mis Registros Emocionales Recientes",
   noRecentEntries: "Aún no tienes registros emocionales. ¡Anímate a crear el primero!",
   entryRegisteredOn: "Registrado el {date}:",
+  viewAllEntriesButton: "Ver todos los registros",
 
   // Mood Evolution Chart
   notEnoughDataForChart: "Registra al menos dos emociones para ver tu evolución.",
   moodScoreLabel: "Puntuación de Ánimo",
+
+  // Full Emotional History Page
+  fullEmotionalHistoryTitle: "Historial Emocional Completo",
+  backToDashboard: "Volver al Panel",
+  myEvolutionFullHistoryDescription: "Evolución completa de tu estado de ánimo a lo largo del tiempo.",
+  allEmotionalEntriesTitle: "Todos los Registros Emocionales",
+  allEmotionalEntriesDescription: "Aquí puedes ver todas tus entradas emocionales ordenadas por fecha.",
+  noEntriesYet: "Aún no tienes registros emocionales.",
 };
 
 export type Translations = typeof t;

@@ -19,7 +19,7 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText, RefreshCw, Loader2 } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText, RefreshCw, Loader2, ArrowRight } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries, overwriteEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -29,6 +29,7 @@ import { type ActivePathDetails as StoredActivePathDetails, getCompletedModules 
 import { pathsData, type Path as AppPathData } from "@/data/pathsData";
 import { fetchUserActivities } from "@/actions/auth";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 
 interface ProcessedChartDataPoint {
@@ -60,6 +61,7 @@ const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
 const API_BASE_URL_FOR_DEBUG = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY_FOR_DEBUG = "4463";
 const API_TIMEOUT_MS_ACTIVITY = 10000;
+const NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD = 4;
 
 
 export default function DashboardPage() {
@@ -126,8 +128,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     console.log("DashboardPage UE [t, user, generateApiUrlWithParams] - START. User:", user ? user.id : "null");
-    const loadedRecentEntries = getRecentEmotionalEntries();
-    const loadedAllEntries = getEmotionalEntries(); // Reads from localStorage
+    const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
+    const loadedAllEntries = getEmotionalEntries(); 
 
     console.log("DashboardPage UE [t, user, generateApiUrlWithParams]: loadedAllEntries from localStorage (first 5 before setting state):", JSON.stringify(loadedAllEntries.slice(0,5)));
 
@@ -281,7 +283,7 @@ export default function DashboardPage() {
 
     const newEntry = addEmotionalEntry(data);
 
-    setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5));
+    setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD));
     setAllEntriesForChart(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
     const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
     if (lastRegisteredEmotionDetails) {
@@ -402,7 +404,7 @@ export default function DashboardPage() {
     if (result.success && result.entries) {
       console.log("DashboardPage (handleRefreshEmotions): Successfully fetched activities. Entries count:", result.entries.length);
       overwriteEmotionalEntries(result.entries);
-      const newRecent = getRecentEmotionalEntries();
+      const newRecent = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
       const newAll = getEmotionalEntries();
       console.log("DashboardPage (handleRefreshEmotions): Entries from localStorage after overwrite (newAll first 5):", JSON.stringify(newAll.slice(0,5)));
       setRecentEntries(newRecent);
@@ -731,7 +733,11 @@ export default function DashboardPage() {
               </CardContent>
                {recentEntries.length > 0 && (
                  <CardFooter className="justify-center pt-4">
-                    <Button variant="link" disabled>Ver todos los registros (próximamente)</Button>
+                    <Button variant="link" asChild>
+                        <Link href="/emotional-log">
+                            {t.viewAllEntriesButton || "Ver todos los registros"} <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </Button>
                 </CardFooter>
                )}
             </Card>
