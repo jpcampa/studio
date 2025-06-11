@@ -19,7 +19,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
@@ -73,7 +73,7 @@ export default function DashboardPage() {
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   
-  const [userActivityForDisplay, setUserActivityForDisplay] = useState<string | null>(null); // Stores the UNENCRYPTED { entry: newEntry } object as JSON string
+  const [userActivityPayloadForDisplay, setUserActivityPayloadForDisplay] = useState<string | null>(null);
   const [outputOfEncryptFunctionForTest, setOutputOfEncryptFunctionForTest] = useState<string | null>(null);
   const [outputOfDecryptFunctionForTest, setOutputOfDecryptFunctionForTest] = useState<string | null>(null);
   
@@ -81,7 +81,8 @@ export default function DashboardPage() {
   const [debugLoginApiUrl, setDebugLoginApiUrl] = useState<string | null>(null);
   const [debugDeleteApiUrl, setDebugDeleteApiUrl] = useState<string | null>(null);
   const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
-  const [debugUserActivityApiUrl, setDebugUserActivityApiUrl] = useState<string | null>(null); // Stores the full ENCRYPTED URL
+  const [debugUserActivityApiUrlEncrypted, setDebugUserActivityApiUrlEncrypted] = useState<string | null>(null); 
+  const [debugUserActivityApiUrlUnencrypted, setDebugUserActivityApiUrlUnencrypted] = useState<string | null>(null);
   const [rawUserObjectForDebug, setRawUserObjectForDebug] = useState<string | null>(null);
   const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
 
@@ -179,7 +180,8 @@ export default function DashboardPage() {
       setDebugLoginApiUrl(null);
       setDebugDeleteApiUrl(null);
       setDebugChangePasswordApiUrl(null);
-      setDebugUserActivityApiUrl(null);
+      setDebugUserActivityApiUrlEncrypted(null);
+      setDebugUserActivityApiUrlUnencrypted(null);
     }
   }, [t, isEmotionalDashboardEnabled, user, generateApiUrlWithParams]); 
 
@@ -193,45 +195,45 @@ export default function DashboardPage() {
     setRawUserIdForDebug(userIdFromContext || null);
 
     if (!isEmotionalDashboardEnabled) {
-      setUserActivityForDisplay(null);
+      setUserActivityPayloadForDisplay(null);
       setOutputOfEncryptFunctionForTest(null);
-      setDebugUserActivityApiUrl(null);
+      setDebugUserActivityApiUrlEncrypted(null);
+      setDebugUserActivityApiUrlUnencrypted(null);
       return;
     }
     
     if (!user || !user.id) { 
         console.warn("DashboardPage (Activity Summary UE): User context or user.id is null/undefined. Skipping user activity summary and URL generation for example payload.");
-        setUserActivityForDisplay("Usuario no disponible o ID de usuario faltante. No se pueden generar datos de actividad de ejemplo.");
+        setUserActivityPayloadForDisplay("Usuario no disponible o ID de usuario faltante. No se pueden generar datos de actividad de ejemplo.");
         setOutputOfEncryptFunctionForTest("Usuario no disponible o ID de usuario faltante.");
-        setDebugUserActivityApiUrl(null); 
+        setDebugUserActivityApiUrlEncrypted(null); 
+        setDebugUserActivityApiUrlUnencrypted(null);
         return;
     }
 
-    if (isEmotionalDashboardEnabled && recentEntries.length > 0) {
-      const exampleEntryForDisplay = recentEntries[0];
-      const examplePayload: SingleEmotionalEntryActivity = { entry: exampleEntryForDisplay };
+    const exampleEntry = recentEntries.length > 0 
+      ? recentEntries[0] 
+      : { id: "ejemplo-placeholder", situation: "Situación de ejemplo inicial", emotion: "alegria", timestamp: new Date().toISOString()};
+    
+    const examplePayload: SingleEmotionalEntryActivity = { entry: exampleEntry };
+    setUserActivityPayloadForDisplay(JSON.stringify(examplePayload, null, 2)); 
       
-      setUserActivityForDisplay(JSON.stringify(examplePayload, null, 2)); 
-      
-      try {
-        const outputOfEncryptCall = encryptDataAES(examplePayload); 
-        setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
-      } catch (error) {
-        console.error("Error processing example activity payload for test display:", error);
-        setOutputOfEncryptFunctionForTest("Error durante el procesamiento del payload de ejemplo.");
-      }
-      setDebugUserActivityApiUrl(generateUserActivityApiUrl(exampleEntryForDisplay, userIdFromContext)); 
-    } else if (isEmotionalDashboardEnabled) {
-        const placeholderEntry: EmotionalEntry = { id: "ejemplo", situation: "Situación de ejemplo", emotion: "alegria", timestamp: new Date().toISOString()};
-        const examplePayload: SingleEmotionalEntryActivity = { entry: placeholderEntry };
-        setUserActivityForDisplay(JSON.stringify(examplePayload, null, 2));
-        setOutputOfEncryptFunctionForTest(encryptDataAES(examplePayload));
-        setDebugUserActivityApiUrl(generateUserActivityApiUrl(placeholderEntry, userIdFromContext));
-    } else {
-      setUserActivityForDisplay(null);
-      setOutputOfEncryptFunctionForTest(null);
-      setDebugUserActivityApiUrl(null);
+    try {
+      const outputOfEncryptCall = encryptDataAES(examplePayload); 
+      setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
+    } catch (error) {
+      console.error("Error processing example activity payload for test display:", error);
+      setOutputOfEncryptFunctionForTest("Error durante el procesamiento del payload de ejemplo.");
     }
+
+    setDebugUserActivityApiUrlEncrypted(generateUserActivityApiUrl(exampleEntry, userIdFromContext)); 
+
+    let unencryptedUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(JSON.stringify(examplePayload))}`;
+    if (userIdFromContext) {
+      unencryptedUrl += `&userID=${encodeURIComponent(userIdFromContext)}`;
+    }
+    setDebugUserActivityApiUrlUnencrypted(unencryptedUrl);
+
     console.log("DashboardPage (Activity Summary UE): END.");
   }, [isEmotionalDashboardEnabled, user, currentActivePath, t, generateUserActivityApiUrl, recentEntries]); 
 
@@ -301,16 +303,18 @@ export default function DashboardPage() {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
     }
 
-    // This now correctly holds the UNENCRYPTED payload for display
     const singleEntryPayload: SingleEmotionalEntryActivity = { entry: newEntry };
-    setUserActivityForDisplay(JSON.stringify(singleEntryPayload, null, 2)); 
-    
-    // This correctly holds the ENCRYPTED version of singleEntryPayload for display
+    setUserActivityPayloadForDisplay(JSON.stringify(singleEntryPayload, null, 2)); 
     setOutputOfEncryptFunctionForTest(encryptDataAES(singleEntryPayload)); 
     
-    // This correctly generates the full URL with the ENCRYPTED singleEntryPayload and ENCRYPTED userID
-    const currentActivityApiUrl = generateUserActivityApiUrl(newEntry, userIdFromContext);
-    setDebugUserActivityApiUrl(currentActivityApiUrl); 
+    const currentEncryptedActivityApiUrl = generateUserActivityApiUrl(newEntry, userIdFromContext);
+    setDebugUserActivityApiUrlEncrypted(currentEncryptedActivityApiUrl); 
+
+    let unencryptedUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(JSON.stringify(singleEntryPayload))}`;
+    if (userIdFromContext) {
+      unencryptedUrl += `&userID=${encodeURIComponent(userIdFromContext)}`;
+    }
+    setDebugUserActivityApiUrlUnencrypted(unencryptedUrl);
 
     toast({
       title: t.emotionalEntrySavedTitle,
@@ -318,11 +322,11 @@ export default function DashboardPage() {
     });
     setIsEntryDialogOpen(false); 
 
-    if (currentActivityApiUrl) {
-      console.log("DashboardPage (handleEmotionalEntrySubmit): Sending NEW emotional entry to API:", currentActivityApiUrl.substring(0,150) + "...");
+    if (currentEncryptedActivityApiUrl) {
+      console.log("DashboardPage (handleEmotionalEntrySubmit): Sending NEW emotional entry to API:", currentEncryptedActivityApiUrl.substring(0,150) + "...");
       try {
         const signal = AbortSignal.timeout(API_TIMEOUT_MS_ACTIVITY);
-        const response = await fetch(currentActivityApiUrl, { signal });
+        const response = await fetch(currentEncryptedActivityApiUrl, { signal });
         const responseText = await response.text();
         if (response.ok) {
           let apiResult;
@@ -379,7 +383,7 @@ export default function DashboardPage() {
           console.error("Error Stack:", error.stack);
         }
         console.error("Full Error Object:", error);
-        console.error("URL attempted:", currentActivityApiUrl);
+        console.error("URL attempted:", currentEncryptedActivityApiUrl);
 
         toast({
           title: "Error de Conexión con API",
@@ -510,25 +514,25 @@ export default function DashboardPage() {
               <Separator />
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                  <Activity className="mr-2 h-4 w-4" />
+                  <FileText className="mr-2 h-4 w-4" />
                   Payload JSON (Objeto <code>{"{ entry: ... }"}</code>) que se encriptará para 'datosactividad' (Nueva Entrada):
                 </p>
-                {userActivityForDisplay ? (
+                {userActivityPayloadForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
-                    <code>{userActivityForDisplay}</code>
+                    <code>{userActivityPayloadForDisplay}</code>
                   </pre>
                 ) : (
                   <p className="text-xs italic text-muted-foreground">[Payload de nueva entrada no disponible o cargando...]</p>
                 )}
                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Este es el objeto JSON que se pasa a <code>encryptDataAES</code> para generar el valor del parámetro <code>datosactividad</code> en la URL. La URL completa (con el payload encriptado y el <code>userID</code>) se muestra en otra sección de depuración si está disponible.
+                    Nota: Este es el objeto JSON que se pasa a <code>encryptDataAES</code> para generar el valor del parámetro <code>datosactividad</code> en la URL.
                   </p>
               </div>
               <Separator />
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <Lock className="mr-2 h-4 w-4" />
-                  Resultado de `encryptDataAES` sobre el Payload de Nueva Entrada:
+                  Resultado de `encryptDataAES` sobre el Payload de Nueva Entrada (lo que va en `datosactividad`):
                 </p>
                 {outputOfEncryptFunctionForTest ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
@@ -555,6 +559,36 @@ export default function DashboardPage() {
                   Con la encriptación GLOBAL ACTIVADA, <code>decryptDataAES(cadena_encriptada_json)</code> intenta desencriptar la cadena (que debe ser un JSON con 'iv' y 'data') y luego parsear el resultado como JSON.
                 </p>
               </div>
+              <Separator />
+              {debugUserActivityApiUrlUnencrypted && (
+                <div>
+                  <p className="text-sm font-semibold mb-1 text-yellow-700 dark:text-yellow-300 flex items-center">
+                    <Send className="mr-2 h-4 w-4" />
+                     URL de API de Actividad (Depuración - SIN ENCRIPTAR AES):
+                  </p>
+                  <pre className="text-xs bg-yellow-50 dark:bg-yellow-900/30 p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner border border-yellow-300 dark:border-yellow-700">
+                    <code>{debugUserActivityApiUrlUnencrypted}</code>
+                  </pre>
+                   <p className="text-xs mt-1 text-muted-foreground">
+                    Nota: Esta URL muestra los parámetros `datosactividad` y `userID` en texto plano (solo codificados para URL) para depuración. La URL que realmente se envía está encriptada.
+                  </p>
+                </div>
+               )}
+               <Separator />
+               {debugUserActivityApiUrlEncrypted && (
+                <div>
+                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
+                    <ShieldQuestion className="mr-2 h-4 w-4" />
+                     URL de API para Guardar Actividad (Depuración - ENCRIPTADA AES - Realmente Enviada):
+                  </p>
+                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                    <code>{debugUserActivityApiUrlEncrypted}</code>
+                  </pre>
+                   <p className="text-xs mt-1 text-muted-foreground">
+                    Nota: El parámetro <code>datosactividad</code> contiene el payload de la nueva entrada encriptado con AES. El parámetro <code>userID</code> (si está presente) contiene el ID del usuario encriptado con AES. Esta URL se actualiza cada vez que se registra una nueva emoción.
+                  </p>
+                </div>
+               )}
               <Separator />
                {debugRegisterApiUrl && (
                 <div>
@@ -622,20 +656,6 @@ export default function DashboardPage() {
                   </pre>
                    <p className="text-xs mt-1 text-muted-foreground">
                     Nota: El parámetro `usuario` contiene un string JSON con 'iv' y 'data' (encriptación global AES activada). Generada usando el email del usuario actual (y contraseña de ejemplo) o datos de ejemplo si no hay sesión.
-                  </p>
-                </div>
-               )}
-               {debugUserActivityApiUrl && (
-                <div>
-                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                    <ShieldQuestion className="mr-2 h-4 w-4" />
-                     URL de API para Guardar Actividad (Depuración - Nueva Entrada):
-                  </p>
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{debugUserActivityApiUrl}</code>
-                  </pre>
-                   <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro <code>datosactividad</code> contiene un string JSON (con 'iv' y 'data') que es la encriptación AES del objeto <code>{"{ entry: ... }"}</code>. El parámetro <code>userID</code> (si está presente) contiene el ID del usuario encriptado directamente con AES. Esta URL se actualiza cada vez que se registra una nueva emoción.
                   </p>
                 </div>
                )}
