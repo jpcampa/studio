@@ -231,7 +231,9 @@ export default function DashboardPage() {
 
 
   const chartData = useMemo(() => {
+    console.log("DashboardPage chartData useMemo: allEntriesForChart INPUT (first 5):", JSON.stringify(allEntriesForChart.slice(0,5)));
     if (!allEntriesForChart || allEntriesForChart.length === 0) {
+      console.log("DashboardPage chartData useMemo: allEntriesForChart is empty or null.");
       return [];
     }
 
@@ -245,13 +247,18 @@ export default function DashboardPage() {
       .map(entry => {
         const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
         const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
+        const moodScore = moodScoreMapping[entry.emotion] ?? 0;
+        if (moodScoreMapping[entry.emotion] === undefined) {
+            console.warn(`MoodEvolutionChart Data Prep: Emotion string "${entry.emotion}" not found in moodScoreMapping. Defaulting to score 0.`);
+        }
         return {
           date: formatEntryTimestamp(entry.timestamp).split(',')[0], 
-          moodScore: moodScoreMapping[entry.emotion] ?? 0, 
+          moodScore: moodScore, 
           emotionLabel: emotionLabel,
           fullDate: formatEntryTimestamp(entry.timestamp),
         };
       });
+    console.log("DashboardPage chartData useMemo: processedData OUTPUT (first 5):", JSON.stringify(processedData.slice(0,5)));
     return processedData;
   }, [allEntriesForChart, t]);
 
@@ -512,7 +519,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
                   <FileText className="mr-2 h-4 w-4" />
-                  Payload JSON (Objeto <code>{"{ entry: ... }"}</code>) que se encriptará para 'datosactividad' (Nueva Entrada):
+                   Payload JSON (Objeto <code>{"{ entry: ... }"}</code>) que se encriptará para 'datosactividad' (Nueva Entrada):
                 </p>
                 {userActivityPayloadForDisplay ? (
                   <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">

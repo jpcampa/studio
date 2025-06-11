@@ -27,10 +27,10 @@ interface MoodEvolutionChartProps {
 
 export function MoodEvolutionChart({ data, title, description, className }: MoodEvolutionChartProps) {
   const t = useTranslations();
-  console.log("MoodEvolutionChart: Rendering. Received data count:", data.length, "Data:", data);
+  // console.log("MoodEvolutionChart: Rendering. Received data for chart props:", data);
 
   if (!data || data.length < 2) {
-    console.log("MoodEvolutionChart: Not enough data to render chart. Showing placeholder.");
+    console.log("MoodEvolutionChart: Not enough data (less than 2 points). Showing placeholder. Data received:", data);
     return (
         <Card className={`shadow-lg flex flex-col ${className}`}>
             <CardHeader>
@@ -50,6 +50,7 @@ export function MoodEvolutionChart({ data, title, description, className }: Mood
     );
   }
 
+  console.log("MoodEvolutionChart: Preparing to render chart with sufficient data:", data);
   const chartConfig = {
     moodScore: {
       label: t.moodScoreLabel, // Add this to translations.ts
