@@ -10,20 +10,20 @@ import { DashboardSummaryCard } from "@/components/dashboard/DashboardSummaryCar
 import { ChartPlaceholder } from "@/components/dashboard/ChartPlaceholder";
 import { EmotionalEntryForm, emotions as emotionOptions } from "@/components/dashboard/EmotionalEntryForm";
 import { MoodEvolutionChart } from "@/components/dashboard/MoodEvolutionChart";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText, RefreshCw, Loader2 } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries, overwriteEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription } from "@/components/ui/alert"; 
-import { encryptDataAES, decryptDataAES, forceEncryptStringAES } from "@/lib/encryption"; 
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { encryptDataAES, decryptDataAES, forceEncryptStringAES } from "@/lib/encryption";
 import { useActivePath } from "@/contexts/ActivePathContext";
 import { type ActivePathDetails as StoredActivePathDetails, getCompletedModules } from "@/lib/progressStore";
 import { pathsData, type Path as AppPathData } from "@/data/pathsData";
@@ -32,10 +32,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 
 interface ProcessedChartDataPoint {
-  date: string; 
+  date: string;
   moodScore: number;
   emotionLabel: string;
-  fullDate: string; 
+  fullDate: string;
 }
 
 interface SingleEmotionalEntryActivity {
@@ -57,31 +57,31 @@ const moodScoreMapping: Record<string, number> = {
 const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"+qlG7LRW9es5HVkyZb5qBw==","data":"XGFYeXI0c1YgbLsx0n1atZ1iEvvWztRUnCmHQmeSwtnG70CJC6OUq7qrCOP830RGaV15IqJtp13co1fEUnirCH6W4CDarwqQnBGstSwsTAA="}';
 const SESSION_STORAGE_REGISTER_URL_KEY = 'workwell-debug-register-url';
 const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
-const API_BASE_URL_FOR_DEBUG = "https://workwellfut.com/wp-content/programacion/wscontenido.php"; 
-const API_KEY_FOR_DEBUG = "4463"; 
-const API_TIMEOUT_MS_ACTIVITY = 10000; 
+const API_BASE_URL_FOR_DEBUG = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
+const API_KEY_FOR_DEBUG = "4463";
+const API_TIMEOUT_MS_ACTIVITY = 10000;
 
 
 export default function DashboardPage() {
   const t = useTranslations();
-  const { user } = useUser(); 
+  const { user } = useUser();
   const { toast } = useToast();
   const { activePath: currentActivePath } = useActivePath();
-  
+
   const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
-  
+
   const [userActivityPayloadForDisplay, setUserActivityPayloadForDisplay] = useState<string | null>(null);
   const [outputOfEncryptFunctionForTest, setOutputOfEncryptFunctionForTest] = useState<string | null>(null);
   const [outputOfDecryptFunctionForTest, setOutputOfDecryptFunctionForTest] = useState<string | null>(null);
-  
+
   const [debugRegisterApiUrl, setDebugRegisterApiUrl] = useState<string | null>(null);
   const [debugLoginApiUrl, setDebugLoginApiUrl] = useState<string | null>(null);
   const [debugDeleteApiUrl, setDebugDeleteApiUrl] = useState<string | null>(null);
   const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
-  const [debugUserActivityApiUrlEncrypted, setDebugUserActivityApiUrlEncrypted] = useState<string | null>(null); 
+  const [debugUserActivityApiUrlEncrypted, setDebugUserActivityApiUrlEncrypted] = useState<string | null>(null);
   const [debugUserActivityApiUrlUnencrypted, setDebugUserActivityApiUrlUnencrypted] = useState<string | null>(null);
   const [rawUserObjectForDebug, setRawUserObjectForDebug] = useState<string | null>(null);
   const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
@@ -91,7 +91,7 @@ export default function DashboardPage() {
   const generateApiUrlWithParams = useCallback((type: string, params: Record<string, any>): string => {
     const encodedParams = Object.entries(params)
       .map(([key, valueObj]) => {
-        const payloadString = encryptDataAES(valueObj); 
+        const payloadString = encryptDataAES(valueObj);
         return `${key}=${encodeURIComponent(payloadString)}`;
       })
       .join('&');
@@ -101,9 +101,9 @@ export default function DashboardPage() {
   const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
     console.log("DashboardPage (generateUserActivityApiUrl): Generating URL for new entry:", JSON.stringify(newEntryData).substring(0,200) + "...");
     console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdForUrlParam (para parámetro userID):", userIdForUrlParam);
-    
+
     const activityPayload: SingleEmotionalEntryActivity = { entry: newEntryData };
-    const jsonPayloadForDatosActividad = encryptDataAES(activityPayload); 
+    const jsonPayloadForDatosActividad = encryptDataAES(activityPayload);
     let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
     console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad para nueva entrada):", url.substring(0, 200) + "...");
 
@@ -125,9 +125,12 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
+    console.log("DashboardPage UE [t, user, generateApiUrlWithParams] - START. User:", user ? user.id : "null");
     const loadedRecentEntries = getRecentEmotionalEntries();
-    const loadedAllEntries = getEmotionalEntries();
-    
+    const loadedAllEntries = getEmotionalEntries(); // Reads from localStorage
+
+    console.log("DashboardPage UE [t, user, generateApiUrlWithParams]: loadedAllEntries from localStorage (first 5 before setting state):", JSON.stringify(loadedAllEntries.slice(0,5)));
+
     setRecentEntries(loadedRecentEntries);
     setAllEntriesForChart(loadedAllEntries);
 
@@ -162,8 +165,8 @@ export default function DashboardPage() {
       };
       setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
     }
-    
-    const currentUserEmailForSetup = user?.email; 
+
+    const currentUserEmailForSetup = user?.email;
     if (currentUserEmailForSetup) {
       setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: currentUserEmailForSetup } }));
       setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: currentUserEmailForSetup, newPassword: "nuevaPassword123" } }));
@@ -171,42 +174,43 @@ export default function DashboardPage() {
       setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
       setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
     }
-  }, [t, user, generateApiUrlWithParams]); 
+    console.log("DashboardPage UE [t, user, generateApiUrlWithParams] - END.");
+  }, [t, user, generateApiUrlWithParams]);
 
   useEffect(() => {
     console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
-    
+
     setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
-    
+
     const userIdFromContext = user?.id;
     console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
     setRawUserIdForDebug(userIdFromContext || null);
-    
-    if (!user || !user.id) { 
+
+    if (!user || !user.id) {
         console.warn("DashboardPage (Activity Summary UE): User context or user.id is null/undefined. Skipping user activity summary and URL generation for example payload.");
         setUserActivityPayloadForDisplay("Usuario no disponible o ID de usuario faltante. No se pueden generar datos de actividad de ejemplo.");
         setOutputOfEncryptFunctionForTest("Usuario no disponible o ID de usuario faltante.");
-        setDebugUserActivityApiUrlEncrypted(null); 
+        setDebugUserActivityApiUrlEncrypted(null);
         setDebugUserActivityApiUrlUnencrypted(null);
         return;
     }
 
-    const exampleEntry = recentEntries.length > 0 
-      ? recentEntries[0] 
+    const exampleEntry = recentEntries.length > 0
+      ? recentEntries[0]
       : { id: "ejemplo-placeholder", situation: "Situación de ejemplo inicial", emotion: "alegria", timestamp: new Date().toISOString()};
-    
+
     const examplePayload: SingleEmotionalEntryActivity = { entry: exampleEntry };
-    setUserActivityPayloadForDisplay(JSON.stringify(examplePayload, null, 2)); 
-      
+    setUserActivityPayloadForDisplay(JSON.stringify(examplePayload, null, 2));
+
     try {
-      const outputOfEncryptCall = encryptDataAES(examplePayload); 
+      const outputOfEncryptCall = encryptDataAES(examplePayload);
       setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
     } catch (error) {
       console.error("Error processing example activity payload for test display:", error);
       setOutputOfEncryptFunctionForTest("Error durante el procesamiento del payload de ejemplo.");
     }
 
-    setDebugUserActivityApiUrlEncrypted(generateUserActivityApiUrl(exampleEntry, userIdFromContext)); 
+    setDebugUserActivityApiUrlEncrypted(generateUserActivityApiUrl(exampleEntry, userIdFromContext));
 
     let unencryptedUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(JSON.stringify(examplePayload))}`;
     if (userIdFromContext) {
@@ -215,7 +219,7 @@ export default function DashboardPage() {
     setDebugUserActivityApiUrlUnencrypted(unencryptedUrl);
 
     console.log("DashboardPage (Activity Summary UE): END.");
-  }, [user, currentActivePath, t, generateUserActivityApiUrl, recentEntries]); 
+  }, [user, currentActivePath, t, generateUserActivityApiUrl, recentEntries]);
 
 
   useEffect(() => {
@@ -233,17 +237,17 @@ export default function DashboardPage() {
   const chartData = useMemo(() => {
     console.log("DashboardPage chartData useMemo: allEntriesForChart INPUT (first 5):", JSON.stringify(allEntriesForChart.slice(0,5)));
     if (!allEntriesForChart || allEntriesForChart.length === 0) {
-      console.log("DashboardPage chartData useMemo: allEntriesForChart is empty or null.");
+      console.log("DashboardPage chartData useMemo: allEntriesForChart is empty or null. Returning empty array for chart.");
       return [];
     }
 
     const processedData = allEntriesForChart
       .map(entry => ({
         ...entry,
-        timestampDate: new Date(entry.timestamp), 
+        timestampDate: new Date(entry.timestamp),
       }))
-      .sort((a, b) => a.timestampDate.getTime() - b.timestampDate.getTime()) 
-      .slice(-15) 
+      .sort((a, b) => a.timestampDate.getTime() - b.timestampDate.getTime())
+      .slice(-15)
       .map(entry => {
         const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
         const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
@@ -252,8 +256,8 @@ export default function DashboardPage() {
             console.warn(`MoodEvolutionChart Data Prep: Emotion string "${entry.emotion}" not found in moodScoreMapping. Defaulting to score 0.`);
         }
         return {
-          date: formatEntryTimestamp(entry.timestamp).split(',')[0], 
-          moodScore: moodScore, 
+          date: formatEntryTimestamp(entry.timestamp).split(',')[0],
+          moodScore: moodScore,
           emotionLabel: emotionLabel,
           fullDate: formatEntryTimestamp(entry.timestamp),
         };
@@ -275,9 +279,9 @@ export default function DashboardPage() {
     }
     const userIdFromContext = user.id;
 
-    const newEntry = addEmotionalEntry(data); 
-    
-    setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5)); 
+    const newEntry = addEmotionalEntry(data);
+
+    setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, 5));
     setAllEntriesForChart(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
     const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
     if (lastRegisteredEmotionDetails) {
@@ -285,11 +289,11 @@ export default function DashboardPage() {
     }
 
     const singleEntryPayload: SingleEmotionalEntryActivity = { entry: newEntry };
-    setUserActivityPayloadForDisplay(JSON.stringify(singleEntryPayload, null, 2)); 
-    setOutputOfEncryptFunctionForTest(encryptDataAES(singleEntryPayload)); 
-    
+    setUserActivityPayloadForDisplay(JSON.stringify(singleEntryPayload, null, 2));
+    setOutputOfEncryptFunctionForTest(encryptDataAES(singleEntryPayload));
+
     const currentEncryptedActivityApiUrl = generateUserActivityApiUrl(newEntry, userIdFromContext);
-    setDebugUserActivityApiUrlEncrypted(currentEncryptedActivityApiUrl); 
+    setDebugUserActivityApiUrlEncrypted(currentEncryptedActivityApiUrl);
 
     let unencryptedUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(JSON.stringify(singleEntryPayload))}`;
     if (userIdFromContext) {
@@ -301,7 +305,7 @@ export default function DashboardPage() {
       title: t.emotionalEntrySavedTitle,
       description: t.emotionalEntrySavedMessage,
     });
-    setIsEntryDialogOpen(false); 
+    setIsEntryDialogOpen(false);
 
     if (currentEncryptedActivityApiUrl) {
       console.log("DashboardPage (handleEmotionalEntrySubmit): Sending NEW emotional entry to API:", currentEncryptedActivityApiUrl.substring(0,150) + "...");
@@ -356,7 +360,7 @@ export default function DashboardPage() {
             errorMessage = "Fallo al contactar el servidor (Failed to fetch). Posible problema de CORS o red. Revisa la consola del navegador.";
             errorType = "FetchSetupOrCORSError";
         }
-        
+
         console.error(`DashboardPage (handleEmotionalEntrySubmit): Error during API call to save new entry. Type: ${errorType}`);
         console.error("Error Name:", error.name);
         console.error("Error Message:", error.message);
@@ -379,7 +383,7 @@ export default function DashboardPage() {
 
   const handleClearDebugUrl = (key: string, setter: React.Dispatch<React.SetStateAction<string | null>>, exampleUrlGenerator: () => string) => {
     sessionStorage.removeItem(key);
-    setter(exampleUrlGenerator()); 
+    setter(exampleUrlGenerator());
     toast({ title: "URL de prueba eliminada de SessionStorage", description: `Se ha regenerado la URL de ejemplo para ${key === SESSION_STORAGE_REGISTER_URL_KEY ? 'registro' : 'login'}.` });
   };
 
@@ -393,12 +397,16 @@ export default function DashboardPage() {
       return;
     }
     setIsRefreshingEmotions(true);
+    console.log("DashboardPage (handleRefreshEmotions): Fetching activities for user:", user.id);
     const result = await fetchUserActivities(user.id);
     if (result.success && result.entries) {
+      console.log("DashboardPage (handleRefreshEmotions): Successfully fetched activities. Entries count:", result.entries.length);
       overwriteEmotionalEntries(result.entries);
       const newRecent = getRecentEmotionalEntries();
+      const newAll = getEmotionalEntries();
+      console.log("DashboardPage (handleRefreshEmotions): Entries from localStorage after overwrite (newAll first 5):", JSON.stringify(newAll.slice(0,5)));
       setRecentEntries(newRecent);
-      setAllEntriesForChart(getEmotionalEntries());
+      setAllEntriesForChart(newAll);
       if (newRecent.length > 0) {
         const lastRegEmotion = emotionOptions.find(e => e.value === newRecent[0].emotion);
         setLastEmotion(lastRegEmotion ? (t[lastRegEmotion.labelKey as keyof typeof t] || lastRegEmotion.value) : null);
@@ -410,6 +418,7 @@ export default function DashboardPage() {
         description: "Se han cargado tus últimos registros emocionales.",
       });
     } else {
+      console.warn("DashboardPage (handleRefreshEmotions): Failed to fetch activities. Error:", result.error);
       toast({
         title: "Error al Refrescar",
         description: result.error || "No se pudieron obtener las emociones.",
@@ -418,7 +427,7 @@ export default function DashboardPage() {
     }
     setIsRefreshingEmotions(false);
   };
-  
+
   return (
     <div className="container mx-auto py-8 space-y-10">
       <div className="text-center md:text-left">
@@ -438,7 +447,7 @@ export default function DashboardPage() {
             icon={lastEmotion ? CheckCircle : Smile}
             cardColorClass={lastEmotion ? "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700" : "bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700" }
             iconColorClass={lastEmotion ? "text-green-600 dark:text-green-400" : "text-slate-600 dark:text-slate-400"}
-            ctaLink="/assessment" 
+            ctaLink="/assessment"
             ctaLabel={t.viewDetails}
           />
           <DashboardSummaryCard
@@ -494,7 +503,7 @@ export default function DashboardPage() {
                 <EmotionalEntryForm onSubmit={handleEmotionalEntrySubmit} />
               </DialogContent>
             </Dialog>
-            
+
             <div className="mt-6 p-4 border rounded-lg bg-muted/20 text-left max-w-2xl mx-auto space-y-4 shadow">
               <div>
                 <p className="text-sm font-semibold mb-1 text-primary flex items-center">
@@ -738,8 +747,8 @@ export default function DashboardPage() {
             icon={Radar}
             className="lg:h-[450px]"
           />
-          <MoodEvolutionChart 
-            data={chartData} 
+          <MoodEvolutionChart
+            data={chartData}
             title={t.myEvolution}
             description={t.myEvolutionDescription}
             className="lg:h-[450px]"
@@ -749,4 +758,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
