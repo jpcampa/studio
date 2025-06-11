@@ -393,47 +393,19 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
           console.log("LoginUser action: User login successful. Now fetching activities...");
 
           // --- Fetch emotional activities ---
+          const activitiesResult = await fetchUserActivities(actualId);
           let fetchedEntries: EmotionalEntry[] | null = null;
-          try {
-            const encryptedUserIdForActivities = forceEncryptStringAES(actualId);
-            const activitiesType = "getactividades";
-            const activitiesApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${activitiesType}&usuario=${encodeURIComponent(encryptedUserIdForActivities)}`;
-            console.log("LoginUser action: Fetching activities from URL:", activitiesApiUrl.substring(0,150) + "...");
-
-            const activitiesSignal = AbortSignal.timeout(API_TIMEOUT_MS);
-            const activitiesResponse = await fetch(activitiesApiUrl, { signal: activitiesSignal });
-            const activitiesResponseText = await activitiesResponse.text();
-            console.log("LoginUser action: Activities API call status:", activitiesResponse.status, "Raw Response Text:", activitiesResponseText);
-
-            if (activitiesResponse.ok) {
-              const activitiesApiResult: ExternalApiResponse = JSON.parse(activitiesResponseText);
-              if (activitiesApiResult.status === "OK" && activitiesApiResult.data) {
-                const decryptedActivitiesData = decryptDataAES(activitiesApiResult.data as string); // Assuming data is an encrypted string
-                if (decryptedActivitiesData && Array.isArray(decryptedActivitiesData)) {
-                   const validationResult = FetchedEmotionalEntriesSchema.safeParse(decryptedActivitiesData);
-                   if (validationResult.success) {
-                     fetchedEntries = validationResult.data;
-                     console.log("LoginUser action: Successfully fetched and validated emotional entries:", fetchedEntries.length, "entries.");
-                   } else {
-                     console.warn("LoginUser action: Fetched emotional entries validation failed:", validationResult.error.flatten());
-                   }
-                } else {
-                  console.warn("LoginUser action: Decrypted activities data is not an array or is null. Data:", decryptedActivitiesData);
-                }
-              } else {
-                console.warn("LoginUser action: Activities API reported 'NOOK' or missing data. Message:", activitiesApiResult.message);
-              }
-            } else {
-              console.warn("LoginUser action: Failed to fetch activities. Status:", activitiesResponse.status, "Response:", activitiesResponseText);
-            }
-          } catch (activitiesError: any) {
-            console.error("LoginUser action: Error fetching/processing emotional activities:", activitiesError.message);
+          if (activitiesResult.success && activitiesResult.entries) {
+            fetchedEntries = activitiesResult.entries;
+            console.log("LoginUser action: Successfully fetched and validated emotional entries via fetchUserActivities:", fetchedEntries.length, "entries.");
+          } else {
+            console.warn("LoginUser action: Failed to fetch emotional entries via fetchUserActivities. Error:", activitiesResult.error);
             // Non-critical, login succeeds, but entries might be missing.
           }
           // --- End fetching emotional activities ---
 
           return {
-            message: "Inicio de sesión exitoso.",
+            message: t.loginSuccessMessage,
             user: userFromApi,
             debugLoginApiUrl: generatedLoginApiUrl,
             fetchedEmotionalEntries: fetchedEntries,
@@ -798,6 +770,93 @@ export async function changePassword(
       success: false,
       debugChangePasswordApiUrl: generatedApiUrl,
     };
+  }
+}
+
+// --- Fetch User Activities ---
+export async function fetchUserActivities(
+  userId: string
+): Promise<{ success: boolean; entries?: EmotionalEntry[]; error?: string }> {
+  console.log(`fetchUserActivities action: Initiated for userId: ${userId}.`);
+
+  if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+    console.warn("fetchUserActivities action: Invalid or missing userId.");
+    return { success: false, error: "ID de usuario inválido." };
+  }
+
+  let encryptedUserIdForActivities: string;
+  try {
+    encryptedUserIdForActivities = forceEncryptStringAES(userId);
+  } catch (encError: any) {
+    console.error("fetchUserActivities action: Error encrypting userId:", encError);
+    return { success: false, error: "Error al preparar el ID de usuario para la solicitud." };
+  }
+
+  const activitiesType = "getactividades";
+  const activitiesApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${activitiesType}&usuario=${encodeURIComponent(encryptedUserIdForActivities)}`;
+  console.log("fetchUserActivities action: Fetching activities from URL:", activitiesApiUrl.substring(0, 150) + "...");
+
+  try {
+    const activitiesSignal = AbortSignal.timeout(API_TIMEOUT_MS); // Reusing API_TIMEOUT_MS
+    const activitiesResponse = await fetch(activitiesApiUrl, { signal: activitiesSignal });
+    const activitiesResponseText = await activitiesResponse.text();
+    console.log("fetchUserActivities action: API call status:", activitiesResponse.status, "Raw Response Text:", activitiesResponseText);
+
+    if (!activitiesResponse.ok) {
+      console.warn("fetchUserActivities action: Failed to fetch activities. Status:", activitiesResponse.status, "Response:", activitiesResponseText);
+      return { success: false, error: `Error del servidor de actividades (HTTP ${activitiesResponse.status}): ${activitiesResponseText.substring(0, 100)}` };
+    }
+
+    const activitiesApiResult: ExternalApiResponse = JSON.parse(activitiesResponseText);
+    if (activitiesApiResult.status === "OK" && activitiesApiResult.data !== undefined) { // Check data is not undefined
+      let potentialEntriesArray: any = null;
+
+      if (Array.isArray(activitiesApiResult.data)) {
+        console.log("fetchUserActivities: Data from API is already an array.");
+        potentialEntriesArray = activitiesApiResult.data;
+      } else if (typeof activitiesApiResult.data === 'string') {
+        console.log("fetchUserActivities: Data from API is a string, attempting decryption.");
+        const decrypted = decryptDataAES(activitiesApiResult.data);
+        if (decrypted && Array.isArray(decrypted)) {
+          console.log("fetchUserActivities: Successfully decrypted API data into an array.");
+          potentialEntriesArray = decrypted;
+        } else {
+          console.warn("fetchUserActivities: Decrypted API data is not an array or decryption failed. Decrypted data:", decrypted);
+        }
+      } else {
+        console.warn("fetchUserActivities: API data is neither an array nor a string. Data:", activitiesApiResult.data);
+      }
+
+      if (potentialEntriesArray) {
+        const validationResult = FetchedEmotionalEntriesSchema.safeParse(potentialEntriesArray);
+        if (validationResult.success) {
+          console.log("fetchUserActivities: Successfully validated fetched/decrypted emotional entries:", validationResult.data.length, "entries.");
+          return { success: true, entries: validationResult.data };
+        } else {
+          console.warn("fetchUserActivities: Fetched/decrypted emotional entries validation failed:", validationResult.error.flatten());
+          return { success: false, error: "Datos de actividades recibidos no son válidos." };
+        }
+      } else {
+         console.warn("fetchUserActivities: No valid array of entries obtained after processing API data.");
+         return { success: false, error: "No se pudieron procesar los datos de actividades." };
+      }
+    } else if (activitiesApiResult.status === "OK" && activitiesApiResult.data === undefined) {
+        console.log("fetchUserActivities: API reported 'OK' but 'data' field is undefined. Assuming no activities or empty list.");
+        return { success: true, entries: [] }; // Success, but no entries
+    }
+     else {
+      console.warn("fetchUserActivities: Activities API reported 'NOOK' or missing data. Message:", activitiesApiResult.message);
+      return { success: false, error: `El servidor de actividades indicó un problema: ${activitiesApiResult.message || 'Error desconocido.'}` };
+    }
+  } catch (error: any) {
+    console.error("fetchUserActivities action: Error during API call or processing:", error);
+    let errorMessage = "Error de red al obtener actividades.";
+    if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
+      errorMessage = "Tiempo de espera agotado al conectar con el servidor de actividades.";
+    } else if (error.message && error.message.includes('fetch failed')) {
+      errorMessage = "Fallo en la comunicación con el servidor de actividades.";
+    }
+    return { success: false, error: errorMessage };
   }
 }
 

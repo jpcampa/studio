@@ -19,15 +19,16 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText } from "lucide-react";
-import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText, RefreshCw, Loader2 } from "lucide-react";
+import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries, overwriteEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
-// import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; // No longer needed
 import { Alert, AlertDescription } from "@/components/ui/alert"; 
 import { encryptDataAES, decryptDataAES, forceEncryptStringAES } from "@/lib/encryption"; 
 import { useActivePath } from "@/contexts/ActivePathContext";
 import { type ActivePathDetails as StoredActivePathDetails, getCompletedModules } from "@/lib/progressStore";
 import { pathsData, type Path as AppPathData } from "@/data/pathsData";
+import { fetchUserActivities } from "@/actions/auth";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 interface ProcessedChartDataPoint {
@@ -65,7 +66,6 @@ export default function DashboardPage() {
   const t = useTranslations();
   const { user } = useUser(); 
   const { toast } = useToast();
-  // const { isEmotionalDashboardEnabled } = useFeatureFlag(); // No longer needed, dashboard is always enabled
   const { activePath: currentActivePath } = useActivePath();
   
   const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
@@ -85,6 +85,7 @@ export default function DashboardPage() {
   const [debugUserActivityApiUrlUnencrypted, setDebugUserActivityApiUrlUnencrypted] = useState<string | null>(null);
   const [rawUserObjectForDebug, setRawUserObjectForDebug] = useState<string | null>(null);
   const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
+  const [isRefreshingEmotions, setIsRefreshingEmotions] = useState(false);
 
 
   const generateApiUrlWithParams = useCallback((type: string, params: Record<string, any>): string => {
@@ -124,7 +125,6 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
-    // Emotional dashboard is always enabled now
     const loadedRecentEntries = getRecentEmotionalEntries();
     const loadedAllEntries = getEmotionalEntries();
     
@@ -181,8 +181,6 @@ export default function DashboardPage() {
     const userIdFromContext = user?.id;
     console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
     setRawUserIdForDebug(userIdFromContext || null);
-
-    // Emotional dashboard is always enabled
     
     if (!user || !user.id) { 
         console.warn("DashboardPage (Activity Summary UE): User context or user.id is null/undefined. Skipping user activity summary and URL generation for example payload.");
@@ -221,7 +219,6 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
-    // Emotional dashboard is always enabled
     const decryptedObjectOrString = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
     if (typeof decryptedObjectOrString === 'object' && decryptedObjectOrString !== null) {
       setOutputOfDecryptFunctionForTest(JSON.stringify(decryptedObjectOrString, null, 2));
@@ -234,7 +231,6 @@ export default function DashboardPage() {
 
 
   const chartData = useMemo(() => {
-    // Emotional dashboard is always enabled
     if (!allEntriesForChart || allEntriesForChart.length === 0) {
       return [];
     }
@@ -261,8 +257,6 @@ export default function DashboardPage() {
 
 
   const handleEmotionalEntrySubmit = async (data: { situation: string; emotion: string }) => {
-    // Emotional dashboard is always enabled
-
     if (!user || !user.id) {
       toast({
         title: "Error de Usuario",
@@ -381,6 +375,42 @@ export default function DashboardPage() {
     setter(exampleUrlGenerator()); 
     toast({ title: "URL de prueba eliminada de SessionStorage", description: `Se ha regenerado la URL de ejemplo para ${key === SESSION_STORAGE_REGISTER_URL_KEY ? 'registro' : 'login'}.` });
   };
+
+  const handleRefreshEmotions = async () => {
+    if (!user || !user.id) {
+      toast({
+        title: "Error de Usuario",
+        description: "No se puede refrescar sin un usuario identificado.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsRefreshingEmotions(true);
+    const result = await fetchUserActivities(user.id);
+    if (result.success && result.entries) {
+      overwriteEmotionalEntries(result.entries);
+      const newRecent = getRecentEmotionalEntries();
+      setRecentEntries(newRecent);
+      setAllEntriesForChart(getEmotionalEntries());
+      if (newRecent.length > 0) {
+        const lastRegEmotion = emotionOptions.find(e => e.value === newRecent[0].emotion);
+        setLastEmotion(lastRegEmotion ? (t[lastRegEmotion.labelKey as keyof typeof t] || lastRegEmotion.value) : null);
+      } else {
+        setLastEmotion(null);
+      }
+      toast({
+        title: "Emociones Actualizadas",
+        description: "Se han cargado tus últimos registros emocionales.",
+      });
+    } else {
+      toast({
+        title: "Error al Refrescar",
+        description: result.error || "No se pudieron obtener las emociones.",
+        variant: "destructive",
+      });
+    }
+    setIsRefreshingEmotions(false);
+  };
   
   return (
     <div className="container mx-auto py-8 space-y-10">
@@ -392,9 +422,7 @@ export default function DashboardPage() {
       </div>
 
       <section aria-labelledby="quick-summary-heading">
-        <h2 id="quick-summary-heading" className="text-2xl font-semibold text-accent mb-6">
-          {t.quickSummary}
-        </h2>
+        <h2 id="quick-summary-heading" className="sr-only">{t.quickSummary}</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <DashboardSummaryCard
             title={t.currentWellbeing}
@@ -438,8 +466,6 @@ export default function DashboardPage() {
           />
         </div>
       </section>
-
-      {/* Alert for disabled emotional dashboard removed as it's always enabled now */}
 
       <>
           <section aria-labelledby="emotional-registry-heading" className="text-center py-6">
@@ -636,10 +662,34 @@ export default function DashboardPage() {
           <section aria-labelledby="recent-entries-heading">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle className="text-xl font-semibold text-accent flex items-center">
-                    <NotebookPen className="mr-3 h-6 w-6" />
-                    {t.recentEmotionalEntriesTitle}
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl font-semibold text-accent flex items-center">
+                      <NotebookPen className="mr-3 h-6 w-6" />
+                      {t.recentEmotionalEntriesTitle}
+                  </CardTitle>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={handleRefreshEmotions}
+                          disabled={!user || !user.id || isRefreshingEmotions}
+                          aria-label="Refrescar emociones"
+                        >
+                          {isRefreshingEmotions ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <RefreshCw className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Refrescar lista de emociones</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </CardHeader>
               <CardContent>
                 {recentEntries.length > 0 ? (
@@ -692,3 +742,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
