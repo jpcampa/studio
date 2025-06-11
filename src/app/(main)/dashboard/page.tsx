@@ -22,7 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
-import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; 
+// import { useFeatureFlag } from "@/contexts/FeatureFlagContext"; // No longer needed
 import { Alert, AlertDescription } from "@/components/ui/alert"; 
 import { encryptDataAES, decryptDataAES, forceEncryptStringAES } from "@/lib/encryption"; 
 import { useActivePath } from "@/contexts/ActivePathContext";
@@ -65,7 +65,7 @@ export default function DashboardPage() {
   const t = useTranslations();
   const { user } = useUser(); 
   const { toast } = useToast();
-  const { isEmotionalDashboardEnabled } = useFeatureFlag(); 
+  // const { isEmotionalDashboardEnabled } = useFeatureFlag(); // No longer needed, dashboard is always enabled
   const { activePath: currentActivePath } = useActivePath();
   
   const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
@@ -124,66 +124,54 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
-    if (isEmotionalDashboardEnabled) {
-      const loadedRecentEntries = getRecentEmotionalEntries();
-      const loadedAllEntries = getEmotionalEntries();
-      
-      setRecentEntries(loadedRecentEntries);
-      setAllEntriesForChart(loadedAllEntries);
+    // Emotional dashboard is always enabled now
+    const loadedRecentEntries = getRecentEmotionalEntries();
+    const loadedAllEntries = getEmotionalEntries();
+    
+    setRecentEntries(loadedRecentEntries);
+    setAllEntriesForChart(loadedAllEntries);
 
-      if (loadedRecentEntries.length > 0) {
-        const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
-        if (lastRegisteredEmotion) {
-          setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
-        }
+    if (loadedRecentEntries.length > 0) {
+      const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
+      if (lastRegisteredEmotion) {
+        setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
       }
-
-      const storedRegisterUrl = sessionStorage.getItem(SESSION_STORAGE_REGISTER_URL_KEY);
-      if (storedRegisterUrl) {
-        setDebugRegisterApiUrl(storedRegisterUrl);
-      } else {
-        const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
-        const registerParams = {
-          usuario: exampleRegisterUser,
-          name: { value: exampleRegisterUser.name },
-          email: { value: exampleRegisterUser.email },
-          password: { value: "PasswordDeRegistro123" }
-        };
-        setDebugRegisterApiUrl(generateApiUrlWithParams("registro", registerParams));
-      }
-
-      const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
-      if (storedLoginUrl) {
-        setDebugLoginApiUrl(storedLoginUrl);
-      } else {
-        const loginParams = {
-          usuario: { email: "login@ejemplo.com" },
-          password: { value: "PasswordDeLogin123" }
-        };
-        setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
-      }
-      
-      const currentUserEmailForSetup = user?.email; 
-      if (currentUserEmailForSetup) {
-        setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: currentUserEmailForSetup } }));
-        setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: currentUserEmailForSetup, newPassword: "nuevaPassword123" } }));
-      } else {
-        setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
-        setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
-      }
-
-    } else {
-      setRecentEntries([]);
-      setAllEntriesForChart([]);
-      setLastEmotion(null);
-      setDebugRegisterApiUrl(null);
-      setDebugLoginApiUrl(null);
-      setDebugDeleteApiUrl(null);
-      setDebugChangePasswordApiUrl(null);
-      setDebugUserActivityApiUrlEncrypted(null);
-      setDebugUserActivityApiUrlUnencrypted(null);
     }
-  }, [t, isEmotionalDashboardEnabled, user, generateApiUrlWithParams]); 
+
+    const storedRegisterUrl = sessionStorage.getItem(SESSION_STORAGE_REGISTER_URL_KEY);
+    if (storedRegisterUrl) {
+      setDebugRegisterApiUrl(storedRegisterUrl);
+    } else {
+      const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
+      const registerParams = {
+        usuario: exampleRegisterUser,
+        name: { value: exampleRegisterUser.name },
+        email: { value: exampleRegisterUser.email },
+        password: { value: "PasswordDeRegistro123" }
+      };
+      setDebugRegisterApiUrl(generateApiUrlWithParams("registro", registerParams));
+    }
+
+    const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
+    if (storedLoginUrl) {
+      setDebugLoginApiUrl(storedLoginUrl);
+    } else {
+      const loginParams = {
+        usuario: { email: "login@ejemplo.com" },
+        password: { value: "PasswordDeLogin123" }
+      };
+      setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
+    }
+    
+    const currentUserEmailForSetup = user?.email; 
+    if (currentUserEmailForSetup) {
+      setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: currentUserEmailForSetup } }));
+      setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: currentUserEmailForSetup, newPassword: "nuevaPassword123" } }));
+    } else {
+      setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
+      setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
+    }
+  }, [t, user, generateApiUrlWithParams]); 
 
   useEffect(() => {
     console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
@@ -194,13 +182,7 @@ export default function DashboardPage() {
     console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
     setRawUserIdForDebug(userIdFromContext || null);
 
-    if (!isEmotionalDashboardEnabled) {
-      setUserActivityPayloadForDisplay(null);
-      setOutputOfEncryptFunctionForTest(null);
-      setDebugUserActivityApiUrlEncrypted(null);
-      setDebugUserActivityApiUrlUnencrypted(null);
-      return;
-    }
+    // Emotional dashboard is always enabled
     
     if (!user || !user.id) { 
         console.warn("DashboardPage (Activity Summary UE): User context or user.id is null/undefined. Skipping user activity summary and URL generation for example payload.");
@@ -235,27 +217,25 @@ export default function DashboardPage() {
     setDebugUserActivityApiUrlUnencrypted(unencryptedUrl);
 
     console.log("DashboardPage (Activity Summary UE): END.");
-  }, [isEmotionalDashboardEnabled, user, currentActivePath, t, generateUserActivityApiUrl, recentEntries]); 
+  }, [user, currentActivePath, t, generateUserActivityApiUrl, recentEntries]); 
 
 
   useEffect(() => {
-    if (isEmotionalDashboardEnabled) {
-      const decryptedObjectOrString = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
-      if (typeof decryptedObjectOrString === 'object' && decryptedObjectOrString !== null) {
-        setOutputOfDecryptFunctionForTest(JSON.stringify(decryptedObjectOrString, null, 2));
-      } else if (typeof decryptedObjectOrString === 'string') {
-        setOutputOfDecryptFunctionForTest(decryptedObjectOrString);
-      } else {
-        setOutputOfDecryptFunctionForTest("Error al procesar la cadena de prueba o resultado no esperado.");
-      }
+    // Emotional dashboard is always enabled
+    const decryptedObjectOrString = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
+    if (typeof decryptedObjectOrString === 'object' && decryptedObjectOrString !== null) {
+      setOutputOfDecryptFunctionForTest(JSON.stringify(decryptedObjectOrString, null, 2));
+    } else if (typeof decryptedObjectOrString === 'string') {
+      setOutputOfDecryptFunctionForTest(decryptedObjectOrString);
     } else {
-        setOutputOfDecryptFunctionForTest(null);
+      setOutputOfDecryptFunctionForTest("Error al procesar la cadena de prueba o resultado no esperado.");
     }
-  }, [isEmotionalDashboardEnabled]);
+  }, []);
 
 
   const chartData = useMemo(() => {
-    if (!isEmotionalDashboardEnabled || !allEntriesForChart || allEntriesForChart.length === 0) {
+    // Emotional dashboard is always enabled
+    if (!allEntriesForChart || allEntriesForChart.length === 0) {
       return [];
     }
 
@@ -277,11 +257,11 @@ export default function DashboardPage() {
         };
       });
     return processedData;
-  }, [allEntriesForChart, t, isEmotionalDashboardEnabled]);
+  }, [allEntriesForChart, t]);
 
 
   const handleEmotionalEntrySubmit = async (data: { situation: string; emotion: string }) => {
-    if (!isEmotionalDashboardEnabled) return;
+    // Emotional dashboard is always enabled
 
     if (!user || !user.id) {
       toast({
@@ -418,11 +398,11 @@ export default function DashboardPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <DashboardSummaryCard
             title={t.currentWellbeing}
-            value={isEmotionalDashboardEnabled && lastEmotion ? lastEmotion : t.wellbeingPlaceholder}
-            description={isEmotionalDashboardEnabled ? t.wellbeingDescription : ""}
-            icon={isEmotionalDashboardEnabled && lastEmotion ? CheckCircle : Smile}
-            cardColorClass={isEmotionalDashboardEnabled && lastEmotion ? "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700" : "bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700" }
-            iconColorClass={isEmotionalDashboardEnabled && lastEmotion ? "text-green-600 dark:text-green-400" : "text-slate-600 dark:text-slate-400"}
+            value={lastEmotion ? lastEmotion : t.wellbeingPlaceholder}
+            description={t.wellbeingDescription}
+            icon={lastEmotion ? CheckCircle : Smile}
+            cardColorClass={lastEmotion ? "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700" : "bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700" }
+            iconColorClass={lastEmotion ? "text-green-600 dark:text-green-400" : "text-slate-600 dark:text-slate-400"}
             ctaLink="/assessment" 
             ctaLabel={t.viewDetails}
           />
@@ -459,18 +439,9 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {!isEmotionalDashboardEnabled && (
-        <Alert variant="default" className="shadow-md bg-amber-50 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700">
-          <Info className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-          <AlertDescription className="text-amber-700 dark:text-amber-300">
-            {t.emotionalDashboardDisabledMessage}
-            {user?.email === 'jpcampa@example.com' && " Puedes activarlo en Configuración > Utilidades de Desarrollo."}
-          </AlertDescription>
-        </Alert>
-      )}
+      {/* Alert for disabled emotional dashboard removed as it's always enabled now */}
 
-      {isEmotionalDashboardEnabled && (
-        <>
+      <>
           <section aria-labelledby="emotional-registry-heading" className="text-center py-6">
             <h2 id="emotional-registry-heading" className="sr-only">{t.emotionalRegistry}</h2>
             <Dialog open={isEntryDialogOpen} onOpenChange={setIsEntryDialogOpen}>
@@ -700,7 +671,6 @@ export default function DashboardPage() {
             </Card>
           </section>
         </>
-      )}
 
       <section aria-labelledby="visualizations-heading">
         <h2 id="visualizations-heading" className="sr-only">Visualizaciones de Progreso</h2>
@@ -711,21 +681,12 @@ export default function DashboardPage() {
             icon={Radar}
             className="lg:h-[450px]"
           />
-          {isEmotionalDashboardEnabled ? (
-             <MoodEvolutionChart 
-              data={chartData} 
-              title={t.myEvolution}
-              description={t.myEvolutionDescription}
-              className="lg:h-[450px]"
-            />
-          ) : (
-            <ChartPlaceholder
-              title={t.myEvolution}
-              description={t.myEvolutionDescription}
-              icon={LineChartIcon}
-              className="lg:h-[450px]"
-            />
-          )}
+          <MoodEvolutionChart 
+            data={chartData} 
+            title={t.myEvolution}
+            description={t.myEvolutionDescription}
+            className="lg:h-[450px]"
+          />
         </div>
       </section>
     </div>

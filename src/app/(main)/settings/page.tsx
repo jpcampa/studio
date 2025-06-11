@@ -11,21 +11,21 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, Palette, Trash2, AlertTriangle, ToggleRight, ToggleLeft, ShieldAlert, KeyRound } from 'lucide-react';
+import { Loader2, Save, Palette, Trash2, AlertTriangle, ShieldAlert, KeyRound } from 'lucide-react'; // Removed ToggleRight, ToggleLeft
 import { useTheme } from 'next-themes';
 import { clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
-import { Separator } from '@/components/ui/separator';
-import { useFeatureFlag } from '@/contexts/FeatureFlagContext';
+// import { Separator } from '@/components/ui/separator'; // No longer needed if dev utilities section is simpler
+// import { useFeatureFlag } from '@/contexts/FeatureFlagContext'; // No longer needed for toggling
 import Link from 'next/link';
 
-const DEVELOPER_EMAIL = 'jpcampa@example.com';
+// const DEVELOPER_EMAIL = 'jpcampa@example.com'; // No longer needed for feature flag toggle
 
 export default function SettingsPage() {
   const t = useTranslations();
   const { user, updateUser, loading: userLoading } = useUser();
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
-  const { isEmotionalDashboardEnabled, toggleEmotionalDashboard } = useFeatureFlag();
+  // const { isEmotionalDashboardEnabled, toggleEmotionalDashboard } = useFeatureFlag(); // No longer needed
 
   const [name, setName] = useState('');
   const [ageRange, setAgeRange] = useState('');
@@ -98,13 +98,13 @@ export default function SettingsPage() {
     });
   };
 
-  const handleToggleEmotionalDashboard = () => {
-    toggleEmotionalDashboard();
-    toast({
-      title: "Dashboard Emocional",
-      description: isEmotionalDashboardEnabled ? t.emotionalDashboardDeactivated : t.emotionalDashboardActivated,
-    });
-  };
+  // const handleToggleEmotionalDashboard = () => { // No longer needed
+  //   toggleEmotionalDashboard();
+  //   toast({
+  //     title: "Dashboard Emocional",
+  //     description: isEmotionalDashboardEnabled ? t.emotionalDashboardDeactivated : t.emotionalDashboardActivated,
+  //   });
+  // };
 
   if (userLoading && !user) {
     return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
@@ -114,7 +114,7 @@ export default function SettingsPage() {
     return <div className="container mx-auto py-8 text-center">{t.loading}</div>;
   }
 
-  const isDeveloper = user?.email === DEVELOPER_EMAIL;
+  // const isDeveloper = user?.email === DEVELOPER_EMAIL; // No longer needed for this page logic
 
   return (
     <div className="container mx-auto py-8">
@@ -249,7 +249,6 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-
           <Card>
             <CardHeader>
                 <CardTitle className="text-xl flex items-center text-amber-600 dark:text-amber-500">
@@ -265,13 +264,7 @@ export default function SettingsPage() {
                 <Trash2 className="mr-2 h-4 w-4" />
                 {t.clearEmotionalEntriesButton}
               </Button>
-
-              {isDeveloper && (
-                <Button variant="outline" onClick={handleToggleEmotionalDashboard} className="border-amber-500 text-amber-600 hover:bg-amber-50 hover:text-amber-700">
-                  {isEmotionalDashboardEnabled ? <ToggleLeft className="mr-2 h-4 w-4" /> : <ToggleRight className="mr-2 h-4 w-4" />}
-                  {isEmotionalDashboardEnabled ? t.deactivateEmotionalDashboardButton : t.activateEmotionalDashboardButton}
-                </Button>
-              )}
+              {/* Feature flag toggle button removed as the feature is now always enabled */}
             </CardContent>
           </Card>
 

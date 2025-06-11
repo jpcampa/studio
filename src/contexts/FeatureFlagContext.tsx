@@ -4,46 +4,36 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-const FEATURE_FLAG_EMOTIONAL_DASHBOARD_KEY = 'workwell-feature-emotionalDashboardEnabled';
+// const FEATURE_FLAG_EMOTIONAL_DASHBOARD_KEY = 'workwell-feature-emotionalDashboardEnabled'; // No longer needed for enabling
 
 interface FeatureFlagContextType {
   isEmotionalDashboardEnabled: boolean;
-  toggleEmotionalDashboard: () => void;
+  toggleEmotionalDashboard: () => void; // Kept for interface consistency, but won't change the always-true state
 }
 
 const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined);
 
 export function FeatureFlagProvider({ children }: { children: ReactNode }) {
-  const [isEmotionalDashboardEnabled, setIsEmotionalDashboardEnabled] = useState(false);
+  // isEmotionalDashboardEnabled is now always true.
+  const [isEmotionalDashboardEnabled, setIsEmotionalDashboardEnabled] = useState(true);
 
-  useEffect(() => {
-    // Load feature flag state from localStorage on initial mount
-    try {
-      const storedFlag = localStorage.getItem(FEATURE_FLAG_EMOTIONAL_DASHBOARD_KEY);
-      if (storedFlag !== null) {
-        setIsEmotionalDashboardEnabled(JSON.parse(storedFlag));
-      } else {
-        // Default to false if not found and save it
-        setIsEmotionalDashboardEnabled(false);
-        localStorage.setItem(FEATURE_FLAG_EMOTIONAL_DASHBOARD_KEY, JSON.stringify(false));
-      }
-    } catch (error) {
-      console.error("Error loading emotional dashboard feature flag from localStorage:", error);
-      // Default to false in case of error
-      setIsEmotionalDashboardEnabled(false);
-    }
-  }, []);
+  // useEffect to load from localStorage is removed as the feature is now always enabled.
+  // If you ever need to make it configurable again via localStorage, you can re-add that logic.
 
   const toggleEmotionalDashboard = useCallback(() => {
-    setIsEmotionalDashboardEnabled(prev => {
-      const newState = !prev;
-      try {
-        localStorage.setItem(FEATURE_FLAG_EMOTIONAL_DASHBOARD_KEY, JSON.stringify(newState));
-      } catch (error) {
-        console.error("Error saving emotional dashboard feature flag to localStorage:", error);
-      }
-      return newState;
-    });
+    // This function no longer changes the state as the feature is always enabled.
+    // It's kept for interface consistency if other parts of the app might still call it,
+    // though its effect is now nullified.
+    // setIsEmotionalDashboardEnabled(prev => {
+    //   const newState = !prev;
+    //   try {
+    //     localStorage.setItem(FEATURE_FLAG_EMOTIONAL_DASHBOARD_KEY, JSON.stringify(newState));
+    //   } catch (error) {
+    //     console.error("Error saving emotional dashboard feature flag to localStorage:", error);
+    //   }
+    //   return newState;
+    // });
+    console.log("toggleEmotionalDashboard called, but isEmotionalDashboardEnabled is fixed to true.");
   }, []);
 
   return (
