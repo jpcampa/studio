@@ -808,7 +808,7 @@ export async function fetchUserActivities(
     }
 
     const activitiesApiResult: ExternalApiResponse = JSON.parse(activitiesResponseText);
-    if (activitiesApiResult.status === "OK" && activitiesApiResult.data !== undefined) { // Check data is not undefined
+    if (activitiesApiResult.status === "OK" && activitiesApiResult.data !== undefined) { 
       let potentialEntriesArray: any = null;
 
       if (Array.isArray(activitiesApiResult.data)) {
@@ -827,8 +827,36 @@ export async function fetchUserActivities(
         console.warn("fetchUserActivities: API data is neither an array nor a string. Data:", activitiesApiResult.data);
       }
 
-      if (potentialEntriesArray) {
-        const validationResult = FetchedEmotionalEntriesSchema.safeParse(potentialEntriesArray);
+      if (potentialEntriesArray && Array.isArray(potentialEntriesArray)) {
+        // Transform array of arrays to array of objects if necessary
+        const transformedEntries = potentialEntriesArray.map((rawEntry: any) => {
+          if (Array.isArray(rawEntry) && rawEntry.length >= 5) {
+            // Assuming structure: [idactividad, fecha, idusuario, situation, emotion]
+            // And that rawEntry[1] (fecha) is a parseable date string
+            let timestamp = rawEntry[1];
+            try {
+                // Attempt to convert to ISO string if not already
+                // This assumes rawEntry[1] is a string that new Date() can parse.
+                // If it's already ISO, new Date().toISOString() is idempotent for valid ISO strings.
+                timestamp = new Date(rawEntry[1]).toISOString();
+            } catch (dateError) {
+                console.warn(`fetchUserActivities: Could not parse date string "${rawEntry[1]}" for entry ID ${rawEntry[0]}. Using original.`, dateError);
+                // If parsing fails, use the original string and let Zod validation catch it if it's truly invalid.
+            }
+            return {
+              id: String(rawEntry[0]),
+              timestamp: timestamp, 
+              situation: String(rawEntry[3]),
+              emotion: String(rawEntry[4]),
+            };
+          }
+          // If rawEntry is already an object (potentially from a previous transformation or direct from API)
+          // or if it's not an array of the expected length, return it as is for Zod to validate.
+          return rawEntry;
+        }).filter(entry => entry && typeof entry === 'object'); // Filter out any nulls or non-objects from bad transformations
+
+        console.log("fetchUserActivities: Transformed entries before Zod validation:", JSON.stringify(transformedEntries, null, 2).substring(0,500) + "...");
+        const validationResult = FetchedEmotionalEntriesSchema.safeParse(transformedEntries);
         if (validationResult.success) {
           console.log("fetchUserActivities: Successfully validated fetched/decrypted emotional entries:", validationResult.data.length, "entries.");
           return { success: true, entries: validationResult.data };
@@ -838,12 +866,13 @@ export async function fetchUserActivities(
           if (zodErrorDetails.formErrors.length > 0) {
             errorSummary = zodErrorDetails.formErrors.join(", ");
           } else if (Object.keys(zodErrorDetails.fieldErrors).length > 0) {
-            // Take the first field error as an example
-            const firstFieldErrorKey = Object.keys(zodErrorDetails.fieldErrors)[0];
-            const firstFieldErrorMessage = (zodErrorDetails.fieldErrors as Record<string, string[]|undefined>)[firstFieldErrorKey]?.[0];
+            const fieldErrors = zodErrorDetails.fieldErrors as Record<string, string[]|undefined>;
+            const firstFieldErrorKey = Object.keys(fieldErrors)[0];
+            const firstFieldErrorMessage = fieldErrors[firstFieldErrorKey]?.[0];
             errorSummary = `Error en campo '${firstFieldErrorKey}': ${firstFieldErrorMessage}`;
           }
           console.warn("fetchUserActivities: Fetched/decrypted emotional entries validation failed:", zodErrorDetails);
+          console.warn("fetchUserActivities: Data that failed Zod validation (after transformation):", JSON.stringify(transformedEntries, null, 2).substring(0,1000) + "...");
           return { success: false, error: `Datos de actividades recibidos no son válidos. Detalle: ${errorSummary.substring(0,150)} (Revise consola del servidor para más info)` };
         }
       } else {
