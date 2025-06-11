@@ -31,6 +31,7 @@ export const t = {
   registrationSuccessTitle: "¡Registro Exitoso!",
   registrationSuccessMessage: "Serás redirigido en breve.", // Original message, can be deprecated if not used.
   registrationSuccessLoginPrompt: "¡Registro completado! Ahora puedes iniciar sesión.", // New message
+  loginSuccessMessage: "Inicio de sesión exitoso.", // Added for direct comparison
   loginFailed: "Error al iniciar sesión. Verifica tus credenciales.",
   registrationFailed: "Error al registrar. Inténtalo de nuevo.",
   // Sidebar Navigation

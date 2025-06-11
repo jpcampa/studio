@@ -44,34 +44,41 @@ export function LoginForm() {
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
 
+  // Effect to handle server action state
   useEffect(() => {
-    console.log("LoginForm useEffect (Mount/UserUpdate): contextUser:", contextUser, "userLoading:", userLoading);
-    if (!userLoading && contextUser) {
-      console.log("LoginForm: User detected (from UserContext), redirecting to /dashboard");
-      router.push("/dashboard");
-    }
-  }, [contextUser, userLoading, router]);
-
-  useEffect(() => {
-    console.log("LoginForm useEffect (ActionState Update): state received from server action:", JSON.stringify(state, null, 2).substring(0, 500) + (JSON.stringify(state, null, 2).length > 500 ? "..." : ""));
+    console.log("LoginForm ACTION_EFFECT: state received from server action:", JSON.stringify(state, null, 2).substring(0, 1000) + (JSON.stringify(state, null, 2).length > 1000 ? "..." : ""));
     
     if (state.debugLoginApiUrl) {
-      console.log("LoginForm: Saving debugLoginApiUrl to sessionStorage:", state.debugLoginApiUrl);
+      console.log("LoginForm ACTION_EFFECT: Saving debugLoginApiUrl to sessionStorage:", state.debugLoginApiUrl);
       sessionStorage.setItem('workwell-debug-login-url', state.debugLoginApiUrl);
     }
 
-    if (state.message) {
-      if (state.message === "Inicio de sesión exitoso." && state.user) {
-        loginContext({ 
-          user: state.user as ContextUser, 
-          entries: state.fetchedEmotionalEntries ?? null 
-        });
-        toast({
-          title: t.login,
-          description: state.message,
-        });
-        console.log("LoginForm: Server action reported successful login. User and emotional entries (if any) set in context.");
-      } else if (state.message !== "Inicio de sesión exitoso.") {
+    // Use translated success message for comparison
+    const loginSuccessMessageKey = "loginSuccessMessage" as keyof typeof t;
+    const expectedSuccessMessage = t[loginSuccessMessageKey] || "Inicio de sesión exitoso.";
+
+
+    const isLoginSuccessMessage = state.message === expectedSuccessMessage;
+    const isUserValid = state.user && typeof state.user.id === 'string' && state.user.id.trim() !== '';
+
+    console.log(`LoginForm ACTION_EFFECT: Checking conditions - isLoginSuccessMessage: ${isLoginSuccessMessage} (Expected: "${expectedSuccessMessage}", Actual: "${state.message}"), isUserValid: ${isUserValid}, User from state:`, state.user);
+
+    if (isLoginSuccessMessage && isUserValid) {
+      console.log("LoginForm ACTION_EFFECT: Login success conditions met. Calling loginContext with user:", state.user, "and entries:", state.fetchedEmotionalEntries);
+      loginContext({ 
+        user: state.user as ContextUser, 
+        entries: state.fetchedEmotionalEntries ?? null 
+      });
+      toast({
+        title: t.login,
+        description: state.message!, // state.message is confirmed to be success message here
+      });
+      console.log("LoginForm ACTION_EFFECT: loginContext called and success toast shown.");
+      // Redirection is handled by the other useEffect listening to contextUser and userLoading
+    } else if (state.message) { 
+      console.warn("LoginForm ACTION_EFFECT: Login success conditions NOT met or other message/error. Message:", state.message, "Errors:", state.errors, "User from state:", state.user);
+      // Display toast for errors or non-success messages
+      if (state.message !== expectedSuccessMessage || !isUserValid) { // If not a true success or user is invalid
         if (!state.errors || Object.keys(state.errors).length === 0 || (state.errors._form && state.errors._form.length > 0)) {
           toast({
             title: t.loginFailed,
@@ -79,12 +86,11 @@ export function LoginForm() {
             variant: "destructive",
           });
         }
-        console.warn("LoginForm: Server action reported login failure or other message. Message:", state.message, "Errors:", state.errors);
       }
     }
 
     if (state.errors && (!state.errors._form || state.errors._form.length === 0)) {
-      console.warn("LoginForm: Server action reported validation errors:", state.errors);
+      console.warn("LoginForm ACTION_EFFECT: Server action reported specific field validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
         if (key !== '_form' && Array.isArray(fieldErrors)) {
           fieldErrors.forEach(error => {
@@ -99,11 +105,30 @@ export function LoginForm() {
         }
       });
     }
-  }, [state, toast, t, loginContext, router]);
+  }, [state, toast, t, loginContext]); // router removed as it's not used for this effect's logic
+
+  // Effect to handle redirection based on UserContext
+   useEffect(() => {
+    console.log(
+      "LoginForm REDIRECT_EFFECT: Checking redirect. contextUser:", contextUser, 
+      "userLoading:", userLoading
+    );
+    if (!userLoading && contextUser && typeof contextUser.id === 'string' && contextUser.id.trim() !== '') {
+      console.log("LoginForm REDIRECT_EFFECT: Conditions MET. Redirecting to /dashboard. User ID:", contextUser.id);
+      router.push("/dashboard");
+    } else {
+      console.log("LoginForm REDIRECT_EFFECT: Conditions NOT MET. No redirect.");
+      if (userLoading) console.log("LoginForm REDIRECT_EFFECT: Reason -> userLoading is true.");
+      if (!contextUser) console.log("LoginForm REDIRECT_EFFECT: Reason -> contextUser is null or undefined.");
+      else if (!contextUser.id || typeof contextUser.id !== 'string' || contextUser.id.trim() === '') {
+        console.log("LoginForm REDIRECT_EFFECT: Reason -> contextUser.id is missing, not a string, or empty.");
+      }
+    }
+  }, [contextUser, userLoading, router]);
 
 
   if (userLoading && !contextUser) {
-    console.log("LoginForm: Rendering loader because UserContext is loading and no user is yet available.");
+    console.log("LoginForm RENDER: UserContext is loading and no user is yet available. Rendering loader.");
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -111,11 +136,14 @@ export function LoginForm() {
     );
   }
 
+  // This condition should ideally prevent the form from rendering if already logged in,
+  // as the redirect effect should have already fired.
   if (!userLoading && contextUser) {
-    console.log("LoginForm: Rendering null because user is already loaded and present (should have been/be redirecting).");
+    console.log("LoginForm RENDER: User is already loaded and present. Redirect should be happening. Rendering null to avoid form flash.");
     return null;
   }
 
+  console.log("LoginForm RENDER: Rendering login form.");
   return (
      <Card className="w-full shadow-xl">
       <CardHeader className="text-center">
@@ -162,7 +190,7 @@ export function LoginForm() {
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.errors._form[0]}</p>
           )}
 
-          {state.message && state.message !== "Inicio de sesión exitoso." && !state.user && (!state.errors || Object.keys(state.errors).length === 0) && (
+          {state.message && state.message !== (t.loginSuccessMessage || "Inicio de sesión exitoso.") && !state.user && (!state.errors || Object.keys(state.errors).length === 0) && (
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
           )}
 
@@ -191,4 +219,3 @@ export function LoginForm() {
     </Card>
   );
 }
-
