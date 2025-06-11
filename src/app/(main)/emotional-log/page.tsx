@@ -11,7 +11,7 @@ import { EmotionalEntryForm, emotions as emotionOptions } from "@/components/das
 import { getEmotionalEntries, formatEntryTimestamp, addEmotionalEntry, type EmotionalEntry } from "@/data/emotionalEntriesStore";
 import { ArrowLeft, NotebookPen, LineChart as LineChartIcon, Edit } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// ScrollArea import is removed as it's no longer used
 import {
   Dialog,
   DialogContent,
@@ -197,24 +197,22 @@ export default function EmotionalLogPage() {
         </CardHeader>
         <CardContent>
           {allEntries.length > 0 ? (
-            <ScrollArea className="h-[500px] pr-4">
-              <ul className="space-y-4">
-                {allEntries.map((entry, index) => {
-                  const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
-                  const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
-                  return (
-                    <li key={entry.id} className="p-4 border rounded-lg bg-muted/30 shadow-sm">
-                      <p className="text-xs text-muted-foreground">{formatEntryTimestamp(entry.timestamp)}</p>
-                      <p className="font-semibold text-primary mt-1">{emotionLabel}</p>
-                      <p className="text-sm text-foreground mt-1 whitespace-pre-wrap break-words">
-                        {entry.situation}
-                      </p>
-                      {index < allEntries.length - 1 && <Separator className="my-4" />}
-                    </li>
-                  );
-                })}
-              </ul>
-            </ScrollArea>
+            <ul className="space-y-4">
+              {allEntries.map((entry, index) => {
+                const emotionDetail = emotionOptions.find(e => e.value === entry.emotion);
+                const emotionLabel = emotionDetail ? t[emotionDetail.labelKey as keyof typeof t] : entry.emotion;
+                return (
+                  <li key={entry.id} className="p-4 border rounded-lg bg-muted/30 shadow-sm">
+                    <p className="text-xs text-muted-foreground">{formatEntryTimestamp(entry.timestamp)}</p>
+                    <p className="font-semibold text-primary mt-1">{emotionLabel}</p>
+                    <p className="text-sm text-foreground mt-1 whitespace-pre-wrap break-words">
+                      {entry.situation}
+                    </p>
+                    {index < allEntries.length - 1 && <Separator className="my-4" />}
+                  </li>
+                );
+              })}
+            </ul>
           ) : (
             <p className="text-muted-foreground italic text-center py-4">{t.noEntriesYet}</p>
           )}
@@ -223,4 +221,3 @@ export default function EmotionalLogPage() {
     </div>
   );
 }
-
