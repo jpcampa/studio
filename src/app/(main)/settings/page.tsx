@@ -238,9 +238,10 @@ export default function SettingsPage() {
               </div>
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <Label htmlFor="skipIntroScreens" className="flex flex-col space-y-1">
-                  <span>{t.settingsSkipIntroScreensTitle}</span>
+                  {/* Texto hardcodeado para asegurar visibilidad */}
+                  <span>Omitir Pantallas Introductorias</span>
                   <span className="font-normal leading-snug text-muted-foreground">
-                    {t.settingsSkipIntroScreensDescription}
+                    Accede directamente al contenido principal de secciones como la evaluación o los resultados, omitiendo las pantallas informativas previas.
                   </span>
                 </Label>
                 <Switch id="skipIntroScreens" checked={skipIntroScreens} onCheckedChange={handleSkipIntroChange} />
