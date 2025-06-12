@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
 import { ArrowRight, LayoutDashboard } from 'lucide-react';
+import { Logo } from '@/components/Logo'; // Import Logo
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
 
@@ -23,6 +24,7 @@ export default function WelcomePage() {
   return (
     <Card className="w-full max-w-3xl shadow-2xl my-8">
       <CardHeader className="text-center pb-4">
+        <Logo className="mx-auto mb-6" /> {/* Logo added here */}
         <CardTitle className="text-3xl md:text-4xl font-bold text-primary">
           {t.welcomePageTitle}
         </CardTitle>
