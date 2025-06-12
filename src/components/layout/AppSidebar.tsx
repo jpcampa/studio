@@ -14,14 +14,15 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings } from "lucide-react";
+import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History } from "lucide-react"; // Added History
 import { useTranslations } from "@/lib/translations";
 import { useUser } from "@/contexts/UserContext";
 import { Logo } from "@/components/Logo";
 
 const navItems = [
   { href: "/dashboard", labelKey: "navDashboard", icon: LayoutDashboard },
-  { href: "/assessment/intro", labelKey: "navAssessment", icon: ClipboardList }, // Updated href
+  { href: "/assessment/intro", labelKey: "navAssessment", icon: ClipboardList }, 
+  { href: "/my-assessments", labelKey: "navMyAssessments", icon: History }, // New Item
   { href: "/paths", labelKey: "navPaths", icon: Milestone },
   { href: "/chatbot", labelKey: "navChatbot", icon: Bot },
   { href: "/resources", labelKey: "navResources", icon: Library },
@@ -38,7 +39,10 @@ export function AppSidebar() {
 
   const isActive = (href: string) => {
     if (href === "/assessment/intro") {
-      return pathname.startsWith("/assessment"); // Highlight for /assessment and /assessment/intro
+      return pathname.startsWith("/assessment"); 
+    }
+    if (href === "/my-assessments") {
+        return pathname.startsWith("/my-assessments") || pathname.startsWith("/assessment/history-results");
     }
     return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
   }
@@ -94,5 +98,3 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
-
-    

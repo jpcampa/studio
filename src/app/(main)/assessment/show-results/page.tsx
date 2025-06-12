@@ -1,91 +1,82 @@
-
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { AssessmentResultsDisplay } from '@/components/assessment/AssessmentResultsDisplay';
-import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
-import { useTranslations } from '@/lib/translations';
-import { Loader2, AlertTriangle } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTranslations } from '@/lib/translations';
+import { ArrowRight, HeartHandshake, CheckCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const SESSION_STORAGE_ASSESSMENT_RESULTS_KEY = 'workwell-assessment-results';
+const SKIP_INTRO_SCREENS_KEY = 'workwell-skip-intro-screens';
 
-export default function ShowResultsPage() {
+export default function AssessmentResultsIntroPage() {
   const t = useTranslations();
   const router = useRouter();
-  const [results, setResults] = useState<InitialAssessmentOutput | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const storedResults = localStorage.getItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
-      if (storedResults) {
-        const parsedResults = JSON.parse(storedResults) as InitialAssessmentOutput;
-        // Basic validation of parsed results structure
-        if (parsedResults && parsedResults.emotionalProfile && parsedResults.priorityAreas && parsedResults.feedback) {
-          setResults(parsedResults);
-        } else {
-          setError("Los datos de la evaluación guardados son inválidos.");
-          console.error("ShowResultsPage: Invalid assessment data structure in sessionStorage", parsedResults);
-        }
-      } else {
-        setError("No se encontraron resultados de la evaluación. Por favor, completa la evaluación primero.");
-        console.warn("ShowResultsPage: No assessment results found in sessionStorage.");
+    if (typeof window !== 'undefined') {
+      const skipIntro = localStorage.getItem(SKIP_INTRO_SCREENS_KEY) === 'true';
+      if (skipIntro) {
+        router.replace('/assessment/current-results'); // Updated link
+        return; 
       }
-    } catch (e) {
-      console.error("ShowResultsPage: Error parsing assessment results from sessionStorage:", e);
-      setError("Error al cargar los resultados de la evaluación.");
-    } finally {
-      setIsLoading(false);
+
+      const results = localStorage.getItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
+      if (!results) {
+        console.warn("AssessmentResultsIntroPage: No assessment results found in sessionStorage. Redirecting to assessment intro.");
+        router.replace('/assessment/intro');
+      }
     }
-  }, []);
-
-  const handleRetakeAssessment = () => {
-    // Optionally clear the results from sessionStorage when retaking
-    // localStorage.removeItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
-    router.push('/assessment/intro');
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto py-8 text-center">
-        <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
-        <p className="mt-4 text-lg font-semibold text-destructive">{t.errorOccurred}</p>
-        <p className="text-muted-foreground">{error}</p>
-        <Button onClick={handleRetakeAssessment} className="mt-6">
-          {t.takeInitialAssessment}
-        </Button>
-      </div>
-    );
-  }
-
-  if (!results) {
-    // This case should ideally be caught by error state, but as a fallback:
-    return (
-      <div className="container mx-auto py-8 text-center">
-        <p className="text-muted-foreground">No hay resultados para mostrar.</p>
-         <Button onClick={handleRetakeAssessment} className="mt-6">
-          {t.takeInitialAssessment}
-        </Button>
-      </div>
-    );
-  }
+  }, [router]);
 
   return (
-    <div className="container mx-auto py-8">
-      <AssessmentResultsDisplay results={results} onRetake={handleRetakeAssessment} />
+    <div className="container mx-auto py-8 flex justify-center">
+      <Card className="w-full max-w-3xl shadow-xl my-8">
+        <CardHeader className="text-center pb-6">
+          <HeartHandshake className="mx-auto h-16 w-16 text-primary mb-4" />
+          <CardTitle className="text-3xl md:text-4xl font-bold text-primary">
+            {t.assessmentResultsIntroTitle}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 px-6 md:px-10 text-base leading-relaxed text-foreground">
+          <p className="text-center text-lg md:text-xl text-muted-foreground whitespace-pre-line">
+            {t.assessmentResultsIntroMainText1}
+          </p>
+          <p className="whitespace-pre-line">
+            {t.assessmentResultsIntroMainText2}
+          </p>
+          <ul className="list-none space-y-2 pl-0">
+            <li className="flex items-start">
+              <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+              <span>{t.assessmentResultsIntroListItem1}</span>
+            </li>
+            <li className="flex items-start">
+              <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+              <span>{t.assessmentResultsIntroListItem2}</span>
+            </li>
+            <li className="flex items-start">
+              <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
+              <span>{t.assessmentResultsIntroListItem3}</span>
+            </li>
+          </ul>
+          <p className="whitespace-pre-line">
+            {t.assessmentResultsIntroMainText3}
+          </p>
+           <p className="whitespace-pre-line font-medium text-accent">
+            {t.assessmentResultsIntroMainText4}
+          </p>
+        </CardContent>
+        <CardFooter className="flex-col items-center gap-4 pt-8 pb-8">
+          <Button asChild size="lg" className="w-full sm:w-auto sm:max-w-md text-base py-3 shadow-lg hover:shadow-primary/40 transition-shadow">
+            <Link href="/assessment/current-results"> {/* Updated link */}
+              {t.assessmentResultsIntroViewProfileButton}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
-
-    

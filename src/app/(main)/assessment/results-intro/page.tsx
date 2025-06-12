@@ -20,11 +20,10 @@ export default function AssessmentResultsIntroPage() {
     if (typeof window !== 'undefined') {
       const skipIntro = localStorage.getItem(SKIP_INTRO_SCREENS_KEY) === 'true';
       if (skipIntro) {
-        router.replace('/assessment/show-results');
-        return; // Importante salir temprano para evitar la verificación de resultados si se omite
+        router.replace('/assessment/current-results'); // Updated link
+        return; 
       }
 
-      // Check if results exist in sessionStorage, if not, redirect back to assessment start
       const results = localStorage.getItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
       if (!results) {
         console.warn("AssessmentResultsIntroPage: No assessment results found in sessionStorage. Redirecting to assessment intro.");
@@ -72,7 +71,7 @@ export default function AssessmentResultsIntroPage() {
         </CardContent>
         <CardFooter className="flex-col items-center gap-4 pt-8 pb-8">
           <Button asChild size="lg" className="w-full sm:w-auto sm:max-w-md text-base py-3 shadow-lg hover:shadow-primary/40 transition-shadow">
-            <Link href="/assessment/show-results">
+            <Link href="/assessment/current-results"> {/* Updated link */}
               {t.assessmentResultsIntroViewProfileButton}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>

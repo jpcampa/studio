@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { QuestionnaireForm } from '@/components/assessment/QuestionnaireForm';
-// AssessmentResultsDisplay is no longer directly used here
 import { submitAssessment, ServerAssessmentResult } from '@/actions/assessment';
 import { useTranslations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +16,7 @@ import { encryptDataAES } from '@/lib/encryption';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle as DialogModalTitle, DialogDescription as DialogModalDescription } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
+import { saveAssessmentToHistory } from '@/data/assessmentHistoryStore'; // Import new store function
 
 
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
@@ -52,14 +52,18 @@ export default function AssessmentPage() {
     await new Promise(resolve => setTimeout(resolve, 2500)); 
 
     setIsProcessingModalVisible(false);
-    // setIsSubmitting(false); // Se manejará después del intento de guardado
 
     if (result.success) {
       try {
         localStorage.setItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY, JSON.stringify(result.data));
         console.log("AssessmentPage: Results saved to sessionStorage:", JSON.stringify(result.data).substring(0,200) + "...");
+        
+        // Save to assessment history store (localStorage based)
+        saveAssessmentToHistory(result.data);
+        console.log("AssessmentPage: Results also saved to local assessment history store.");
+
       } catch (error) {
-        console.error("AssessmentPage: Error saving results to sessionStorage:", error);
+        console.error("AssessmentPage: Error saving results to sessionStorage or history store:", error);
         toast({
             title: t.errorOccurred,
             description: "No se pudieron guardar temporalmente los resultados para mostrar.",
@@ -127,9 +131,9 @@ export default function AssessmentPage() {
           if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
             errorMessage = t.assessmentSavedErrorTimeout;
           } else if (error instanceof TypeError && error.message.toLowerCase().includes('failed to fetch')) {
-            errorMessage = t.assessmentSavedErrorFetchFailed; // Updated translation will be used here
-            console.error("AssessmentPage: 'Failed to fetch' error. This often indicates a CORS issue or network problem. Check the browser's console (Network tab) for more details, and ensure the server at", new URL(saveUrlForDebug).origin, "is configured to accept requests from this origin (your app's domain).");
-          } else if (error instanceof SyntaxError) { // If JSON.parse fails on API response
+            errorMessage = t.assessmentSavedErrorFetchFailed;
+            console.error("AssessmentPage: 'Failed to fetch' error. This often indicates a CORS issue or network problem. Check the browser's console (Network tab) for more details, and ensure the server at", new URL(saveUrlForDebug || API_BASE_URL).origin, "is configured to accept requests from this origin (your app's domain).");
+          } else if (error instanceof SyntaxError) { 
             errorMessage = "Error procesando la respuesta del servidor de guardado (JSON inválido).";
           }
           toast({
@@ -159,7 +163,7 @@ export default function AssessmentPage() {
         variant: "destructive",
       });
     }
-    setIsSubmitting(false); // Ensure this is set after all operations
+    setIsSubmitting(false); 
   };
 
   const handleDevSubmit = async () => {

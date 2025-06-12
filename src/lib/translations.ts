@@ -41,6 +41,7 @@ export const t = {
   navChatbot: "Mentor AI",
   navResources: "Recursos",
   navSettings: "Configuración",
+  navMyAssessments: "Mis Evaluaciones", // New Nav Item
   // Welcome Page / Dashboard (Old, parts might be reused or removed)
   welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.",
   startYourJourney: "Comienza tu viaje hacia el bienestar",
@@ -89,6 +90,13 @@ export const t = {
   assessmentSavedErrorFetchFailed: "Fallo en la comunicación con el servicio de guardado. Esto podría deberse a un problema de red o una restricción CORS del servidor. Revisa la consola del navegador para más detalles.",
   assessmentSaveSkippedTitle: "Guardado Omitido",
   assessmentSaveSkippedMessage: "No se pudo identificar al usuario para guardar la evaluación. Podrás ver tus resultados, pero no se sincronizarán.",
+  // My Assessments Page
+  myAssessmentsTitle: "Mis Evaluaciones",
+  myAssessmentsDescription: "Aquí puedes ver el historial de tus evaluaciones completadas.",
+  viewAssessmentResultsButton: "Ver Resultados",
+  assessmentDateLabel: "Evaluación del {date}",
+  noAssessmentsFound: "Aún no has completado ninguna evaluación.",
+  priorityAreaLabel: "Área prioritaria",
 
 
   // Assessment Intro Page
