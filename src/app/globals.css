@@ -17,7 +17,7 @@ body {
     --popover: 0 0% 100%; /* white */
     --popover-foreground: 0 0% 3.9%; /* default dark text */
 
-    --primary: 207 88% 68%; /* #64B5F6 calming desaturated blue */
+    --primary: 100 51% 57%; /* #80ca5a friendly green */
     --primary-foreground: 0 0% 98%; /* white/very light text for contrast */
 
     --secondary: 0 0% 93%; /* Slightly darker than background */
@@ -34,7 +34,7 @@ body {
 
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 207 88% 68%; /* primary color for ring */
+    --ring: 100 51% 57%; /* primary color for ring */
 
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -46,12 +46,12 @@ body {
     /* Sidebar specific theme variables, can be adjusted if needed */
     --sidebar-background: 220 10% 97%; /* Slightly off-white, adjust as needed */
     --sidebar-foreground: 220 10% 25%; /* Darker text for sidebar */
-    --sidebar-primary: 207 88% 68%; /* Same as app primary */
+    --sidebar-primary: 100 51% 57%; /* Same as app primary */
     --sidebar-primary-foreground: 0 0% 98%; /* Same as app primary-foreground */
     --sidebar-accent: 265 43% 73%; /* Same as app accent */
     --sidebar-accent-foreground: 0 0% 98%; /* Same as app accent-foreground */
     --sidebar-border: 0 0% 89.8%; /* Consistent border */
-    --sidebar-ring: 207 88% 68%; /* Consistent ring */
+    --sidebar-ring: 100 51% 57%; /* Consistent ring */
   }
 
   .dark {
