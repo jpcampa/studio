@@ -74,6 +74,10 @@ export const t = {
   scoreLevelHigh: "Alto",
   scoreLevelVeryHigh: "Muy Alto",
   generatedAssessmentSaveUrlLabel: "URL de Guardado de Evaluación (Solo para Depuración)",
+  assessmentCompletedModalTitle: "Evaluación Completada",
+  assessmentProcessingModalMessage: "Estamos preparando tu perfil emocional…",
+  assessmentResultsReadyTitle: "¡Resultados Listos!",
+  assessmentResultsReadyMessage: "Tu perfil emocional personalizado ya está disponible.",
 
   // Assessment Intro Page
   assessmentIntroPageTitle: "Bienvenido/a a tu primer paso",
@@ -272,5 +276,3 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
-
-    

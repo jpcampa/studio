@@ -10,11 +10,14 @@ import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, TestTube2, ShieldQuestion } from 'lucide-react';
+import { RotateCcw, TestTube2, ShieldQuestion, Loader2 } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { assessmentDimensions } from '@/data/assessmentDimensions';
 import { encryptDataAES } from '@/lib/encryption'; // Import encryption utility
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle as DialogModalTitle, DialogDescription as DialogModalDescription } from "@/components/ui/dialog"; // Renamed to avoid conflict
+import { useRouter } from 'next/navigation';
+
 
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
 
@@ -24,7 +27,7 @@ const API_KEY = "4463";
 
 
 interface AssessmentSavePayload {
-  assessmentId: string; // Nuevo campo para el ID único de la evaluación
+  assessmentId: string;
   userId: string;
   rawAnswers: Record<string, number>;
   aiInterpretation: InitialAssessmentOutput;
@@ -35,28 +38,37 @@ export default function AssessmentPage() {
   const t = useTranslations();
   const { toast } = useToast();
   const { user } = useUser();
+  const router = useRouter();
   const [assessmentResults, setAssessmentResults] = useState<InitialAssessmentOutput | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showQuestionnaire, setShowQuestionnaire] = useState(true);
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
+  const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
 
   const handleSubmit = async (answers: Record<string, number>) => {
     setIsSubmitting(true);
+    setIsProcessingModalVisible(true);
     setGeneratedSaveUrl(null); 
+
     const result: ServerAssessmentResult = await submitAssessment(answers);
+
+    // Artificial delay to simulate further processing after AI returns
+    await new Promise(resolve => setTimeout(resolve, 2500)); 
+
+    setIsProcessingModalVisible(false);
     setIsSubmitting(false);
 
     if (result.success) {
       setAssessmentResults(result.data);
       setShowQuestionnaire(false);
       toast({
-        title: "Evaluación Completada",
-        description: "Tus resultados están listos.",
+        title: t.assessmentResultsReadyTitle, // Using specific toast message
+        description: t.assessmentResultsReadyMessage,
       });
 
       if (user && user.id) {
         const assessmentTimestamp = new Date().toISOString();
-        const assessmentId = crypto.randomUUID(); // Generar ID único para esta instancia de evaluación
+        const assessmentId = crypto.randomUUID(); 
 
         const payloadToSave: AssessmentSavePayload = {
           assessmentId: assessmentId,
@@ -93,7 +105,7 @@ export default function AssessmentPage() {
     setAssessmentResults(null);
     setShowQuestionnaire(true);
     setGeneratedSaveUrl(null); 
-    // No redirigimos aquí, AssessmentResultsDisplay lo hará a /assessment/intro si es necesario
+    router.push('/assessment/intro');
   };
 
   const handleDevSubmit = async () => {
@@ -111,14 +123,14 @@ export default function AssessmentPage() {
   if (!showQuestionnaire && assessmentResults) {
     return (
       <div className="container mx-auto py-8 space-y-8">
-        <AssessmentResultsDisplay results={assessmentResults} onRetake={() => router.push('/assessment/intro')} />
+        <AssessmentResultsDisplay results={assessmentResults} onRetake={handleRetakeAssessment} />
         
         {generatedSaveUrl && (
            <Card className="mt-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
             <CardHeader>
               <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
                 <ShieldQuestion className="mr-2 h-5 w-5" />
-                {t.generatedAssessmentSaveUrlLabel || "URL de Guardado de Evaluación (Solo para Depuración)"}
+                {t.generatedAssessmentSaveUrlLabel}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -131,15 +143,12 @@ export default function AssessmentPage() {
             </CardContent>
           </Card>
         )}
-
-        {/* El botón de "Realizar de Nuevo" se maneja dentro de AssessmentResultsDisplay y redirige a intro */}
       </div>
     );
   }
   
   return (
     <div className="container mx-auto py-8">
-      {/* El Card de título de la evaluación se elimina ya que la intro lo cubre */}
       {showQuestionnaire && (
         <>
           {isDeveloper && (
@@ -153,14 +162,26 @@ export default function AssessmentPage() {
           <QuestionnaireForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </>
       )}
-       {!showQuestionnaire && !assessmentResults && ( // Caso raro, si se oculta el cuestionario pero no hay resultados
+       {!showQuestionnaire && !assessmentResults && !isProcessingModalVisible && ( 
            <div className="text-center py-10">
              <p className="text-muted-foreground">{t.loading}...</p>
              <Button onClick={() => router.push('/assessment/intro')} className="mt-4">{t.startAssessment}</Button>
            </div>
         )}
+
+        <Dialog open={isProcessingModalVisible}>
+          <DialogContent className="sm:max-w-md flex flex-col items-center justify-center text-center p-8">
+            <DialogHeader>
+              <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-6" />
+              <DialogModalTitle className="text-2xl font-bold text-primary">
+                {t.assessmentCompletedModalTitle}
+              </DialogModalTitle>
+              <DialogModalDescription className="text-md text-muted-foreground mt-2">
+                {t.assessmentProcessingModalMessage}
+              </DialogModalDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
     </div>
   );
 }
-
-    
