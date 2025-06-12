@@ -155,6 +155,8 @@ export const t = {
   deactivateEmotionalDashboardButton: "Desactivar Dashboard Emocional",
   emotionalDashboardActivated: "Dashboard Emocional activado.",
   emotionalDashboardDeactivated: "Dashboard Emocional desactivado.",
+  settingsSkipIntroScreensTitle: "Omitir Pantallas Introductorias",
+  settingsSkipIntroScreensDescription: "Accede directamente al contenido principal de secciones como la evaluación o los resultados.",
   
   // Change Password
   changePasswordTitle: "Cambiar Contraseña",
@@ -286,5 +288,3 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
-
-    

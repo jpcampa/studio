@@ -6,9 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
 import { ArrowRight, Info, Shield, ListChecks, UserCheck, BookOpen } from 'lucide-react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+const SKIP_INTRO_SCREENS_KEY = 'workwell-skip-intro-screens';
 
 export default function AssessmentIntroPage() {
   const t = useTranslations();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const skipIntro = localStorage.getItem(SKIP_INTRO_SCREENS_KEY) === 'true';
+      if (skipIntro) {
+        router.replace('/assessment');
+      }
+    }
+  }, [router]);
 
   return (
     <div className="container mx-auto py-8 flex justify-center">
@@ -79,5 +93,3 @@ export default function AssessmentIntroPage() {
     </div>
   );
 }
-
-    

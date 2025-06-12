@@ -11,21 +11,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, Palette, Trash2, AlertTriangle, ShieldAlert, KeyRound } from 'lucide-react'; // Removed ToggleRight, ToggleLeft
+import { Loader2, Save, Palette, Trash2, AlertTriangle, ShieldAlert, KeyRound, FastForward } from 'lucide-react'; 
 import { useTheme } from 'next-themes';
 import { clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
-// import { Separator } from '@/components/ui/separator'; // No longer needed if dev utilities section is simpler
-// import { useFeatureFlag } from '@/contexts/FeatureFlagContext'; // No longer needed for toggling
 import Link from 'next/link';
 
-// const DEVELOPER_EMAIL = 'jpcampa@example.com'; // No longer needed for feature flag toggle
+const SKIP_INTRO_SCREENS_KEY = 'workwell-skip-intro-screens';
 
 export default function SettingsPage() {
   const t = useTranslations();
   const { user, updateUser, loading: userLoading } = useUser();
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
-  // const { isEmotionalDashboardEnabled, toggleEmotionalDashboard } = useFeatureFlag(); // No longer needed
 
   const [name, setName] = useState('');
   const [ageRange, setAgeRange] = useState('');
@@ -35,6 +32,7 @@ export default function SettingsPage() {
   const [dailyCheckIn, setDailyCheckIn] = useState(true);
   const [moduleReminders, setModuleReminders] = useState(true);
   const [motivationalQuotes, setMotivationalQuotes] = useState(false);
+  const [skipIntroScreens, setSkipIntroScreens] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
   const [appVersion, setAppVersion] = useState('');
@@ -44,6 +42,10 @@ export default function SettingsPage() {
       setName(user.name || '');
       setAgeRange(user.ageRange || '');
       setGender(user.gender || '');
+    }
+    if (typeof window !== 'undefined') {
+      const storedSkipIntro = localStorage.getItem(SKIP_INTRO_SCREENS_KEY);
+      setSkipIntroScreens(storedSkipIntro === 'true');
     }
   }, [user]);
 
@@ -98,13 +100,16 @@ export default function SettingsPage() {
     });
   };
 
-  // const handleToggleEmotionalDashboard = () => { // No longer needed
-  //   toggleEmotionalDashboard();
-  //   toast({
-  //     title: "Dashboard Emocional",
-  //     description: isEmotionalDashboardEnabled ? t.emotionalDashboardDeactivated : t.emotionalDashboardActivated,
-  //   });
-  // };
+  const handleSkipIntroChange = (checked: boolean) => {
+    setSkipIntroScreens(checked);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(SKIP_INTRO_SCREENS_KEY, JSON.stringify(checked));
+    }
+    toast({
+      title: "Preferencia Guardada",
+      description: checked ? "Ahora omitirás las pantallas introductorias." : "Ahora verás las pantallas introductorias.",
+    });
+  };
 
   if (userLoading && !user) {
     return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
@@ -113,8 +118,6 @@ export default function SettingsPage() {
   if (!user) {
     return <div className="container mx-auto py-8 text-center">{t.loading}</div>;
   }
-
-  // const isDeveloper = user?.email === DEVELOPER_EMAIL; // No longer needed for this page logic
 
   return (
     <div className="container mx-auto py-8">
@@ -233,6 +236,15 @@ export default function SettingsPage() {
                 </Label>
                 <Switch id="motivationalQuotes" checked={motivationalQuotes} onCheckedChange={setMotivationalQuotes} />
               </div>
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <Label htmlFor="skipIntroScreens" className="flex flex-col space-y-1">
+                  <span>{t.settingsSkipIntroScreensTitle}</span>
+                  <span className="font-normal leading-snug text-muted-foreground">
+                    {t.settingsSkipIntroScreensDescription}
+                  </span>
+                </Label>
+                <Switch id="skipIntroScreens" checked={skipIntroScreens} onCheckedChange={handleSkipIntroChange} />
+              </div>
             </CardContent>
           </Card>
 
@@ -264,7 +276,6 @@ export default function SettingsPage() {
                 <Trash2 className="mr-2 h-4 w-4" />
                 {t.clearEmotionalEntriesButton}
               </Button>
-              {/* Feature flag toggle button removed as the feature is now always enabled */}
             </CardContent>
           </Card>
 

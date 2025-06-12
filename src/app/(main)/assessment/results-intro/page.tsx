@@ -10,17 +10,26 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const SESSION_STORAGE_ASSESSMENT_RESULTS_KEY = 'workwell-assessment-results';
+const SKIP_INTRO_SCREENS_KEY = 'workwell-skip-intro-screens';
 
 export default function AssessmentResultsIntroPage() {
   const t = useTranslations();
   const router = useRouter();
 
   useEffect(() => {
-    // Check if results exist in sessionStorage, if not, redirect back to assessment start
-    const results = typeof window !== 'undefined' ? localStorage.getItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY) : null;
-    if (!results) {
-      console.warn("AssessmentResultsIntroPage: No assessment results found in sessionStorage. Redirecting to intro.");
-      router.replace('/assessment/intro');
+    if (typeof window !== 'undefined') {
+      const skipIntro = localStorage.getItem(SKIP_INTRO_SCREENS_KEY) === 'true';
+      if (skipIntro) {
+        router.replace('/assessment/show-results');
+        return; // Importante salir temprano para evitar la verificación de resultados si se omite
+      }
+
+      // Check if results exist in sessionStorage, if not, redirect back to assessment start
+      const results = localStorage.getItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
+      if (!results) {
+        console.warn("AssessmentResultsIntroPage: No assessment results found in sessionStorage. Redirecting to assessment intro.");
+        router.replace('/assessment/intro');
+      }
     }
   }, [router]);
 
@@ -73,5 +82,3 @@ export default function AssessmentResultsIntroPage() {
     </div>
   );
 }
-
-    
