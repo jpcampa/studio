@@ -69,30 +69,39 @@ export default function MyAssessmentsPage() {
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(apiUrl, { signal });
-      const responseText = await response.text();
+      let responseText = await response.text();
       
-      console.log("MyAssessmentsPage: Raw API Response Text (before JSON.parse):", responseText);
+      console.log("MyAssessmentsPage: Raw API Response Text (before any parsing):", responseText);
 
       if (!response.ok) {
         console.error(`MyAssessmentsPage: API Error HTTP ${response.status}. StatusText: ${response.statusText}. ResponseBody: ${responseText}`);
         throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${response.statusText || responseText.substring(0,100) || 'Error del servidor'}`);
       }
       
+      let potentialJsonString = responseText;
+      const varDumpRegex = /^string\(\d+\)\s*"(.*)"\s*$/s; // 's' flag for dot to match newline
+      const match = responseText.match(varDumpRegex);
+
+      if (match && match[1]) {
+        potentialJsonString = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\'); // Unescape escaped quotes and backslashes
+        console.log("MyAssessmentsPage: Extracted potential JSON string from var_dump-like output:", potentialJsonString);
+      }
+
       let apiResult: ExternalApiResponse;
       try {
-        apiResult = JSON.parse(responseText);
+        apiResult = JSON.parse(potentialJsonString);
       } catch (jsonError: any) {
         let devErrorMessage = "MyAssessmentsPage: Failed to parse JSON response from API.";
-        if (typeof responseText === 'string' && responseText.trim().startsWith('string(')) {
-            devErrorMessage += " The response looks like PHP var_dump() output, not valid JSON.";
+        if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(')) {
+            devErrorMessage += " The response looks like PHP var_dump() output, and extraction failed or result was still not JSON.";
         }
-        console.error(devErrorMessage, "Raw text was:", responseText, "Error:", jsonError);
+        console.error(devErrorMessage, "Original responseText was:", responseText, "Attempted to parse:", potentialJsonString, "Error:", jsonError);
         setError(t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)");
         setIsLoading(false);
         return;
       }
       
-      console.log("MyAssessmentsPage: API call status OK. Raw API Result:", JSON.stringify(apiResult).substring(0,500) + "...");
+      console.log("MyAssessmentsPage: API call status OK. Parsed API Result (from potentialJsonString):", JSON.stringify(apiResult).substring(0,500) + "...");
 
 
       if (apiResult.status === "OK") {
@@ -128,7 +137,7 @@ export default function MyAssessmentsPage() {
             setAssessments(sortedAssessments);
             console.log("MyAssessmentsPage: Successfully fetched, processed, and validated assessments:", sortedAssessments.length, "records.");
             if (sortedAssessments.length === 0) {
-                setError(null); // Clear previous errors if we get an empty list back successfully
+                setError(null); 
             }
           } else {
             console.error("MyAssessmentsPage: Validation failed for processed assessment data:", validationResult.error.flatten());
