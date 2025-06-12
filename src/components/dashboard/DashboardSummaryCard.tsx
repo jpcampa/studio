@@ -27,6 +27,20 @@ export function DashboardSummaryCard({
   cardColorClass = 'bg-card',
   iconColorClass = 'text-primary',
 }: DashboardSummaryCardProps) {
+  
+  // Specifically update the ctaLink for "Realizar Evaluación Inicial"
+  let finalCtaLink = ctaLink;
+  if (ctaLabel === "Realizar Evaluación Inicial" && ctaLink === "/assessment") {
+    finalCtaLink = "/assessment/intro";
+  }
+  if (ctaLabel === "Ver detalles" && title === "Tu Bienestar Hoy" && ctaLink === "/assessment"){
+    finalCtaLink = "/assessment/intro";
+  }
+   if (ctaLabel === "Ver detalles" && title === "Tu Progreso" && ctaLink === "/assessment"){
+    finalCtaLink = "/assessment/intro";
+  }
+
+
   return (
     <Card className={cn('shadow-lg hover:shadow-xl transition-shadow duration-300', cardColorClass)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -36,9 +50,9 @@ export function DashboardSummaryCard({
       <CardContent>
         <div className="text-xl md:text-2xl font-bold">{value}</div>
         {description && <p className="text-xs text-muted-foreground pt-1">{description}</p>}
-        {ctaLink && ctaLabel && (
+        {finalCtaLink && ctaLabel && (
           <Button asChild variant="link" className="px-0 pt-3 text-sm h-auto leading-tight">
-            <Link href={ctaLink}>{ctaLabel}</Link>
+            <Link href={finalCtaLink}>{ctaLabel}</Link>
           </Button>
         )}
       </CardContent>
@@ -46,3 +60,4 @@ export function DashboardSummaryCard({
   );
 }
 
+    

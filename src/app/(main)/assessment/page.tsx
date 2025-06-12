@@ -93,6 +93,7 @@ export default function AssessmentPage() {
     setAssessmentResults(null);
     setShowQuestionnaire(true);
     setGeneratedSaveUrl(null); 
+    // No redirigimos aquí, AssessmentResultsDisplay lo hará a /assessment/intro si es necesario
   };
 
   const handleDevSubmit = async () => {
@@ -110,7 +111,7 @@ export default function AssessmentPage() {
   if (!showQuestionnaire && assessmentResults) {
     return (
       <div className="container mx-auto py-8 space-y-8">
-        <AssessmentResultsDisplay results={assessmentResults} />
+        <AssessmentResultsDisplay results={assessmentResults} onRetake={() => router.push('/assessment/intro')} />
         
         {generatedSaveUrl && (
            <Card className="mt-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
@@ -131,29 +132,14 @@ export default function AssessmentPage() {
           </Card>
         )}
 
-        <div className="mt-8 text-center">
-          <Button onClick={handleRetakeAssessment} variant="outline">
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Realizar Evaluación de Nuevo
-          </Button>
-        </div>
+        {/* El botón de "Realizar de Nuevo" se maneja dentro de AssessmentResultsDisplay y redirige a intro */}
       </div>
     );
   }
   
   return (
     <div className="container mx-auto py-8">
-      <Card className="mb-8 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold text-primary">{t.assessmentTitle}</CardTitle>
-          <CardDescription className="text-lg">{t.assessmentIntro}</CardDescription>
-        </CardHeader>
-        {!showQuestionnaire && !assessmentResults && (
-           <CardContent>
-             <Button onClick={() => setShowQuestionnaire(true)}>{t.startAssessment}</Button>
-           </CardContent>
-        )}
-      </Card>
+      {/* El Card de título de la evaluación se elimina ya que la intro lo cubre */}
       {showQuestionnaire && (
         <>
           {isDeveloper && (
@@ -167,6 +153,14 @@ export default function AssessmentPage() {
           <QuestionnaireForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </>
       )}
+       {!showQuestionnaire && !assessmentResults && ( // Caso raro, si se oculta el cuestionario pero no hay resultados
+           <div className="text-center py-10">
+             <p className="text-muted-foreground">{t.loading}...</p>
+             <Button onClick={() => router.push('/assessment/intro')} className="mt-4">{t.startAssessment}</Button>
+           </div>
+        )}
     </div>
   );
 }
+
+    

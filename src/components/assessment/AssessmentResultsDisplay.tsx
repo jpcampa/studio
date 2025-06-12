@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity, AlertTriangle, Info } from 'lucide-react';
+import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw } from 'lucide-react';
 import {
   ChartContainer,
   ChartTooltip,
@@ -28,9 +28,11 @@ import {
 import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions'; // Import dimensions data
 import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations'; // Import interpretations
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
+  onRetake: () => void; // Callback para reiniciar la evaluación
 }
 
 const themedChartColors = [
@@ -68,8 +70,9 @@ const getInterpretationLevel = (score: number, interpretations: InterpretationLe
   return t.scoreLevelLow || "Bajo";
 };
 
-export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayProps) {
+export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
+  const router = useRouter();
 
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 ||
       Object.values(results.emotionalProfile).some(score => typeof score !== 'number') ||
@@ -79,8 +82,8 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
         <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
         <p className="mt-4 text-lg font-semibold">{t.errorOccurred}</p>
         <p className="text-muted-foreground">No se pudieron cargar los resultados de la evaluación. Faltan datos o están malformados.</p>
-        <Button asChild className="mt-6">
-          <Link href="/assessment">{t.takeInitialAssessment}</Link>
+        <Button asChild className="mt-6" onClick={() => router.push('/assessment/intro')}>
+          <Link href="/assessment/intro">{t.takeInitialAssessment}</Link>
         </Button>
       </div>
     );
@@ -275,15 +278,19 @@ export function AssessmentResultsDisplay({ results }: AssessmentResultsDisplayPr
         </CardContent>
       </Card>
 
-      {results.priorityAreas.length > 0 && (
-        <div className="text-center mt-8">
-          <Button asChild size="lg">
-            <Link href={`/paths?start_with=${encodeURIComponent(results.priorityAreas[0])}`}>
-              {t.startPathFor.replace("{area}", results.priorityAreas[0].split('(')[0].trim())}
-            </Link>
-          </Button>
-        </div>
-      )}
+      <div className="mt-8 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
+        {results.priorityAreas.length > 0 && (
+            <Button asChild size="lg">
+                <Link href={`/paths?start_with=${encodeURIComponent(results.priorityAreas[0])}`}>
+                {t.startPathFor.replace("{area}", results.priorityAreas[0].split('(')[0].trim())}
+                </Link>
+            </Button>
+        )}
+        <Button onClick={onRetake} variant="outline" size="lg">
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Realizar Evaluación de Nuevo
+        </Button>
+      </div>
     </div>
   );
 }

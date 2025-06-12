@@ -33,6 +33,7 @@ export default function WelcomePage() {
         <p className="text-md md:text-lg leading-relaxed text-foreground whitespace-pre-line">
           {t.welcomePageMainText1}
         </p>
+        <p className="text-md md:text-lg leading-relaxed text-foreground whitespace-pre-line italic">-posible imagen-</p>
         <p className="text-md md:text-lg leading-relaxed text-foreground whitespace-pre-line">
           {t.welcomePageMainText2}
         </p>
@@ -45,7 +46,7 @@ export default function WelcomePage() {
       </CardContent>
       <CardFooter className="flex-col items-center gap-4 pt-6 pb-8">
         <Button asChild size="lg" className="w-full sm:w-auto sm:max-w-xs text-base py-3 shadow-lg hover:shadow-primary/40 transition-shadow">
-          <Link href="/assessment">
+          <Link href="/assessment/intro"> {/* Updated href */}
             {t.welcomePageStartAssessmentButton}
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
@@ -60,3 +61,5 @@ export default function WelcomePage() {
     </Card>
   );
 }
+
+    

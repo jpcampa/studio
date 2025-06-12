@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -20,7 +21,7 @@ import { Logo } from "@/components/Logo";
 
 const navItems = [
   { href: "/dashboard", labelKey: "navDashboard", icon: LayoutDashboard },
-  { href: "/assessment", labelKey: "navAssessment", icon: ClipboardList },
+  { href: "/assessment/intro", labelKey: "navAssessment", icon: ClipboardList }, // Updated href
   { href: "/paths", labelKey: "navPaths", icon: Milestone },
   { href: "/chatbot", labelKey: "navChatbot", icon: Bot },
   { href: "/resources", labelKey: "navResources", icon: Library },
@@ -35,7 +36,12 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { logout } = useUser();
 
-  const isActive = (href: string) => pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+  const isActive = (href: string) => {
+    if (href === "/assessment/intro") {
+      return pathname.startsWith("/assessment"); // Highlight for /assessment and /assessment/intro
+    }
+    return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+  }
 
   return (
     <Sidebar variant="sidebar" collapsible="icon" side="left">
@@ -88,3 +94,5 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
+
+    

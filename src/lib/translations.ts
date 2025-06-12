@@ -75,6 +75,31 @@ export const t = {
   scoreLevelVeryHigh: "Muy Alto",
   generatedAssessmentSaveUrlLabel: "URL de Guardado de Evaluación (Solo para Depuración)",
 
+  // Assessment Intro Page
+  assessmentIntroPageTitle: "Bienvenido/a a tu primer paso",
+  assessmentIntroPageTagline: "Este cuestionario no es solo una evaluación.\nEs un momento contigo. Una invitación a mirar hacia dentro con honestidad, curiosidad y sin juicio.",
+  assessmentIntroPageMainText1: "Vas a encontrar frases que hablan de ti: cómo sueles sentirte, pensar, actuar… y cómo estás viviendo tu presente emocional.\nAlgunas te resultarán fáciles. Otras te harán parar y reflexionar. Y eso está bien.\nCada respuesta es un paso más hacia tu bienestar.",
+  assessmentIntroPagePurposeTitle: "¿Para qué sirve?",
+  assessmentIntroPagePurpose1: "Conocerte mejor.",
+  assessmentIntroPagePurpose2: "Detectar tus necesidades actuales.",
+  assessmentIntroPagePurpose3: "Activar rutas de desarrollo personal adaptadas a ti.",
+  assessmentIntroPageWhatToKnowTitle: "¿Qué necesitas saber?",
+  assessmentIntroPageWhatToKnowDurationLabel: "Duración:",
+  assessmentIntroPageWhatToKnowDurationText: "5–7 minutos.",
+  assessmentIntroPageWhatToKnowContentLabel: "Contenido:",
+  assessmentIntroPageWhatToKnowContentText: "Aspectos clave de tu personalidad, estado emocional y forma de afrontar retos.",
+  assessmentIntroPageWhatToKnowFormatLabel: "Formato:",
+  assessmentIntroPageWhatToKnowFormatText: "Escala tipo Likert del 1 al 5 (según tu grado de acuerdo o identificación con cada afirmación).",
+  assessmentIntroPageWhatToKnowResultsLabel: "Resultados:",
+  assessmentIntroPageWhatToKnowResultsText: "Perfil emocional interpretado + recomendaciones personalizadas.",
+  assessmentIntroPageWhatToKnowPrivacyLabel: "Privacidad:",
+  assessmentIntroPageWhatToKnowPrivacyText: "Tus respuestas son confidenciales y no se comparten.",
+  assessmentIntroPageImportantLabel: "Importante:",
+  assessmentIntroPageImportantText: "Esta evaluación no es un diagnóstico formal ni sustituye un proceso terapéutico clínico.",
+  assessmentIntroPageFinalWords: "Tómate tu tiempo. Respira. Responde con sinceridad.\nEste camino empieza en ti. Y no estarás solo/a.",
+  assessmentIntroPageStartButton: "Comenzar Evaluación",
+
+
   // Paths
   pathsTitle: "Rutas de Desarrollo",
   selectPathPrompt: "Elige una ruta para trabajar en tu bienestar.",
