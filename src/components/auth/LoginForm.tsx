@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff, ShieldQuestion } from "lucide-react"; 
 
+const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
 const initialState: LoginState = {
   message: null,
   errors: {},
@@ -114,10 +115,17 @@ export function LoginForm() {
       "userLoading:", userLoading
     );
     if (!userLoading && contextUser && typeof contextUser.id === 'string' && contextUser.id.trim() !== '') {
-      console.log("LoginForm REDIRECT_EFFECT: Conditions MET. Redirecting to /dashboard. User ID:", contextUser.id);
-      router.push("/dashboard");
+      console.log("LoginForm REDIRECT_EFFECT: User context updated. Checking welcome screen status.");
+      const welcomeSeen = typeof window !== 'undefined' && localStorage.getItem(WELCOME_SEEN_KEY);
+      if (welcomeSeen === 'true') {
+        console.log("LoginForm REDIRECT_EFFECT: Welcome screen seen. Redirecting to /dashboard. User ID:", contextUser.id);
+        router.push("/dashboard");
+      } else {
+        console.log("LoginForm REDIRECT_EFFECT: Welcome screen NOT seen. Redirecting to /welcome. User ID:", contextUser.id);
+        router.push("/welcome");
+      }
     } else {
-      console.log("LoginForm REDIRECT_EFFECT: Conditions NOT MET. No redirect.");
+      console.log("LoginForm REDIRECT_EFFECT: Conditions NOT MET for redirect. No redirect.");
       if (userLoading) console.log("LoginForm REDIRECT_EFFECT: Reason -> userLoading is true.");
       if (!contextUser) console.log("LoginForm REDIRECT_EFFECT: Reason -> contextUser is null or undefined.");
       else if (!contextUser.id || typeof contextUser.id !== 'string' || contextUser.id.trim() === '') {
@@ -219,3 +227,5 @@ export function LoginForm() {
     </Card>
   );
 }
+
+    

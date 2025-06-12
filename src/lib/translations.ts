@@ -75,7 +75,6 @@ export const t = {
   scoreLevelVeryHigh: "Muy Alto",
   generatedAssessmentSaveUrlLabel: "URL de Guardado de Evaluación (Solo para Depuración)",
 
-
   // Paths
   pathsTitle: "Rutas de Desarrollo",
   selectPathPrompt: "Elige una ruta para trabajar en tu bienestar.",
@@ -231,6 +230,15 @@ export const t = {
   allEmotionalEntriesTitle: "Todos los Registros Emocionales",
   allEmotionalEntriesDescription: "Aquí puedes ver todas tus entradas emocionales ordenadas por fecha.",
   noEntriesYet: "Aún no tienes registros emocionales.",
+
+  // Welcome Page
+  welcomePageTitle: "Bienvenido/a: Este espacio es para ti",
+  welcomePageMainText1: "Hay momentos en los que algo dentro de nosotros pide atención.\nTal vez te sientes apagado/a, desbordado/a, desconectado/a… o simplemente sabes que podrías estar mejor, con más claridad, energía o sentido.",
+  welcomePageMainText2: "Esta app nace para acompañarte en ese camino.\nAquí no hay etiquetas, diagnósticos ni exigencias. Solo un espacio íntimo, diseñado con base científica y con mucho respeto, para ayudarte a entender cómo estás, qué necesitas y por dónde puedes empezar a cuidarte de verdad.\nA través de una evaluación breve y sencilla, descubrirás tu perfil personal y emocional actual. No para juzgarte, sino para ofrecerte un mapa que te oriente. A partir de ahí, activaremos rutas personalizadas con prácticas breves, validadas y pensadas para mejorar tu bienestar día a día.",
+  welcomePageLegalDisclaimer: "Aviso legal: Esta app no sustituye un proceso terapéutico clínico. Es una herramienta profesional de acompañamiento emocional y crecimiento personal.",
+  welcomePageMotivationalQuote: "Estás a un clic de comenzar a escucharte de verdad.\nY eso, aunque no lo parezca, ya es un acto de valentía.",
+  welcomePageStartAssessmentButton: "Iniciar mi evaluación personalizada",
+  welcomePageSkipToDashboardButton: "Ir al Panel Principal",
 };
 
 export type Translations = typeof t;
@@ -239,3 +247,5 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
+
+    
