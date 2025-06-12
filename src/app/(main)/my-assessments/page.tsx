@@ -71,32 +71,36 @@ export default function MyAssessmentsPage() {
       const response = await fetch(apiUrl, { signal });
       let responseText = await response.text();
       
-      console.log("MyAssessmentsPage: Raw API Response Text (before any parsing):", responseText);
+      console.log("MyAssessmentsPage: Raw API Response Text (before any parsing or var_dump stripping):", responseText);
 
-      if (!response.ok) {
-        console.error(`MyAssessmentsPage: API Error HTTP ${response.status}. StatusText: ${response.statusText}. ResponseBody: ${responseText}`);
-        throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${response.statusText || responseText.substring(0,100) || 'Error del servidor'}`);
-      }
-      
       let jsonToParse = responseText;
-      const varDumpRegex = /^string\(\d+\)\s*"(.*)"\s*$/s; // 's' flag for dot to match newline
+      // Attempt to strip var_dump output if present
+      const varDumpRegex = /^string\(\d+\)\s*"(.*)"\s*$/s;
       const match = responseText.match(varDumpRegex);
 
       if (match && match[1]) {
         console.log("MyAssessmentsPage: Detected var_dump-like output. Attempting to extract JSON content.");
+        // Unescape escaped double quotes and backslashes within the JSON string
         jsonToParse = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
         console.log("MyAssessmentsPage: Extracted potential JSON string for parsing:", jsonToParse);
       }
 
+
+      if (!response.ok) {
+        console.error(`MyAssessmentsPage: API Error HTTP ${response.status}. StatusText: ${response.statusText}. ResponseBody (potentially stripped): ${jsonToParse}`);
+        throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${response.statusText || jsonToParse.substring(0,100) || 'Error del servidor'}`);
+      }
+      
       let apiResult: ExternalApiResponse;
       try {
         apiResult = JSON.parse(jsonToParse);
       } catch (jsonError: any) {
         let devErrorMessage = "MyAssessmentsPage: Failed to parse JSON response from API.";
-        if (match) { // If we attempted to parse var_dump output and it still failed
-            devErrorMessage = "MyAssessmentsPage: Failed to parse extracted JSON from var_dump-like output.";
-        } else if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(') && !match) {
-            devErrorMessage += " The response looks like PHP var_dump() output, but regex extraction failed.";
+        if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(') && !match) {
+            // This means it looked like var_dump but regex failed, or it was var_dump and extraction failed
+            devErrorMessage += " The response looks like PHP var_dump() output, but regex extraction or subsequent parsing failed.";
+        } else if (match && jsonToParse !== responseText) {
+             devErrorMessage = "MyAssessmentsPage: Failed to parse extracted JSON from var_dump-like output.";
         }
         console.error(devErrorMessage, "Original responseText was:", responseText, "Attempted to parse:", jsonToParse, "Error:", jsonError);
         setError(t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)");
@@ -120,18 +124,21 @@ export default function MyAssessmentsPage() {
           if (decryptedData && Array.isArray(decryptedData)) {
             console.log("MyAssessmentsPage: Successfully decrypted API data into an array.");
             potentialAssessmentsArray = decryptedData;
-          } else if (decryptedData === null && apiResult.data.toLowerCase().includes("no hay evaluaciones")) {
-            console.log("MyAssessmentsPage: API data decrypted to null, original string indicated no evaluations.");
-            potentialAssessmentsArray = [];
           } else {
-            console.warn("MyAssessmentsPage: Decrypted API data is not an array or decryption failed. Decrypted data:", decryptedData);
+            console.warn(
+                "MyAssessmentsPage: Decrypted API data is NOT an array or decryption was not successful. Type of decryptedData:", 
+                typeof decryptedData, 
+                ". Value (first 200 chars):", JSON.stringify(decryptedData).substring(0,200),
+                ". This will likely cause a validation error next."
+            );
+            // Let Zod validation handle the error message for the user if potentialAssessmentsArray is not what's expected
           }
         } else if (apiResult.data === null || (typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.trim() === "[]" || apiResult.data.toLowerCase().includes("no hay evaluaciones")))) {
             console.log("MyAssessmentsPage: API reported 'OK' but data is null, empty, or indicates no assessments. Treating as empty list.");
             potentialAssessmentsArray = [];
         }
 
-        if (potentialAssessmentsArray && Array.isArray(potentialAssessmentsArray)) {
+        if (potentialAssessmentsArray !== null && potentialAssessmentsArray !== undefined) { // Ensure it's not undefined from a failed branch
           const validationResult = ApiFetchedAssessmentsSchema.safeParse(potentialAssessmentsArray);
           if (validationResult.success) {
             const sortedAssessments = validationResult.data.sort((a, b) => 
@@ -144,16 +151,12 @@ export default function MyAssessmentsPage() {
             }
           } else {
             console.error("MyAssessmentsPage: Validation failed for processed assessment data:", validationResult.error.flatten());
-            setError(t.errorOccurred + " (Datos de evaluación recibidos no son válidos)");
+            console.error("MyAssessmentsPage: Data that failed Zod validation (potentialAssessmentsArray):", JSON.stringify(potentialAssessmentsArray).substring(0,1000) + "...");
+            setError(t.errorOccurred + " (Datos de evaluación recibidos no son válidos o tienen un formato incorrecto)");
           }
-        } else {
+        } else { // potentialAssessmentsArray is null or undefined, meaning data processing failed before Zod
           console.warn("MyAssessmentsPage: No valid array of assessments obtained after processing API data. Original apiResult.data type:", typeof apiResult.data, "apiResult.data:", apiResult.data);
-          if(apiResult.data && typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.toLowerCase().includes("no hay evaluaciones"))){
-            setAssessments([]); 
-            console.log("MyAssessmentsPage: Original data string was empty or indicated no evaluations. Setting assessments to [].");
-          } else {
-            setError(t.errorOccurred + " (No se pudieron procesar los datos de evaluaciones. Formato inesperado.)");
-          }
+           setError(t.errorOccurred + " (No se pudieron procesar los datos de evaluaciones. Formato inesperado o fallo en desencriptación.)");
         }
 
       } else { // apiResult.status === "NOOK"
@@ -208,7 +211,7 @@ export default function MyAssessmentsPage() {
           <h1 className="text-4xl font-bold text-primary mb-3">{t.myAssessmentsTitle}</h1>
           <p className="text-lg text-muted-foreground">{t.myAssessmentsDescription}</p>
         </div>
-        <Button onClick={fetchAssessments} variant="outline" disabled={isLoading} className="mt-4 sm:mt-0">
+        <Button onClick={fetchAssessments} variant="outline" disabled={isLoading}>
           <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           Refrescar
         </Button>
