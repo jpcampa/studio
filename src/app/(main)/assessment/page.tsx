@@ -23,6 +23,7 @@ const DEVELOPER_EMAIL = 'jpcampa@example.com';
 const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY = "4463";
 const SESSION_STORAGE_ASSESSMENT_RESULTS_KEY = 'workwell-assessment-results';
+const API_SAVE_TIMEOUT_MS = 15000; // 15 segundos para el guardado
 
 interface AssessmentSavePayload {
   assessmentId: string;
@@ -37,7 +38,6 @@ export default function AssessmentPage() {
   const { toast } = useToast();
   const { user } = useUser();
   const router = useRouter();
-  // No longer managing assessmentResults or showQuestionnaire directly here for displaying results
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
   const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
@@ -52,10 +52,9 @@ export default function AssessmentPage() {
     await new Promise(resolve => setTimeout(resolve, 2500)); 
 
     setIsProcessingModalVisible(false);
-    setIsSubmitting(false);
+    // setIsSubmitting(false); // Se manejará después del intento de guardado
 
     if (result.success) {
-      // Store results in sessionStorage
       try {
         localStorage.setItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY, JSON.stringify(result.data));
         console.log("AssessmentPage: Results saved to sessionStorage:", JSON.stringify(result.data).substring(0,200) + "...");
@@ -66,7 +65,8 @@ export default function AssessmentPage() {
             description: "No se pudieron guardar temporalmente los resultados para mostrar.",
             variant: "destructive",
         });
-        return; // Prevent further navigation if storage fails
+        setIsSubmitting(false);
+        return; 
       }
 
       toast({
@@ -74,6 +74,7 @@ export default function AssessmentPage() {
         description: t.assessmentResultsReadyMessage,
       });
 
+      // Attempt to save assessment to external API
       if (user && user.id) {
         const assessmentTimestamp = new Date().toISOString();
         const assessmentId = crypto.randomUUID(); 
@@ -86,21 +87,68 @@ export default function AssessmentPage() {
           assessmentTimestamp: assessmentTimestamp,
         };
 
+        let saveUrlForDebug = "";
         try {
-          console.log("Payload a encriptar para guardar evaluación:", payloadToSave);
           const encryptedPayload = encryptDataAES(payloadToSave);
-          const saveUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardarevaluacion&datosEvaluacion=${encodeURIComponent(encryptedPayload)}`;
-          setGeneratedSaveUrl(saveUrl); // Still set for debug display on this page if needed later
-          console.log("Generated Assessment Save URL (for debug):", saveUrl);
-        } catch (encError) {
-          console.error("Error encrypting assessment payload:", encError);
-          setGeneratedSaveUrl(t.errorOccurred + " (encryption failed)");
+          saveUrlForDebug = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardarevaluacion&datosEvaluacion=${encodeURIComponent(encryptedPayload)}`;
+          setGeneratedSaveUrl(saveUrlForDebug); 
+          console.log("AssessmentPage: Attempting to save assessment to external API. URL (for server logging, payload encrypted):", saveUrlForDebug.substring(0,150) + "...");
+          
+          const saveResponse = await fetch(saveUrlForDebug, { signal: AbortSignal.timeout(API_SAVE_TIMEOUT_MS) });
+          const saveResponseText = await saveResponse.text();
+
+          if (saveResponse.ok) {
+            const saveApiResult = JSON.parse(saveResponseText);
+            if (saveApiResult.status === "OK") {
+              toast({
+                title: t.assessmentSavedSuccessTitle,
+                description: t.assessmentSavedSuccessMessage,
+                className: "bg-green-50 dark:bg-green-900/30 border-green-500",
+              });
+              console.log("AssessmentPage: Assessment successfully saved to API. Response:", saveApiResult);
+            } else {
+              toast({
+                title: t.assessmentSavedErrorTitle,
+                description: t.assessmentSavedErrorMessageApi.replace("{message}", saveApiResult.message || t.errorOccurred),
+                variant: "destructive",
+              });
+              console.warn("AssessmentPage: API reported 'NOOK' for assessment save. Message:", saveApiResult.message, "Full Response:", saveApiResult);
+            }
+          } else {
+            toast({
+              title: t.assessmentSavedErrorNetworkTitle,
+              description: t.assessmentSavedErrorNetworkMessage.replace("{status}", saveResponse.status.toString()).replace("{details}", saveResponseText.substring(0,100)),
+              variant: "destructive",
+            });
+            console.warn("AssessmentPage: Failed to save assessment to API. Status:", saveResponse.status, "Response Text:", saveResponseText);
+          }
+        } catch (error: any) {
+          let errorMessage = t.assessmentSavedErrorGeneric;
+          if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
+            errorMessage = t.assessmentSavedErrorTimeout;
+          } else if (error.message && error.message.includes('fetch failed')) {
+            errorMessage = t.assessmentSavedErrorFetchFailed;
+          } else if (error instanceof SyntaxError) {
+            errorMessage = "Error procesando la respuesta del servidor de guardado (JSON inválido)."
+          }
+          toast({
+            title: t.assessmentSavedErrorTitle,
+            description: errorMessage,
+            variant: "destructive",
+          });
+          console.error("AssessmentPage: Error saving assessment to API:", error, "URL attempted:", saveUrlForDebug);
         }
       } else {
         setGeneratedSaveUrl(t.errorOccurred + " (User ID not available for debug URL)");
+        toast({
+          title: t.assessmentSaveSkippedTitle,
+          description: t.assessmentSaveSkippedMessage,
+          variant: "default", 
+          className: "bg-yellow-50 dark:bg-yellow-900/30 border-yellow-500",
+        });
+        console.warn("AssessmentPage: User not identified or user.id missing. Cannot save assessment to external API.");
       }
       
-      // Redirect to the new results intro page
       router.push('/assessment/results-intro');
 
     } else {
@@ -110,6 +158,7 @@ export default function AssessmentPage() {
         variant: "destructive",
       });
     }
+    setIsSubmitting(false); // Ensure this is set after all operations
   };
 
   const handleDevSubmit = async () => {
@@ -123,9 +172,6 @@ export default function AssessmentPage() {
   };
   
   const isDeveloper = user?.email === DEVELOPER_EMAIL;
-
-  // The logic to display AssessmentResultsDisplay is removed from this page.
-  // This page now only handles the questionnaire form and processing.
   
   return (
     <div className="container mx-auto py-8">
@@ -139,7 +185,6 @@ export default function AssessmentPage() {
       )}
       <QuestionnaireForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         
-      {/* Debug display for generatedSaveUrl can remain if useful, or be removed */}
       {generatedSaveUrl && (
         <Card className="mt-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
         <CardHeader>
@@ -150,7 +195,7 @@ export default function AssessmentPage() {
         </CardHeader>
         <CardContent>
             <p className="text-xs text-muted-foreground mb-2">
-            Esta URL se genera para mostrar cómo se enviarían los datos. No se envía automáticamente.
+            Esta URL se genera para mostrar cómo se enviarían los datos y se usa para el intento de guardado.
             </p>
             <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
             <code>{generatedSaveUrl}</code>
@@ -175,5 +220,3 @@ export default function AssessmentPage() {
     </div>
   );
 }
-
-    

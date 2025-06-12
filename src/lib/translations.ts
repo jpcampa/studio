@@ -73,11 +73,23 @@ export const t = {
   scoreLevelMedium: "Medio",
   scoreLevelHigh: "Alto",
   scoreLevelVeryHigh: "Muy Alto",
-  generatedAssessmentSaveUrlLabel: "URL de Guardado de Evaluación (Solo para Depuración)",
+  generatedAssessmentSaveUrlLabel: "URL de Guardado de Evaluación (Depuración)",
   assessmentCompletedModalTitle: "Evaluación Completada",
   assessmentProcessingModalMessage: "Estamos preparando tu perfil emocional…",
   assessmentResultsReadyTitle: "¡Resultados Listos!",
   assessmentResultsReadyMessage: "Tu perfil emocional personalizado ya está disponible.",
+  assessmentSavedSuccessTitle: "Evaluación Guardada",
+  assessmentSavedSuccessMessage: "Tus resultados de evaluación han sido guardados en el servidor.",
+  assessmentSavedErrorTitle: "Error al Guardar Evaluación",
+  assessmentSavedErrorMessageApi: "El servidor respondió con un error: {message}",
+  assessmentSavedErrorNetworkTitle: "Error de Comunicación",
+  assessmentSavedErrorNetworkMessage: "No se pudo guardar la evaluación en el servidor (HTTP {status}). Detalles: {details}",
+  assessmentSavedErrorGeneric: "Ocurrió un error desconocido al intentar guardar tu evaluación.",
+  assessmentSavedErrorTimeout: "Tiempo de espera agotado al guardar la evaluación.",
+  assessmentSavedErrorFetchFailed: "Fallo en la comunicación con el servicio de guardado.",
+  assessmentSaveSkippedTitle: "Guardado Omitido",
+  assessmentSaveSkippedMessage: "No se pudo identificar al usuario para guardar la evaluación. Podrás ver tus resultados, pero no se sincronizarán.",
+
 
   // Assessment Intro Page
   assessmentIntroPageTitle: "Bienvenido/a a tu primer paso",
@@ -156,7 +168,7 @@ export const t = {
   emotionalDashboardActivated: "Dashboard Emocional activado.",
   emotionalDashboardDeactivated: "Dashboard Emocional desactivado.",
   settingsSkipIntroScreensTitle: "Omitir Pantallas Introductorias",
-  settingsSkipIntroScreensDescription: "Accede directamente al contenido principal de secciones como la evaluación o los resultados.",
+  settingsSkipIntroScreensDescription: "Accede directamente al contenido principal de secciones como la evaluación o los resultados, omitiendo las pantallas informativas previas.",
   
   // Change Password
   changePasswordTitle: "Cambiar Contraseña",
