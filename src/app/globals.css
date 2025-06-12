@@ -26,8 +26,8 @@ body {
     --muted: 0 0% 90%; /* Muted elements */
     --muted-foreground: 0 0% 45.1%; /* Muted foreground text */
 
-    --accent: 265 43% 73%; /* #B39DDB gentle lavender */
-    --accent-foreground: 0 0% 98%; /* white/very light text for contrast */
+    --accent: 40 70% 75%; /* #f7e0a0 soft gold */
+    --accent-foreground: 0 0% 20%; /* Darker text for better contrast with light gold */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -48,14 +48,15 @@ body {
     --sidebar-foreground: 220 10% 25%; /* Darker text for sidebar */
     --sidebar-primary: 100 51% 57%; /* Same as app primary */
     --sidebar-primary-foreground: 0 0% 98%; /* Same as app primary-foreground */
-    --sidebar-accent: 265 43% 73%; /* Same as app accent */
-    --sidebar-accent-foreground: 0 0% 98%; /* Same as app accent-foreground */
+    --sidebar-accent: 40 70% 75%; /* Same as app accent (soft gold) */
+    --sidebar-accent-foreground: 0 0% 20%; /* Darker text for sidebar accent */
     --sidebar-border: 0 0% 89.8%; /* Consistent border */
     --sidebar-ring: 100 51% 57%; /* Consistent ring */
   }
 
   .dark {
     /* Keeping dark theme as is, can be adjusted later if needed */
+    /* Consider updating dark theme accents if this new light theme accent is kept */
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -68,7 +69,7 @@ body {
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
+    --accent: 40 70% 25%; /* Darker gold for dark mode */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
@@ -85,7 +86,7 @@ body {
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent: 40 70% 25%; /* Darker gold for dark mode sidebar accent */
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
