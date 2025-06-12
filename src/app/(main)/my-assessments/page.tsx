@@ -6,19 +6,19 @@ import Link from 'next/link';
 import { useTranslations } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatAssessmentTimestamp, type AssessmentRecord } from '@/data/assessmentHistoryStore'; // Keep AssessmentRecord type and formatter
+import { formatAssessmentTimestamp, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/contexts/UserContext';
 import { forceEncryptStringAES, decryptDataAES } from '@/lib/encryption';
 import { z } from 'zod';
-import type { InitialAssessmentOutput } from '@/ai/flows/initial-assessment'; // Ensure correct type for assessment data
+import type { InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 // API constants
 const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY = "4463";
-const API_TIMEOUT_MS = 20000; // Increased timeout for potentially larger data
+const API_TIMEOUT_MS = 20000;
 
 // Zod schema for validating the structure of a single assessment record from the API
 const ApiSingleAssessmentRecordSchema = z.object({
@@ -58,7 +58,7 @@ export default function MyAssessmentsPage() {
 
     setIsLoading(true);
     setError(null);
-    setAssessments([]); // Clear previous assessments before fetching
+    setAssessments([]);
 
     try {
       const encryptedUserId = forceEncryptStringAES(user.id);
@@ -69,75 +69,86 @@ export default function MyAssessmentsPage() {
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(apiUrl, { signal });
       const responseText = await response.text();
-      console.log("MyAssessmentsPage: API call status:", response.status, "Raw Response Text:", responseText.substring(0,500) + "...");
-
-
+      
       if (!response.ok) {
-        throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${responseText.substring(0,100)}`);
+        console.error(`MyAssessmentsPage: API Error HTTP ${response.status}. StatusText: ${response.statusText}. ResponseBody: ${responseText}`);
+        throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${response.statusText || responseText.substring(0,100) || 'Error del servidor'}`);
       }
 
       const apiResult: ExternalApiResponse = JSON.parse(responseText);
+      console.log("MyAssessmentsPage: API call status OK. Raw API Result:", JSON.stringify(apiResult).substring(0,500) + "...");
+
 
       if (apiResult.status === "OK") {
-        if (typeof apiResult.data === 'string' && apiResult.data.trim() !== '') {
-          console.log("MyAssessmentsPage: API returned data string, attempting decryption...");
+        let potentialAssessmentsArray: any = null;
+
+        if (Array.isArray(apiResult.data)) {
+          console.log("MyAssessmentsPage: Data from API is already an array.");
+          potentialAssessmentsArray = apiResult.data;
+        } else if (typeof apiResult.data === 'string' && apiResult.data.trim() !== '') {
+          console.log("MyAssessmentsPage: Data from API is a string, attempting decryption...");
           const decryptedData = decryptDataAES(apiResult.data);
           console.log("MyAssessmentsPage: Decrypted data (type " + typeof decryptedData + "):", JSON.stringify(decryptedData).substring(0,500) + "...");
-
-
           if (decryptedData && Array.isArray(decryptedData)) {
-            const validationResult = ApiFetchedAssessmentsSchema.safeParse(decryptedData);
-            if (validationResult.success) {
-              // Sort by timestamp descending (newest first)
-              const sortedAssessments = validationResult.data.sort((a, b) => 
-                new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-              );
-              setAssessments(sortedAssessments);
-              console.log("MyAssessmentsPage: Successfully fetched, decrypted, and validated assessments:", sortedAssessments.length, "records.");
-            } else {
-              console.error("MyAssessmentsPage: Validation failed for decrypted assessment data:", validationResult.error.flatten());
-              setError(t.errorOccurred + " (Datos de evaluación recibidos no son válidos)");
-            }
+            console.log("MyAssessmentsPage: Successfully decrypted API data into an array.");
+            potentialAssessmentsArray = decryptedData;
           } else if (decryptedData === null && apiResult.data.toLowerCase().includes("no hay evaluaciones")) {
-            // Handle case where API might return a specific string for no evaluations, even if encrypted
-             setAssessments([]); // No assessments found
-             console.log("MyAssessmentsPage: API data decrypted to null, original string indicated no evaluations.");
-          } else if (Array.isArray(decryptedData) && decryptedData.length === 0) {
-            setAssessments([]); // No assessments found
-            console.log("MyAssessmentsPage: Decrypted data is an empty array.");
+            console.log("MyAssessmentsPage: API data decrypted to null, original string indicated no evaluations.");
+            potentialAssessmentsArray = [];
+          } else {
+            console.warn("MyAssessmentsPage: Decrypted API data is not an array or decryption failed. Decrypted data:", decryptedData);
           }
-           else {
-            console.warn("MyAssessmentsPage: Decrypted data is not an array or is null. Decrypted data:", decryptedData, "Original encrypted string:", apiResult.data);
-            // Check if the original data string itself might indicate no evaluations, e.g., "[]" or some specific message.
-            if (apiResult.data.trim() === "[]" || apiResult.data.toLowerCase().includes("no hay evaluaciones para este usuario")) {
-                setAssessments([]);
-            } else {
-                setError(t.errorOccurred + " (No se pudieron procesar los datos de evaluaciones)");
-            }
-          }
-        } else if (apiResult.data === null || (Array.isArray(apiResult.data) && apiResult.data.length === 0) || (typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.trim() === "[]" || apiResult.data.toLowerCase().includes("no hay evaluaciones")))) {
-          // Handle cases where data might be explicitly null, an empty array, or an empty/specific string indicating no records
-          setAssessments([]);
-          console.log("MyAssessmentsPage: API reported 'OK' but data is null, empty, or indicates no assessments.");
-        } else {
-          console.warn("MyAssessmentsPage: API reported 'OK' but data field is not a non-empty string. Data type:", typeof apiResult.data, "Data:", apiResult.data);
-          setError(t.errorOccurred + " (Formato de datos inesperado del servidor)");
+        } else if (apiResult.data === null || (typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.trim() === "[]" || apiResult.data.toLowerCase().includes("no hay evaluaciones")))) {
+            console.log("MyAssessmentsPage: API reported 'OK' but data is null, empty, or indicates no assessments. Treating as empty list.");
+            potentialAssessmentsArray = [];
         }
-      } else {
+
+        if (potentialAssessmentsArray && Array.isArray(potentialAssessmentsArray)) {
+          const validationResult = ApiFetchedAssessmentsSchema.safeParse(potentialAssessmentsArray);
+          if (validationResult.success) {
+            const sortedAssessments = validationResult.data.sort((a, b) => 
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+            );
+            setAssessments(sortedAssessments);
+            console.log("MyAssessmentsPage: Successfully fetched, processed, and validated assessments:", sortedAssessments.length, "records.");
+            if (sortedAssessments.length === 0) {
+                setError(null); // Clear previous errors if we get an empty list back successfully
+            }
+          } else {
+            console.error("MyAssessmentsPage: Validation failed for processed assessment data:", validationResult.error.flatten());
+            setError(t.errorOccurred + " (Datos de evaluación recibidos no son válidos)");
+          }
+        } else {
+          // This case means data was not an array, not a decryptable string to array, or was explicitly empty/null.
+          // If it was meant to be "no evaluations", it should have become an empty array above.
+          // So, if we reach here and potentialAssessmentsArray is still not an array, it's an unexpected format.
+          console.warn("MyAssessmentsPage: No valid array of assessments obtained after processing API data. Original apiResult.data type:", typeof apiResult.data, "apiResult.data:", apiResult.data);
+          if(apiResult.data && typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.toLowerCase().includes("no hay evaluaciones"))){
+            setAssessments([]); // Explicitly set to empty if string indicates no evaluations
+            console.log("MyAssessmentsPage: Original data string was empty or indicated no evaluations. Setting assessments to [].");
+          } else {
+            setError(t.errorOccurred + " (No se pudieron procesar los datos de evaluaciones. Formato inesperado.)");
+          }
+        }
+
+      } else { // apiResult.status === "NOOK"
         console.warn("MyAssessmentsPage: API reported 'NOOK'. Message:", apiResult.message);
         if (apiResult.message && apiResult.message.toLowerCase().includes("no hay evaluaciones")) {
-            setAssessments([]); // Treat "NOOK" with specific message as no assessments
+            setAssessments([]); 
+            setError(null); // Clear previous error if API correctly reports no evaluations
         } else {
             setError(`${t.errorOccurred}: ${apiResult.message || 'Error desconocido del servidor'}`);
         }
       }
     } catch (e: any) {
-      console.error("MyAssessmentsPage: Error fetching assessments:", e);
+      console.error("MyAssessmentsPage: Error fetching or processing assessments:", e);
       let errorMessage = t.errorOccurred;
       if (e.name === 'AbortError' || (e.cause && e.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = t.errorOccurred + " (Tiempo de espera agotado)";
+      } else if (e instanceof SyntaxError) {
+        errorMessage = t.errorOccurred + " (Respuesta del servidor no válida)";
       } else if (e.message) {
-        errorMessage = e.message;
+        errorMessage = e.message; // Already includes (HTTP XXX) if thrown above
       }
       setError(errorMessage);
     } finally {
@@ -149,12 +160,11 @@ export default function MyAssessmentsPage() {
     if (!userLoading && user) {
       fetchAssessments();
     } else if (!userLoading && !user) {
-      // Handle case where user is not logged in after loading
       setIsLoading(false);
       setError(t.errorOccurred + " (Debes iniciar sesión para ver tus evaluaciones)");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, userLoading]); // Removed t from dependencies as it's stable
+  }, [user, userLoading]);
 
   if (isLoading || userLoading) {
     return (
