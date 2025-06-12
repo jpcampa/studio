@@ -78,30 +78,33 @@ export default function MyAssessmentsPage() {
         throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${response.statusText || responseText.substring(0,100) || 'Error del servidor'}`);
       }
       
-      let potentialJsonString = responseText;
+      let jsonToParse = responseText;
       const varDumpRegex = /^string\(\d+\)\s*"(.*)"\s*$/s; // 's' flag for dot to match newline
       const match = responseText.match(varDumpRegex);
 
       if (match && match[1]) {
-        potentialJsonString = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\'); // Unescape escaped quotes and backslashes
-        console.log("MyAssessmentsPage: Extracted potential JSON string from var_dump-like output:", potentialJsonString);
+        console.log("MyAssessmentsPage: Detected var_dump-like output. Attempting to extract JSON content.");
+        jsonToParse = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+        console.log("MyAssessmentsPage: Extracted potential JSON string for parsing:", jsonToParse);
       }
 
       let apiResult: ExternalApiResponse;
       try {
-        apiResult = JSON.parse(potentialJsonString);
+        apiResult = JSON.parse(jsonToParse);
       } catch (jsonError: any) {
         let devErrorMessage = "MyAssessmentsPage: Failed to parse JSON response from API.";
-        if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(')) {
-            devErrorMessage += " The response looks like PHP var_dump() output, and extraction failed or result was still not JSON.";
+        if (match) { // If we attempted to parse var_dump output and it still failed
+            devErrorMessage = "MyAssessmentsPage: Failed to parse extracted JSON from var_dump-like output.";
+        } else if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(') && !match) {
+            devErrorMessage += " The response looks like PHP var_dump() output, but regex extraction failed.";
         }
-        console.error(devErrorMessage, "Original responseText was:", responseText, "Attempted to parse:", potentialJsonString, "Error:", jsonError);
+        console.error(devErrorMessage, "Original responseText was:", responseText, "Attempted to parse:", jsonToParse, "Error:", jsonError);
         setError(t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)");
         setIsLoading(false);
         return;
       }
       
-      console.log("MyAssessmentsPage: API call status OK. Parsed API Result (from potentialJsonString):", JSON.stringify(apiResult).substring(0,500) + "...");
+      console.log("MyAssessmentsPage: API call status OK. Parsed API Result (from jsonToParse):", JSON.stringify(apiResult).substring(0,500) + "...");
 
 
       if (apiResult.status === "OK") {
@@ -167,8 +170,8 @@ export default function MyAssessmentsPage() {
       let errorMessage = t.errorOccurred;
       if (e.name === 'AbortError' || (e.cause && e.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = t.errorOccurred + " (Tiempo de espera agotado)";
-      } else if (e instanceof SyntaxError) { // JSON.parse error
-        errorMessage = t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)";
+      } else if (e instanceof SyntaxError) { // JSON.parse error on potentially cleaned string
+        errorMessage = t.errorOccurred + " (Respuesta del servidor no es JSON válido incluso después de intentar procesarla. Revisa la consola.)";
       } else if (e.message) {
         errorMessage = e.message; 
       }
