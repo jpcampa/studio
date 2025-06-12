@@ -103,6 +103,16 @@ export const t = {
   assessmentIntroPageFinalWords: "Tómate tu tiempo. Respira. Responde con sinceridad.\nEste camino empieza en ti. Y no estarás solo/a.",
   assessmentIntroPageStartButton: "Comenzar Evaluación",
 
+  // Assessment Results Intro Page
+  assessmentResultsIntroTitle: "Gracias por este momento contigo",
+  assessmentResultsIntroMainText1: "Tus respuestas han trazado un mapa emocional único: un reflejo sincero de cómo estás, cómo sientes y cómo afrontas la vida.",
+  assessmentResultsIntroMainText2: "En la siguiente pantalla, descubrirás tu perfil personal-emocional interpretado:",
+  assessmentResultsIntroListItem1: "Un resumen visual claro.",
+  assessmentResultsIntroListItem2: "Una lectura profesional de tus fortalezas y ámbitos en desarrollo.",
+  assessmentResultsIntroListItem3: "Sugerencias prácticas para cuidarte desde dentro.",
+  assessmentResultsIntroMainText3: "Este perfil no te etiqueta ni te limita.\nEs una guía flexible para avanzar con más consciencia, claridad y dirección.",
+  assessmentResultsIntroMainText4: "Además, hemos activado para ti rutas personalizadas basadas en tu estilo emocional.",
+  assessmentResultsIntroViewProfileButton: "Ver mi perfil emocional",
 
   // Paths
   pathsTitle: "Rutas de Desarrollo",
@@ -276,3 +286,5 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
+
+    
