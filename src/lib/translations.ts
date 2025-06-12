@@ -86,7 +86,7 @@ export const t = {
   assessmentSavedErrorNetworkMessage: "No se pudo guardar la evaluación en el servidor (HTTP {status}). Detalles: {details}",
   assessmentSavedErrorGeneric: "Ocurrió un error desconocido al intentar guardar tu evaluación.",
   assessmentSavedErrorTimeout: "Tiempo de espera agotado al guardar la evaluación.",
-  assessmentSavedErrorFetchFailed: "Fallo en la comunicación con el servicio de guardado.",
+  assessmentSavedErrorFetchFailed: "Fallo en la comunicación con el servicio de guardado. Esto podría deberse a un problema de red o una restricción CORS del servidor. Revisa la consola del navegador para más detalles.",
   assessmentSaveSkippedTitle: "Guardado Omitido",
   assessmentSaveSkippedMessage: "No se pudo identificar al usuario para guardar la evaluación. Podrás ver tus resultados, pero no se sincronizarán.",
 

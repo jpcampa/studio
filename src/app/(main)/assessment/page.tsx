@@ -126,10 +126,11 @@ export default function AssessmentPage() {
           let errorMessage = t.assessmentSavedErrorGeneric;
           if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
             errorMessage = t.assessmentSavedErrorTimeout;
-          } else if (error.message && error.message.includes('fetch failed')) {
-            errorMessage = t.assessmentSavedErrorFetchFailed;
-          } else if (error instanceof SyntaxError) {
-            errorMessage = "Error procesando la respuesta del servidor de guardado (JSON inválido)."
+          } else if (error instanceof TypeError && error.message.toLowerCase().includes('failed to fetch')) {
+            errorMessage = t.assessmentSavedErrorFetchFailed; // Updated translation will be used here
+            console.error("AssessmentPage: 'Failed to fetch' error. This often indicates a CORS issue or network problem. Check the browser's console (Network tab) for more details, and ensure the server at", new URL(saveUrlForDebug).origin, "is configured to accept requests from this origin (your app's domain).");
+          } else if (error instanceof SyntaxError) { // If JSON.parse fails on API response
+            errorMessage = "Error procesando la respuesta del servidor de guardado (JSON inválido).";
           }
           toast({
             title: t.assessmentSavedErrorTitle,
