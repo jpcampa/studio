@@ -63,19 +63,35 @@ export default function MyAssessmentsPage() {
     try {
       const encryptedUserId = forceEncryptStringAES(user.id);
       const apiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
+
       
-      console.log("MyAssessmentsPage: Fetching assessments from URL:", apiUrl.substring(0,150) + "...");
+      console.log("UserID ",(user.id)," UserID encriptado ",encryptedUserId," MyAssessmentsPage: Fetching assessments from URL:", apiUrl.substring(0,150) + "...");
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(apiUrl, { signal });
       const responseText = await response.text();
       
+      console.log("MyAssessmentsPage: Raw API Response Text (before JSON.parse):", responseText);
+
       if (!response.ok) {
         console.error(`MyAssessmentsPage: API Error HTTP ${response.status}. StatusText: ${response.statusText}. ResponseBody: ${responseText}`);
         throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${response.statusText || responseText.substring(0,100) || 'Error del servidor'}`);
       }
-
-      const apiResult: ExternalApiResponse = JSON.parse(responseText);
+      
+      let apiResult: ExternalApiResponse;
+      try {
+        apiResult = JSON.parse(responseText);
+      } catch (jsonError: any) {
+        let devErrorMessage = "MyAssessmentsPage: Failed to parse JSON response from API.";
+        if (typeof responseText === 'string' && responseText.trim().startsWith('string(')) {
+            devErrorMessage += " The response looks like PHP var_dump() output, not valid JSON.";
+        }
+        console.error(devErrorMessage, "Raw text was:", responseText, "Error:", jsonError);
+        setError(t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)");
+        setIsLoading(false);
+        return;
+      }
+      
       console.log("MyAssessmentsPage: API call status OK. Raw API Result:", JSON.stringify(apiResult).substring(0,500) + "...");
 
 
@@ -119,12 +135,9 @@ export default function MyAssessmentsPage() {
             setError(t.errorOccurred + " (Datos de evaluación recibidos no son válidos)");
           }
         } else {
-          // This case means data was not an array, not a decryptable string to array, or was explicitly empty/null.
-          // If it was meant to be "no evaluations", it should have become an empty array above.
-          // So, if we reach here and potentialAssessmentsArray is still not an array, it's an unexpected format.
           console.warn("MyAssessmentsPage: No valid array of assessments obtained after processing API data. Original apiResult.data type:", typeof apiResult.data, "apiResult.data:", apiResult.data);
           if(apiResult.data && typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.toLowerCase().includes("no hay evaluaciones"))){
-            setAssessments([]); // Explicitly set to empty if string indicates no evaluations
+            setAssessments([]); 
             console.log("MyAssessmentsPage: Original data string was empty or indicated no evaluations. Setting assessments to [].");
           } else {
             setError(t.errorOccurred + " (No se pudieron procesar los datos de evaluaciones. Formato inesperado.)");
@@ -135,7 +148,7 @@ export default function MyAssessmentsPage() {
         console.warn("MyAssessmentsPage: API reported 'NOOK'. Message:", apiResult.message);
         if (apiResult.message && apiResult.message.toLowerCase().includes("no hay evaluaciones")) {
             setAssessments([]); 
-            setError(null); // Clear previous error if API correctly reports no evaluations
+            setError(null); 
         } else {
             setError(`${t.errorOccurred}: ${apiResult.message || 'Error desconocido del servidor'}`);
         }
@@ -145,10 +158,10 @@ export default function MyAssessmentsPage() {
       let errorMessage = t.errorOccurred;
       if (e.name === 'AbortError' || (e.cause && e.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = t.errorOccurred + " (Tiempo de espera agotado)";
-      } else if (e instanceof SyntaxError) {
-        errorMessage = t.errorOccurred + " (Respuesta del servidor no válida)";
+      } else if (e instanceof SyntaxError) { // JSON.parse error
+        errorMessage = t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)";
       } else if (e.message) {
-        errorMessage = e.message; // Already includes (HTTP XXX) if thrown above
+        errorMessage = e.message; 
       }
       setError(errorMessage);
     } finally {
@@ -265,4 +278,3 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
-
