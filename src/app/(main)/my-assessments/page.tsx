@@ -51,21 +51,25 @@ export default function MyAssessmentsPage() {
 
   const fetchAssessments = async () => {
     if (!user || !user.id) {
-      setError(t.errorOccurred + " (Usuario no autenticado)");
+      setError(t.errorOccurred + " (Usuario no autenticado o ID de usuario no disponible para la API)");
       setIsLoading(false);
+      console.warn("MyAssessmentsPage: Fetch aborted. User or user.id is not available.", "User:", user);
       return;
     }
 
     setIsLoading(true);
     setError(null);
-    setAssessments([]);
+    setAssessments([]); // Clear previous assessments
+
+    const currentUserId = user.id;
+    console.log("MyAssessmentsPage: Preparing to fetch assessments for user.id:", currentUserId);
 
     try {
-      const encryptedUserId = forceEncryptStringAES(user.id);
-      const apiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
-
+      const encryptedUserId = forceEncryptStringAES(currentUserId);
+      console.log("MyAssessmentsPage: Encrypted user ID:", encryptedUserId);
       
-      console.log("UserID ",(user.id)," UserID encriptado ",encryptedUserId," MyAssessmentsPage: Fetching assessments from URL:", apiUrl.substring(0,150) + "...");
+      const apiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
+      console.log("MyAssessmentsPage: Fetching assessments from URL:", apiUrl);
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(apiUrl, { signal });
@@ -73,13 +77,14 @@ export default function MyAssessmentsPage() {
       
       console.log("MyAssessmentsPage: Raw API Response Text (before any parsing or var_dump stripping):", responseText);
 
-      let jsonToParse = responseText;
       // Attempt to strip var_dump output if present
+      let jsonToParse = responseText;
       const varDumpRegex = /^string\(\d+\)\s*"(.*)"\s*$/s;
       const match = responseText.match(varDumpRegex);
 
       if (match && match[1]) {
         console.log("MyAssessmentsPage: Detected var_dump-like output. Attempting to extract JSON content.");
+        // Unescape escaped double quotes and backslashes that var_dump might add
         jsonToParse = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
         console.log("MyAssessmentsPage: Extracted potential JSON string for parsing:", jsonToParse);
       }
@@ -97,7 +102,7 @@ export default function MyAssessmentsPage() {
         let devErrorMessage = "MyAssessmentsPage: Failed to parse JSON response from API.";
         if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(') && !match) {
             devErrorMessage += " The response looks like PHP var_dump() output, but regex extraction or subsequent parsing failed.";
-        } else if (match && jsonToParse !== responseText) {
+        } else if (match && jsonToParse !== responseText) { // This means we attempted extraction
              devErrorMessage = "MyAssessmentsPage: Failed to parse extracted JSON from var_dump-like output.";
         }
         console.error(devErrorMessage, "Raw text was:", responseText, "Error:", jsonError);
@@ -129,6 +134,8 @@ export default function MyAssessmentsPage() {
                 ". Value (first 200 chars):", JSON.stringify(decryptedData).substring(0,200),
                 ". This will likely cause a validation error next."
             );
+            // If decryptedData is not an array, set potentialAssessmentsArray to it to let Zod fail clearly
+            potentialAssessmentsArray = decryptedData; 
           }
         } else if (apiResult.data === null || (typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.trim() === "[]" || apiResult.data.toLowerCase().includes("no hay evaluaciones")))) {
             console.log("MyAssessmentsPage: API reported 'OK' but data is null, empty, or indicates no assessments. Treating as empty list.");
@@ -143,7 +150,7 @@ export default function MyAssessmentsPage() {
             );
             setAssessments(sortedAssessments);
             console.log("MyAssessmentsPage: Successfully fetched, processed, and validated assessments:", sortedAssessments.length, "records.");
-            if (sortedAssessments.length === 0) {
+            if (sortedAssessments.length === 0) { // No error if list is empty
                 setError(null); 
             }
           } else {
@@ -172,7 +179,7 @@ export default function MyAssessmentsPage() {
         console.warn("MyAssessmentsPage: API reported 'NOOK'. Message:", apiResult.message);
         if (apiResult.message && apiResult.message.toLowerCase().includes("no hay evaluaciones")) {
             setAssessments([]); 
-            setError(null); 
+            setError(null); // Clear error if it explicitly says no assessments
         } else {
             setError(`${t.errorOccurred}: ${apiResult.message || 'Error desconocido del servidor'}`);
         }
@@ -182,9 +189,10 @@ export default function MyAssessmentsPage() {
       let errorMessage = t.errorOccurred;
       if (e.name === 'AbortError' || (e.cause && e.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = t.errorOccurred + " (Tiempo de espera agotado)";
-      } else if (e instanceof SyntaxError) { 
+      } else if (e instanceof SyntaxError) { // This SyntaxError would be from the JSON.parse(jsonToParse)
         errorMessage = t.errorOccurred + " (Respuesta del servidor no es JSON válido incluso después de intentar procesarla. Revisa la consola.)";
       } else if (e.message) {
+        // Use the error message from the thrown error if available (e.g., from !response.ok)
         errorMessage = e.message; 
       }
       setError(errorMessage);
@@ -194,14 +202,15 @@ export default function MyAssessmentsPage() {
   };
 
   useEffect(() => {
-    if (!userLoading && user) {
+    if (!userLoading && user && user.id) { // Ensure user.id is present
       fetchAssessments();
-    } else if (!userLoading && !user) {
+    } else if (!userLoading && (!user || !user.id)) {
       setIsLoading(false);
-      setError(t.errorOccurred + " (Debes iniciar sesión para ver tus evaluaciones)");
+      setError(t.errorOccurred + " (Debes iniciar sesión y tener un ID de usuario para ver tus evaluaciones)");
+      console.warn("MyAssessmentsPage: User not loaded or user.id missing. User:", user);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, userLoading]);
+  }, [user, userLoading]); // Removed t from dependencies as it's stable
 
   if (isLoading || userLoading) {
     return (
@@ -220,7 +229,7 @@ export default function MyAssessmentsPage() {
           <h1 className="text-4xl font-bold text-primary mb-3">{t.myAssessmentsTitle}</h1>
           <p className="text-lg text-muted-foreground">{t.myAssessmentsDescription}</p>
         </div>
-        <Button onClick={fetchAssessments} variant="outline" disabled={isLoading}>
+        <Button onClick={fetchAssessments} variant="outline" disabled={isLoading || !user || !user.id}>
           <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           Refrescar
         </Button>
@@ -302,3 +311,4 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
+
