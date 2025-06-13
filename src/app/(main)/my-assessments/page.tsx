@@ -80,7 +80,6 @@ export default function MyAssessmentsPage() {
 
       if (match && match[1]) {
         console.log("MyAssessmentsPage: Detected var_dump-like output. Attempting to extract JSON content.");
-        // Unescape escaped double quotes and backslashes within the JSON string
         jsonToParse = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
         console.log("MyAssessmentsPage: Extracted potential JSON string for parsing:", jsonToParse);
       }
@@ -97,12 +96,11 @@ export default function MyAssessmentsPage() {
       } catch (jsonError: any) {
         let devErrorMessage = "MyAssessmentsPage: Failed to parse JSON response from API.";
         if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(') && !match) {
-            // This means it looked like var_dump but regex failed, or it was var_dump and extraction failed
             devErrorMessage += " The response looks like PHP var_dump() output, but regex extraction or subsequent parsing failed.";
         } else if (match && jsonToParse !== responseText) {
              devErrorMessage = "MyAssessmentsPage: Failed to parse extracted JSON from var_dump-like output.";
         }
-        console.error(devErrorMessage, "Original responseText was:", responseText, "Attempted to parse:", jsonToParse, "Error:", jsonError);
+        console.error(devErrorMessage, "Raw text was:", responseText, "Error:", jsonError);
         setError(t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)");
         setIsLoading(false);
         return;
@@ -131,14 +129,13 @@ export default function MyAssessmentsPage() {
                 ". Value (first 200 chars):", JSON.stringify(decryptedData).substring(0,200),
                 ". This will likely cause a validation error next."
             );
-            // Let Zod validation handle the error message for the user if potentialAssessmentsArray is not what's expected
           }
         } else if (apiResult.data === null || (typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.trim() === "[]" || apiResult.data.toLowerCase().includes("no hay evaluaciones")))) {
             console.log("MyAssessmentsPage: API reported 'OK' but data is null, empty, or indicates no assessments. Treating as empty list.");
             potentialAssessmentsArray = [];
         }
 
-        if (potentialAssessmentsArray !== null && potentialAssessmentsArray !== undefined) { // Ensure it's not undefined from a failed branch
+        if (potentialAssessmentsArray !== null && potentialAssessmentsArray !== undefined) { 
           const validationResult = ApiFetchedAssessmentsSchema.safeParse(potentialAssessmentsArray);
           if (validationResult.success) {
             const sortedAssessments = validationResult.data.sort((a, b) => 
@@ -150,16 +147,28 @@ export default function MyAssessmentsPage() {
                 setError(null); 
             }
           } else {
-            console.error("MyAssessmentsPage: Validation failed for processed assessment data:", validationResult.error.flatten());
-            console.error("MyAssessmentsPage: Data that failed Zod validation (potentialAssessmentsArray):", JSON.stringify(potentialAssessmentsArray).substring(0,1000) + "...");
-            setError(t.errorOccurred + " (Datos de evaluación recibidos no son válidos o tienen un formato incorrecto)");
+            const flatErrors = validationResult.error.flatten();
+            console.error(
+              "MyAssessmentsPage: Zod validation failed.",
+              "Flattened errors:", flatErrors,
+              "Full Zod error object:", validationResult.error,
+              "Zod error issues:", JSON.stringify(validationResult.error.issues, null, 2)
+            );
+            console.error("MyAssessmentsPage: Data that FAILED Zod validation (potentialAssessmentsArray, first 1000 chars):", JSON.stringify(potentialAssessmentsArray).substring(0,1000) + "...");
+            
+            let userErrorMessage = t.errorOccurred + " (Datos de evaluación recibidos no son válidos o tienen un formato incorrecto)";
+            if (validationResult.error.issues.length > 0) {
+                const firstIssue = validationResult.error.issues[0];
+                userErrorMessage += `. Detalle: ${firstIssue.message} en la ruta '${firstIssue.path.join('.')}'`;
+            }
+            setError(userErrorMessage);
           }
-        } else { // potentialAssessmentsArray is null or undefined, meaning data processing failed before Zod
+        } else { 
           console.warn("MyAssessmentsPage: No valid array of assessments obtained after processing API data. Original apiResult.data type:", typeof apiResult.data, "apiResult.data:", apiResult.data);
            setError(t.errorOccurred + " (No se pudieron procesar los datos de evaluaciones. Formato inesperado o fallo en desencriptación.)");
         }
 
-      } else { // apiResult.status === "NOOK"
+      } else { 
         console.warn("MyAssessmentsPage: API reported 'NOOK'. Message:", apiResult.message);
         if (apiResult.message && apiResult.message.toLowerCase().includes("no hay evaluaciones")) {
             setAssessments([]); 
@@ -173,7 +182,7 @@ export default function MyAssessmentsPage() {
       let errorMessage = t.errorOccurred;
       if (e.name === 'AbortError' || (e.cause && e.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = t.errorOccurred + " (Tiempo de espera agotado)";
-      } else if (e instanceof SyntaxError) { // JSON.parse error on potentially cleaned string
+      } else if (e instanceof SyntaxError) { 
         errorMessage = t.errorOccurred + " (Respuesta del servidor no es JSON válido incluso después de intentar procesarla. Revisa la consola.)";
       } else if (e.message) {
         errorMessage = e.message; 
