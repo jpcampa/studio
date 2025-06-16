@@ -146,7 +146,6 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       return null; 
     }
     
-    // Ensure 'value' is treated as a number for color logic
     const scoreValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, Math.min(5, value)) : 0;
     if (typeof value !== 'number' || isNaN(value)) {
          console.warn(`CustomRadarDot: Invalid 'value' prop (${value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
@@ -424,7 +423,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
               </Button>
             </>
           )}
-          <p className="text-sm text-muted-foreground italic text-center pt-4">
+          <p className="text-base text-muted-foreground italic text-center pt-4">
             Este perfil no es un veredicto. Es una invitación a cuidarte con más consciencia y compasión. No tienes que hacerlo todo a la vez. Basta con empezar.
           </p>
         </CardContent>
