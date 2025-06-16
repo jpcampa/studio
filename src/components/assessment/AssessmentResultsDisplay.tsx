@@ -24,17 +24,12 @@ import {
   PieChart,
   Pie,
   Cell,
-  DotProps, // Import DotProps
+  type DotProps,
 } from "recharts"
 import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions';
 import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useRouter } from 'next/navigation';
-
-interface AssessmentResultsDisplayProps {
-  results: InitialAssessmentOutput;
-  onRetake: () => void;
-}
 
 const themedChartColors = [
   "hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))",
@@ -131,26 +126,33 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
 
   // Custom dot rendering function for Radar chart
   const CustomRadarDot = (props: DotProps & { payload?: any, value?: number }) => {
-    const { cx, cy, payload, value } = props; // `value` is the score for the current dimension from dataKey="score"
+    const { cx, cy, payload, value } = props;
 
-    if (value === undefined || payload === undefined) {
-        return null;
-    }
+    let dotColor = "hsl(var(--chart-2))"; // Default to Blue (unprocessed/error/zero score)
+    let scoreForLog: string | number = "N/A";
+    const dimensionNameForLog = payload?.dimension || "Unknown Dimension";
 
-    let dotColor = "hsl(var(--muted))"; // Default gris
-    const scoreValue = typeof value === 'number' ? value : 0;
-
-    if (scoreValue >= 4.0) {
-      dotColor = "hsl(var(--primary))"; // Verde
-    } else if (scoreValue >= 2.5) {
-      dotColor = "hsl(var(--chart-5))"; // Naranja (usando chart-5 que es un naranja/amarillo)
-    } else if (scoreValue >= 1.0) {
-      dotColor = "hsl(var(--destructive))"; // Rojo
-    } else if (scoreValue === 0) {
-      dotColor = "hsl(var(--chart-2))"; // Azul para 0 o no evaluado
+    if (typeof value === 'number') {
+        scoreForLog = value; // Use the direct numeric value
+        if (value >= 4.0) {
+          dotColor = "hsl(var(--primary))"; // Green
+        } else if (value >= 2.5) {
+          dotColor = "hsl(var(--chart-5))"; // Orange
+        } else if (value >= 1.0) {
+          dotColor = "hsl(var(--destructive))"; // Red
+        }
+        // If value is 0 or < 1.0, it remains Blue (default from initialization)
+    } else {
+        scoreForLog = `Invalid (${String(value)})`;
+        console.warn(`CustomRadarDot: 'value' (score) is not a number or undefined. Value: ${value}, Type: ${typeof value}, For Dimension: ${dimensionNameForLog}, Payload: ${JSON.stringify(payload)}`);
     }
     
-    console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${scoreValue}, Color: ${dotColor}`);
+    console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used: ${scoreForLog}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
+    
+    if (typeof cx !== 'number' || typeof cy !== 'number') {
+      console.error(`CustomRadarDot: cx or cy is not a valid number for dimension ${dimensionNameForLog}. Cannot render dot. cx: ${cx}, cy: ${cy}`);
+      return null; 
+    }
     
     return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
   };
@@ -213,14 +215,14 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                     <Radar 
                         name={t.emotionalProfile} 
                         dataKey="score" 
-                        stroke="hsl(var(--muted-foreground))" // Linea del radar neutra
-                        fill="hsl(var(--muted-foreground))"   // Relleno del radar sutil
+                        stroke="hsl(var(--muted-foreground))" 
+                        fill="hsl(var(--muted-foreground))"  
                         fillOpacity={0.1} 
-                        dot={<CustomRadarDot />} // Usamos el componente personalizado para los puntos
+                        dot={<CustomRadarDot />} 
                         activeDot={{ r: 7, strokeWidth: 2, fill: "hsl(var(--foreground))", stroke: "hsl(var(--background))" }}
                     />
                     <ChartTooltip
-                        cursor={{ stroke: "hsl(var(--border))", strokeDasharray: '3 3' }} // Cursor más sutil
+                        cursor={{ stroke: "hsl(var(--border))", strokeDasharray: '3 3' }} 
                         content={
                         <ChartTooltipContent
                             className="!bg-background !border !border-border !shadow-lg !rounded-md max-w-xs"
@@ -361,3 +363,5 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
     </div>
   );
 }
+
+    
