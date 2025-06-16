@@ -29,32 +29,45 @@ const ApiSingleAssessmentRecordSchema = z.object({
   data: z.object({
     emotionalProfile: z.union([
       z.record(z.string(), z.number().min(1).max(5)), // 1. Original object format { "DimensionName": score }
-      z.array( // 2. Array of objects OR 3. Array of [string, number] tuples
+      z.array( // 2. Array of objects OR 3. Array of [string, number] tuples OR 4. Array of [id, string, string_score] tuples
         z.union([
           z.object({ // 2. Array of objects { dimensionName: "Name", score: X }
             dimensionName: z.string(),
             score: z.number().min(1).max(5)
           }),
-          z.tuple([z.string(), z.number().min(1).max(5)]) // 3. Array of [string, number] tuples
+          z.tuple([z.string(), z.number().min(1).max(5)]), // 3. Array of [string, number] tuples
+          z.tuple([z.string(), z.string(), z.string()]) // 4. NEW: Array of [id_eval, dimensionName, score_string] tuples
         ])
       )
     ]).transform((profile, ctx) => {
+      // console.log("MyAssessmentsPage: Transforming emotionalProfile. Input type:", typeof profile, "Is array:", Array.isArray(profile), "Value (first 300 chars):", JSON.stringify(profile).substring(0,300));
       if (Array.isArray(profile)) {
-        // console.log("MyAssessmentsPage: Transforming emotionalProfile from array:", JSON.stringify(profile).substring(0, 300));
         const newRecord: Record<string, number> = {};
         let conversionOk = true;
-        for (const item of profile) { // item can be object or tuple
-          if (Array.isArray(item)) { // It's a tuple [string, number]
-            if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) {
+        for (const item of profile) {
+          if (Array.isArray(item)) { // It's a tuple
+            if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) { // [string, number] tuple
               newRecord[item[0]] = item[1];
+            } else if (item.length === 3 && typeof item[0] === 'string' && typeof item[1] === 'string' && typeof item[2] === 'string') { // [id_eval, dimensionName, score_string] tuple
+              const dimensionName = item[1];
+              const scoreValue = parseFloat(item[2]);
+              if (!isNaN(scoreValue) && scoreValue >= 1 && scoreValue <= 5) {
+                newRecord[dimensionName] = scoreValue;
+              } else {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  path: ['emotionalProfile', profile.indexOf(item)],
+                  message: `Invalid score string or out of range in [id, name, score_string] tuple: ${JSON.stringify(item)}. Score string: "${item[2]}". Parsed: ${scoreValue}`,
+                });
+                conversionOk = false; break;
+              }
             } else {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ['emotionalProfile', profile.indexOf(item)],
-                message: `Invalid tuple structure or score out of range in emotionalProfile array: ${JSON.stringify(item)}. Expected [string, number(1-5)].`,
+                message: `Invalid tuple structure in emotionalProfile array: ${JSON.stringify(item)}. Expected [string, number(1-5)] or [id_string, name_string, score_string(1-5)].`,
               });
-              conversionOk = false;
-              break;
+              conversionOk = false; break;
             }
           } else if (typeof item === 'object' && item !== null && 'dimensionName' in item && 'score' in item) { // It's an object {dimensionName, score}
             const objItem = item as { dimensionName: string, score: number };
@@ -66,35 +79,28 @@ const ApiSingleAssessmentRecordSchema = z.object({
                 path: ['emotionalProfile', profile.indexOf(item)],
                 message: `Invalid item object structure or score out of range in emotionalProfile array: ${JSON.stringify(item)}. Expected {dimensionName: string, score: number(1-5)}.`,
               });
-              conversionOk = false;
-              break;
+              conversionOk = false; break;
             }
           } else { // Unexpected item type in array
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               path: ['emotionalProfile', profile.indexOf(item)],
-              message: `Unexpected item type in emotionalProfile array: ${JSON.stringify(item)}. Expected object or [string, number] tuple.`,
+              message: `Unexpected item type in emotionalProfile array: ${JSON.stringify(item)}. Expected object or tuple.`,
             });
-            conversionOk = false;
-            break;
+            conversionOk = false; break;
           }
         }
-        if (!conversionOk) return z.NEVER; // Propagate error to stop parsing
-
-        // Ensure all 12 dimensions are present in the transformed record, if needed
-        // This is a stricter check. If not all dimensions are mandatory from API, this can be relaxed.
-        // const expectedDimensionNames = assessmentDimensions.map(d => d.name); // Assuming assessmentDimensions is available
-        // if (expectedDimensionNames.some(dn => !(dn in newRecord))) {
-        //   ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Transformed emotional profile is missing some expected dimensions." });
-        //   return z.NEVER;
-        // }
+        if (!conversionOk) return z.NEVER;
+        // console.log("MyAssessmentsPage: Transformed emotionalProfile from array to object:", JSON.stringify(newRecord).substring(0,300));
         return newRecord;
       }
-      // If not an array, it must be the original object format, so return as is.
-      return profile;
+      // console.log("MyAssessmentsPage: emotionalProfile is already an object:", JSON.stringify(profile).substring(0,300));
+      return profile; // If not an array, it must be the original object format
     }),
     priorityAreas: z.array(z.string()).min(3, "Debe haber al menos 3 áreas prioritarias.").max(3, "Debe haber exactamente 3 áreas prioritarias."),
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
+    // Adding 'respuestas' to the schema to accept it, even if not directly used in UI yet
+    respuestas: z.array(z.tuple([z.string(), z.string(), z.string()])).optional(),
   }),
 });
 
@@ -112,13 +118,15 @@ export default function MyAssessmentsPage() {
   const [assessments, setAssessments] = useState<AssessmentRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [debugApiUrl, setDebugApiUrl] = useState<string | null>(null); // State for debug URL
+  const [debugApiUrl, setDebugApiUrl] = useState<string | null>(null);
+  const [rawApiData, setRawApiData] = useState<string | null>(null); // State for raw API data
 
   const fetchAssessments = async () => {
     if (!user || !user.id) {
       setError(t.errorOccurred + " (Usuario no autenticado o ID de usuario no disponible para la API)");
       setIsLoading(false);
       setDebugApiUrl("Error: Usuario no autenticado o ID no disponible.");
+      setRawApiData(null);
       console.warn("MyAssessmentsPage: Fetch aborted. User or user.id is not available.", "User:", user);
       return;
     }
@@ -127,6 +135,7 @@ export default function MyAssessmentsPage() {
     setError(null);
     setAssessments([]);
     setDebugApiUrl(null);
+    setRawApiData(null);
 
     const currentUserId = user.id;
     console.log("MyAssessmentsPage: Preparing to fetch assessments for user.id:", currentUserId);
@@ -137,12 +146,13 @@ export default function MyAssessmentsPage() {
       console.log("MyAssessmentsPage: Encrypted user ID (for API request):", encryptedUserId.substring(0, 50) + "...");
       
       constructedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
-      setDebugApiUrl(constructedApiUrl); // Set the URL for display
+      setDebugApiUrl(constructedApiUrl);
       console.log("MyAssessmentsPage: Fetching assessments from URL (first 150 chars):", constructedApiUrl.substring(0,150) + "...");
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(constructedApiUrl, { signal });
       let responseText = await response.text();
+      setRawApiData(responseText); // Store raw response text
       
       console.log("MyAssessmentsPage: Raw API Response Text (first 500 chars before any parsing):", responseText.substring(0,500) + (responseText.length > 500 ? "..." : ""));
 
@@ -321,6 +331,26 @@ export default function MyAssessmentsPage() {
           </CardContent>
         </Card>
       )}
+      
+      {rawApiData && (
+        <Card className="mb-8 shadow-md border-blue-500 bg-blue-50 dark:bg-blue-900/30">
+          <CardHeader>
+            <CardTitle className="text-lg text-blue-700 dark:text-blue-300 flex items-center">
+              <ShieldQuestion className="mr-2 h-5 w-5" />
+              Respuesta Cruda de la API (Depuración)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground mb-2">
+              Esta es la respuesta textual recibida del servidor antes de cualquier parseo o desencriptación.
+            </p>
+            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
+              <code>{rawApiData}</code>
+            </pre>
+          </CardContent>
+        </Card>
+      )}
+
 
       {error && (
         <Alert variant="destructive" className="mb-8">
