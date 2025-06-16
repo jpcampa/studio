@@ -95,7 +95,9 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   }
 
   const radarData = assessmentDimensions.map(dim => {
-    const score = results.emotionalProfile[dim.name] ?? 0; // Default to 0 if not found
+    const scoreInProfile = results.emotionalProfile[dim.name];
+    const score = scoreInProfile ?? 0;
+    console.log(`AssessmentResultsDisplay - Mapping dimension: '${dim.name}', Score found in profile: ${scoreInProfile}, Final score for radar: ${score}`);
     return {
       dimensionId: dim.id,
       dimension: dim.name,
@@ -192,17 +194,16 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                         fillOpacity={0.1} 
                         dot={(props) => {
                             const { cx, cy, payload } = props;
-                            // payload.score should be a number between 0 and 5 due to radarData processing.
                             const value = typeof payload.score === 'number' ? payload.score : 0;
-                            let dotColor = "hsl(var(--muted))"; // Default grey for unexpected cases
+                            let dotColor = "hsl(var(--muted))"; 
 
                             if (value >= 4.0) {
                                 dotColor = "hsl(var(--primary))"; // Green
-                            } else if (value >= 2.5) { // Implicitly value < 4.0
+                            } else if (value >= 2.5) { 
                                 dotColor = "hsl(var(--chart-5))"; // Orange
-                            } else if (value >= 1.0) { // Implicitly value < 2.5
+                            } else if (value >= 1.0) { 
                                 dotColor = "hsl(var(--destructive))"; // Red
-                            } else if (value === 0) { // Specifically for 0 or un-evaluated
+                            } else if (value === 0) { 
                                 dotColor = "hsl(var(--chart-2))"; // Blue
                             }
                             console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${value}, Color: ${dotColor}`);
