@@ -29,7 +29,6 @@ import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmen
 import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations'; // Import interpretations
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useRouter } from 'next/navigation'; // Import useRouter
-import { useEffect } from 'react'; // Import useEffect for logging
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
@@ -75,10 +74,6 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   const t = useTranslations();
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("AssessmentResultsDisplay: Received results.emotionalProfile:", JSON.stringify(results?.emotionalProfile, null, 2));
-  }, [results]);
-
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 ||
       Object.values(results.emotionalProfile).some(score => typeof score !== 'number') ||
       !results.priorityAreas) {
@@ -95,9 +90,7 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   }
 
   const radarData = assessmentDimensions.map(dim => {
-    const scoreInProfile = results.emotionalProfile[dim.name];
-    const score = scoreInProfile ?? 0;
-    console.log(`AssessmentResultsDisplay - Mapping dimension: '${dim.name}', Score found in profile: ${scoreInProfile}, Final score for radar: ${score}`);
+    const score = results.emotionalProfile[dim.name] ?? 0;
     return {
       dimensionId: dim.id,
       dimension: dim.name,
@@ -105,14 +98,11 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
       fullMark: 5,
     };
   });
-  
-  console.log("AssessmentResultsDisplay: Generated radarData for chart:", JSON.stringify(radarData, null, 2));
-
 
   const emotionalProfileRadarConfig: ChartConfig = {
     score: {
       label: t.emotionalProfile,
-      color: "hsl(var(--muted-foreground))", 
+      color: "hsl(var(--primary))", 
     },
   };
 
@@ -130,7 +120,7 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
     };
   });
   
-  const radarChartDescriptionText = `${t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones."} Los puntos en el gráfico se colorean según la puntuación: Verde (4.0-5.0), Naranja (2.5-3.99), Rojo (1.0-2.49), Azul (0 o no evaluado).`;
+  const radarChartDescriptionText = t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones.";
 
   return (
     <div className="space-y-8">
@@ -189,27 +179,11 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                     <Radar 
                         name={t.emotionalProfile} 
                         dataKey="score" 
-                        stroke="hsl(var(--muted-foreground))" 
-                        fill="hsl(var(--muted-foreground))"   
-                        fillOpacity={0.1} 
-                        dot={(props) => {
-                            const { cx, cy, payload } = props;
-                            const value = typeof payload.score === 'number' ? payload.score : 0;
-                            let dotColor = "hsl(var(--muted))"; 
-
-                            if (value >= 4.0) {
-                                dotColor = "hsl(var(--primary))"; // Green
-                            } else if (value >= 2.5) { 
-                                dotColor = "hsl(var(--chart-5))"; // Orange
-                            } else if (value >= 1.0) { 
-                                dotColor = "hsl(var(--destructive))"; // Red
-                            } else if (value === 0) { 
-                                dotColor = "hsl(var(--chart-2))"; // Blue
-                            }
-                            console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${value}, Color: ${dotColor}`);
-                            return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
-                        }}
-                        activeDot={{ r: 7, strokeWidth: 2 }}
+                        stroke="hsl(var(--primary))" 
+                        fill="hsl(var(--primary))"   
+                        fillOpacity={0.6} 
+                        dot={{ r: 3, fill: "hsl(var(--primary-foreground))", stroke: "hsl(var(--primary))" }}
+                        activeDot={{ r: 5, strokeWidth: 2 }}
                     />
                     <ChartTooltip
                         cursor={{ stroke: "hsl(var(--primary))", strokeDasharray: '3 3' }}
