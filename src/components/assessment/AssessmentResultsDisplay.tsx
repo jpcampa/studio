@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw } from 'lucide-react';
+import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles } from 'lucide-react';
 import {
   ChartContainer,
   ChartTooltip,
@@ -122,6 +122,29 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
 
   return (
     <div className="space-y-8">
+      <Card className="shadow-xl border-primary/30 bg-primary/5 dark:bg-primary/10">
+        <CardHeader className="text-center">
+          <Sparkles className="mx-auto h-12 w-12 text-primary mb-3" />
+          <CardTitle className="text-2xl md:text-3xl font-bold text-primary">
+            Bienvenido/a a tu perfil emocional y personal
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-center text-foreground/90 space-y-3 px-6 md:px-10 pb-6">
+          <p className="text-base md:text-lg">
+            Este perfil no es un juicio ni una etiqueta.
+          </p>
+          <p className="text-base md:text-lg">
+            Es un mapa claro y respetuoso sobre cómo sientes, piensas y afrontas tu vida en este momento.
+          </p>
+          <p className="text-base md:text-lg">
+            Gracias a tu evaluación, ahora puedes ver con claridad tus fortalezas emocionales y los ámbitos que merecen más cuidado.
+          </p>
+          <p className="text-base md:text-lg font-semibold text-accent">
+            Este es tu punto de partida para transformar tu bienestar.
+          </p>
+        </CardContent>
+      </Card>
+
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-primary flex items-center">
@@ -294,5 +317,3 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
     </div>
   );
 }
-
-    
