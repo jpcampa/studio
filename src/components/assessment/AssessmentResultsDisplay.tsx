@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays } from 'lucide-react';
+import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays, TrendingUp, Star, Zap } from 'lucide-react'; // Added more icons
 import {
   ChartContainer,
   ChartTooltip,
@@ -33,9 +33,15 @@ import { useRouter } from 'next/navigation';
 import { formatAssessmentTimestamp } from '@/data/assessmentHistoryStore';
 
 interface AssessmentResultsDisplayProps {
-  results: InitialAssessmentOutput | null; // Allow null for error handling
+  results: InitialAssessmentOutput | null;
   onRetake: () => void;
-  assessmentTimestamp?: string; // Optional: ISO string for the assessment date
+  assessmentTimestamp?: string;
+}
+
+interface CategorizedDimension extends AssessmentDimension {
+  score: number;
+  interpretationText: string;
+  scoreLevel: string;
 }
 
 const themedChartColors = [
@@ -130,37 +136,83 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
   
   const radarChartDescriptionText = (t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones.") + 
                                    " Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0), Azul (0 o no evaluado).";
-
+  
   const CustomRadarDot = (props: DotProps & { payload?: any, value?: number }) => {
-    const { cx, cy, payload, value } = props;
+    const { cx, cy, payload, value: rawValue } = props;
     
-    let dotColor = "hsl(var(--chart-2))"; // Default to Blue (unprocessed/error/zero score or <1)
-    let scoreForLog: string | number = "N/A";
+    const scoreValue = typeof rawValue === 'number' ? rawValue : 0;
+    let dotColor = "hsl(var(--chart-2))"; // Default Azul (para 0 o no evaluado o < 1)
     const dimensionNameForLog = payload?.dimension || "Unknown Dimension";
 
-    if (typeof value === 'number') {
-        scoreForLog = value;
-        if (value >= 4.0) {
-          dotColor = "hsl(var(--primary))"; // Green
-        } else if (value >= 2.5) {
-          dotColor = "hsl(var(--chart-5))"; // Orange (assuming chart-5 is orange/yellow)
-        } else if (value >= 1.0) {
-          dotColor = "hsl(var(--destructive))"; // Red
-        }
-        // Scores 0 or < 1.0 remain Blue (default)
-    } else {
-        scoreForLog = `Invalid (${String(value)})`;
-        console.warn(`CustomRadarDot: 'value' (score) is not a number or undefined. Value: ${value}, Type: ${typeof value}, For Dimension: ${dimensionNameForLog}, Payload: ${JSON.stringify(payload)}`);
+    if (scoreValue >= 4.0) {
+      dotColor = "hsl(var(--primary))"; // Verde
+    } else if (scoreValue >= 2.5) {
+      dotColor = "hsl(var(--chart-5))"; // Naranja
+    } else if (scoreValue >= 1.0) {
+      dotColor = "hsl(var(--destructive))"; // Rojo
     }
     
-    console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used: ${scoreForLog}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
+    console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used: ${scoreValue}, Raw value: ${rawValue}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
     
-    if (typeof cx !== 'number' || typeof cy !== 'number') {
-      console.error(`CustomRadarDot: cx or cy is not a valid number for dimension ${dimensionNameForLog}. Cannot render dot. cx: ${cx}, cy: ${cy}`);
+    if (typeof cx !== 'number' || typeof cy !== 'number' || isNaN(cx) || isNaN(cy)) {
+      console.error(`CustomRadarDot: cx (${cx}) or cy (${cy}) is not a valid number for dimension ${dimensionNameForLog}. Cannot render dot.`);
       return null; 
     }
     
     return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
+  };
+
+  // Categorize dimensions for detailed analysis
+  const highStrengthDimensions: CategorizedDimension[] = [];
+  const functionalDimensions: CategorizedDimension[] = [];
+  const priorityImprovementDimensions: CategorizedDimension[] = [];
+
+  assessmentDimensions.forEach(dim => {
+    const score = results.emotionalProfile[dim.name];
+    const interpretationKey = dim.id as keyof typeof assessmentInterpretations;
+    const interpretationsForDim = assessmentInterpretations[interpretationKey];
+
+    if (typeof score === 'number' && interpretationsForDim) {
+      const interpretationText = getInterpretationText(score, interpretationsForDim);
+      const scoreLevel = getInterpretationLevel(score, interpretationsForDim, t);
+      const categorizedDim = { ...dim, score, interpretationText, scoreLevel };
+
+      if (score >= 4.0) {
+        highStrengthDimensions.push(categorizedDim);
+      } else if (score >= 2.5) {
+        functionalDimensions.push(categorizedDim);
+      } else if (score < 2.5) { // Includes scores < 1.0 down to 0
+        priorityImprovementDimensions.push(categorizedDim);
+      }
+    }
+  });
+
+  const renderDimensionGroup = (title: string, dimensions: CategorizedDimension[], icon: React.ElementType) => {
+    if (dimensions.length === 0) return null;
+    const IconComponent = icon;
+    return (
+      <div className="mt-6">
+        <h3 className="text-xl font-semibold text-primary mb-3 flex items-center">
+          <IconComponent className="mr-2 h-6 w-6" />
+          {title}
+        </h3>
+        <Accordion type="single" collapsible className="w-full">
+          {dimensions.map((dim) => (
+            <AccordionItem value={dim.id} key={dim.id}>
+              <AccordionTrigger className="text-base hover:no-underline">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full text-left">
+                  <span className="font-semibold text-foreground">{dim.name}</span>
+                  <span className="text-sm text-muted-foreground sm:ml-4">Puntuación: {dim.score.toFixed(1)}/5 ({dim.scoreLevel})</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="text-sm text-foreground/90 px-2">
+                <p className="whitespace-pre-line leading-relaxed">{dim.interpretationText}</p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    );
   };
 
 
@@ -229,7 +281,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
                     <Radar 
                         name={t.emotionalProfile} 
                         dataKey="score" 
-                        stroke="hsl(var(--muted-foreground))" 
+                        stroke="hsl(var(--muted-foreground))"  
                         fill="hsl(var(--muted-foreground))"  
                         fillOpacity={0.1} 
                         dot={<CustomRadarDot />} 
@@ -293,14 +345,18 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
                 </PieChart>
               </ChartContainer>
             </div>
-            <ul className="mt-4 space-y-2 text-xs sm:text-sm">
-              {results.priorityAreas.map((area, index) => (
-                <li key={index} className="flex items-center p-2 bg-muted/50 rounded-md">
-                  <CheckCircle className="mr-2 h-5 w-5 text-green-500 flex-shrink-0" />
-                  {area}
-                </li>
-              ))}
-            </ul>
+            {results.priorityAreas.length > 0 ? (
+                <ul className="mt-4 space-y-2 text-xs sm:text-sm">
+                {results.priorityAreas.map((area, index) => (
+                    <li key={index} className="flex items-center p-2 bg-muted/50 rounded-md">
+                    <CheckCircle className="mr-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                    {area}
+                    </li>
+                ))}
+                </ul>
+            ) : (
+                <p className="mt-4 text-sm text-muted-foreground italic text-center">No se identificaron áreas prioritarias específicas en esta evaluación o no se pudieron cargar.</p>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -308,47 +364,16 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       <Card className="shadow-lg mt-8">
         <CardHeader>
           <CardTitle>{t.detailedAnalysisTitle || "Análisis Detallado por Dimensión"}</CardTitle>
+          <CardDescription>Explora tus resultados en cada área. Las dimensiones se agrupan según tu puntuación.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Accordion type="single" collapsible className="w-full">
-            {assessmentDimensions.map((dim) => {
-              const score = results.emotionalProfile[dim.name];
-              const interpretationKey = dim.id as keyof typeof assessmentInterpretations;
-              const interpretationsForDim = assessmentInterpretations[interpretationKey];
-
-              if (score === undefined || !interpretationsForDim) {
-                return (
-                  <AccordionItem value={dim.id} key={dim.id}>
-                    <AccordionTrigger className="text-base hover:no-underline">
-                        <div className="flex items-center">
-                            <Info className="mr-3 h-5 w-5 text-muted-foreground" />
-                            {dim.name}
-                        </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="text-sm text-muted-foreground px-2">
-                        No se pudo obtener una interpretación para esta dimensión.
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              }
-              const interpretationText = getInterpretationText(score, interpretationsForDim);
-              const scoreLevel = getInterpretationLevel(score, interpretationsForDim, t);
-
-              return (
-                <AccordionItem value={dim.id} key={dim.id}>
-                  <AccordionTrigger className="text-base hover:no-underline">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full text-left">
-                        <span className="font-semibold text-primary">{dim.name}</span>
-                        <span className="text-sm text-muted-foreground sm:ml-4">Puntuación: {score.toFixed(1)}/5 ({scoreLevel})</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-sm text-foreground/90 px-2">
-                    <p className="whitespace-pre-line leading-relaxed">{interpretationText}</p>
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
+          {renderDimensionGroup("Fortalezas Consolidadas (Puntuación >= 4.0)", highStrengthDimensions, Star)}
+          {renderDimensionGroup("Ámbitos Funcionales con Potencial de Mejora (Puntuación 2.5 - 3.9)", functionalDimensions, TrendingUp)}
+          {renderDimensionGroup("Áreas de Mejora Prioritaria (Puntuación < 2.5)", priorityImprovementDimensions, Zap)}
+          
+          {(highStrengthDimensions.length === 0 && functionalDimensions.length === 0 && priorityImprovementDimensions.length === 0) && (
+             <p className="text-muted-foreground text-center py-4">No se pudieron categorizar las dimensiones para el análisis detallado. Verifica los datos de entrada.</p>
+          )}
         </CardContent>
       </Card>
 
@@ -378,3 +403,6 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
   );
 }
 
+    
+
+    
