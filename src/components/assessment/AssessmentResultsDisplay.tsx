@@ -90,7 +90,8 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   }
 
   const radarData = assessmentDimensions.map(dim => {
-    const score = results.emotionalProfile[dim.name] ?? 0; // Default to 0 if not found to ensure correct color logic
+    const score = results.emotionalProfile[dim.name] ?? 0; // Default to 0 if not found
+    // console.log(`Dimension: ${dim.name}, Score from results: ${results.emotionalProfile[dim.name]}, Final score for chart: ${Math.max(0, Math.min(5, score))}`);
     return {
       dimensionId: dim.id,
       dimension: dim.name,
@@ -102,15 +103,14 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   const emotionalProfileRadarConfig: ChartConfig = {
     score: {
       label: t.emotionalProfile,
-      // This color is a fallback or for legends, individual dots will have their own colors.
       color: "hsl(var(--muted-foreground))", 
     },
   };
 
   const pieChartData = results.priorityAreas.map((areaName) => ({
-    name: areaName, // Full dimension name for display
+    name: areaName,
     slug: slugify(areaName),
-    value: 1, // Equal value for each slice
+    value: 1, 
   }));
 
   const priorityAreasPieConfig: ChartConfig = {};
@@ -121,7 +121,7 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
     };
   });
   
-  const radarChartDescriptionText = `${t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones."} Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0).`;
+  const radarChartDescriptionText = `${t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones."} Los puntos en el gráfico se colorean según la puntuación: Verde (4.0-5.0), Naranja (2.5-3.99), Rojo (1.0-2.49), Azul (0 o no evaluado).`;
 
   return (
     <div className="space-y-8">
@@ -180,26 +180,27 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                     <Radar 
                         name={t.emotionalProfile} 
                         dataKey="score" 
-                        stroke="hsl(var(--muted-foreground))" // Neutral stroke for the radar shape lines
-                        fill="hsl(var(--muted-foreground))"   // Neutral, very light fill for the radar area
-                        fillOpacity={0.1} // Make it very subtle
+                        stroke="hsl(var(--muted-foreground))" 
+                        fill="hsl(var(--muted-foreground))"   
+                        fillOpacity={0.1} 
                         dot={(props) => {
-                            const { cx, cy, payload } = props; // payload.score is the value for this dot
-                            const value = payload.score;
-                            let dotColor = "hsl(var(--muted-foreground))"; // Default color
-                            
+                            const { cx, cy, payload } = props;
+                            const value = typeof payload.score === 'number' ? payload.score : 0;
+                            let dotColor = "hsl(var(--muted))"; // Default grey
+
                             if (value >= 4.0) {
                                 dotColor = "hsl(var(--primary))"; // Green
                             } else if (value >= 2.5) {
-                                dotColor = "hsl(var(--chart-5))"; // Orange-ish (e.g., from theme: --chart-5: 27 87% 67%)
-                            } else if (value >= 1.0) { // Scores are between 1 and 5
+                                dotColor = "hsl(var(--chart-5))"; // Orange
+                            } else if (value >= 1.0) { 
                                 dotColor = "hsl(var(--destructive))"; // Red
-                            } else { // for scores below 1, if any, or default
-                                dotColor = "hsl(var(--muted))";
+                            } else if (value === 0) {
+                                dotColor = "hsl(var(--chart-2))"; // Blue for 0 or not evaluated (chart-2 is typically a blueish tone)
                             }
+                            // console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${value}, Color: ${dotColor}`);
                             return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
                         }}
-                        activeDot={{ r: 7, strokeWidth: 2 }} // Style for hovered dot
+                        activeDot={{ r: 7, strokeWidth: 2 }}
                     />
                     <ChartTooltip
                         cursor={{ stroke: "hsl(var(--primary))", strokeDasharray: '3 3' }}
