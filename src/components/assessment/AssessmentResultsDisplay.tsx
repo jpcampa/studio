@@ -11,6 +11,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend, // Added import
+  ChartLegendContent, // Added import
   type ChartConfig,
 } from "@/components/ui/chart"
 import {
@@ -139,9 +141,14 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     const { cx, cy, payload } = props;
     let { value } = props;
 
+    if (typeof cx !== 'number' || typeof cy !== 'number' || isNaN(cx) || isNaN(cy)) {
+      console.error(`CustomRadarDot: cx (${cx}) or cy (${cy}) is not a valid number for dimension ${payload?.dimension || 'Unknown'}. Cannot render dot.`);
+      return null; 
+    }
+    
     if (typeof value !== 'number' || isNaN(value)) {
+      console.warn(`CustomRadarDot: Invalid 'value' (${props.value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
       value = 0; 
-      console.warn(`CustomRadarDot: Invalid 'value' (${props.value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0.`);
     }
 
     const scoreValue = Math.max(0, Math.min(5, Number(value)));
@@ -157,12 +164,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     }
     
     console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used for color: ${scoreValue}, Original value prop: ${props.value}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
-    
-    if (typeof cx !== 'number' || typeof cy !== 'number' || isNaN(cx) || isNaN(cy)) {
-      console.error(`CustomRadarDot: cx (${cx}) or cy (${cy}) is not a valid number for dimension ${dimensionNameForLog}. Cannot render dot.`);
-      return null; 
-    }
-    
+        
     return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
   };
 
@@ -434,3 +436,4 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     </div>
   );
 }
+
