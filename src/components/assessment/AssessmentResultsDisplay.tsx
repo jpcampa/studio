@@ -29,6 +29,7 @@ import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmen
 import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations'; // Import interpretations
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useRouter } from 'next/navigation'; // Import useRouter
+import { useEffect } from 'react'; // Import useEffect for logging
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
@@ -74,6 +75,10 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   const t = useTranslations();
   const router = useRouter();
 
+  useEffect(() => {
+    console.log("AssessmentResultsDisplay: Received results.emotionalProfile:", JSON.stringify(results?.emotionalProfile, null, 2));
+  }, [results]);
+
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 ||
       Object.values(results.emotionalProfile).some(score => typeof score !== 'number') ||
       !results.priorityAreas) {
@@ -91,7 +96,6 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
 
   const radarData = assessmentDimensions.map(dim => {
     const score = results.emotionalProfile[dim.name] ?? 0; // Default to 0 if not found
-    // console.log(`Dimension: ${dim.name}, Score from results: ${results.emotionalProfile[dim.name]}, Final score for chart: ${Math.max(0, Math.min(5, score))}`);
     return {
       dimensionId: dim.id,
       dimension: dim.name,
@@ -99,6 +103,9 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
       fullMark: 5,
     };
   });
+  
+  console.log("AssessmentResultsDisplay: Generated radarData for chart:", JSON.stringify(radarData, null, 2));
+
 
   const emotionalProfileRadarConfig: ChartConfig = {
     score: {
@@ -186,7 +193,7 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                         dot={(props) => {
                             const { cx, cy, payload } = props;
                             const value = typeof payload.score === 'number' ? payload.score : 0;
-                            let dotColor = "hsl(var(--muted))"; // Default grey
+                            let dotColor = "hsl(var(--muted))"; // Default grey for unexpected values
 
                             if (value >= 4.0) {
                                 dotColor = "hsl(var(--primary))"; // Green
@@ -194,10 +201,10 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                                 dotColor = "hsl(var(--chart-5))"; // Orange
                             } else if (value >= 1.0) { 
                                 dotColor = "hsl(var(--destructive))"; // Red
-                            } else if (value === 0) {
+                            } else if (value === 0) { 
                                 dotColor = "hsl(var(--chart-2))"; // Blue for 0 or not evaluated (chart-2 is typically a blueish tone)
                             }
-                            // console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${value}, Color: ${dotColor}`);
+                            console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${value}, Color: ${dotColor}`);
                             return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
                         }}
                         activeDot={{ r: 7, strokeWidth: 2 }}
@@ -345,3 +352,5 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   );
 }
 
+
+    
