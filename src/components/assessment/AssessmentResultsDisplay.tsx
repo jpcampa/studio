@@ -194,7 +194,7 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                             const { cx, cy, payload } = props;
                             // payload.score should be a number between 0 and 5 due to radarData processing.
                             const value = typeof payload.score === 'number' ? payload.score : 0;
-                            let dotColor = "hsl(var(--muted))"; // Default grey
+                            let dotColor = "hsl(var(--muted))"; // Default grey for unexpected cases
 
                             if (value >= 4.0) {
                                 dotColor = "hsl(var(--primary))"; // Green
@@ -205,7 +205,6 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                             } else if (value === 0) { // Specifically for 0 or un-evaluated
                                 dotColor = "hsl(var(--chart-2))"; // Blue
                             }
-                            // Critical log: Check the value and resulting color for each dot
                             console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${value}, Color: ${dotColor}`);
                             return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
                         }}
