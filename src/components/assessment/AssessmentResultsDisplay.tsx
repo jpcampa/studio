@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles } from 'lucide-react';
+import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays } from 'lucide-react';
 import {
   ChartContainer,
   ChartTooltip,
@@ -30,6 +30,13 @@ import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmen
 import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useRouter } from 'next/navigation';
+import { formatAssessmentTimestamp } from '@/data/assessmentHistoryStore';
+
+interface AssessmentResultsDisplayProps {
+  results: InitialAssessmentOutput | null; // Allow null for error handling
+  onRetake: () => void;
+  assessmentTimestamp?: string; // Optional: ISO string for the assessment date
+}
 
 const themedChartColors = [
   "hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))",
@@ -64,7 +71,7 @@ const getInterpretationLevel = (score: number, interpretations: InterpretationLe
   return t.scoreLevelLow || "Bajo";
 };
 
-export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResultsDisplayProps) {
+export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestamp }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
   const router = useRouter();
 
@@ -87,8 +94,8 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
 
   const radarData = assessmentDimensions.map(dim => {
     const scoreFromProfile = results.emotionalProfile[dim.name];
-    const score = scoreFromProfile !== undefined && typeof scoreFromProfile === 'number' ? scoreFromProfile : 0;
-    const finalScore = Math.max(0, Math.min(5, score));
+    const scoreValue = scoreFromProfile !== undefined && typeof scoreFromProfile === 'number' ? scoreFromProfile : 0;
+    const finalScore = Math.max(0, Math.min(5, scoreValue));
     console.log(`AssessmentResultsDisplay - Mapping dimension: '${dim.name}', Score found in profile: ${scoreFromProfile}, Final score for radar: ${finalScore}`);
     return {
       dimensionId: dim.id,
@@ -124,24 +131,23 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   const radarChartDescriptionText = (t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones.") + 
                                    " Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0), Azul (0 o no evaluado).";
 
-  // Custom dot rendering function for Radar chart
   const CustomRadarDot = (props: DotProps & { payload?: any, value?: number }) => {
     const { cx, cy, payload, value } = props;
-
-    let dotColor = "hsl(var(--chart-2))"; // Default to Blue (unprocessed/error/zero score)
+    
+    let dotColor = "hsl(var(--chart-2))"; // Default to Blue (unprocessed/error/zero score or <1)
     let scoreForLog: string | number = "N/A";
     const dimensionNameForLog = payload?.dimension || "Unknown Dimension";
 
     if (typeof value === 'number') {
-        scoreForLog = value; // Use the direct numeric value
+        scoreForLog = value;
         if (value >= 4.0) {
           dotColor = "hsl(var(--primary))"; // Green
         } else if (value >= 2.5) {
-          dotColor = "hsl(var(--chart-5))"; // Orange
+          dotColor = "hsl(var(--chart-5))"; // Orange (assuming chart-5 is orange/yellow)
         } else if (value >= 1.0) {
           dotColor = "hsl(var(--destructive))"; // Red
         }
-        // If value is 0 or < 1.0, it remains Blue (default from initialization)
+        // Scores 0 or < 1.0 remain Blue (default)
     } else {
         scoreForLog = `Invalid (${String(value)})`;
         console.warn(`CustomRadarDot: 'value' (score) is not a number or undefined. Value: ${value}, Type: ${typeof value}, For Dimension: ${dimensionNameForLog}, Payload: ${JSON.stringify(payload)}`);
@@ -185,10 +191,18 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
 
       <Card className="shadow-xl">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-primary flex items-center">
-            <Activity className="mr-3 h-8 w-8" />
-             {t.assessmentResultsTitle}
-          </CardTitle>
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+            <CardTitle className="text-3xl font-bold text-primary flex items-center">
+              <Activity className="mr-3 h-8 w-8" />
+              {t.assessmentResultsTitle}
+            </CardTitle>
+            {assessmentTimestamp && (
+              <div className="flex items-center text-sm text-muted-foreground mt-2 sm:mt-0 sm:ml-4">
+                <CalendarDays className="mr-2 h-4 w-4" />
+                <span>{formatAssessmentTimestamp(assessmentTimestamp)}</span>
+              </div>
+            )}
+          </div>
         </CardHeader>
       </Card>
 
@@ -364,4 +378,3 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   );
 }
 
-    

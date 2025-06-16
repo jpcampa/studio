@@ -80,7 +80,11 @@ export default function HistoricalAssessmentResultsPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <AssessmentResultsDisplay results={assessmentRecord.data} onRetake={handleRetakeAssessment} />
+      <AssessmentResultsDisplay 
+        results={assessmentRecord.data} 
+        onRetake={handleRetakeAssessment}
+        assessmentTimestamp={assessmentRecord.timestamp} 
+      />
        <div className="mt-8 text-center">
         <Button onClick={handleViewHistory} variant="outline">
           Volver al Historial de Evaluaciones
@@ -89,3 +93,4 @@ export default function HistoricalAssessmentResultsPage() {
     </div>
   );
 }
+
