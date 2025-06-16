@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useTranslations } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatAssessmentTimestamp, type AssessmentRecord } from '@/data/assessmentHistoryStore';
+import { formatAssessmentTimestamp, type AssessmentRecord, overwriteAssessmentHistory } from '@/data/assessmentHistoryStore'; // Import overwriteAssessmentHistory
 import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw, ShieldQuestion } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/contexts/UserContext';
@@ -23,20 +23,30 @@ const API_TIMEOUT_MS = 20000;
 // Zod schema for validating the structure of a single assessment record from the API
 const ApiSingleAssessmentRecordSchema = z.object({
   id: z.string(),
-  timestamp: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Timestamp must be a valid ISO date string",
+  timestamp: z.string().refine((val) => {
+    // Try parsing with Date.parse first, as it's more lenient with "YYYY-MM-DD HH:MM:SS"
+    const parsedDate = Date.parse(val);
+    if (!isNaN(parsedDate)) return true;
+    // Fallback to try parsing as full ISO string if Date.parse failed
+    try {
+        return !isNaN(new Date(val).getTime());
+    } catch (e) {
+        return false;
+    }
+  }, {
+    message: "Timestamp must be a valid date string",
   }),
   data: z.object({
     emotionalProfile: z.union([
-      z.record(z.string(), z.number().min(1).max(5)), // 1. Original object format { "DimensionName": score }
-      z.array( // 2. Array of objects OR 3. Array of [string, number] tuples OR 4. Array of [id, string, string_score] tuples
+      z.record(z.string(), z.number().min(1).max(5)), 
+      z.array(
         z.union([
-          z.object({ // 2. Array of objects { dimensionName: "Name", score: X }
+          z.object({ 
             dimensionName: z.string(),
             score: z.number().min(1).max(5)
           }),
-          z.tuple([z.string(), z.number().min(1).max(5)]), // 3. Array of [string, number] tuples
-          z.tuple([z.string(), z.string(), z.string()]) // 4. NEW: Array of [id_eval, dimensionName, score_string] tuples
+          z.tuple([z.string(), z.number().min(1).max(5)]), 
+          z.tuple([z.string(), z.string(), z.string()]) 
         ])
       )
     ]).transform((profile, ctx) => {
@@ -45,10 +55,10 @@ const ApiSingleAssessmentRecordSchema = z.object({
         const newRecord: Record<string, number> = {};
         let conversionOk = true;
         for (const item of profile) {
-          if (Array.isArray(item)) { // It's a tuple
-            if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) { // [string, number] tuple
+          if (Array.isArray(item)) { 
+            if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) { 
               newRecord[item[0]] = item[1];
-            } else if (item.length === 3 && typeof item[0] === 'string' && typeof item[1] === 'string' && typeof item[2] === 'string') { // [id_eval, dimensionName, score_string] tuple
+            } else if (item.length === 3 && typeof item[0] === 'string' && typeof item[1] === 'string' && typeof item[2] === 'string') { 
               const dimensionName = item[1];
               const scoreValue = parseFloat(item[2]);
               if (!isNaN(scoreValue) && scoreValue >= 1 && scoreValue <= 5) {
@@ -69,7 +79,7 @@ const ApiSingleAssessmentRecordSchema = z.object({
               });
               conversionOk = false; break;
             }
-          } else if (typeof item === 'object' && item !== null && 'dimensionName' in item && 'score' in item) { // It's an object {dimensionName, score}
+          } else if (typeof item === 'object' && item !== null && 'dimensionName' in item && 'score' in item) { 
             const objItem = item as { dimensionName: string, score: number };
             if (typeof objItem.dimensionName === 'string' && typeof objItem.score === 'number' && objItem.score >=1 && objItem.score <=5) {
                newRecord[objItem.dimensionName] = objItem.score;
@@ -81,7 +91,7 @@ const ApiSingleAssessmentRecordSchema = z.object({
               });
               conversionOk = false; break;
             }
-          } else { // Unexpected item type in array
+          } else { 
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               path: ['emotionalProfile', profile.indexOf(item)],
@@ -95,9 +105,9 @@ const ApiSingleAssessmentRecordSchema = z.object({
         return newRecord;
       }
       // console.log("MyAssessmentsPage: emotionalProfile is already an object:", JSON.stringify(profile).substring(0,300));
-      return profile; // If not an array, it must be the original object format
+      return profile; 
     }),
-    priorityAreas: z.array(z.string()).max(3), // Temporarily allowing 0-3 areas due to backend sending empty/non-compliant arrays
+    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."), // Updated from min(3).max(3)
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
     respuestas: z.array(z.tuple([z.string(), z.string(), z.string()])).optional(),
   }),
@@ -132,7 +142,8 @@ export default function MyAssessmentsPage() {
 
     setIsLoading(true);
     setError(null);
-    setAssessments([]);
+    // No limpiar assessments aquí para evitar parpadeo si hay datos locales y la API falla
+    // setAssessments([]); 
     setDebugApiUrl(null);
     setRawApiData(null);
 
@@ -221,11 +232,31 @@ export default function MyAssessmentsPage() {
           console.log("MyAssessmentsPage: Data before Zod validation (potentialAssessmentsArray, first 1000 chars):", JSON.stringify(potentialAssessmentsArray).substring(0,1000) + "...");
           const validationResult = ApiFetchedAssessmentsSchema.safeParse(potentialAssessmentsArray);
           if (validationResult.success) {
-            const sortedAssessments = validationResult.data.sort((a, b) => 
+            // Convert timestamps to full ISO string if they are not already, before sorting and saving
+            const processedAssessments = validationResult.data.map(record => {
+                try {
+                    // Attempt to create a Date object. Date.parse is more lenient.
+                    // If it's already a valid ISO string, new Date() will handle it.
+                    // If it's "YYYY-MM-DD HH:MM:SS", new Date() will also handle it.
+                    const dateObj = new Date(record.timestamp.includes('T') ? record.timestamp : record.timestamp.replace(' ', 'T'));
+                    if (isNaN(dateObj.getTime())) {
+                        console.warn(`MyAssessmentsPage: Invalid timestamp format for record ID ${record.id}: ${record.timestamp}. Keeping original.`);
+                        return record;
+                    }
+                    return { ...record, timestamp: dateObj.toISOString() };
+                } catch (e) {
+                    console.warn(`MyAssessmentsPage: Error processing timestamp for record ID ${record.id}: ${record.timestamp}. Keeping original. Error: ${e}`);
+                    return record;
+                }
+            });
+
+            const sortedAssessments = processedAssessments.sort((a, b) => 
               new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
             );
-            setAssessments(sortedAssessments);
-            console.log("MyAssessmentsPage: Successfully fetched, processed, and validated assessments:", sortedAssessments.length, "records.");
+            
+            setAssessments(sortedAssessments); // Update React state for display
+            overwriteAssessmentHistory(sortedAssessments); // Sync with localStorage
+            console.log("MyAssessmentsPage: Successfully fetched, processed, validated and stored assessments:", sortedAssessments.length, "records.");
             if (sortedAssessments.length === 0) { 
                 setError(null); 
             }
@@ -255,6 +286,7 @@ export default function MyAssessmentsPage() {
         console.warn("MyAssessmentsPage: API reported 'NOOK'. Message:", apiResult.message);
         if (apiResult.message && apiResult.message.toLowerCase().includes("no hay evaluaciones")) {
             setAssessments([]); 
+            overwriteAssessmentHistory([]); // Clear local store if API says no assessments
             setError(null); 
         } else {
             setError(`${t.errorOccurred}: ${apiResult.message || 'Error desconocido del servidor'}`);
