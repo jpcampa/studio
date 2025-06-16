@@ -27,7 +27,40 @@ const ApiSingleAssessmentRecordSchema = z.object({
     message: "Timestamp must be a valid ISO date string",
   }),
   data: z.object({
-    emotionalProfile: z.record(z.string(), z.number().min(1).max(5)),
+    emotionalProfile: z.union([
+      z.record(z.string(), z.number().min(1).max(5)), // Original object format
+      z.array(z.object({ // New array format (assuming array of objects like {dimensionName: string, score: number})
+        dimensionName: z.string(),
+        score: z.number().min(1).max(5)
+      }))
+    ]).transform((profile, ctx) => {
+      if (Array.isArray(profile)) {
+        // This part of the union implies it's an array of {dimensionName: string, score: number}
+        // console.log("MyAssessmentsPage: Transforming emotionalProfile from array of objects:", JSON.stringify(profile).substring(0, 200));
+        const newRecord: Record<string, number> = {};
+        let conversionOk = true;
+        for (const item of profile as { dimensionName: string, score: number }[]) {
+          // The z.array(z.object(...)) part of the union should have already validated the item structure
+          // but we ensure direct assignment.
+          if (typeof item.dimensionName === 'string' && typeof item.score === 'number') {
+             newRecord[item.dimensionName] = item.score;
+          } else {
+            // This case should ideally not be reached if the array(object()) schema matched.
+            // It's a safeguard or indicates a more complex array structure not yet handled.
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Invalid item structure in emotionalProfile array during transformation: ${JSON.stringify(item)}. Expected {dimensionName: string, score: number}.`,
+            });
+            conversionOk = false;
+            break;
+          }
+        }
+        if (!conversionOk) return z.NEVER; // Fails validation if an item is bad during transform
+        return newRecord;
+      }
+      // If not an array, it must be the record type (or Zod would have failed the union)
+      return profile;
+    }),
     priorityAreas: z.array(z.string()).min(3).max(3),
     feedback: z.string().min(1),
   }),
@@ -59,39 +92,37 @@ export default function MyAssessmentsPage() {
 
     setIsLoading(true);
     setError(null);
-    setAssessments([]); // Clear previous assessments
+    setAssessments([]); 
 
     const currentUserId = user.id;
     console.log("MyAssessmentsPage: Preparing to fetch assessments for user.id:", currentUserId);
 
     try {
       const encryptedUserId = forceEncryptStringAES(currentUserId);
-      console.log("MyAssessmentsPage: Encrypted user ID:", encryptedUserId);
+      console.log("MyAssessmentsPage: Encrypted user ID (for API request):", encryptedUserId.substring(0, 50) + "...");
       
       const apiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
-      console.log("MyAssessmentsPage: Fetching assessments from URL:", apiUrl);
+      console.log("MyAssessmentsPage: Fetching assessments from URL (first 150 chars):", apiUrl.substring(0,150) + "...");
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(apiUrl, { signal });
       let responseText = await response.text();
       
-      console.log("MyAssessmentsPage: Raw API Response Text (before any parsing or var_dump stripping):", responseText);
+      console.log("MyAssessmentsPage: Raw API Response Text (first 500 chars before any parsing):", responseText.substring(0,500) + (responseText.length > 500 ? "..." : ""));
 
-      // Attempt to strip var_dump output if present
       let jsonToParse = responseText;
       const varDumpRegex = /^string\(\d+\)\s*"(.*)"\s*$/s;
       const match = responseText.match(varDumpRegex);
 
       if (match && match[1]) {
         console.log("MyAssessmentsPage: Detected var_dump-like output. Attempting to extract JSON content.");
-        // Unescape escaped double quotes and backslashes that var_dump might add
         jsonToParse = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-        console.log("MyAssessmentsPage: Extracted potential JSON string for parsing:", jsonToParse);
+        console.log("MyAssessmentsPage: Extracted potential JSON string for parsing (first 500 chars):", jsonToParse.substring(0,500) + (jsonToParse.length > 500 ? "..." : ""));
       }
 
 
       if (!response.ok) {
-        console.error(`MyAssessmentsPage: API Error HTTP ${response.status}. StatusText: ${response.statusText}. ResponseBody (potentially stripped): ${jsonToParse}`);
+        console.error(`MyAssessmentsPage: API Error HTTP ${response.status}. StatusText: ${response.statusText}. ResponseBody (potentially stripped, first 300 chars): ${jsonToParse.substring(0,300)}`);
         throw new Error(`${t.errorOccurred} (HTTP ${response.status}): ${response.statusText || jsonToParse.substring(0,100) || 'Error del servidor'}`);
       }
       
@@ -102,16 +133,16 @@ export default function MyAssessmentsPage() {
         let devErrorMessage = "MyAssessmentsPage: Failed to parse JSON response from API.";
         if (typeof responseText === 'string' && responseText.trim().toLowerCase().startsWith('string(') && !match) {
             devErrorMessage += " The response looks like PHP var_dump() output, but regex extraction or subsequent parsing failed.";
-        } else if (match && jsonToParse !== responseText) { // This means we attempted extraction
+        } else if (match && jsonToParse !== responseText) { 
              devErrorMessage = "MyAssessmentsPage: Failed to parse extracted JSON from var_dump-like output.";
         }
-        console.error(devErrorMessage, "Raw text was:", responseText, "Error:", jsonError);
+        console.error(devErrorMessage, "Raw text was (first 500 chars):", responseText.substring(0,500), "Error:", jsonError);
         setError(t.errorOccurred + " (Respuesta del servidor no es JSON válido. Revisa la consola del navegador para ver la respuesta cruda del servidor.)");
         setIsLoading(false);
         return;
       }
       
-      console.log("MyAssessmentsPage: API call status OK. Parsed API Result (from jsonToParse):", JSON.stringify(apiResult).substring(0,500) + "...");
+      console.log("MyAssessmentsPage: API call status OK. Parsed API Result (from jsonToParse, first 500 chars of stringified):", JSON.stringify(apiResult).substring(0,500) + "...");
 
 
       if (apiResult.status === "OK") {
@@ -123,7 +154,7 @@ export default function MyAssessmentsPage() {
         } else if (typeof apiResult.data === 'string' && apiResult.data.trim() !== '') {
           console.log("MyAssessmentsPage: Data from API is a string, attempting decryption...");
           const decryptedData = decryptDataAES(apiResult.data);
-          console.log("MyAssessmentsPage: Decrypted data (type " + typeof decryptedData + "):", JSON.stringify(decryptedData).substring(0,500) + "...");
+          console.log("MyAssessmentsPage: Decrypted data (type " + typeof decryptedData + ", first 500 chars of stringified):", JSON.stringify(decryptedData).substring(0,500) + "...");
           if (decryptedData && Array.isArray(decryptedData)) {
             console.log("MyAssessmentsPage: Successfully decrypted API data into an array.");
             potentialAssessmentsArray = decryptedData;
@@ -134,7 +165,6 @@ export default function MyAssessmentsPage() {
                 ". Value (first 200 chars):", JSON.stringify(decryptedData).substring(0,200),
                 ". This will likely cause a validation error next."
             );
-            // If decryptedData is not an array, set potentialAssessmentsArray to it to let Zod fail clearly
             potentialAssessmentsArray = decryptedData; 
           }
         } else if (apiResult.data === null || (typeof apiResult.data === 'string' && (apiResult.data.trim() === '' || apiResult.data.trim() === "[]" || apiResult.data.toLowerCase().includes("no hay evaluaciones")))) {
@@ -143,6 +173,7 @@ export default function MyAssessmentsPage() {
         }
 
         if (potentialAssessmentsArray !== null && potentialAssessmentsArray !== undefined) { 
+          console.log("MyAssessmentsPage: Data before Zod validation (potentialAssessmentsArray, first 1000 chars):", JSON.stringify(potentialAssessmentsArray).substring(0,1000) + "...");
           const validationResult = ApiFetchedAssessmentsSchema.safeParse(potentialAssessmentsArray);
           if (validationResult.success) {
             const sortedAssessments = validationResult.data.sort((a, b) => 
@@ -150,7 +181,7 @@ export default function MyAssessmentsPage() {
             );
             setAssessments(sortedAssessments);
             console.log("MyAssessmentsPage: Successfully fetched, processed, and validated assessments:", sortedAssessments.length, "records.");
-            if (sortedAssessments.length === 0) { // No error if list is empty
+            if (sortedAssessments.length === 0) { 
                 setError(null); 
             }
           } else {
@@ -159,7 +190,7 @@ export default function MyAssessmentsPage() {
               "MyAssessmentsPage: Zod validation failed.",
               "Flattened errors:", flatErrors,
               "Full Zod error object:", validationResult.error,
-              "Zod error issues:", JSON.stringify(validationResult.error.issues, null, 2)
+              "Zod error issues (stringified):", JSON.stringify(validationResult.error.issues, null, 2)
             );
             console.error("MyAssessmentsPage: Data that FAILED Zod validation (potentialAssessmentsArray, first 1000 chars):", JSON.stringify(potentialAssessmentsArray).substring(0,1000) + "...");
             
@@ -179,7 +210,7 @@ export default function MyAssessmentsPage() {
         console.warn("MyAssessmentsPage: API reported 'NOOK'. Message:", apiResult.message);
         if (apiResult.message && apiResult.message.toLowerCase().includes("no hay evaluaciones")) {
             setAssessments([]); 
-            setError(null); // Clear error if it explicitly says no assessments
+            setError(null); 
         } else {
             setError(`${t.errorOccurred}: ${apiResult.message || 'Error desconocido del servidor'}`);
         }
@@ -189,10 +220,9 @@ export default function MyAssessmentsPage() {
       let errorMessage = t.errorOccurred;
       if (e.name === 'AbortError' || (e.cause && e.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
         errorMessage = t.errorOccurred + " (Tiempo de espera agotado)";
-      } else if (e instanceof SyntaxError) { // This SyntaxError would be from the JSON.parse(jsonToParse)
+      } else if (e instanceof SyntaxError) { 
         errorMessage = t.errorOccurred + " (Respuesta del servidor no es JSON válido incluso después de intentar procesarla. Revisa la consola.)";
       } else if (e.message) {
-        // Use the error message from the thrown error if available (e.g., from !response.ok)
         errorMessage = e.message; 
       }
       setError(errorMessage);
@@ -202,7 +232,7 @@ export default function MyAssessmentsPage() {
   };
 
   useEffect(() => {
-    if (!userLoading && user && user.id) { // Ensure user.id is present
+    if (!userLoading && user && user.id) { 
       fetchAssessments();
     } else if (!userLoading && (!user || !user.id)) {
       setIsLoading(false);
@@ -210,7 +240,7 @@ export default function MyAssessmentsPage() {
       console.warn("MyAssessmentsPage: User not loaded or user.id missing. User:", user);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, userLoading]); // Removed t from dependencies as it's stable
+  }, [user, userLoading]); 
 
   if (isLoading || userLoading) {
     return (
