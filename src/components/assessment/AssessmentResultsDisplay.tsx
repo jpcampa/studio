@@ -406,10 +406,16 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
             Basado en tus resultados, te recomendamos explorar las siguientes rutas para continuar tu crecimiento.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="flex flex-col items-center space-y-4 p-6 text-center">
           {(results.priorityAreas && results.priorityAreas.length > 0) ? (
             results.priorityAreas.map((areaName, index) => (
-              <Button key={index} asChild variant="default" size="lg" className="w-full sm:w-auto justify-start text-left">
+              <Button
+                key={index}
+                asChild
+                variant="default"
+                size="lg"
+                className="w-full max-w-sm sm:w-auto justify-center"
+              >
                 <Link href={`/paths?start_with=${encodeURIComponent(areaName)}`}>
                   <Milestone className="mr-2 h-5 w-5" />
                   Comenzar Ruta: {areaName.split('(')[0].trim()}
@@ -421,7 +427,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
               <p className="text-muted-foreground">
                 No se han identificado áreas prioritarias específicas en esta evaluación. Te invitamos a explorar todas nuestras rutas de desarrollo disponibles.
               </p>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild variant="outline" size="lg" className="w-full max-w-sm sm:w-auto justify-center">
                 <Link href="/paths">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Explorar Todas las Rutas
@@ -429,7 +435,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
               </Button>
             </>
           )}
-          <p className="text-base text-muted-foreground italic text-center pt-4">
+          <p className="text-base text-muted-foreground italic pt-4">
             Este perfil no es un veredicto. Es una invitación a cuidarte con más consciencia y compasión. No tienes que hacerlo todo a la vez. Basta con empezar.
           </p>
         </CardContent>
@@ -450,4 +456,3 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     </div>
   );
 }
-
