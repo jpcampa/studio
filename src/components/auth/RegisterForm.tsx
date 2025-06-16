@@ -17,7 +17,7 @@ import { useUser } from "@/contexts/UserContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, ShieldQuestion } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 
 const initialState: RegisterState = { 
@@ -70,8 +70,6 @@ export function RegisterForm() {
         console.log("RegisterForm: Server action reported successful registration. Redirecting to login.");
         router.push('/login'); 
       } else if (state.errors && Object.keys(state.errors).length > 0 && state.message && !state.user) {
-        // Errors specific to fields are handled below. This handles _form errors or general messages accompanying field errors.
-        // Only show a general toast if there's an _form error or the message isn't just "Validation error".
         if (state.errors._form || (state.message !== "Error de validación en los datos ingresados." && state.message !== "Error de validación.")) {
           toast({
             title: t.errorOccurred,
@@ -81,7 +79,6 @@ export function RegisterForm() {
         }
         console.warn("RegisterForm: Server action reported errors. Message:", state.message, "Errors:", state.errors);
       } else if (!state.user && state.message && state.message !== t.registrationSuccessLoginPrompt && (!state.errors || Object.keys(state.errors).length === 0)) { 
-        // This means there's a message, no user, no specific field errors. Likely an API error message.
         toast({
           title: t.errorOccurred,
           description: state.message, 
@@ -91,7 +88,6 @@ export function RegisterForm() {
       }
     }
     
-    // Display toasts for specific field errors if they exist and no general _form error message was already shown as a toast
     if (state.errors && (!state.errors._form || state.errors._form.length === 0)) { 
       console.warn("RegisterForm: Server action reported validation errors:", state.errors);
       Object.entries(state.errors).forEach(([key, fieldErrors]) => {
@@ -211,26 +207,13 @@ export function RegisterForm() {
           </div>
            {state.errors?.agreeTerms && <p className="text-sm text-destructive pt-1">{state.errors.agreeTerms[0]}</p>}
            
-          {/* Mostrar error general del formulario si existe y no hay errores específicos de campo que ya se muestran con toast */}
           {state.errors?._form && (
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.errors._form[0]}</p>
           )}
-          {/* Mostrar mensaje general si no es de éxito y no hay errores de campo ni _form */}
           {state.message && state.message !== t.registrationSuccessLoginPrompt && !state.errors?.name && !state.errors?.email && !state.errors?.password && !state.errors?.ageRange && !state.errors?.gender && !state.errors?.initialEmotionalState && !state.errors?.agreeTerms && !state.errors?._form && (
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
           )}
 
-          {state.debugApiUrl && (
-            <div className="mt-4 p-3 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg shadow">
-              <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 flex items-center mb-1">
-                <ShieldQuestion className="mr-2 h-4 w-4" />
-                Debug: URL de API Generada
-              </p>
-              <pre className="text-xs text-yellow-600 dark:text-yellow-400 overflow-x-auto whitespace-pre-wrap break-all bg-yellow-100 dark:bg-yellow-800/30 p-2 rounded-md shadow-inner">
-                <code>{state.debugApiUrl}</code>
-              </pre>
-            </div>
-          )}
           <SubmitButton />
         </form>
       </CardContent>
@@ -245,3 +228,5 @@ export function RegisterForm() {
     </Card>
   );
 }
+
+    

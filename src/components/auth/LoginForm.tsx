@@ -14,7 +14,7 @@ import { loginUser, type LoginState } from "@/actions/auth";
 import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Eye, EyeOff, ShieldQuestion } from "lucide-react"; 
+import { Loader2, Eye, EyeOff } from "lucide-react"; 
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
 const initialState: LoginState = {
@@ -54,7 +54,6 @@ export function LoginForm() {
       sessionStorage.setItem('workwell-debug-login-url', state.debugLoginApiUrl);
     }
 
-    // Use translated success message for comparison
     const loginSuccessMessageKey = "loginSuccessMessage" as keyof typeof t;
     const expectedSuccessMessage = t[loginSuccessMessageKey] || "Inicio de sesión exitoso.";
 
@@ -72,14 +71,12 @@ export function LoginForm() {
       });
       toast({
         title: t.login,
-        description: state.message!, // state.message is confirmed to be success message here
+        description: state.message!, 
       });
       console.log("LoginForm ACTION_EFFECT: loginContext called and success toast shown.");
-      // Redirection is handled by the other useEffect listening to contextUser and userLoading
     } else if (state.message) { 
       console.warn("LoginForm ACTION_EFFECT: Login success conditions NOT met or other message/error. Message:", state.message, "Errors:", state.errors, "User from state:", state.user);
-      // Display toast for errors or non-success messages
-      if (state.message !== expectedSuccessMessage || !isUserValid) { // If not a true success or user is invalid
+      if (state.message !== expectedSuccessMessage || !isUserValid) { 
         if (!state.errors || Object.keys(state.errors).length === 0 || (state.errors._form && state.errors._form.length > 0)) {
           toast({
             title: t.loginFailed,
@@ -106,9 +103,8 @@ export function LoginForm() {
         }
       });
     }
-  }, [state, toast, t, loginContext]); // router removed as it's not used for this effect's logic
+  }, [state, toast, t, loginContext]); 
 
-  // Effect to handle redirection based on UserContext
    useEffect(() => {
     console.log(
       "LoginForm REDIRECT_EFFECT: Checking redirect. contextUser:", contextUser, 
@@ -144,8 +140,6 @@ export function LoginForm() {
     );
   }
 
-  // This condition should ideally prevent the form from rendering if already logged in,
-  // as the redirect effect should have already fired.
   if (!userLoading && contextUser) {
     console.log("LoginForm RENDER: User is already loaded and present. Redirect should be happening. Rendering null to avoid form flash.");
     return null;
@@ -201,18 +195,7 @@ export function LoginForm() {
           {state.message && state.message !== (t.loginSuccessMessage || "Inicio de sesión exitoso.") && !state.user && (!state.errors || Object.keys(state.errors).length === 0) && (
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
           )}
-
-          {state.debugLoginApiUrl && (
-            <div className="mt-4 p-3 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg shadow">
-              <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 flex items-center mb-1">
-                <ShieldQuestion className="mr-2 h-4 w-4" />
-                Debug: URL de API de Login Generada
-              </p>
-              <pre className="text-xs text-yellow-600 dark:text-yellow-400 overflow-x-auto whitespace-pre-wrap break-all bg-yellow-100 dark:bg-yellow-800/30 p-2 rounded-md shadow-inner">
-                <code>{state.debugLoginApiUrl}</code>
-              </pre>
-            </div>
-          )}
+          
           <SubmitButton />
         </form>
       </CardContent>

@@ -25,7 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { encryptDataAES, decryptDataAES, forceEncryptStringAES } from "@/lib/encryption";
 import { useActivePath } from "@/contexts/ActivePathContext";
-import { type ActivePathDetails as StoredActivePathDetails, getCompletedModules } from "@/lib/progressStore";
+import type { ActivePathDetails as StoredActivePathDetails} from "@/lib/progressStore";
 import { pathsData, type Path as AppPathData } from "@/data/pathsData";
 import { fetchUserActivities } from "@/actions/auth";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -55,11 +55,8 @@ const moodScoreMapping: Record<string, number> = {
   asco: 1,
 };
 
-const ENCRYPTED_STRING_FOR_DECRYPTION_TEST = '{"iv":"+qlG7LRW9es5HVkyZb5qBw==","data":"XGFYeXI0c1YgbLsx0n1atZ1iEvvWztRUnCmHQmeSwtnG70CJC6OUq7qrCOP830RGaV15IqJtp13co1fEUnirCH6W4CDarwqQnBGstSwsTAA="}';
-const SESSION_STORAGE_REGISTER_URL_KEY = 'workwell-debug-register-url';
-const SESSION_STORAGE_LOGIN_URL_KEY = 'workwell-debug-login-url';
-const API_BASE_URL_FOR_DEBUG = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
-const API_KEY_FOR_DEBUG = "4463";
+const API_BASE_URL_FOR_ACTIVITY_SAVE = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
+const API_KEY_FOR_ACTIVITY_SAVE = "4463";
 const API_TIMEOUT_MS_ACTIVITY = 10000;
 const NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD = 4;
 
@@ -74,64 +71,28 @@ export default function DashboardPage() {
   const [recentEntries, setRecentEntries] = useState<EmotionalEntry[]>([]);
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
-
-  const [userActivityPayloadForDisplay, setUserActivityPayloadForDisplay] = useState<string | null>(null);
-  const [outputOfEncryptFunctionForTest, setOutputOfEncryptFunctionForTest] = useState<string | null>(null);
-  const [outputOfDecryptFunctionForTest, setOutputOfDecryptFunctionForTest] = useState<string | null>(null);
-
-  const [debugRegisterApiUrl, setDebugRegisterApiUrl] = useState<string | null>(null);
-  const [debugLoginApiUrl, setDebugLoginApiUrl] = useState<string | null>(null);
-  const [debugDeleteApiUrl, setDebugDeleteApiUrl] = useState<string | null>(null);
-  const [debugChangePasswordApiUrl, setDebugChangePasswordApiUrl] = useState<string | null>(null);
-  const [debugUserActivityApiUrlEncrypted, setDebugUserActivityApiUrlEncrypted] = useState<string | null>(null);
-  const [debugUserActivityApiUrlUnencrypted, setDebugUserActivityApiUrlUnencrypted] = useState<string | null>(null);
-  const [rawUserObjectForDebug, setRawUserObjectForDebug] = useState<string | null>(null);
-  const [rawUserIdForDebug, setRawUserIdForDebug] = useState<string | null>(null);
   const [isRefreshingEmotions, setIsRefreshingEmotions] = useState(false);
 
-
-  const generateApiUrlWithParams = useCallback((type: string, params: Record<string, any>): string => {
-    const encodedParams = Object.entries(params)
-      .map(([key, valueObj]) => {
-        const payloadString = encryptDataAES(valueObj);
-        return `${key}=${encodeURIComponent(payloadString)}`;
-      })
-      .join('&');
-    return `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=${type}&${encodedParams}`;
-  }, []);
-
   const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
-    console.log("DashboardPage (generateUserActivityApiUrl): Generating URL for new entry:", JSON.stringify(newEntryData).substring(0,200) + "...");
-    console.log("DashboardPage (generateUserActivityApiUrl DEBUG): userIdForUrlParam (para parámetro userID):", userIdForUrlParam);
-
     const activityPayload: SingleEmotionalEntryActivity = { entry: newEntryData };
     const jsonPayloadForDatosActividad = encryptDataAES(activityPayload);
-    let url = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
-    console.log("DashboardPage (generateUserActivityApiUrl): URL base (con datosactividad para nueva entrada):", url.substring(0, 200) + "...");
-
+    let url = `${API_BASE_URL_FOR_ACTIVITY_SAVE}?apikey=${API_KEY_FOR_ACTIVITY_SAVE}&tipo=guardaractividad&datosactividad=${encodeURIComponent(jsonPayloadForDatosActividad)}`;
+    
     if (userIdForUrlParam && typeof userIdForUrlParam === 'string' && userIdForUrlParam.trim() !== '') {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es válido. Procediendo a encriptar para parámetro userID.");
       try {
         const encryptedDirectUserId = forceEncryptStringAES(userIdForUrlParam);
-        console.log("DashboardPage (generateUserActivityApiUrl): Salida de forceEncryptStringAES para userIdForUrlParam (parámetro userID):", encryptedDirectUserId);
         url += `&userID=${encodeURIComponent(encryptedDirectUserId)}`;
-        console.log("DashboardPage (generateUserActivityApiUrl): URL final con parámetro userID añadido:", url.substring(0, 250) + "...");
       } catch (encError) {
          console.error("DashboardPage (generateUserActivityApiUrl): Error encriptando userIdForUrlParam con forceEncryptStringAES:", encError);
       }
-    } else {
-      console.log("DashboardPage (generateUserActivityApiUrl): userIdForUrlParam es nulo, vacío o no es un string. El parámetro userID no se añadirá. Valor de userIdForUrlParam:", userIdForUrlParam);
     }
     return url;
   }, []);
 
 
   useEffect(() => {
-    console.log("DashboardPage UE [t, user, generateApiUrlWithParams] - START. User:", user ? user.id : "null");
     const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
     const loadedAllEntries = getEmotionalEntries(); 
-
-    console.log("DashboardPage UE [t, user, generateApiUrlWithParams]: loadedAllEntries from localStorage (first 5 before setting state):", JSON.stringify(loadedAllEntries.slice(0,5)));
 
     setRecentEntries(loadedRecentEntries);
     setAllEntriesForChart(loadedAllEntries);
@@ -142,104 +103,11 @@ export default function DashboardPage() {
         setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
       }
     }
-
-    const storedRegisterUrl = sessionStorage.getItem(SESSION_STORAGE_REGISTER_URL_KEY);
-    if (storedRegisterUrl) {
-      setDebugRegisterApiUrl(storedRegisterUrl);
-    } else {
-      const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
-      const registerParams = {
-        usuario: exampleRegisterUser,
-        name: { value: exampleRegisterUser.name },
-        email: { value: exampleRegisterUser.email },
-        password: { value: "PasswordDeRegistro123" }
-      };
-      setDebugRegisterApiUrl(generateApiUrlWithParams("registro", registerParams));
-    }
-
-    const storedLoginUrl = sessionStorage.getItem(SESSION_STORAGE_LOGIN_URL_KEY);
-    if (storedLoginUrl) {
-      setDebugLoginApiUrl(storedLoginUrl);
-    } else {
-      const loginParams = {
-        usuario: { email: "login@ejemplo.com" },
-        password: { value: "PasswordDeLogin123" }
-      };
-      setDebugLoginApiUrl(generateApiUrlWithParams("login", loginParams));
-    }
-
-    const currentUserEmailForSetup = user?.email;
-    if (currentUserEmailForSetup) {
-      setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: currentUserEmailForSetup } }));
-      setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: currentUserEmailForSetup, newPassword: "nuevaPassword123" } }));
-    } else {
-      setDebugDeleteApiUrl(generateApiUrlWithParams("baja", { usuario: { email: "baja_ejemplo@workwell.app" } }));
-      setDebugChangePasswordApiUrl(generateApiUrlWithParams("cambiocontraseña", { usuario: { email: "cambio_ejemplo@workwell.app", newPassword: "PasswordEjemplo123" } }));
-    }
-    console.log("DashboardPage UE [t, user, generateApiUrlWithParams] - END.");
-  }, [t, user, generateApiUrlWithParams]);
-
-  useEffect(() => {
-    console.log("DashboardPage (Activity Summary UE): START. User from context:", user ? JSON.stringify(user).substring(0,100)+'...' : "null");
-
-    setRawUserObjectForDebug(user ? JSON.stringify(user, null, 2) : "Usuario no disponible o cargando...");
-
-    const userIdFromContext = user?.id;
-    console.log("DashboardPage (Activity Summary UE DEBUG): Para el parámetro userID, se usará este ID del UserContext (antes de encriptar):", userIdFromContext);
-    setRawUserIdForDebug(userIdFromContext || null);
-
-    if (!user || !user.id) {
-        console.warn("DashboardPage (Activity Summary UE): User context or user.id is null/undefined. Skipping user activity summary and URL generation for example payload.");
-        setUserActivityPayloadForDisplay("Usuario no disponible o ID de usuario faltante. No se pueden generar datos de actividad de ejemplo.");
-        setOutputOfEncryptFunctionForTest("Usuario no disponible o ID de usuario faltante.");
-        setDebugUserActivityApiUrlEncrypted(null);
-        setDebugUserActivityApiUrlUnencrypted(null);
-        return;
-    }
-
-    const exampleEntry = recentEntries.length > 0
-      ? recentEntries[0]
-      : { id: "ejemplo-placeholder", situation: "Situación de ejemplo inicial", emotion: "alegria", timestamp: new Date().toISOString()};
-
-    const examplePayload: SingleEmotionalEntryActivity = { entry: exampleEntry };
-    setUserActivityPayloadForDisplay(JSON.stringify(examplePayload, null, 2));
-
-    try {
-      const outputOfEncryptCall = encryptDataAES(examplePayload);
-      setOutputOfEncryptFunctionForTest(outputOfEncryptCall);
-    } catch (error) {
-      console.error("Error processing example activity payload for test display:", error);
-      setOutputOfEncryptFunctionForTest("Error durante el procesamiento del payload de ejemplo.");
-    }
-
-    setDebugUserActivityApiUrlEncrypted(generateUserActivityApiUrl(exampleEntry, userIdFromContext));
-
-    let unencryptedUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(JSON.stringify(examplePayload))}`;
-    if (userIdFromContext) {
-      unencryptedUrl += `&userID=${encodeURIComponent(userIdFromContext)}`;
-    }
-    setDebugUserActivityApiUrlUnencrypted(unencryptedUrl);
-
-    console.log("DashboardPage (Activity Summary UE): END.");
-  }, [user, currentActivePath, t, generateUserActivityApiUrl, recentEntries]);
-
-
-  useEffect(() => {
-    const decryptedObjectOrString = decryptDataAES(ENCRYPTED_STRING_FOR_DECRYPTION_TEST);
-    if (typeof decryptedObjectOrString === 'object' && decryptedObjectOrString !== null) {
-      setOutputOfDecryptFunctionForTest(JSON.stringify(decryptedObjectOrString, null, 2));
-    } else if (typeof decryptedObjectOrString === 'string') {
-      setOutputOfDecryptFunctionForTest(decryptedObjectOrString);
-    } else {
-      setOutputOfDecryptFunctionForTest("Error al procesar la cadena de prueba o resultado no esperado.");
-    }
-  }, []);
+  }, [t, user]);
 
 
   const chartData = useMemo(() => {
-    console.log("DashboardPage chartData useMemo: allEntriesForChart INPUT (first 5):", JSON.stringify(allEntriesForChart.slice(0,5)));
     if (!allEntriesForChart || allEntriesForChart.length === 0) {
-      console.log("DashboardPage chartData useMemo: allEntriesForChart is empty or null. Returning empty array for chart.");
       return [];
     }
 
@@ -264,7 +132,6 @@ export default function DashboardPage() {
           fullDate: formatEntryTimestamp(entry.timestamp),
         };
       });
-    console.log("DashboardPage chartData useMemo: processedData OUTPUT (first 5):", JSON.stringify(processedData.slice(0,5)));
     return processedData;
   }, [allEntriesForChart, t]);
 
@@ -290,24 +157,13 @@ export default function DashboardPage() {
         setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
     }
 
-    const singleEntryPayload: SingleEmotionalEntryActivity = { entry: newEntry };
-    setUserActivityPayloadForDisplay(JSON.stringify(singleEntryPayload, null, 2));
-    setOutputOfEncryptFunctionForTest(encryptDataAES(singleEntryPayload));
-
-    const currentEncryptedActivityApiUrl = generateUserActivityApiUrl(newEntry, userIdFromContext);
-    setDebugUserActivityApiUrlEncrypted(currentEncryptedActivityApiUrl);
-
-    let unencryptedUrl = `${API_BASE_URL_FOR_DEBUG}?apikey=${API_KEY_FOR_DEBUG}&tipo=guardaractividad&datosactividad=${encodeURIComponent(JSON.stringify(singleEntryPayload))}`;
-    if (userIdFromContext) {
-      unencryptedUrl += `&userID=${encodeURIComponent(userIdFromContext)}`;
-    }
-    setDebugUserActivityApiUrlUnencrypted(unencryptedUrl);
-
     toast({
       title: t.emotionalEntrySavedTitle,
       description: t.emotionalEntrySavedMessage,
     });
     setIsEntryDialogOpen(false);
+
+    const currentEncryptedActivityApiUrl = generateUserActivityApiUrl(newEntry, userIdFromContext);
 
     if (currentEncryptedActivityApiUrl) {
       console.log("DashboardPage (handleEmotionalEntrySubmit): Sending NEW emotional entry to API:", currentEncryptedActivityApiUrl.substring(0,150) + "...");
@@ -381,12 +237,6 @@ export default function DashboardPage() {
     } else {
       console.warn("DashboardPage (handleEmotionalEntrySubmit): No API URL generated for saving new entry. Skipping fetch.");
     }
-  };
-
-  const handleClearDebugUrl = (key: string, setter: React.Dispatch<React.SetStateAction<string | null>>, exampleUrlGenerator: () => string) => {
-    sessionStorage.removeItem(key);
-    setter(exampleUrlGenerator());
-    toast({ title: "URL de prueba eliminada de SessionStorage", description: `Se ha regenerado la URL de ejemplo para ${key === SESSION_STORAGE_REGISTER_URL_KEY ? 'registro' : 'login'}.` });
   };
 
   const handleRefreshEmotions = async () => {
@@ -505,176 +355,6 @@ export default function DashboardPage() {
                 <EmotionalEntryForm onSubmit={handleEmotionalEntrySubmit} />
               </DialogContent>
             </Dialog>
-
-            <div className="mt-6 p-4 border rounded-lg bg-muted/20 text-left max-w-2xl mx-auto space-y-4 shadow">
-              <div>
-                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                  <UserCircle2 className="mr-2 h-4 w-4" />
-                  User Object del Contexto (RAW):
-                </p>
-                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
-                  <code>{rawUserObjectForDebug || "No disponible o cargando..."}</code>
-                </pre>
-              </div>
-              <Separator/>
-              <div>
-                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                  <UserCircle2 className="mr-2 h-4 w-4" />
-                   ID de Usuario del Contexto (RAW):
-                </p>
-                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                  <code>{rawUserIdForDebug || "No disponible o cargando..."}</code>
-                </pre>
-              </div>
-              <Separator />
-              <div>
-                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                  <FileText className="mr-2 h-4 w-4" />
-                   Payload JSON (Objeto <code>{"{ entry: ... }"}</code>) que se encriptará para 'datosactividad' (Nueva Entrada):
-                </p>
-                {userActivityPayloadForDisplay ? (
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-96">
-                    <code>{userActivityPayloadForDisplay}</code>
-                  </pre>
-                ) : (
-                  <p className="text-xs italic text-muted-foreground">[Payload de nueva entrada no disponible o cargando...]</p>
-                )}
-                 <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Este es el objeto JSON que se pasa a <code>encryptDataAES</code> para generar el valor del parámetro <code>datosactividad</code> en la URL.
-                  </p>
-              </div>
-              <Separator />
-              <div>
-                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                  <Lock className="mr-2 h-4 w-4" />
-                  Resultado de `encryptDataAES` sobre el Payload de Nueva Entrada (lo que va en `datosactividad`):
-                </p>
-                {outputOfEncryptFunctionForTest ? (
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
-                    <code>{outputOfEncryptFunctionForTest}</code>
-                  </pre>
-                ) : (
-                  <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
-                )}
-              </div>
-              <Separator />
-               <div>
-                <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                  <KeyRound className="mr-2 h-4 w-4" />
-                  Prueba de Función `decryptDataAES` (Encriptación GLOBAL ACTIVADA):
-                </p>
-                {outputOfDecryptFunctionForTest ? (
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{outputOfDecryptFunctionForTest}</code>
-                  </pre>
-                ) : (
-                  <p className="text-xs italic text-muted-foreground">[Calculando o valor no disponible...]</p>
-                )}
-                <p className="text-xs mt-2 text-muted-foreground">
-                  Con la encriptación GLOBAL ACTIVADA, <code>decryptDataAES(cadena_encriptada_json)</code> intenta desencriptar la cadena (que debe ser un JSON con 'iv' y 'data') y luego parsear el resultado como JSON.
-                </p>
-              </div>
-              <Separator />
-              {debugUserActivityApiUrlUnencrypted && (
-                <div>
-                  <p className="text-sm font-semibold mb-1 text-yellow-700 dark:text-yellow-300 flex items-center">
-                    <Send className="mr-2 h-4 w-4" />
-                     URL de API de Actividad (Depuración - SIN ENCRIPTAR AES):
-                  </p>
-                  <pre className="text-xs bg-yellow-50 dark:bg-yellow-900/30 p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner border border-yellow-300 dark:border-yellow-700">
-                    <code>{debugUserActivityApiUrlUnencrypted}</code>
-                  </pre>
-                   <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Esta URL muestra los parámetros `datosactividad` y `userID` en texto plano (solo codificados para URL) para depuración. La URL que realmente se envía está encriptada.
-                  </p>
-                </div>
-               )}
-               <Separator />
-               {debugUserActivityApiUrlEncrypted && (
-                <div>
-                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                    <ShieldQuestion className="mr-2 h-4 w-4" />
-                     URL de API para Guardar Actividad (Depuración - ENCRIPTADA AES - Realmente Enviada):
-                  </p>
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{debugUserActivityApiUrlEncrypted}</code>
-                  </pre>
-                   <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro <code>datosactividad</code> contiene el payload de la nueva entrada encriptado con AES. El parámetro <code>userID</code> (si está presente) contiene el ID del usuario encriptado con AES. Esta URL se actualiza cada vez que se registra una nueva emoción.
-                  </p>
-                </div>
-               )}
-              <Separator />
-               {debugRegisterApiUrl && (
-                <div>
-                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                    <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Registro (Depuración - Payloads ENCRIPTADOS con AES):
-                  </p>
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{debugRegisterApiUrl}</code>
-                  </pre>
-                  <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Los parámetros `usuario`, `name`, `email`, `password` contienen strings JSON con 'iv' y 'data' (encriptación global AES activada).
-                  </p>
-                  <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_REGISTER_URL_KEY, setDebugRegisterApiUrl, () => {
-                     const exampleRegisterUser = { id: `reg-id-${crypto.randomUUID().substring(0,8)}`, name: "Usuario Ejemplo", email: "registro@ejemplo.com", ageRange: "25_34", gender: "female", initialEmotionalState: 4 };
-                     const registerParams = { usuario: exampleRegisterUser, name: { value: exampleRegisterUser.name }, email: { value: exampleRegisterUser.email }, password: { value: "PasswordDeRegistro123" }};
-                     return generateApiUrlWithParams("registro", registerParams);
-                  })} className="mt-2">
-                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
-                  </Button>
-                </div>
-               )}
-               {debugLoginApiUrl && (
-                <div>
-                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                    <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Login (Depuración - Payloads ENCRIPTADOS con AES):
-                  </p>
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{debugLoginApiUrl}</code>
-                  </pre>
-                   <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: Los parámetros `usuario` y `password` contienen strings JSON con 'iv' y 'data' (encriptación global AES activada).
-                  </p>
-                  <Button variant="outline" size="sm" onClick={() => handleClearDebugUrl(SESSION_STORAGE_LOGIN_URL_KEY, setDebugLoginApiUrl, () => {
-                    const loginParams = { usuario: { email: "login@ejemplo.com" }, password: { value: "PasswordDeLogin123" } };
-                    return generateApiUrlWithParams("login", loginParams);
-                  })} className="mt-2">
-                    <Trash2 className="mr-2 h-3 w-3" /> Limpiar URL (para regenerar ejemplo)
-                  </Button>
-                </div>
-               )}
-               {debugDeleteApiUrl && (
-                <div>
-                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                    <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Baja (Depuración - Payload ENCRIPTADO con AES):
-                  </p>
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{debugDeleteApiUrl}</code>
-                  </pre>
-                   <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro `usuario` contiene un string JSON con 'iv' y 'data' (encriptación global AES activada). Generada usando el email del usuario actual o un ejemplo si no hay sesión.
-                  </p>
-                </div>
-               )}
-               {debugChangePasswordApiUrl && (
-                <div>
-                  <p className="text-sm font-semibold mb-1 text-primary flex items-center">
-                    <ShieldQuestion className="mr-2 h-4 w-4" />
-                    URL de API de Cambio Contraseña (Depuración - Payload ENCRIPTADO con AES):
-                  </p>
-                  <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                    <code>{debugChangePasswordApiUrl}</code>
-                  </pre>
-                   <p className="text-xs mt-1 text-muted-foreground">
-                    Nota: El parámetro `usuario` contiene un string JSON con 'iv' y 'data' (encriptación global AES activada). Generada usando el email del usuario actual (y contraseña de ejemplo) o datos de ejemplo si no hay sesión.
-                  </p>
-                </div>
-               )}
-            </div>
           </section>
 
           <section aria-labelledby="recent-entries-heading">
@@ -764,3 +444,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    

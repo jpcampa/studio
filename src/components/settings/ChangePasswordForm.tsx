@@ -8,10 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "@/lib/translations";
-import { Eye, EyeOff, Loader2, Save, ShieldQuestion } from "lucide-react";
+import { Eye, EyeOff, Loader2, Save } from "lucide-react";
 import { changePassword, type ChangePasswordState } from "@/actions/auth";
 import { useUser } from "@/contexts/UserContext";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation"; 
 
 const initialState: ChangePasswordState = { 
   errors: {}, 
@@ -36,22 +36,14 @@ function SubmitButton() {
 export function ChangePasswordForm() {
   const t = useTranslations();
   const { toast } = useToast();
-  const { user, loading: userLoading, logout } = useUser(); // Import logout
-  const router = useRouter(); // Initialize useRouter
+  const { user, loading: userLoading, logout } = useUser(); 
+  const router = useRouter(); 
 
   const changePasswordWithEmail = changePassword.bind(null, user?.email || "");
   const [state, formAction] = useActionState(changePasswordWithEmail, initialState);
   
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-  const [persistedDebugUrl, setPersistedDebugUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const storedUrl = sessionStorage.getItem(SESSION_STORAGE_CHANGE_PASSWORD_URL_KEY);
-    if (storedUrl) {
-      setPersistedDebugUrl(storedUrl);
-    }
-  }, []);
 
   useEffect(() => {
     if (!state) {
@@ -62,7 +54,6 @@ export function ChangePasswordForm() {
 
     if (state.debugChangePasswordApiUrl) {
       sessionStorage.setItem(SESSION_STORAGE_CHANGE_PASSWORD_URL_KEY, state.debugChangePasswordApiUrl);
-      setPersistedDebugUrl(state.debugChangePasswordApiUrl);
     }
 
     if (state.success && state.message) {
@@ -71,9 +62,9 @@ export function ChangePasswordForm() {
         description: state.message,
       });
       setTimeout(() => {
-        logout(); // Call logout from UserContext
-        router.push('/login'); // Redirect to login page
-      }, 2000); // Wait 2 seconds
+        logout(); 
+        router.push('/login'); 
+      }, 2000); 
     } else if (state.message) {
         let errorTitle = t.passwordChangeErrorTitle;
         let errorMessage = state.message;
@@ -82,22 +73,14 @@ export function ChangePasswordForm() {
         if (state.errors?._form?.length) {
             errorMessage = state.errors._form[0];
         } else if (state.errors?.newPassword?.length) {
-            errorTitle = t.errorOccurred; // More generic for field errors
+            errorTitle = t.errorOccurred; 
             errorMessage = state.errors.newPassword[0];
         } else if (state.errors?.confirmNewPassword?.length) {
-            errorTitle = t.errorOccurred; // More generic for field errors
+            errorTitle = t.errorOccurred; 
             errorMessage = state.errors.confirmNewPassword[0];
-        } else if (state.message === t.validationError && (state.errors?.newPassword || state.errors?.confirmNewPassword)) {
-            // If it's a general validationError message but specific field errors were also present,
-            // they would have been shown as toasts above, so don't show this general one.
-            // This logic could be tricky; main goal is to avoid duplicate toasts for the same issue.
-            // Let's simplify: if there are specific field errors, they get their own toasts.
-            // If there's _form error, it gets a toast.
-            // If there's just state.message (and it's not success), it gets a toast.
         }
         
-        // Show toast only if an error message is determined
-        if (!state.success) { // Ensures we only toast actual errors here
+        if (!state.success) { 
             toast({
                 title: errorTitle,
                 description: errorMessage,
@@ -105,7 +88,6 @@ export function ChangePasswordForm() {
             });
         }
     } else if (!state.success && state.errors && Object.keys(state.errors).length > 0) {
-        // Fallback for field errors if no state.message was set (e.g. only Zod errors)
         if (state.errors?.newPassword?.length) {
             toast({ title: t.errorOccurred, description: state.errors.newPassword[0], variant: "destructive" });
         }
@@ -122,8 +104,6 @@ export function ChangePasswordForm() {
     router.push('/login');
     return null;
   }
-
-  const displayDebugUrl = state?.debugChangePasswordApiUrl || persistedDebugUrl;
 
   return (
     <form action={formAction} className="space-y-6">
@@ -187,19 +167,9 @@ export function ChangePasswordForm() {
         <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
       )}
 
-      {displayDebugUrl && (
-        <div className="mt-4 p-3 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg shadow">
-            <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 flex items-center mb-1">
-            <ShieldQuestion className="mr-2 h-4 w-4" />
-            Debug: URL de API de Cambio de Contraseña Generada
-            </p>
-            <pre className="text-xs text-yellow-600 dark:text-yellow-400 overflow-x-auto whitespace-pre-wrap break-all bg-yellow-100 dark:bg-yellow-800/30 p-2 rounded-md shadow-inner">
-            <code>{displayDebugUrl}</code>
-            </pre>
-        </div>
-      )}
       <SubmitButton />
     </form>
   );
 }
 
+    
