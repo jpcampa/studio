@@ -2,17 +2,15 @@
 "use client";
 
 import type { InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays, TrendingUp, Star, Zap } from 'lucide-react'; // Added more icons
+import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays, TrendingUp, Star, Zap, Milestone, ExternalLink, Lightbulb } from 'lucide-react'; 
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/chart"
 import {
@@ -135,24 +133,30 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
   });
   
   const radarChartDescriptionText = (t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones.") + 
-                                   " Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0), Azul (0 o no evaluado).";
+                                   " Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0), Azul (< 1.0 o no evaluado).";
   
   const CustomRadarDot = (props: DotProps & { payload?: any, value?: number }) => {
-    const { cx, cy, payload, value: rawValue } = props;
-    
-    const scoreValue = typeof rawValue === 'number' ? rawValue : 0;
-    let dotColor = "hsl(var(--chart-2))"; // Default Azul (para 0 o no evaluado o < 1)
+    const { cx, cy, payload } = props;
+    let { value } = props;
+
+    if (typeof value !== 'number' || isNaN(value)) {
+      value = 0; 
+      console.warn(`CustomRadarDot: Invalid 'value' (${props.value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0.`);
+    }
+
+    const scoreValue = Math.max(0, Math.min(5, Number(value)));
+    let dotColor = "hsl(var(--chart-2))"; // Default Blue (for 0 or < 1 or not evaluated)
     const dimensionNameForLog = payload?.dimension || "Unknown Dimension";
 
     if (scoreValue >= 4.0) {
-      dotColor = "hsl(var(--primary))"; // Verde
+      dotColor = "hsl(var(--primary))"; // Green
     } else if (scoreValue >= 2.5) {
-      dotColor = "hsl(var(--chart-5))"; // Naranja
+      dotColor = "hsl(var(--chart-5))"; // Orange/Yellow
     } else if (scoreValue >= 1.0) {
-      dotColor = "hsl(var(--destructive))"; // Rojo
+      dotColor = "hsl(var(--destructive))"; // Red
     }
     
-    console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used: ${scoreValue}, Raw value: ${rawValue}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
+    console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used for color: ${scoreValue}, Original value prop: ${props.value}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
     
     if (typeof cx !== 'number' || typeof cy !== 'number' || isNaN(cx) || isNaN(cy)) {
       console.error(`CustomRadarDot: cx (${cx}) or cy (${cy}) is not a valid number for dimension ${dimensionNameForLog}. Cannot render dot.`);
@@ -162,7 +166,6 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
   };
 
-  // Categorize dimensions for detailed analysis
   const highStrengthDimensions: CategorizedDimension[] = [];
   const functionalDimensions: CategorizedDimension[] = [];
   const priorityImprovementDimensions: CategorizedDimension[] = [];
@@ -181,7 +184,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
         highStrengthDimensions.push(categorizedDim);
       } else if (score >= 2.5) {
         functionalDimensions.push(categorizedDim);
-      } else if (score < 2.5) { // Includes scores < 1.0 down to 0
+      } else if (score < 2.5) { 
         priorityImprovementDimensions.push(categorizedDim);
       }
     }
@@ -386,14 +389,43 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
         </CardContent>
       </Card>
 
-      <div className="mt-8 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
-        {results.priorityAreas.length > 0 && (
-            <Button asChild size="lg">
-                <Link href={`/paths?start_with=${encodeURIComponent(results.priorityAreas[0])}`}>
-                {t.startPathFor.replace("{area}", results.priorityAreas[0].split('(')[0].trim())}
+      <Card className="shadow-xl mt-8">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Lightbulb className="mr-3 h-7 w-7 text-primary" />
+            Próximos Pasos: Rutas de Desarrollo Sugeridas
+          </CardTitle>
+          <CardDescription>
+            Basado en tus resultados, te recomendamos explorar las siguientes rutas para continuar tu crecimiento.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {(results.priorityAreas && results.priorityAreas.length > 0) ? (
+            results.priorityAreas.map((areaName, index) => (
+              <Button key={index} asChild variant="default" size="lg" className="w-full sm:w-auto justify-start text-left">
+                <Link href={`/paths?start_with=${encodeURIComponent(areaName)}`}>
+                  <Milestone className="mr-2 h-5 w-5" />
+                  Comenzar Ruta: {areaName.split('(')[0].trim()}
                 </Link>
-            </Button>
-        )}
+              </Button>
+            ))
+          ) : (
+            <>
+              <p className="text-muted-foreground">
+                No se han identificado áreas prioritarias específicas en esta evaluación. Te invitamos a explorar todas nuestras rutas de desarrollo disponibles.
+              </p>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/paths">
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Explorar Todas las Rutas
+                </Link>
+              </Button>
+            </>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="mt-12 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
         <Button onClick={onRetake} variant="outline" size="lg">
             <RotateCcw className="mr-2 h-4 w-4" />
             Realizar Evaluación de Nuevo
@@ -402,7 +434,3 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     </div>
   );
 }
-
-    
-
-    
