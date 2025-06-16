@@ -104,7 +104,7 @@ const ApiSingleAssessmentRecordSchema = z.object({
       }
       return profile;
     }),
-    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."),
+    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."), // Allows 0-3 items
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
     respuestas: z.array(z.tuple([z.string(), z.string(), z.string()])).optional(),
   }),
@@ -124,7 +124,6 @@ export default function MyAssessmentsPage() {
   const [assessments, setAssessments] = useState<AssessmentRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // States for debugApiUrl and rawApiData are removed as the cards are being removed
 
   const fetchAssessments = async () => {
     if (!user || !user.id) {
@@ -136,7 +135,6 @@ export default function MyAssessmentsPage() {
 
     setIsLoading(true);
     setError(null);
-    // No limpiar assessments aquí para evitar parpadeo si hay datos locales y la API falla
 
     const currentUserId = user.id;
     console.log("MyAssessmentsPage: Preparing to fetch assessments for user.id:", currentUserId);
@@ -147,13 +145,11 @@ export default function MyAssessmentsPage() {
       console.log("MyAssessmentsPage: Encrypted user ID (for API request):", encryptedUserId.substring(0, 50) + "...");
       
       constructedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
-      // setDebugApiUrl removed
       console.log("MyAssessmentsPage: Fetching assessments from URL (first 150 chars):", constructedApiUrl.substring(0,150) + "...");
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(constructedApiUrl, { signal });
       let responseText = await response.text();
-      // setRawApiData removed
       
       console.log("MyAssessmentsPage: Raw API Response Text (first 500 chars before any parsing):", responseText.substring(0,500) + (responseText.length > 500 ? "..." : ""));
 
@@ -291,7 +287,6 @@ export default function MyAssessmentsPage() {
         errorMessage = e.message; 
       }
       setError(errorMessage);
-      // setDebugApiUrl removed call for constructedApiUrl
     } finally {
       setIsLoading(false);
     }
@@ -331,8 +326,6 @@ export default function MyAssessmentsPage() {
         </Button>
       </div>
 
-      {/* Debug cards are removed from here */}
-
       {error && (
         <Alert variant="destructive" className="mb-8">
           <AlertTriangle className="h-4 w-4" />
@@ -361,9 +354,9 @@ export default function MyAssessmentsPage() {
       )}
 
       {assessments.length > 0 && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="space-y-8">
           {assessments.map((assessment) => (
-            <Card key={assessment.id} className="shadow-lg hover:shadow-xl transition-shadow flex flex-col">
+            <Card key={assessment.id} className="shadow-lg hover:shadow-xl transition-shadow flex flex-col max-w-2xl mx-auto">
               <CardHeader>
                 <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className="text-xs">
