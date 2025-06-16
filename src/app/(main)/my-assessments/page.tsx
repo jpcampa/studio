@@ -97,7 +97,7 @@ const ApiSingleAssessmentRecordSchema = z.object({
       // console.log("MyAssessmentsPage: emotionalProfile is already an object:", JSON.stringify(profile).substring(0,300));
       return profile; // If not an array, it must be the original object format
     }),
-    priorityAreas: z.array(z.string()).min(3, "Debe haber al menos 3 áreas prioritarias.").max(3, "Debe haber exactamente 3 áreas prioritarias."),
+    priorityAreas: z.array(z.string()).max(3), // Temporarily allowing 0-3 areas due to backend sending empty/non-compliant arrays
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
     respuestas: z.array(z.tuple([z.string(), z.string(), z.string()])).optional(),
   }),
