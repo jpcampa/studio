@@ -7,7 +7,7 @@ import { useTranslations } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatAssessmentTimestamp, type AssessmentRecord, overwriteAssessmentHistory } from '@/data/assessmentHistoryStore'; // Import overwriteAssessmentHistory
-import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw, ShieldQuestion } from 'lucide-react';
+import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/contexts/UserContext';
 import { forceEncryptStringAES, decryptDataAES } from '@/lib/encryption';
@@ -38,27 +38,24 @@ const ApiSingleAssessmentRecordSchema = z.object({
   }),
   data: z.object({
     emotionalProfile: z.union([
-      z.record(z.string(), z.number().min(1).max(5)), 
+      z.record(z.string(), z.number().min(1).max(5)),
       z.array(
         z.union([
-          z.object({ 
+          z.object({
             dimensionName: z.string(),
             score: z.number().min(1).max(5)
           }),
-          z.tuple([z.string(), z.number().min(1).max(5)]), 
-          z.tuple([z.string(), z.string(), z.string()]) 
+          z.tuple([z.string(), z.number().min(1).max(5)]),
+          z.tuple([z.string(), z.string(), z.string()]) // For [id, name, score_string]
         ])
       )
     ]).transform((profile, ctx) => {
-      // console.log("MyAssessmentsPage: Transforming emotionalProfile. Input type:", typeof profile, "Is array:", Array.isArray(profile), "Value (first 300 chars):", JSON.stringify(profile).substring(0,300));
       if (Array.isArray(profile)) {
         const newRecord: Record<string, number> = {};
         let conversionOk = true;
         for (const item of profile) {
-          if (Array.isArray(item)) { 
-            if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) { 
-              newRecord[item[0]] = item[1];
-            } else if (item.length === 3 && typeof item[0] === 'string' && typeof item[1] === 'string' && typeof item[2] === 'string') { 
+          if (Array.isArray(item)) {
+            if (item.length === 3 && typeof item[0] === 'string' && typeof item[1] === 'string' && typeof item[2] === 'string') {
               const dimensionName = item[1];
               const scoreValue = parseFloat(item[2]);
               if (!isNaN(scoreValue) && scoreValue >= 1 && scoreValue <= 5) {
@@ -71,6 +68,8 @@ const ApiSingleAssessmentRecordSchema = z.object({
                 });
                 conversionOk = false; break;
               }
+            } else if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) {
+              newRecord[item[0]] = item[1];
             } else {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
@@ -79,7 +78,7 @@ const ApiSingleAssessmentRecordSchema = z.object({
               });
               conversionOk = false; break;
             }
-          } else if (typeof item === 'object' && item !== null && 'dimensionName' in item && 'score' in item) { 
+          } else if (typeof item === 'object' && item !== null && 'dimensionName' in item && 'score' in item) {
             const objItem = item as { dimensionName: string, score: number };
             if (typeof objItem.dimensionName === 'string' && typeof objItem.score === 'number' && objItem.score >=1 && objItem.score <=5) {
                newRecord[objItem.dimensionName] = objItem.score;
@@ -91,7 +90,7 @@ const ApiSingleAssessmentRecordSchema = z.object({
               });
               conversionOk = false; break;
             }
-          } else { 
+          } else {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               path: ['emotionalProfile', profile.indexOf(item)],
@@ -101,13 +100,11 @@ const ApiSingleAssessmentRecordSchema = z.object({
           }
         }
         if (!conversionOk) return z.NEVER;
-        // console.log("MyAssessmentsPage: Transformed emotionalProfile from array to object:", JSON.stringify(newRecord).substring(0,300));
         return newRecord;
       }
-      // console.log("MyAssessmentsPage: emotionalProfile is already an object:", JSON.stringify(profile).substring(0,300));
-      return profile; 
+      return profile;
     }),
-    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."), // Updated from min(3).max(3)
+    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."),
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
     respuestas: z.array(z.tuple([z.string(), z.string(), z.string()])).optional(),
   }),
@@ -127,15 +124,12 @@ export default function MyAssessmentsPage() {
   const [assessments, setAssessments] = useState<AssessmentRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [debugApiUrl, setDebugApiUrl] = useState<string | null>(null);
-  const [rawApiData, setRawApiData] = useState<string | null>(null);
+  // States for debugApiUrl and rawApiData are removed as the cards are being removed
 
   const fetchAssessments = async () => {
     if (!user || !user.id) {
       setError(t.errorOccurred + " (Usuario no autenticado o ID de usuario no disponible para la API)");
       setIsLoading(false);
-      setDebugApiUrl("Error: Usuario no autenticado o ID no disponible.");
-      setRawApiData(null);
       console.warn("MyAssessmentsPage: Fetch aborted. User or user.id is not available.", "User:", user);
       return;
     }
@@ -143,9 +137,6 @@ export default function MyAssessmentsPage() {
     setIsLoading(true);
     setError(null);
     // No limpiar assessments aquí para evitar parpadeo si hay datos locales y la API falla
-    // setAssessments([]); 
-    setDebugApiUrl(null);
-    setRawApiData(null);
 
     const currentUserId = user.id;
     console.log("MyAssessmentsPage: Preparing to fetch assessments for user.id:", currentUserId);
@@ -156,13 +147,13 @@ export default function MyAssessmentsPage() {
       console.log("MyAssessmentsPage: Encrypted user ID (for API request):", encryptedUserId.substring(0, 50) + "...");
       
       constructedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
-      setDebugApiUrl(constructedApiUrl);
+      // setDebugApiUrl removed
       console.log("MyAssessmentsPage: Fetching assessments from URL (first 150 chars):", constructedApiUrl.substring(0,150) + "...");
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(constructedApiUrl, { signal });
       let responseText = await response.text();
-      setRawApiData(responseText); 
+      // setRawApiData removed
       
       console.log("MyAssessmentsPage: Raw API Response Text (first 500 chars before any parsing):", responseText.substring(0,500) + (responseText.length > 500 ? "..." : ""));
 
@@ -235,9 +226,6 @@ export default function MyAssessmentsPage() {
             // Convert timestamps to full ISO string if they are not already, before sorting and saving
             const processedAssessments = validationResult.data.map(record => {
                 try {
-                    // Attempt to create a Date object. Date.parse is more lenient.
-                    // If it's already a valid ISO string, new Date() will handle it.
-                    // If it's "YYYY-MM-DD HH:MM:SS", new Date() will also handle it.
                     const dateObj = new Date(record.timestamp.includes('T') ? record.timestamp : record.timestamp.replace(' ', 'T'));
                     if (isNaN(dateObj.getTime())) {
                         console.warn(`MyAssessmentsPage: Invalid timestamp format for record ID ${record.id}: ${record.timestamp}. Keeping original.`);
@@ -303,7 +291,7 @@ export default function MyAssessmentsPage() {
         errorMessage = e.message; 
       }
       setError(errorMessage);
-      setDebugApiUrl(constructedApiUrl || "Error: No se pudo construir la URL de la API antes del fallo.");
+      // setDebugApiUrl removed call for constructedApiUrl
     } finally {
       setIsLoading(false);
     }
@@ -315,7 +303,6 @@ export default function MyAssessmentsPage() {
     } else if (!userLoading && (!user || !user.id)) {
       setIsLoading(false);
       setError(t.errorOccurred + " (Debes iniciar sesión y tener un ID de usuario para ver tus evaluaciones)");
-      setDebugApiUrl("Error: Usuario no cargado o ID no disponible.");
       console.warn("MyAssessmentsPage: User not loaded or user.id missing. User:", user);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -344,44 +331,7 @@ export default function MyAssessmentsPage() {
         </Button>
       </div>
 
-      {debugApiUrl && (
-        <Card className="mb-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
-          <CardHeader>
-            <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
-              <ShieldQuestion className="mr-2 h-5 w-5" />
-              URL de API Construida (Depuración)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground mb-2">
-              Esta es la URL que se intentó (o se intentará) usar para obtener el historial de evaluaciones. El parámetro 'usuario' está encriptado.
-            </p>
-            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-              <code>{debugApiUrl}</code>
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-      
-      {rawApiData && (
-        <Card className="mb-8 shadow-md border-blue-500 bg-blue-50 dark:bg-blue-900/30">
-          <CardHeader>
-            <CardTitle className="text-lg text-blue-700 dark:text-blue-300 flex items-center">
-              <ShieldQuestion className="mr-2 h-5 w-5" />
-              Respuesta Cruda de la API (Depuración)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground mb-2">
-              Esta es la respuesta textual recibida del servidor antes de cualquier parseo o desencriptación.
-            </p>
-            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner max-h-60">
-              <code>{rawApiData}</code>
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-
+      {/* Debug cards are removed from here */}
 
       {error && (
         <Alert variant="destructive" className="mb-8">
