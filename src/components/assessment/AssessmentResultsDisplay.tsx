@@ -90,11 +90,11 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   }
 
   const radarData = assessmentDimensions.map(dim => {
-    const score = results.emotionalProfile[dim.name] ?? 3; // Default to 3 if not found
+    const score = results.emotionalProfile[dim.name] ?? 0; // Default to 0 if not found to ensure correct color logic
     return {
       dimensionId: dim.id,
       dimension: dim.name,
-      score: Math.max(1, Math.min(5, score)), // Ensure score is between 1 and 5
+      score: Math.max(0, Math.min(5, score)), // Ensure score is between 0 and 5
       fullMark: 5,
     };
   });
@@ -102,7 +102,8 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   const emotionalProfileRadarConfig: ChartConfig = {
     score: {
       label: t.emotionalProfile,
-      color: "hsl(var(--primary))",
+      // This color is a fallback or for legends, individual dots will have their own colors.
+      color: "hsl(var(--muted-foreground))", 
     },
   };
 
@@ -119,6 +120,8 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
       color: themedChartColors[index % themedChartColors.length],
     };
   });
+  
+  const radarChartDescriptionText = `${t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones."} Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0).`;
 
   return (
     <div className="space-y-8">
@@ -158,7 +161,7 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center"><Activity className="mr-2 h-6 w-6 text-accent" />{t.emotionalProfile}</CardTitle>
-            <CardDescription>{t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones."}</CardDescription>
+            <CardDescription>{radarChartDescriptionText}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[400px] w-full">
@@ -174,7 +177,30 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                         )}
                     />
                     <PolarRadiusAxis angle={90} domain={[0, 5]} tickCount={6} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={{ stroke: "hsl(var(--border))" }} />
-                    <Radar name={t.emotionalProfile} dataKey="score" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
+                    <Radar 
+                        name={t.emotionalProfile} 
+                        dataKey="score" 
+                        stroke="hsl(var(--muted-foreground))" // Neutral stroke for the radar shape lines
+                        fill="hsl(var(--muted-foreground))"   // Neutral, very light fill for the radar area
+                        fillOpacity={0.1} // Make it very subtle
+                        dot={(props) => {
+                            const { cx, cy, payload } = props; // payload.score is the value for this dot
+                            const value = payload.score;
+                            let dotColor = "hsl(var(--muted-foreground))"; // Default color
+                            
+                            if (value >= 4.0) {
+                                dotColor = "hsl(var(--primary))"; // Green
+                            } else if (value >= 2.5) {
+                                dotColor = "hsl(var(--chart-5))"; // Orange-ish (e.g., from theme: --chart-5: 27 87% 67%)
+                            } else if (value >= 1.0) { // Scores are between 1 and 5
+                                dotColor = "hsl(var(--destructive))"; // Red
+                            } else { // for scores below 1, if any, or default
+                                dotColor = "hsl(var(--muted))";
+                            }
+                            return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
+                        }}
+                        activeDot={{ r: 7, strokeWidth: 2 }} // Style for hovered dot
+                    />
                     <ChartTooltip
                         cursor={{ stroke: "hsl(var(--primary))", strokeDasharray: '3 3' }}
                         content={
@@ -317,3 +343,4 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
     </div>
   );
 }
+
