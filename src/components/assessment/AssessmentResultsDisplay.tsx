@@ -192,18 +192,20 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                         fillOpacity={0.1} 
                         dot={(props) => {
                             const { cx, cy, payload } = props;
+                            // payload.score should be a number between 0 and 5 due to radarData processing.
                             const value = typeof payload.score === 'number' ? payload.score : 0;
-                            let dotColor = "hsl(var(--muted))"; // Default grey for unexpected values
+                            let dotColor = "hsl(var(--muted))"; // Default grey
 
                             if (value >= 4.0) {
                                 dotColor = "hsl(var(--primary))"; // Green
-                            } else if (value >= 2.5) {
+                            } else if (value >= 2.5) { // Implicitly value < 4.0
                                 dotColor = "hsl(var(--chart-5))"; // Orange
-                            } else if (value >= 1.0) { 
+                            } else if (value >= 1.0) { // Implicitly value < 2.5
                                 dotColor = "hsl(var(--destructive))"; // Red
-                            } else if (value === 0) { 
-                                dotColor = "hsl(var(--chart-2))"; // Blue for 0 or not evaluated (chart-2 is typically a blueish tone)
+                            } else if (value === 0) { // Specifically for 0 or un-evaluated
+                                dotColor = "hsl(var(--chart-2))"; // Blue
                             }
+                            // Critical log: Check the value and resulting color for each dot
                             console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${value}, Color: ${dotColor}`);
                             return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
                         }}
@@ -351,6 +353,3 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
     </div>
   );
 }
-
-
-    
