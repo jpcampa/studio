@@ -99,7 +99,6 @@ const ApiSingleAssessmentRecordSchema = z.object({
     }),
     priorityAreas: z.array(z.string()).min(3, "Debe haber al menos 3 áreas prioritarias.").max(3, "Debe haber exactamente 3 áreas prioritarias."),
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
-    // Adding 'respuestas' to the schema to accept it, even if not directly used in UI yet
     respuestas: z.array(z.tuple([z.string(), z.string(), z.string()])).optional(),
   }),
 });
@@ -119,7 +118,7 @@ export default function MyAssessmentsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [debugApiUrl, setDebugApiUrl] = useState<string | null>(null);
-  const [rawApiData, setRawApiData] = useState<string | null>(null); // State for raw API data
+  const [rawApiData, setRawApiData] = useState<string | null>(null);
 
   const fetchAssessments = async () => {
     if (!user || !user.id) {
@@ -152,7 +151,7 @@ export default function MyAssessmentsPage() {
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
       const response = await fetch(constructedApiUrl, { signal });
       let responseText = await response.text();
-      setRawApiData(responseText); // Store raw response text
+      setRawApiData(responseText); 
       
       console.log("MyAssessmentsPage: Raw API Response Text (first 500 chars before any parsing):", responseText.substring(0,500) + (responseText.length > 500 ? "..." : ""));
 
