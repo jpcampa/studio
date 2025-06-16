@@ -7,7 +7,7 @@ import { useTranslations } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatAssessmentTimestamp, type AssessmentRecord } from '@/data/assessmentHistoryStore';
-import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
+import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw, ShieldQuestion } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/contexts/UserContext';
 import { forceEncryptStringAES, decryptDataAES } from '@/lib/encryption';
@@ -35,18 +35,13 @@ const ApiSingleAssessmentRecordSchema = z.object({
       }))
     ]).transform((profile, ctx) => {
       if (Array.isArray(profile)) {
-        // This part of the union implies it's an array of {dimensionName: string, score: number}
         // console.log("MyAssessmentsPage: Transforming emotionalProfile from array of objects:", JSON.stringify(profile).substring(0, 200));
         const newRecord: Record<string, number> = {};
         let conversionOk = true;
         for (const item of profile as { dimensionName: string, score: number }[]) {
-          // The z.array(z.object(...)) part of the union should have already validated the item structure
-          // but we ensure direct assignment.
           if (typeof item.dimensionName === 'string' && typeof item.score === 'number') {
              newRecord[item.dimensionName] = item.score;
           } else {
-            // This case should ideally not be reached if the array(object()) schema matched.
-            // It's a safeguard or indicates a more complex array structure not yet handled.
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: `Invalid item structure in emotionalProfile array during transformation: ${JSON.stringify(item)}. Expected {dimensionName: string, score: number}.`,
@@ -55,10 +50,9 @@ const ApiSingleAssessmentRecordSchema = z.object({
             break;
           }
         }
-        if (!conversionOk) return z.NEVER; // Fails validation if an item is bad during transform
+        if (!conversionOk) return z.NEVER; 
         return newRecord;
       }
-      // If not an array, it must be the record type (or Zod would have failed the union)
       return profile;
     }),
     priorityAreas: z.array(z.string()).min(3).max(3),
@@ -66,7 +60,6 @@ const ApiSingleAssessmentRecordSchema = z.object({
   }),
 });
 
-// Zod schema for validating the array of assessment records
 const ApiFetchedAssessmentsSchema = z.array(ApiSingleAssessmentRecordSchema);
 
 interface ExternalApiResponse {
@@ -81,11 +74,13 @@ export default function MyAssessmentsPage() {
   const [assessments, setAssessments] = useState<AssessmentRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [debugApiUrl, setDebugApiUrl] = useState<string | null>(null); // State for debug URL
 
   const fetchAssessments = async () => {
     if (!user || !user.id) {
       setError(t.errorOccurred + " (Usuario no autenticado o ID de usuario no disponible para la API)");
       setIsLoading(false);
+      setDebugApiUrl("Error: Usuario no autenticado o ID no disponible.");
       console.warn("MyAssessmentsPage: Fetch aborted. User or user.id is not available.", "User:", user);
       return;
     }
@@ -93,19 +88,22 @@ export default function MyAssessmentsPage() {
     setIsLoading(true);
     setError(null);
     setAssessments([]); 
+    setDebugApiUrl(null);
 
     const currentUserId = user.id;
     console.log("MyAssessmentsPage: Preparing to fetch assessments for user.id:", currentUserId);
 
+    let constructedApiUrl = "";
     try {
       const encryptedUserId = forceEncryptStringAES(currentUserId);
       console.log("MyAssessmentsPage: Encrypted user ID (for API request):", encryptedUserId.substring(0, 50) + "...");
       
-      const apiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
-      console.log("MyAssessmentsPage: Fetching assessments from URL (first 150 chars):", apiUrl.substring(0,150) + "...");
+      constructedApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=getEvaluacion&usuario=${encodeURIComponent(encryptedUserId)}`;
+      setDebugApiUrl(constructedApiUrl); // Set the URL for display
+      console.log("MyAssessmentsPage: Fetching assessments from URL (first 150 chars):", constructedApiUrl.substring(0,150) + "...");
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
-      const response = await fetch(apiUrl, { signal });
+      const response = await fetch(constructedApiUrl, { signal });
       let responseText = await response.text();
       
       console.log("MyAssessmentsPage: Raw API Response Text (first 500 chars before any parsing):", responseText.substring(0,500) + (responseText.length > 500 ? "..." : ""));
@@ -226,6 +224,7 @@ export default function MyAssessmentsPage() {
         errorMessage = e.message; 
       }
       setError(errorMessage);
+      setDebugApiUrl(constructedApiUrl || "Error: No se pudo construir la URL de la API antes del fallo.");
     } finally {
       setIsLoading(false);
     }
@@ -237,6 +236,7 @@ export default function MyAssessmentsPage() {
     } else if (!userLoading && (!user || !user.id)) {
       setIsLoading(false);
       setError(t.errorOccurred + " (Debes iniciar sesión y tener un ID de usuario para ver tus evaluaciones)");
+      setDebugApiUrl("Error: Usuario no cargado o ID no disponible.");
       console.warn("MyAssessmentsPage: User not loaded or user.id missing. User:", user);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -264,6 +264,25 @@ export default function MyAssessmentsPage() {
           Refrescar
         </Button>
       </div>
+
+      {debugApiUrl && (
+        <Card className="mb-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
+          <CardHeader>
+            <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
+              <ShieldQuestion className="mr-2 h-5 w-5" />
+              URL de API Construida (Depuración)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground mb-2">
+              Esta es la URL que se intentó (o se intentará) usar para obtener el historial de evaluaciones. El parámetro 'usuario' está encriptado.
+            </p>
+            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+              <code>{debugApiUrl}</code>
+            </pre>
+          </CardContent>
+        </Card>
+      )}
 
       {error && (
         <Alert variant="destructive" className="mb-8">
