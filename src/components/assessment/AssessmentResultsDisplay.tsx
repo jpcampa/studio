@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays, TrendingUp, Star, Zap, Milestone, ExternalLink, Lightbulb } from 'lucide-react'; 
+import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays, TrendingUp, Star, Zap, Milestone, ExternalLink, Lightbulb, HeartHandshake } from 'lucide-react'; 
 import {
   ChartContainer,
   ChartTooltip,
@@ -102,7 +102,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     const scoreFromProfile = results.emotionalProfile[dim.name];
     const scoreValue = scoreFromProfile !== undefined && typeof scoreFromProfile === 'number' ? scoreFromProfile : 0;
     const finalScore = Math.max(0, Math.min(5, scoreValue));
-    console.log(`AssessmentResultsDisplay - Mapping dimension: '${dim.name}', Score found in profile: ${scoreFromProfile}, Final score for radar: ${finalScore}`);
+    // console.log(`AssessmentResultsDisplay - Mapping dimension: '${dim.name}', Score found in profile: ${scoreFromProfile}, Final score for radar: ${finalScore}`);
     return {
       dimensionId: dim.id,
       dimension: dim.name,
@@ -110,7 +110,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       fullMark: 5,
     };
   });
-  console.log("AssessmentResultsDisplay: Generated radarData for chart:", radarData);
+  // console.log("AssessmentResultsDisplay: Generated radarData for chart:", radarData);
 
 
   const emotionalProfileRadarConfig: ChartConfig = {
@@ -141,6 +141,8 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     const { cx, cy, payload } = props;
     let { value } = props;
 
+    // console.log(`CustomRadarDot - Initial props - Dimension: ${payload?.dimension || 'Unknown'}, Value: ${value}, CX: ${cx}, CY: ${cy}`);
+
     if (typeof cx !== 'number' || typeof cy !== 'number' || isNaN(cx) || isNaN(cy)) {
       console.error(`CustomRadarDot: cx (${cx}) or cy (${cy}) is not a valid number for dimension ${payload?.dimension || 'Unknown'}. Cannot render dot.`);
       return null; 
@@ -148,7 +150,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     
     const scoreValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, Math.min(5, value)) : 0;
     if (typeof value !== 'number' || isNaN(value)) {
-         console.warn(`CustomRadarDot: Invalid 'value' prop (${value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
+         // console.warn(`CustomRadarDot: Invalid 'value' prop (${value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
     }
 
     let dotColor = "hsl(var(--chart-2))"; // Default Blue (for 0 or < 1.0 or not evaluated)
@@ -162,7 +164,7 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       dotColor = "hsl(var(--destructive))"; // Red
     }
     
-    console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used for color: ${scoreValue}, Original value prop: ${props.value}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
+    // console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used for color: ${scoreValue}, Original value prop: ${props.value}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
         
     return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
   };
@@ -218,6 +220,10 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       </div>
     );
   };
+
+  const startCarePath = (results.priorityAreas && results.priorityAreas.length > 0)
+    ? `/paths?start_with=${encodeURIComponent(results.priorityAreas[0])}`
+    : "/paths";
 
 
   return (
@@ -430,6 +436,12 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       </Card>
 
       <div className="mt-12 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
+        <Button asChild variant="default" size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+          <Link href={startCarePath}>
+            <HeartHandshake className="mr-2 h-5 w-5" />
+            Empezar a cuidarme
+          </Link>
+        </Button>
         <Button onClick={onRetake} variant="outline" size="lg">
             <RotateCcw className="mr-2 h-4 w-4" />
             Realizar Evaluación de Nuevo
