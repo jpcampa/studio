@@ -24,15 +24,16 @@ import {
   PieChart,
   Pie,
   Cell,
+  DotProps, // Import DotProps
 } from "recharts"
-import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions'; // Import dimensions data
-import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations'; // Import interpretations
+import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions';
+import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation';
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput;
-  onRetake: () => void; // Callback para reiniciar la evaluación
+  onRetake: () => void;
 }
 
 const themedChartColors = [
@@ -49,7 +50,6 @@ const slugify = (text: string) =>
     .replace(/\s+/g, '-')
     .replace(/[^\w-]+/g, '');
 
-// Helper function to get interpretation based on score
 const getInterpretationText = (score: number, interpretations: InterpretationLevels): string => {
   if (score >= 4.8 && interpretations.veryHigh) {
     return interpretations.veryHigh;
@@ -62,7 +62,6 @@ const getInterpretationText = (score: number, interpretations: InterpretationLev
   }
 };
 
-// Helper function to get interpretation level string
 const getInterpretationLevel = (score: number, interpretations: InterpretationLevels, t: any): string => {
   if (score >= 4.8 && interpretations.veryHigh) return t.scoreLevelVeryHigh || "Muy Alto";
   if (score >= 3.8) return t.scoreLevelHigh || "Alto";
@@ -73,6 +72,8 @@ const getInterpretationLevel = (score: number, interpretations: InterpretationLe
 export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
   const router = useRouter();
+
+  console.log("AssessmentResultsDisplay: Received results.emotionalProfile:", results?.emotionalProfile);
 
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 ||
       Object.values(results.emotionalProfile).some(score => typeof score !== 'number') ||
@@ -90,14 +91,19 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
   }
 
   const radarData = assessmentDimensions.map(dim => {
-    const score = results.emotionalProfile[dim.name] ?? 0;
+    const scoreFromProfile = results.emotionalProfile[dim.name];
+    const score = scoreFromProfile !== undefined && typeof scoreFromProfile === 'number' ? scoreFromProfile : 0;
+    const finalScore = Math.max(0, Math.min(5, score));
+    console.log(`AssessmentResultsDisplay - Mapping dimension: '${dim.name}', Score found in profile: ${scoreFromProfile}, Final score for radar: ${finalScore}`);
     return {
       dimensionId: dim.id,
       dimension: dim.name,
-      score: Math.max(0, Math.min(5, score)), // Ensure score is between 0 and 5
+      score: finalScore,
       fullMark: 5,
     };
   });
+  console.log("AssessmentResultsDisplay: Generated radarData for chart:", radarData);
+
 
   const emotionalProfileRadarConfig: ChartConfig = {
     score: {
@@ -120,7 +126,35 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
     };
   });
   
-  const radarChartDescriptionText = t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones.";
+  const radarChartDescriptionText = (t.radarChartDescription || "Visualización de tu perfil en las diferentes dimensiones.") + 
+                                   " Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0), Azul (0 o no evaluado).";
+
+  // Custom dot rendering function for Radar chart
+  const CustomRadarDot = (props: DotProps & { payload?: any, value?: number }) => {
+    const { cx, cy, payload, value } = props; // `value` is the score for the current dimension from dataKey="score"
+
+    if (value === undefined || payload === undefined) {
+        return null;
+    }
+
+    let dotColor = "hsl(var(--muted))"; // Default gris
+    const scoreValue = typeof value === 'number' ? value : 0;
+
+    if (scoreValue >= 4.0) {
+      dotColor = "hsl(var(--primary))"; // Verde
+    } else if (scoreValue >= 2.5) {
+      dotColor = "hsl(var(--chart-5))"; // Naranja (usando chart-5 que es un naranja/amarillo)
+    } else if (scoreValue >= 1.0) {
+      dotColor = "hsl(var(--destructive))"; // Rojo
+    } else if (scoreValue === 0) {
+      dotColor = "hsl(var(--chart-2))"; // Azul para 0 o no evaluado
+    }
+    
+    console.log(`Radar Dot - Dimension: ${payload.dimension}, Score: ${scoreValue}, Color: ${dotColor}`);
+    
+    return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
+  };
+
 
   return (
     <div className="space-y-8">
@@ -179,14 +213,14 @@ export function AssessmentResultsDisplay({ results, onRetake }: AssessmentResult
                     <Radar 
                         name={t.emotionalProfile} 
                         dataKey="score" 
-                        stroke="hsl(var(--primary))" 
-                        fill="hsl(var(--primary))"   
-                        fillOpacity={0.6} 
-                        dot={{ r: 3, fill: "hsl(var(--primary-foreground))", stroke: "hsl(var(--primary))" }}
-                        activeDot={{ r: 5, strokeWidth: 2 }}
+                        stroke="hsl(var(--muted-foreground))" // Linea del radar neutra
+                        fill="hsl(var(--muted-foreground))"   // Relleno del radar sutil
+                        fillOpacity={0.1} 
+                        dot={<CustomRadarDot />} // Usamos el componente personalizado para los puntos
+                        activeDot={{ r: 7, strokeWidth: 2, fill: "hsl(var(--foreground))", stroke: "hsl(var(--background))" }}
                     />
                     <ChartTooltip
-                        cursor={{ stroke: "hsl(var(--primary))", strokeDasharray: '3 3' }}
+                        cursor={{ stroke: "hsl(var(--border))", strokeDasharray: '3 3' }} // Cursor más sutil
                         content={
                         <ChartTooltipContent
                             className="!bg-background !border !border-border !shadow-lg !rounded-md max-w-xs"
