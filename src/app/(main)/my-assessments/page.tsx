@@ -28,35 +28,73 @@ const ApiSingleAssessmentRecordSchema = z.object({
   }),
   data: z.object({
     emotionalProfile: z.union([
-      z.record(z.string(), z.number().min(1).max(5)), // Original object format
-      z.array(z.object({ // New array format (assuming array of objects like {dimensionName: string, score: number})
-        dimensionName: z.string(),
-        score: z.number().min(1).max(5)
-      }))
+      z.record(z.string(), z.number().min(1).max(5)), // 1. Original object format { "DimensionName": score }
+      z.array( // 2. Array of objects OR 3. Array of [string, number] tuples
+        z.union([
+          z.object({ // 2. Array of objects { dimensionName: "Name", score: X }
+            dimensionName: z.string(),
+            score: z.number().min(1).max(5)
+          }),
+          z.tuple([z.string(), z.number().min(1).max(5)]) // 3. Array of [string, number] tuples
+        ])
+      )
     ]).transform((profile, ctx) => {
       if (Array.isArray(profile)) {
-        // console.log("MyAssessmentsPage: Transforming emotionalProfile from array of objects:", JSON.stringify(profile).substring(0, 200));
+        // console.log("MyAssessmentsPage: Transforming emotionalProfile from array:", JSON.stringify(profile).substring(0, 300));
         const newRecord: Record<string, number> = {};
         let conversionOk = true;
-        for (const item of profile as { dimensionName: string, score: number }[]) {
-          if (typeof item.dimensionName === 'string' && typeof item.score === 'number') {
-             newRecord[item.dimensionName] = item.score;
-          } else {
+        for (const item of profile) { // item can be object or tuple
+          if (Array.isArray(item)) { // It's a tuple [string, number]
+            if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) {
+              newRecord[item[0]] = item[1];
+            } else {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['emotionalProfile', profile.indexOf(item)],
+                message: `Invalid tuple structure or score out of range in emotionalProfile array: ${JSON.stringify(item)}. Expected [string, number(1-5)].`,
+              });
+              conversionOk = false;
+              break;
+            }
+          } else if (typeof item === 'object' && item !== null && 'dimensionName' in item && 'score' in item) { // It's an object {dimensionName, score}
+            const objItem = item as { dimensionName: string, score: number };
+            if (typeof objItem.dimensionName === 'string' && typeof objItem.score === 'number' && objItem.score >=1 && objItem.score <=5) {
+               newRecord[objItem.dimensionName] = objItem.score;
+            } else {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['emotionalProfile', profile.indexOf(item)],
+                message: `Invalid item object structure or score out of range in emotionalProfile array: ${JSON.stringify(item)}. Expected {dimensionName: string, score: number(1-5)}.`,
+              });
+              conversionOk = false;
+              break;
+            }
+          } else { // Unexpected item type in array
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `Invalid item structure in emotionalProfile array during transformation: ${JSON.stringify(item)}. Expected {dimensionName: string, score: number}.`,
+              path: ['emotionalProfile', profile.indexOf(item)],
+              message: `Unexpected item type in emotionalProfile array: ${JSON.stringify(item)}. Expected object or [string, number] tuple.`,
             });
             conversionOk = false;
             break;
           }
         }
-        if (!conversionOk) return z.NEVER; 
+        if (!conversionOk) return z.NEVER; // Propagate error to stop parsing
+
+        // Ensure all 12 dimensions are present in the transformed record, if needed
+        // This is a stricter check. If not all dimensions are mandatory from API, this can be relaxed.
+        // const expectedDimensionNames = assessmentDimensions.map(d => d.name); // Assuming assessmentDimensions is available
+        // if (expectedDimensionNames.some(dn => !(dn in newRecord))) {
+        //   ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Transformed emotional profile is missing some expected dimensions." });
+        //   return z.NEVER;
+        // }
         return newRecord;
       }
+      // If not an array, it must be the original object format, so return as is.
       return profile;
     }),
-    priorityAreas: z.array(z.string()).min(3).max(3),
-    feedback: z.string().min(1),
+    priorityAreas: z.array(z.string()).min(3, "Debe haber al menos 3 áreas prioritarias.").max(3, "Debe haber exactamente 3 áreas prioritarias."),
+    feedback: z.string().min(1, "El feedback no puede estar vacío."),
   }),
 });
 
@@ -65,7 +103,7 @@ const ApiFetchedAssessmentsSchema = z.array(ApiSingleAssessmentRecordSchema);
 interface ExternalApiResponse {
   status: "OK" | "NOOK";
   message: string;
-  data: any; 
+  data: any;
 }
 
 export default function MyAssessmentsPage() {
@@ -87,7 +125,7 @@ export default function MyAssessmentsPage() {
 
     setIsLoading(true);
     setError(null);
-    setAssessments([]); 
+    setAssessments([]);
     setDebugApiUrl(null);
 
     const currentUserId = user.id;
