@@ -11,8 +11,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  ChartLegend, // Added import
-  ChartLegendContent, // Added import
+  ChartLegend,
+  ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/chart"
 import {
@@ -146,13 +146,13 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       return null; 
     }
     
+    // Ensure 'value' is treated as a number for color logic
+    const scoreValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, Math.min(5, value)) : 0;
     if (typeof value !== 'number' || isNaN(value)) {
-      console.warn(`CustomRadarDot: Invalid 'value' (${props.value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
-      value = 0; 
+         console.warn(`CustomRadarDot: Invalid 'value' prop (${value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
     }
 
-    const scoreValue = Math.max(0, Math.min(5, Number(value)));
-    let dotColor = "hsl(var(--chart-2))"; // Default Blue (for 0 or < 1 or not evaluated)
+    let dotColor = "hsl(var(--chart-2))"; // Default Blue (for 0 or < 1.0 or not evaluated)
     const dimensionNameForLog = payload?.dimension || "Unknown Dimension";
 
     if (scoreValue >= 4.0) {
@@ -424,6 +424,9 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
               </Button>
             </>
           )}
+          <p className="text-sm text-muted-foreground italic text-center pt-4">
+            Este perfil no es un veredicto. Es una invitación a cuidarte con más consciencia y compasión. No tienes que hacerlo todo a la vez. Basta con empezar.
+          </p>
         </CardContent>
       </Card>
 
