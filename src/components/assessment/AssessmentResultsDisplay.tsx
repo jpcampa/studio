@@ -277,13 +277,13 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
           <CardContent>
             <div className="h-[400px] w-full">
             <ChartContainer config={emotionalProfileRadarConfig} className="w-full h-full">
-                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                     <PolarGrid gridType="polygon" stroke="hsl(var(--border))" />
                     <PolarAngleAxis
                         dataKey="dimension"
                         tick={({ x, y, payload }) => (
-                          <text x={x} y={y} dy={4} textAnchor="middle" fill="hsl(var(--foreground))" fontSize={10}>
-                            {payload.value.split('(')[0].trim().substring(0,15)}
+                          <text x={x} y={y} dy={4} textAnchor="middle" fill="hsl(var(--foreground))" fontSize={9}>
+                            {payload.value.split('(')[0].trim().substring(0,12)}
                           </text>
                         )}
                     />
@@ -456,3 +456,4 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     </div>
   );
 }
+
