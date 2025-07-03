@@ -48,7 +48,7 @@ export function DashboardSummaryCard({
         <Icon className={cn('h-5 w-5', iconColorClass)} />
       </CardHeader>
       <CardContent>
-        <div className="text-xl md:text-2xl font-bold">{value}</div>
+        <div className="text-xl md:text-2xl font-bold break-words">{value}</div>
         {description && <p className="text-xs text-muted-foreground pt-1">{description}</p>}
         {finalCtaLink && ctaLabel && (
           <Button asChild variant="link" className="px-0 pt-3 text-sm h-auto leading-tight">
@@ -59,5 +59,3 @@ export function DashboardSummaryCard({
     </Card>
   );
 }
-
-    
