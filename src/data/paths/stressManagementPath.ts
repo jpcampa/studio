@@ -99,14 +99,11 @@ export const stressManagementPath: Path = {
         },
         { type: 'quote', text: 'Tu cuerpo no está en tu contra. Te está hablando. La clave está en aprender a escucharlo con compasión.' },
         { type: 'title', text: 'Técnicas Específicas' },
-        {
-            type: 'exercise',
-            title: 'Ejercicio 1: Mapa del Estrés Personal',
-            objective: 'Con este ejercicio empezarás a reconocer cómo se manifiesta el estrés en ti. Al explorar tus pensamientos, emociones, sensaciones físicas y comportamientos cuando te sientes bajo presión, podrás comprender mejor lo que te ocurre y dar los primeros pasos para recuperar el equilibrio y sentirte más en calma.',
-            duration: '5 a 10 minutos',
-            content: [
-                { type: 'paragraph', text: 'Piensa en una situación reciente que te haya generado estrés. Luego, completa paso a paso este registro guiado. Te acompañaré con preguntas breves para que puedas ir registrando lo que viviste.'}
-            ]
+        { 
+          type: 'stressMapExercise',
+          title: 'Ejercicio 1: Mapa del Estrés Personal',
+          objective: 'Con este ejercicio empezarás a reconocer cómo se manifiesta el estrés en ti. Al explorar tus pensamientos, emociones, sensaciones físicas y comportamientos cuando te sientes bajo presión, podrás comprender mejor lo que te ocurre y dar los primeros pasos para recuperar el equilibrio y sentirte más en calma.',
+          duration: '5 a 10 minutos',
         },
         {
             type: 'exercise',

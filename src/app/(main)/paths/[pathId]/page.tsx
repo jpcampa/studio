@@ -6,7 +6,7 @@ import { pathsData, Path, PathModule, ModuleContent } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Headphones, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check } from 'lucide-react';
+import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
@@ -16,6 +16,7 @@ import { getCompletedModules, saveCompletedModules } from '@/lib/progressStore';
 import { useActivePath } from '@/contexts/ActivePathContext';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
+import { StressMapExercise } from '@/components/paths/StressMapExercise';
 
 interface PathDetailPageProps {
   params: Promise<{ pathId: string }>;
@@ -63,6 +64,8 @@ const renderContent = (contentItem: ModuleContent, index: number) => {
         );
     case 'quote':
         return <blockquote key={index} className="mt-6 border-l-2 pl-6 italic text-accent-foreground/80">"{contentItem.text}"</blockquote>;
+    case 'stressMapExercise':
+        return <StressMapExercise key={index} content={contentItem} />;
     default:
       return null;
   }

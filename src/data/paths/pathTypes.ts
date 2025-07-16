@@ -32,6 +32,15 @@ export type ExerciseContent = {
     content: ModuleContent[];
 };
 
+export type StressMapExerciseContent = {
+    type: 'stressMapExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+    // No 'content' needed as it's a self-contained interactive component
+};
+
+
 // A union type for all possible content block types within a module
 export type ModuleContent =
   | ParagraphContent
@@ -39,7 +48,8 @@ export type ModuleContent =
   | ListContent
   | QuoteContent
   | CollapsibleContent
-  | ExerciseContent;
+  | ExerciseContent
+  | StressMapExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
