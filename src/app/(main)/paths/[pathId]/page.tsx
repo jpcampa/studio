@@ -1,12 +1,12 @@
 
 "use client";
 
-import { use, useState, useEffect } from 'react'; 
-import { pathsData, PathModule, Path } from '@/data/pathsData';
+import { use, useState, useEffect } from 'react';
+import { pathsData, Path, PathModule, ModuleContent } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Headphones, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle } from 'lucide-react';
+import { CheckCircle, BookOpen, Headphones, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
@@ -14,10 +14,60 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { getCompletedModules, saveCompletedModules } from '@/lib/progressStore';
 import { useActivePath } from '@/contexts/ActivePathContext';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Separator } from '@/components/ui/separator';
 
 interface PathDetailPageProps {
   params: Promise<{ pathId: string }>;
 }
+
+const renderContent = (contentItem: ModuleContent, index: number) => {
+  switch (contentItem.type) {
+    case 'title':
+      return <h3 key={index} className="text-xl font-bold text-primary mt-6 mb-3">{contentItem.text}</h3>;
+    case 'paragraph':
+      return <p key={index} className="text-base leading-relaxed whitespace-pre-line mb-4" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />;
+    case 'list':
+      return (
+        <ul key={index} className="list-disc list-inside space-y-2 mb-4 pl-4">
+          {contentItem.items.map((item, i) => <li key={i}>{item}</li>)}
+        </ul>
+      );
+    case 'collapsible':
+      return (
+        <Accordion key={index} type="single" collapsible className="w-full mb-4">
+          <AccordionItem value={`item-${index}`} className="border rounded-lg shadow-sm">
+            <AccordionTrigger className="p-4 text-base font-semibold hover:no-underline">
+              {contentItem.title}
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4">
+              <div className="border-t pt-4">
+                {contentItem.content.map((item, i) => renderContent(item, i))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      );
+    case 'exercise':
+        return (
+            <Card key={index} className="bg-muted/30 my-6 shadow-md">
+                <CardHeader>
+                    <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{contentItem.title}</CardTitle>
+                    {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
+                </CardHeader>
+                <CardContent>
+                    {contentItem.content.map((item, i) => renderContent(item, i))}
+                </CardContent>
+                {contentItem.duration && <CardFooter className="text-xs text-muted-foreground"><Clock className="mr-2 h-3 w-3" />Duración sugerida: {contentItem.duration}</CardFooter>}
+            </Card>
+        );
+    case 'quote':
+        return <blockquote key={index} className="mt-6 border-l-2 pl-6 italic text-accent-foreground/80">"{contentItem.text}"</blockquote>;
+    default:
+      return null;
+  }
+};
+
 
 export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();
@@ -35,11 +85,9 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
       const initialCompleted = getCompletedModules(path.id);
       setCompletedModules(initialCompleted);
       loadPath(path.id, path.title, path.modules.length);
-      // The line below was removed as it was redundant and likely causing a re-render loop.
-      // activePathContext.updateModuleCompletion(path.id, '', false); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, loadPath]); // Dependencies updated to stable function reference from context and path object.
+  }, [path, loadPath]);
 
 
   if (!path) {
@@ -86,9 +134,9 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
   
   const getModuleIcon = (type: PathModule['type']) => {
     switch (type) {
-      case 'text': return <BookOpen className="h-6 w-6 text-primary" />;
-      case 'audio': return <Headphones className="h-6 w-6 text-primary" />; 
-      case 'reflection': return <Edit3 className="h-6 w-6 text-primary" />;
+      case 'introduction': return <BookOpen className="h-6 w-6 text-primary" />;
+      case 'skill_practice': return <Edit3 className="h-6 w-6 text-primary" />;
+      case 'summary': return <CheckCircle className="h-6 w-6 text-primary" />;
       default: return <BookOpen className="h-6 w-6 text-primary" />;
     }
   };
@@ -105,8 +153,8 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
               className="object-cover"
               data-ai-hint={path.dataAiHint} 
             />
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-              <h1 className="text-5xl font-bold text-white text-center drop-shadow-lg">{path.title}</h1>
+            <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-4">
+              <h1 className="text-3xl md:text-5xl font-bold text-white text-center drop-shadow-lg">{path.title}</h1>
             </div>
           </div>
         )}
@@ -122,12 +170,12 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
 
       <div className="space-y-6">
         {path.modules.map((module: PathModule, index: number) => (
-          <Card key={module.id} className={`shadow-lg transition-all duration-300 hover:shadow-xl ${completedModules.has(module.id) ? 'opacity-70 border-green-500' : 'border-transparent'}`}>
-            <CardHeader className="flex flex-row items-center justify-between">
+          <Card key={module.id} className={`shadow-lg transition-all duration-300 hover:shadow-xl ${completedModules.has(module.id) ? 'opacity-80 border-green-500' : 'border-transparent'}`}>
+            <CardHeader>
               <div className="flex items-center gap-4">
                 {getModuleIcon(module.type)}
                 <div>
-                  <CardTitle className="text-xl text-accent">{t.module} {index + 1}: {module.title}</CardTitle>
+                  <CardTitle className="text-xl text-accent">{module.title}</CardTitle>
                   {module.estimatedTime && (
                     <CardDescription className="flex items-center text-sm text-muted-foreground">
                       <Clock className="h-4 w-4 mr-1" /> {module.estimatedTime}
@@ -137,34 +185,11 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
               </div>
             </CardHeader>
             <CardContent>
-              {module.type === 'text' && (
-                <Button asChild>
-                  <Link href={module.content} target="_blank" rel="noopener noreferrer">
-                    {t.startReading}
-                    <ExternalLink className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              )}
-              {module.type === 'audio' && module.content.startsWith('https://placehold.co') && (
-                 <div className="my-4 p-4 border rounded-lg shadow-sm bg-muted/30" data-ai-hint="audio player interface">
-                    <div className="flex items-center w-full gap-3 mb-3">
-                        <PlayCircle className="w-10 h-10 text-primary flex-shrink-0" />
-                        <div className="flex-grow overflow-hidden">
-                        <p className="font-semibold text-foreground truncate" title={module.title.replace('Audio: ', '')}>{module.title.replace('Audio: ', '')}</p>
-                        <p className="text-xs text-muted-foreground">Reproductor simulado</p>
-                        </div>
-                    </div>
-                    <Progress value={35} className="w-full h-2 mb-2" aria-label="Progreso de audio simulado" />
-                    <p className="text-xs text-muted-foreground text-center">Contenido de audio no disponible en la demostración.</p>
-                 </div>
-              )}
-              {module.type === 'reflection' && (
-                <p className="text-base leading-relaxed whitespace-pre-line italic text-muted-foreground">{module.content}</p>
-              )}
+                {module.content.map((contentItem, i) => renderContent(contentItem, i))}
             </CardContent>
             <CardFooter>
               <Button onClick={() => toggleComplete(module.id, module.title)} variant={completedModules.has(module.id) ? "secondary" : "default"}>
-                <CheckCircle className="mr-2 h-4 w-4" />
+                <Check className="mr-2 h-4 w-4" />
                 {completedModules.has(module.id) ? t.markAsNotCompleted : t.markAsCompleted}
               </Button>
             </CardFooter>
