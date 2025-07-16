@@ -48,6 +48,12 @@ export type TriggerExerciseContent = {
     // No 'content' needed as it's a self-contained interactive component
 };
 
+export type TherapeuticNotebookReflection = {
+    type: 'therapeuticNotebookReflection';
+    title: string;
+    prompts: string[];
+}
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -58,7 +64,8 @@ export type ModuleContent =
   | CollapsibleContent
   | ExerciseContent
   | StressMapExerciseContent
-  | TriggerExerciseContent;
+  | TriggerExerciseContent
+  | TherapeuticNotebookReflection;
 
 // Defines a single module within a guided path
 export type PathModule = {

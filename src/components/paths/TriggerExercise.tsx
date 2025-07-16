@@ -15,6 +15,7 @@ import { Edit3, Save, CheckCircle, NotebookText } from 'lucide-react';
 import { emotions } from '@/components/dashboard/EmotionalEntryForm';
 import type { TriggerExerciseContent } from '@/data/paths/pathTypes';
 import { Separator } from '../ui/separator';
+import { addNotebookEntry } from '@/data/therapeuticNotebookStore'; // Importar la función para guardar
 
 interface TriggerExerciseProps {
   content: TriggerExerciseContent;
@@ -24,6 +25,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
   const t = useTranslations();
   const { toast } = useToast();
 
+  // State for the main exercise
   const [emotion, setEmotion] = useState('');
   const [situation, setSituation] = useState('');
   const [otherSituation, setOtherSituation] = useState('');
@@ -34,8 +36,14 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
   const [triggerSource, setTriggerSource] = useState('');
   const [copingResponse, setCopingResponse] = useState('');
   const [otherCopingResponse, setOtherCopingResponse] = useState('');
-
   const [isSaved, setIsSaved] = useState(false);
+
+  // State for the reflection
+  const [reflectionSituations, setReflectionSituations] = useState('');
+  const [reflectionActions, setReflectionActions] = useState('');
+  const [reflectionNextTime, setReflectionNextTime] = useState('');
+  const [isReflectionSaved, setIsReflectionSaved] = useState(false);
+
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -49,9 +57,6 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
       return;
     }
     
-    // Here you would typically save the full exercise data to a specific store
-    // For now, we'll just show a confirmation.
-    
     toast({
       title: "Ejercicio Guardado",
       description: "Tu registro de 'Identifica tu disparador' ha sido guardado exitosamente.",
@@ -59,6 +64,44 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
     
     setIsSaved(true);
   };
+  
+  const handleSaveReflection = (e: FormEvent) => {
+    e.preventDefault();
+     if (!reflectionSituations.trim() || !reflectionActions.trim() || !reflectionNextTime.trim()) {
+      toast({
+        title: "Reflexión Incompleta",
+        description: "Por favor, responde a todas las preguntas de reflexión para guardarla.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const reflectionEntry = `
+      **Ejercicio:** ${content.title}
+
+      **¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?**
+      ${reflectionSituations}
+
+      **¿Qué hice en esos momentos?**
+      ${reflectionActions}
+
+      **¿Qué podría probar diferente la próxima vez?**
+      ${reflectionNextTime}
+    `;
+
+    addNotebookEntry({
+        title: `Reflexión: ${content.title}`,
+        content: reflectionEntry,
+        pathId: 'gestion-estres', // Hardcoded for now, could be dynamic
+    });
+
+    toast({
+      title: "Reflexión Guardada",
+      description: "Tu reflexión ha sido guardada en tu Cuaderno Terapéutico.",
+    });
+    
+    setIsReflectionSaved(true);
+  }
 
   const situationOptions = [
       { id: 'situation-hurtful-comment', label: 'Alguien me dijo algo que me dolió' },
@@ -114,16 +157,16 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
                      <RadioGroupItem value="otra" id="situation-other" />
                     <Label htmlFor="situation-other" className="font-normal">Otra:</Label>
                 </div>
-                {situation === 'otra' && (
-                    <Textarea 
-                        value={otherSituation}
-                        onChange={(e) => setOtherSituation(e.target.value)}
-                        placeholder="Describe la situación"
-                        disabled={isSaved}
-                        className="ml-6"
-                    />
-                )}
             </RadioGroup>
+            {situation === 'otra' && (
+                <Textarea 
+                    value={otherSituation}
+                    onChange={(e) => setOtherSituation(e.target.value)}
+                    placeholder="Describe la situación"
+                    disabled={isSaved}
+                    className="ml-6 mt-2"
+                />
+            )}
           </div>
 
           <div>
@@ -139,7 +182,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
 
           <div>
             <Label className="font-semibold">¿Te vino alguna imagen o recuerdo automático?</Label>
-            <RadioGroup onValueChange={(val) => setHadAutomaticImage(val === 'yes')} value={hadAutomaticImage === 'indeterminate' ? '' : (hadAutomaticImage ? 'yes' : 'no')} className="flex space-x-4 mt-2" disabled={isSaved}>
+             <RadioGroup onValueChange={(val) => setHadAutomaticImage(val === 'yes')} value={hadAutomaticImage === 'indeterminate' ? '' : (hadAutomaticImage ? 'yes' : 'no')} className="flex space-x-4 mt-2" disabled={isSaved}>
                 <div className="flex items-center space-x-2">
                     <RadioGroupItem value="yes" id="hadImage-yes" />
                     <Label htmlFor="hadImage-yes" className="font-normal">Sí</Label>
@@ -202,16 +245,16 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
                      <RadioGroupItem value="otra" id="coping-other" />
                     <Label htmlFor="coping-other" className="font-normal">Otra:</Label>
                 </div>
-                {copingResponse === 'otra' && (
-                    <Textarea 
-                        value={otherCopingResponse}
-                        onChange={(e) => setOtherCopingResponse(e.target.value)}
-                        placeholder="Describe tu respuesta"
-                        disabled={isSaved}
-                        className="ml-6"
-                    />
-                )}
-            </RadioGroup>
+             </RadioGroup>
+             {copingResponse === 'otra' && (
+                <Textarea 
+                    value={otherCopingResponse}
+                    onChange={(e) => setOtherCopingResponse(e.target.value)}
+                    placeholder="Describe tu respuesta"
+                    disabled={isSaved}
+                    className="ml-6 mt-2"
+                />
+            )}
           </div>
 
           {!isSaved ? (
@@ -227,17 +270,58 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
         </form>
 
         {isSaved && (
-          <div className="mt-8 pt-6 border-t">
+          <form onSubmit={handleSaveReflection} className="mt-8 pt-6 border-t">
             <h4 className="font-semibold text-md text-primary mb-4 flex items-center">
               <NotebookText className="mr-2 h-5 w-5" />
               Reflexión Final (Para el Cuaderno Terapéutico)
             </h4>
-            <ul className="list-disc list-inside space-y-2 text-sm text-foreground/90">
-                <li>¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?</li>
-                <li>¿Qué hice en esos momentos?</li>
-                <li>¿Qué podría probar diferente la próxima vez?</li>
-            </ul>
-          </div>
+            <div className="space-y-4">
+               <div>
+                  <Label htmlFor="reflection-situations" className="font-semibold text-sm">¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?</Label>
+                  <Textarea 
+                    id="reflection-situations"
+                    value={reflectionSituations}
+                    onChange={e => setReflectionSituations(e.target.value)}
+                    placeholder="Escribe aquí tu reflexión..."
+                    rows={3}
+                    disabled={isReflectionSaved}
+                  />
+               </div>
+               <div>
+                  <Label htmlFor="reflection-actions" className="font-semibold text-sm">¿Qué hice en esos momentos?</Label>
+                   <Textarea 
+                    id="reflection-actions"
+                    value={reflectionActions}
+                    onChange={e => setReflectionActions(e.target.value)}
+                    placeholder="Escribe aquí tu reflexión..."
+                    rows={3}
+                    disabled={isReflectionSaved}
+                  />
+               </div>
+                <div>
+                  <Label htmlFor="reflection-next-time" className="font-semibold text-sm">¿Qué podría probar diferente la próxima vez?</Label>
+                   <Textarea 
+                    id="reflection-next-time"
+                    value={reflectionNextTime}
+                    onChange={e => setReflectionNextTime(e.target.value)}
+                    placeholder="Escribe aquí tu reflexión..."
+                    rows={3}
+                    disabled={isReflectionSaved}
+                  />
+               </div>
+            </div>
+
+            {!isReflectionSaved ? (
+              <Button type="submit" className="w-full mt-4">
+                  <Save className="mr-2 h-4 w-4" /> Guardar Reflexión en mi Cuaderno
+              </Button>
+            ) : (
+              <div className="mt-4 flex items-center justify-center p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-md">
+                  <CheckCircle className="mr-2 h-5 w-5" />
+                  <p className="font-medium">Tu reflexión ha sido guardada.</p>
+              </div>
+            )}
+          </form>
         )}
 
       </CardContent>
