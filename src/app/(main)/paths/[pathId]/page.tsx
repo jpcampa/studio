@@ -17,6 +17,7 @@ import { useActivePath } from '@/contexts/ActivePathContext';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
 import { StressMapExercise } from '@/components/paths/StressMapExercise';
+import { TriggerExercise } from '@/components/paths/TriggerExercise';
 
 interface PathDetailPageProps {
   params: Promise<{ pathId: string }>;
@@ -66,6 +67,8 @@ const renderContent = (contentItem: ModuleContent, index: number) => {
         return <blockquote key={index} className="mt-6 border-l-2 pl-6 italic text-accent-foreground/80">"{contentItem.text}"</blockquote>;
     case 'stressMapExercise':
         return <StressMapExercise key={index} content={contentItem} />;
+    case 'triggerExercise':
+        return <TriggerExercise key={index} content={contentItem} />;
     default:
       return null;
   }

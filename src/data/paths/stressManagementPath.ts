@@ -1,4 +1,3 @@
-
 import type { Path } from '../pathsData';
 
 export const stressManagementPath: Path = {
@@ -106,28 +105,10 @@ export const stressManagementPath: Path = {
           duration: '5 a 10 minutos',
         },
         {
-            type: 'exercise',
+            type: 'triggerExercise',
             title: 'Ejercicio 2: Identifica tu disparador',
             objective: 'Aprender a diferenciar si lo que te está generando estrés viene del entorno (externo) o de ti mismo/a (interno), para empezar a responder con conciencia en lugar de reaccionar en automático.',
             duration: '5 a 8 minutos',
-            content: [
-                { type: 'paragraph', text: 'Cuando sientes que todo te supera, es fácil pensar que lo que te estresa está fuera de ti. Pero muchas veces, lo que más influye es lo que ocurre en tu interior. Por eso, aprender a diferenciar entre lo que pasa fuera (el estresor) y lo que sientes por dentro (la respuesta de estrés) es un paso clave para recuperar el control.'},
-                { type: 'collapsible', title: '¿Qué es un estresor y qué es el estrés?', content: [{type: 'paragraph', text:'El estresor es el desencadenante, eso que genera presión o malestar. Puede ser algo externo (como una crítica, una discusión, una fecha límite) o interno (como un pensamiento, un recuerdo o una sensación física).\nEl estrés es cómo lo vives: tensión, ansiedad, insomnio, pensamientos acelerados, bloqueos, irritabilidad...'}]},
-                { type: 'collapsible', title: '¿Es externo o interno lo que te estresa?', content: [
-                    {type: 'paragraph', text: 'Muchos estresores son visibles: una carga laboral, una discusión, una demanda del entorno. Pero otras veces el origen está dentro: tus creencias, tus expectativas, tu historia emocional.'},
-                    {type: 'paragraph', text: 'Ejemplos de estresores externos:'},
-                    {type: 'list', items: ['Cargas laborales excesivas', 'Críticas o conflictos', 'Cambios inesperados', 'Ruido, interrupciones, caos']},
-                    {type: 'paragraph', text: 'Ejemplos de estresores internos:'},
-                    {type: 'list', items: ['"Tengo que hacerlo perfecto"', '"Seguro que se enfadó conmigo"', '"No puedo fallar"', 'Recuerdos dolorosos', 'Sensaciones físicas malinterpretadas (como palpitaciones que generan miedo)']},
-                    {type: 'paragraph', text: 'Saber si lo que te activa es externo, interno o una mezcla te da poder. No puedes controlar todo lo que pasa fuera, pero sí puedes transformar cómo lo interpretas y cómo lo enfrentas.'}
-                ]},
-                { type: 'collapsible', title: '¿Estás reaccionando o estás respondiendo?', content: [{type: 'paragraph', text:'Una reacción es rápida, impulsiva, automática. Viene del miedo o del cansancio. No hay espacio entre lo que pasa y lo que haces.\nUna respuesta es consciente. Dejas un pequeño espacio entre el estímulo y tu decisión. Ese espacio es libertad. Por ejemplo: alguien te grita → tú sientes el impulso de gritar → respiras → eliges responder con firmeza, pero sin perder el control.'}]},
-                { type: 'collapsible', title: '¿Por qué es importante esta diferencia?', content: [
-                    {type: 'paragraph', text: 'Porque no puedes controlar todo lo que ocurre, pero sí puedes aprender a regular lo que ocurre dentro de ti.\nCuando entiendes qué te estresa y de dónde viene, puedes:'},
-                    {type: 'list', items: ['Elegir tus batallas', 'Cuestionar tus pensamientos automáticos', 'Regular tu cuerpo', 'Pedir ayuda cuando lo necesites', 'Poner límites sin culpa', 'Cuidarte con amabilidad']}
-                ]},
-                { type: 'collapsible', title: 'Un recordatorio para ti', content: [{type: 'paragraph', text:'No todo lo que duele es una amenaza. No todo lo que piensas es verdad. Y no todo lo que sientes necesita una reacción inmediata.'}]},
-            ]
         },
         {
             type: 'title',
