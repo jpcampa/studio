@@ -11,9 +11,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/lib/translations';
-import { Edit3, Save, CheckCircle } from 'lucide-react';
+import { Edit3, Save, CheckCircle, NotebookText } from 'lucide-react';
 import { emotions } from '@/components/dashboard/EmotionalEntryForm';
 import type { TriggerExerciseContent } from '@/data/paths/pathTypes';
+import { Separator } from '../ui/separator';
 
 interface TriggerExerciseProps {
   content: TriggerExerciseContent;
@@ -138,7 +139,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
 
           <div>
             <Label className="font-semibold">¿Te vino alguna imagen o recuerdo automático?</Label>
-            <RadioGroup onValueChange={(val) => setHadAutomaticImage(val === 'yes')} className="flex space-x-4 mt-2" disabled={isSaved}>
+            <RadioGroup onValueChange={(val) => setHadAutomaticImage(val === 'yes')} value={hadAutomaticImage === 'indeterminate' ? '' : (hadAutomaticImage ? 'yes' : 'no')} className="flex space-x-4 mt-2" disabled={isSaved}>
                 <div className="flex items-center space-x-2">
                     <RadioGroupItem value="yes" id="hadImage-yes" />
                     <Label htmlFor="hadImage-yes" className="font-normal">Sí</Label>
@@ -223,8 +224,22 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
                 <p className="font-medium">Tu ejercicio ha sido guardado.</p>
             </div>
           )}
-
         </form>
+
+        {isSaved && (
+          <div className="mt-8 pt-6 border-t">
+            <h4 className="font-semibold text-md text-primary mb-4 flex items-center">
+              <NotebookText className="mr-2 h-5 w-5" />
+              Reflexión Final (Para el Cuaderno Terapéutico)
+            </h4>
+            <ul className="list-disc list-inside space-y-2 text-sm text-foreground/90">
+                <li>¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?</li>
+                <li>¿Qué hice en esos momentos?</li>
+                <li>¿Qué podría probar diferente la próxima vez?</li>
+            </ul>
+          </div>
+        )}
+
       </CardContent>
       {content.duration && <CardFooter className="text-xs text-muted-foreground">Duración sugerida: {content.duration}</CardFooter>}
     </Card>
