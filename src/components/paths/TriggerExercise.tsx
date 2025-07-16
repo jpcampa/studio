@@ -102,15 +102,15 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
           
           <div>
             <Label className="font-semibold">¿Qué situación estaba ocurriendo?</Label>
-            <div className="space-y-2 mt-2">
+            <RadioGroup onValueChange={setSituation} value={situation} className="space-y-2 mt-2" disabled={isSaved}>
                 {situationOptions.map(opt => (
                      <div key={opt.id} className="flex items-center space-x-2">
-                        <RadioGroupItem value={opt.label} id={opt.id} checked={situation === opt.label} onClick={() => setSituation(opt.label)} disabled={isSaved} />
+                        <RadioGroupItem value={opt.label} id={opt.id} />
                         <Label htmlFor={opt.id} className="font-normal">{opt.label}</Label>
                      </div>
                 ))}
                 <div className="flex items-center space-x-2">
-                     <RadioGroupItem value="otra" id="situation-other" checked={situation === 'otra'} onClick={() => setSituation('otra')} disabled={isSaved} />
+                     <RadioGroupItem value="otra" id="situation-other" />
                     <Label htmlFor="situation-other" className="font-normal">Otra:</Label>
                 </div>
                 {situation === 'otra' && (
@@ -122,7 +122,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
                         className="ml-6"
                     />
                 )}
-            </div>
+            </RadioGroup>
           </div>
 
           <div>
@@ -172,7 +172,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
 
            <div>
             <Label className="font-semibold">¿De dónde vino el disparador principal?</Label>
-            <RadioGroup onValueChange={setTriggerSource} className="space-y-1 mt-2" disabled={isSaved}>
+            <RadioGroup onValueChange={setTriggerSource} value={triggerSource} className="space-y-1 mt-2" disabled={isSaved}>
                 <div className="flex items-center space-x-2">
                     <RadioGroupItem value="externo" id="source-external" />
                     <Label htmlFor="source-external" className="font-normal">Externo (personas, tareas, entorno)</Label>
@@ -190,15 +190,15 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
 
           <div>
             <Label className="font-semibold">¿Qué hiciste para calmarte o evitarlo?</Label>
-             <div className="space-y-2 mt-2">
+             <RadioGroup onValueChange={setCopingResponse} value={copingResponse} className="space-y-2 mt-2" disabled={isSaved}>
                 {copingOptions.map(opt => (
                      <div key={opt.id} className="flex items-center space-x-2">
-                        <RadioGroupItem value={opt.label} id={opt.id} checked={copingResponse === opt.label} onClick={() => setCopingResponse(opt.label)} disabled={isSaved}/>
+                        <RadioGroupItem value={opt.label} id={opt.id} />
                         <Label htmlFor={opt.id} className="font-normal">{opt.label}</Label>
                      </div>
                 ))}
                  <div className="flex items-center space-x-2">
-                     <RadioGroupItem value="otra" id="coping-other" checked={copingResponse === 'otra'} onClick={() => setCopingResponse('otra')} disabled={isSaved}/>
+                     <RadioGroupItem value="otra" id="coping-other" />
                     <Label htmlFor="coping-other" className="font-normal">Otra:</Label>
                 </div>
                 {copingResponse === 'otra' && (
@@ -210,7 +210,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
                         className="ml-6"
                     />
                 )}
-            </div>
+            </RadioGroup>
           </div>
 
           {!isSaved ? (
