@@ -54,6 +54,20 @@ export type TherapeuticNotebookReflection = {
     prompts: string[];
 }
 
+export type DetectiveExerciseContent = {
+    type: 'detectiveExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type DemandsExerciseContent = {
+    type: 'demandsExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -65,7 +79,9 @@ export type ModuleContent =
   | ExerciseContent
   | StressMapExerciseContent
   | TriggerExerciseContent
-  | TherapeuticNotebookReflection;
+  | TherapeuticNotebookReflection
+  | DetectiveExerciseContent
+  | DemandsExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {

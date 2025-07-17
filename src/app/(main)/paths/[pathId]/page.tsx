@@ -18,6 +18,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Separator } from '@/components/ui/separator';
 import { StressMapExercise } from '@/components/paths/StressMapExercise';
 import { TriggerExercise } from '@/components/paths/TriggerExercise';
+import { DetectiveExercise } from '@/components/paths/DetectiveExercise';
+import { DemandsExercise } from '@/components/paths/DemandsExercise';
 
 interface PathDetailPageProps {
   params: Promise<{ pathId: string }>;
@@ -69,6 +71,10 @@ const renderContent = (contentItem: ModuleContent, index: number) => {
         return <StressMapExercise key={index} content={contentItem} />;
     case 'triggerExercise':
         return <TriggerExercise key={index} content={contentItem} />;
+    case 'detectiveExercise':
+        return <DetectiveExercise key={index} content={contentItem} />;
+    case 'demandsExercise':
+        return <DemandsExercise key={index} content={contentItem} />;
     default:
       return null;
   }
