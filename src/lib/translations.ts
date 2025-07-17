@@ -41,7 +41,8 @@ export const t = {
   navChatbot: "Mentor AI",
   navResources: "Recursos",
   navSettings: "Configuración",
-  navMyAssessments: "Mis Evaluaciones", // New Nav Item
+  navMyAssessments: "Mis Evaluaciones",
+  navTherapeuticNotebook: "Cuaderno Terapéutico",
   // Welcome Page / Dashboard (Old, parts might be reused or removed)
   welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.",
   startYourJourney: "Comienza tu viaje hacia el bienestar",
@@ -291,6 +292,11 @@ export const t = {
   allEmotionalEntriesTitle: "Todos los Registros Emocionales",
   allEmotionalEntriesDescription: "Aquí puedes ver todas tus entradas emocionales ordenadas por fecha.",
   noEntriesYet: "Aún no tienes registros emocionales.",
+
+  // Therapeutic Notebook Page
+  therapeuticNotebookTitle: "Cuaderno Terapéutico",
+  therapeuticNotebookDescription: "Un espacio privado para tus reflexiones y ejercicios.",
+  noNotebookEntries: "Aún no tienes entradas en tu cuaderno. Completa los ejercicios de reflexión en las rutas para empezar.",
 
   // Welcome Page
   welcomePageTitle: "Bienvenido/a: Este espacio es para ti",

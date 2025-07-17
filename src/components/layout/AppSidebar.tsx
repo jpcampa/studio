@@ -14,7 +14,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History } from "lucide-react"; // Added History
+import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History, NotebookText } from "lucide-react";
 import { useTranslations } from "@/lib/translations";
 import { useUser } from "@/contexts/UserContext";
 import { Logo } from "@/components/Logo";
@@ -22,8 +22,9 @@ import { Logo } from "@/components/Logo";
 const navItems = [
   { href: "/dashboard", labelKey: "navDashboard", icon: LayoutDashboard },
   { href: "/assessment/intro", labelKey: "navAssessment", icon: ClipboardList }, 
-  { href: "/my-assessments", labelKey: "navMyAssessments", icon: History }, // New Item
+  { href: "/my-assessments", labelKey: "navMyAssessments", icon: History },
   { href: "/paths", labelKey: "navPaths", icon: Milestone },
+  { href: "/therapeutic-notebook", labelKey: "navTherapeuticNotebook", icon: NotebookText },
   { href: "/chatbot", labelKey: "navChatbot", icon: Bot },
   { href: "/resources", labelKey: "navResources", icon: Library },
 ];
