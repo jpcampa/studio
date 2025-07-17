@@ -1,12 +1,12 @@
 
 "use client";
 
-import { use, useState, useEffect } from 'react';
+import { use, useState, useEffect, type FormEvent } from 'react';
 import { pathsData, Path, PathModule, ModuleContent } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check } from 'lucide-react';
+import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check, Save, NotebookText } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
@@ -20,12 +20,16 @@ import { StressMapExercise } from '@/components/paths/StressMapExercise';
 import { TriggerExercise } from '@/components/paths/TriggerExercise';
 import { DetectiveExercise } from '@/components/paths/DetectiveExercise';
 import { DemandsExercise } from '@/components/paths/DemandsExercise';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
+
 
 interface PathDetailPageProps {
   params: Promise<{ pathId: string }>;
 }
 
-const renderContent = (contentItem: ModuleContent, index: number) => {
+const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
       return <h3 key={index} className="text-xl font-bold text-primary mt-6 mb-3">{contentItem.text}</h3>;
@@ -34,25 +38,28 @@ const renderContent = (contentItem: ModuleContent, index: number) => {
     case 'list':
       return (
         <ul key={index} className="list-disc list-inside space-y-2 mb-4 pl-4">
-          {contentItem.items.map((item, i) => <li key={i}>{item}</li>)}
+          {contentItem.items.map((item, i) => <li key={i} dangerouslySetInnerHTML={{ __html: item.replace(/☐/g, '<span class="inline-block w-4 h-4 border border-foreground/50 rounded-sm mr-2"></span>') }} />)}
         </ul>
       );
     case 'collapsible':
       return (
         <Accordion key={index} type="single" collapsible className="w-full mb-4">
           <AccordionItem value={`item-${index}`} className="border rounded-lg shadow-sm">
-            <AccordionTrigger className="p-4 text-base font-semibold hover:no-underline">
+            <AccordionTrigger className="p-4 text-base font-semibold hover:no-underline text-left">
               {contentItem.title}
             </AccordionTrigger>
             <AccordionContent className="px-4 pb-4">
               <div className="border-t pt-4">
-                {contentItem.content.map((item, i) => renderContent(item, i))}
+                {contentItem.content.map((item, i) => renderContent(item, i, pathId))}
               </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       );
     case 'exercise':
+        if (contentItem.title === 'Ejercicio 2: Ensayo de Crisis Imaginaria') {
+            return <CrisisRehearsalExercise key={index} content={contentItem} pathId={pathId} />;
+        }
         return (
             <Card key={index} className="bg-muted/30 my-6 shadow-md">
                 <CardHeader>
@@ -60,7 +67,7 @@ const renderContent = (contentItem: ModuleContent, index: number) => {
                     {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
                 </CardHeader>
                 <CardContent>
-                    {contentItem.content.map((item, i) => renderContent(item, i))}
+                    {contentItem.content.map((item, i) => renderContent(item, i, pathId))}
                 </CardContent>
                 {contentItem.duration && <CardFooter className="text-xs text-muted-foreground"><Clock className="mr-2 h-3 w-3" />Duración sugerida: {contentItem.duration}</CardFooter>}
             </Card>
@@ -80,6 +87,84 @@ const renderContent = (contentItem: ModuleContent, index: number) => {
   }
 };
 
+// Componente específico para el ejercicio de Ensayo de Crisis
+function CrisisRehearsalExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    const { toast } = useToast();
+    const [whatWouldYouDo, setWhatWouldYouDo] = useState('');
+    const [whatWouldYouSay, setWhatWouldYouSay] = useState('');
+    const [whatTool, setWhatTool] = useState('');
+    const [isSaved, setIsSaved] = useState(false);
+
+    if (content.type !== 'exercise') return null;
+
+    const handleSaveReflection = (e: FormEvent) => {
+        e.preventDefault();
+        if (!whatWouldYouDo.trim() || !whatWouldYouSay.trim() || !whatTool.trim()) {
+            toast({ title: "Reflexión Incompleta", description: "Por favor, completa todos los campos del ensayo.", variant: "destructive" });
+            return;
+        }
+
+        const reflectionContent = `
+**Ejercicio: ${content.title}**
+
+*He visualizado una situación de crisis pasada y reflexiono sobre cómo actuaría hoy:*
+
+**¿Qué haría diferente?**
+${whatWouldYouDo}
+
+**¿Qué me diría a mí mismo/a?**
+${whatWouldYouSay}
+
+**¿Qué herramienta usaría primero?**
+${whatTool}
+        `;
+
+        addNotebookEntry({
+            title: `Reflexión: ${content.title}`,
+            content: reflectionContent,
+            pathId: pathId,
+        });
+
+        toast({ title: "Ensayo Guardado", description: "Tu reflexión ha sido guardada en el Cuaderno Terapéutico." });
+        setIsSaved(true);
+    };
+
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader>
+                <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{content.title}</CardTitle>
+                {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+            </CardHeader>
+            <CardContent>
+                {content.content.map((item, i) => renderContent(item, i, pathId))}
+                <form onSubmit={handleSaveReflection} className="mt-4 space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="what-would-you-do">¿Qué harías diferente?</Label>
+                        <Textarea id="what-would-you-do" value={whatWouldYouDo} onChange={e => setWhatWouldYouDo(e.target.value)} disabled={isSaved} />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="what-would-you-say">¿Qué te dirías?</Label>
+                        <Textarea id="what-would-you-say" value={whatWouldYouSay} onChange={e => setWhatWouldYouSay(e.target.value)} disabled={isSaved} />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="what-tool">¿Qué herramienta usarías primero?</Label>
+                        <Textarea id="what-tool" value={whatTool} onChange={e => setWhatTool(e.target.value)} disabled={isSaved} />
+                    </div>
+                    {!isSaved ? (
+                        <Button type="submit" className="w-full">
+                            <Save className="mr-2 h-4 w-4" /> Guardar Ensayo en mi Cuaderno
+                        </Button>
+                    ) : (
+                        <div className="flex items-center justify-center p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-md">
+                            <CheckCircle className="mr-2 h-5 w-5" />
+                            <p className="font-medium">Tu ensayo ha sido guardado.</p>
+                        </div>
+                    )}
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
 
 export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();
@@ -197,7 +282,7 @@ export default function PathDetailPage({ params: paramsPromise }: PathDetailPage
               </div>
             </CardHeader>
             <CardContent>
-                {module.content.map((contentItem, i) => renderContent(contentItem, i))}
+                {module.content.map((contentItem, i) => renderContent(contentItem, i, path.id))}
             </CardContent>
             <CardFooter>
               <Button onClick={() => toggleComplete(module.id, module.title)} variant={completedModules.has(module.id) ? "secondary" : "default"}>
