@@ -20,6 +20,7 @@ import { StressMapExercise } from '@/components/paths/StressMapExercise';
 import { TriggerExercise } from '@/components/paths/TriggerExercise';
 import { DetectiveExercise } from '@/components/paths/DetectiveExercise';
 import { DemandsExercise } from '@/components/paths/DemandsExercise';
+import { WellbeingPlanExercise } from '@/components/paths/WellbeingPlanExercise';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
@@ -82,6 +83,8 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <DetectiveExercise key={index} content={contentItem} />;
     case 'demandsExercise':
         return <DemandsExercise key={index} content={contentItem} />;
+    case 'wellbeingPlanExercise':
+        return <WellbeingPlanExercise key={index} content={contentItem} />;
     default:
       return null;
   }
