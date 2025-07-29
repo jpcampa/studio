@@ -21,15 +21,91 @@ import { TriggerExercise } from '@/components/paths/TriggerExercise';
 import { DetectiveExercise } from '@/components/paths/DetectiveExercise';
 import { DemandsExercise } from '@/components/paths/DemandsExercise';
 import { WellbeingPlanExercise } from '@/components/paths/WellbeingPlanExercise';
+import { UncertaintyMapExercise } from '@/components/paths/UncertaintyMapExercise';
+import { ControlTrafficLightExercise } from '@/components/paths/ControlTrafficLightExercise';
+import { AlternativeStoriesExercise } from '@/components/paths/AlternativeStoriesExercise';
+import { MantraExercise } from '@/components/paths/MantraExercise';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
-import { ChartPlaceholder } from '@/components/dashboard/ChartPlaceholder';
 
 
 interface PathDetailPageProps {
   params: Promise<{ pathId: string }>;
 }
+
+
+// Componente para manejar las reflexiones del cuaderno terapéutico
+function TherapeuticNotebookReflectionExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    const { toast } = useToast();
+    const [reflection, setReflection] = useState('');
+    const [isSaved, setIsSaved] = useState(false);
+
+    if (content.type !== 'therapeuticNotebookReflection') return null;
+
+    const handleSaveReflection = (e: FormEvent) => {
+        e.preventDefault();
+        if (!reflection.trim()) {
+            toast({ title: "Reflexión Incompleta", description: "Por favor, escribe tu reflexión antes de guardar.", variant: "destructive" });
+            return;
+        }
+
+        const fullContent = `
+**${content.title}**
+
+${content.prompts.join('\n')}
+
+**Mi reflexión:**
+${reflection}
+        `;
+
+        addNotebookEntry({
+            title: `Reflexión: ${content.title}`,
+            content: fullContent,
+            pathId: pathId,
+        });
+
+        toast({ title: "Reflexión Guardada", description: "Tu reflexión ha sido guardada en el Cuaderno Terapéutico." });
+        setIsSaved(true);
+    };
+
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader>
+                <CardTitle className="text-lg text-primary flex items-center"><NotebookText className="mr-2"/>{content.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={handleSaveReflection} className="space-y-4">
+                    <div className="space-y-2">
+                        {content.prompts.map((prompt, index) => (
+                            <p key={index} className="text-sm text-foreground/80 italic"> • {prompt}</p>
+                        ))}
+                         <Label htmlFor={`reflection-${pathId}`} className="sr-only">Tu reflexión</Label>
+                        <Textarea
+                            id={`reflection-${pathId}`}
+                            value={reflection}
+                            onChange={e => setReflection(e.target.value)}
+                            placeholder="Escribe aquí tu reflexión personal..."
+                            rows={5}
+                            disabled={isSaved}
+                        />
+                    </div>
+                    {!isSaved ? (
+                        <Button type="submit" className="w-full">
+                            <Save className="mr-2 h-4 w-4" /> Guardar Reflexión en mi Cuaderno
+                        </Button>
+                    ) : (
+                        <div className="flex items-center justify-center p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-md">
+                            <CheckCircle className="mr-2 h-5 w-5" />
+                            <p className="font-medium">Tu reflexión ha sido guardada.</p>
+                        </div>
+                    )}
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
+
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
@@ -87,13 +163,15 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'wellbeingPlanExercise':
         return <WellbeingPlanExercise key={index} content={contentItem} />;
     case 'uncertaintyMapExercise':
-        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={Map} />;
+        return <UncertaintyMapExercise key={index} content={contentItem} />;
     case 'controlTrafficLightExercise':
-        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={TrafficCone} />;
+        return <ControlTrafficLightExercise key={index} content={contentItem} />;
     case 'alternativeStoriesExercise':
-        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={GitBranchPlus} />;
+        return <AlternativeStoriesExercise key={index} content={contentItem} />;
     case 'mantraExercise':
-        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={Orbit} />;
+        return <MantraExercise key={index} content={contentItem} />;
+    case 'therapeuticNotebookReflection':
+        return <TherapeuticNotebookReflectionExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }

@@ -26,7 +26,7 @@ export const uncertaintyPath: Path = {
               { type: 'list', items: [
                 'La incertidumbre es parte de la vida, pero muchas veces la vivimos como amenaza.',
                 'Nuestro cuerpo y mente tienden a sobreprotegernos cuando sentimos que no tenemos el control.',
-                'La intolerancia a lo incierto genera ansiedad, bloqueo y evitación.',
+                'La intolerancia a la incertidumbre genera ansiedad, bloqueo y evitación.',
                 'Con entrenamiento, puedes vivir lo incierto desde un lugar más flexible y seguro.'
               ]}
             ]
@@ -45,11 +45,16 @@ export const uncertaintyPath: Path = {
             objective: 'Diferencia entre lo que depende de ti, lo que puedes influir y lo que está fuera de tu control para enfocar tu energía en lo que sí puedes transformar.',
             duration: '6 a 9 minutos'
           },
+          { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+            '¿Qué intenté controlar esta semana que no estaba en mis manos?',
+            '¿Cómo me sentí al soltarlo?',
+            '¿Qué ideas me llevo sobre mi forma de vivir lo incierto?',
+          ]},
           { type: 'title', text: 'Resumen Clave de la Semana' },
           { type: 'list', items: [
               'La incertidumbre activa el sistema de amenaza cerebral.',
               'Nuestro cuerpo reacciona incluso ante la falta de información, no solo ante el peligro real.',
-              'La intolerancia a lo incierto se manifiesta en necesidad de control, rigidez y evitación.',
+              'La intolerancia a la incertidumbre se manifiesta en necesidad de control, rigidez y evitación.',
               'No puedes controlar todo, pero puedes aprender a moverte con flexibilidad.',
               'Diferenciar entre lo que depende de ti y lo que no, alivia la ansiedad y te devuelve poder.'
             ]
@@ -93,6 +98,13 @@ export const uncertaintyPath: Path = {
             { type: 'exercise', title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.', content: [
                 { type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. No anticipes el resultado. Haz la acción con conciencia.'}
             ]},
+             { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+                '¿Qué he aprendido sobre mi forma de reaccionar ante lo incierto?',
+                '¿Qué me ha ayudado más: calmarme antes, enfrentarme directamente o ambas cosas?',
+                '¿Qué tipo de pensamientos suelen aumentar mi ansiedad? ¿Puedo verlos como historias, no como verdades?',
+                '¿He notado algún cambio en cómo me siento al no tener el control total?',
+                '¿Qué me gustaría seguir practicando para fortalecer mi confianza ante lo incierto?',
+             ]},
             { type: 'title', text: 'Resumen Clave de la Semana' },
             { type: 'list', items: [
                 'El cuerpo reacciona a la incertidumbre como si fuera una amenaza real, pero podemos enseñarle que no lo es.',
@@ -160,18 +172,24 @@ export const uncertaintyPath: Path = {
             ]
           },
           { type: 'title', text: 'Técnicas Específicas'},
-          { 
-            type: 'alternativeStoriesExercise', 
-            title: 'Ejercicio 1: Historias Alternativas', 
+          {
+            type: 'alternativeStoriesExercise',
+            title: 'Ejercicio 1: Historias Alternativas',
             objective: 'Entrena tu flexibilidad mental imaginando más de un posible desenlace. No se trata de forzarte a pensar en positivo, sino de recordarte que lo que temes no siempre ocurre.',
             duration: '5–10 minutos'
           },
-          { 
-            type: 'mantraExercise', 
-            title: 'Ejercicio 2: ¿Y si…? pero también…', 
+          {
+            type: 'mantraExercise',
+            title: 'Ejercicio 2: ¿Y si…? pero también…',
             objective: 'Esta técnica no busca eliminar los pensamientos de duda, sino equilibrarlos con otra posibilidad más amable y realista que reconozca tu capacidad.',
             duration: '5–7 minutos'
           },
+           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+              '¿Qué historia rígida me he contado esta semana que no se cumplió tal como la imaginaba?',
+              '¿Qué descubrí al permitirme ver la situación desde más de un ángulo?',
+              '¿Cuál de las frases “pero también…” sentí más mía o quiero recordarme más a menudo?',
+              '¿En qué momento me sorprendí reaccionando con más flexibilidad de lo habitual?',
+            ]},
           { type: 'title', text: 'Resumen Clave de la Semana'},
           { type: 'list', items: [
             'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guion.',
@@ -229,6 +247,12 @@ export const uncertaintyPath: Path = {
                 { type: 'paragraph', text: 'Cuando intentas controlarlo todo, tu mente se agota. Este ejercicio te propone soltar por un momento. Elige la forma que hoy más te ayude: Escribir y soltar, Respirar con intención o Cerrar el día con gratitud.'}
             ]
           },
+          { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+             '¿Qué parte de ti se suaviza cuando dejas de intentar controlarlo todo?',
+             '¿Qué notas en tu cuerpo cuando sueltas la tensión de tener todas las respuestas?',
+             '¿Qué cambia en tu mente cuando aceptas que no necesitas prever cada paso?',
+             '¿Qué te gustaría recordarte la próxima vez que intentes tenerlo todo bajo control?'
+          ]},
           { type: 'title', text: 'Resumen Clave de la Semana'},
           { type: 'list', items: [
             'Controlarlo todo puede parecer seguro… pero suele alimentar tu ansiedad.',

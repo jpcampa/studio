@@ -18,5 +18,4 @@ export type Path = {
 export const pathsData: Path[] = [
   stressManagementPath,
   uncertaintyPath,
-  // ... other imported paths can be added here
 ];
