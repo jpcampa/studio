@@ -103,6 +103,13 @@ export type MantraExerciseContent = {
     duration?: string;
 };
 
+export type DelSabotajeALaAccionExerciseContent = {
+    type: 'delSabotajeALaAccionExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -121,7 +128,8 @@ export type ModuleContent =
   | UncertaintyMapExerciseContent
   | ControlTrafficLightExerciseContent
   | AlternativeStoriesExerciseContent
-  | MantraExerciseContent;
+  | MantraExerciseContent
+  | DelSabotajeALaAccionExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {

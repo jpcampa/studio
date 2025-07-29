@@ -25,6 +25,7 @@ import { UncertaintyMapExercise } from '@/components/paths/UncertaintyMapExercis
 import { ControlTrafficLightExercise } from '@/components/paths/ControlTrafficLightExercise';
 import { AlternativeStoriesExercise } from '@/components/paths/AlternativeStoriesExercise';
 import { MantraExercise } from '@/components/paths/MantraExercise';
+import { DelSabotajeALaAccionExercise } from '@/components/paths/DelSabotajeALaAccionExercise';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
@@ -138,6 +139,19 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         if (contentItem.title === 'Ejercicio 2: Ensayo de Crisis Imaginaria') {
             return <CrisisRehearsalExercise key={index} content={contentItem} pathId={pathId} />;
         }
+        if (contentItem.content.some(c => c.type === 'paragraph' && c.text.includes('Ejercicio interactivo próximamente'))) {
+            return (
+                <Card key={index} className="bg-muted/30 my-6 shadow-md">
+                    <CardHeader>
+                        <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{contentItem.title}</CardTitle>
+                        {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-center text-muted-foreground italic p-4">Ejercicio interactivo próximamente.</p>
+                    </CardContent>
+                </Card>
+            );
+        }
         return (
             <Card key={index} className="bg-muted/30 my-6 shadow-md">
                 <CardHeader>
@@ -170,6 +184,8 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <AlternativeStoriesExercise key={index} content={contentItem} />;
     case 'mantraExercise':
         return <MantraExercise key={index} content={contentItem} />;
+    case 'delSabotajeALaAccionExercise':
+        return <DelSabotajeALaAccionExercise key={index} content={contentItem} />;
     case 'therapeuticNotebookReflection':
         return <TherapeuticNotebookReflectionExercise key={index} content={contentItem} pathId={pathId} />;
     default:

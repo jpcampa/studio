@@ -225,11 +225,10 @@ export const procrastinationPath: Path = {
           },
           { type: 'title', text: 'Técnicas Específicas' },
           {
-            type: 'exercise',
+            type: 'delSabotajeALaAccionExercise',
             title: 'Ejercicio 1: Del Sabotaje a la Acción',
             objective: 'Este ejercicio te ayuda a identificar las frases internas que alimentan tu procrastinación y a entrenar respuestas más realistas, amables y útiles. No se trata de eliminar tus pensamientos, sino de aprender a responderte con una voz que te acompañe, no que te paralice.',
             duration: '10 a 15 minutos',
-            content: [{ type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }],
           },
           {
             type: 'exercise',
