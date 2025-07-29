@@ -1,5 +1,6 @@
 import type { PathModule, CollapsibleContent, ExerciseContent, ModuleContent } from './paths/pathTypes';
 import { stressManagementPath } from './paths/stressManagementPath';
+import { uncertaintyPath } from './paths/uncertaintyPath';
 
 // Re-export types for easy access in other parts of the application
 export type { PathModule, CollapsibleContent, ExerciseContent, ModuleContent };
@@ -16,5 +17,6 @@ export type Path = {
 // This makes the file cleaner and scales better as more paths are added.
 export const pathsData: Path[] = [
   stressManagementPath,
+  uncertaintyPath,
   // ... other imported paths can be added here
 ];

@@ -6,7 +6,7 @@ import { pathsData, Path, PathModule, ModuleContent } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check, Save, NotebookText } from 'lucide-react';
+import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check, Save, NotebookText, Map, TrafficCone, GitBranchPlus, Orbit } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
@@ -24,6 +24,7 @@ import { WellbeingPlanExercise } from '@/components/paths/WellbeingPlanExercise'
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
+import { ChartPlaceholder } from '@/components/dashboard/ChartPlaceholder';
 
 
 interface PathDetailPageProps {
@@ -85,6 +86,14 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <DemandsExercise key={index} content={contentItem} />;
     case 'wellbeingPlanExercise':
         return <WellbeingPlanExercise key={index} content={contentItem} />;
+    case 'uncertaintyMapExercise':
+        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={Map} />;
+    case 'controlTrafficLightExercise':
+        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={TrafficCone} />;
+    case 'alternativeStoriesExercise':
+        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={GitBranchPlus} />;
+    case 'mantraExercise':
+        return <ChartPlaceholder key={index} title={contentItem.title} description={contentItem.objective} icon={Orbit} />;
     default:
       return null;
   }

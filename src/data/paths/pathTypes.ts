@@ -75,6 +75,34 @@ export type WellbeingPlanExerciseContent = {
     duration?: string;
 };
 
+export type UncertaintyMapExerciseContent = {
+    type: 'uncertaintyMapExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type ControlTrafficLightExerciseContent = {
+    type: 'controlTrafficLightExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type AlternativeStoriesExerciseContent = {
+    type: 'alternativeStoriesExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type MantraExerciseContent = {
+    type: 'mantraExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -89,7 +117,11 @@ export type ModuleContent =
   | TherapeuticNotebookReflection
   | DetectiveExerciseContent
   | DemandsExerciseContent
-  | WellbeingPlanExerciseContent;
+  | WellbeingPlanExerciseContent
+  | UncertaintyMapExerciseContent
+  | ControlTrafficLightExerciseContent
+  | AlternativeStoriesExerciseContent
+  | MantraExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
