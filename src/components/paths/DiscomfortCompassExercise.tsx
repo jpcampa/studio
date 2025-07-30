@@ -12,6 +12,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Edit3, Save, CheckCircle, ArrowRight } from 'lucide-react';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import type { DiscomfortCompassExerciseContent } from '@/data/paths/pathTypes';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface DiscomfortCompassExerciseProps {
   content: DiscomfortCompassExerciseContent;
