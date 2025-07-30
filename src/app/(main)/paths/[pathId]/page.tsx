@@ -6,7 +6,7 @@ import { pathsData, Path, PathModule, ModuleContent } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check, Save, NotebookText, Map, TrafficCone, GitBranchPlus, Orbit, ArrowRight, Calendar as CalendarIcon, X as XIcon, Minus as MinusIcon } from 'lucide-react';
+import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check, Save, NotebookText, Map, TrafficCone, GitBranchPlus, Orbit, ArrowRight, Calendar as CalendarIcon, X as XIcon, Minus as MinusIcon, CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
