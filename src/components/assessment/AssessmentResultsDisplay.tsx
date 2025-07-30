@@ -139,24 +139,24 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
                                    " Los puntos en el gráfico se colorean según la puntuación: Rojo (1.0-2.49), Naranja (2.5-3.99), Verde (4.0-5.0), Azul (< 1.0 o no evaluado).";
   
   const CustomRadarDot = (props: DotProps & { payload?: any, value?: number }) => {
-    const { cx, cy, payload } = props;
-    let { value } = props;
+    const { cx, cy, payload, value: valueFromProps } = props;
 
-    // console.log(`CustomRadarDot - Initial props - Dimension: ${payload?.dimension || 'Unknown'}, Value: ${value}, CX: ${cx}, CY: ${cy}`);
+    // Use value from payload as the primary source of truth for the score.
+    const value = payload?.score;
 
     if (typeof cx !== 'number' || typeof cy !== 'number' || isNaN(cx) || isNaN(cy)) {
       console.error(`CustomRadarDot: cx (${cx}) or cy (${cy}) is not a valid number for dimension ${payload?.dimension || 'Unknown'}. Cannot render dot.`);
-      return null; 
+      return null;
     }
-    
+
     const scoreValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, Math.min(5, value)) : 0;
     if (typeof value !== 'number' || isNaN(value)) {
-         // console.warn(`CustomRadarDot: Invalid 'value' prop (${value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
+        // This might still be useful to log if the payload itself is missing the score
+        // console.warn(`CustomRadarDot: Invalid 'value' (${value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
     }
 
     let dotColor = "hsl(var(--chart-2))"; // Default Blue (for 0 or < 1.0 or not evaluated)
-    const dimensionNameForLog = payload?.dimension || "Unknown Dimension";
-
+    
     if (scoreValue >= 4.0) {
       dotColor = "hsl(var(--primary))"; // Green
     } else if (scoreValue >= 2.5) {
@@ -164,8 +164,6 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     } else if (scoreValue >= 1.0) {
       dotColor = "hsl(var(--destructive))"; // Red
     }
-    
-    // console.log(`Radar Dot - Rendering - Dimension: ${dimensionNameForLog}, Score used for color: ${scoreValue}, Original value prop: ${props.value}, Final Dot Color: ${dotColor}, Props (cx,cy): ${cx},${cy}`);
         
     return <circle cx={cx} cy={cy} r={5} fill={dotColor} stroke="hsl(var(--background))" strokeWidth={1.5} />;
   };
