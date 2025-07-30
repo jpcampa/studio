@@ -2,6 +2,7 @@ import type { PathModule, CollapsibleContent, ExerciseContent, ModuleContent } f
 import { stressManagementPath } from './paths/stressManagementPath';
 import { uncertaintyPath } from './paths/uncertaintyPath';
 import { procrastinationPath } from './paths/procrastinationPath';
+import { settingBoundariesPath } from './paths/settingBoundariesPath';
 
 // Re-export types for easy access in other parts of the application
 export type { PathModule, CollapsibleContent, ExerciseContent, ModuleContent };
@@ -20,4 +21,5 @@ export const pathsData: Path[] = [
   stressManagementPath,
   uncertaintyPath,
   procrastinationPath,
+  settingBoundariesPath,
 ];

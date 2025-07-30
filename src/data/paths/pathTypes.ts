@@ -110,6 +110,55 @@ export type DelSabotajeALaAccionExerciseContent = {
     duration?: string;
 };
 
+export type MapOfUnsaidThingsExerciseContent = {
+    type: 'mapOfUnsaidThingsExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type DiscomfortCompassExerciseContent = {
+    type: 'discomfortCompassExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type AssertivePhraseExerciseContent = {
+    type: 'assertivePhraseExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type NoGuiltTechniquesExerciseContent = {
+    type: 'noGuiltTechniquesExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type PostBoundaryEmotionsExerciseContent = {
+    type: 'postBoundaryEmotionsExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type CompassionateFirmnessExerciseContent = {
+    type: 'compassionateFirmnessExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type SelfCareContractExerciseContent = {
+    type: 'selfCareContractExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -129,7 +178,14 @@ export type ModuleContent =
   | ControlTrafficLightExerciseContent
   | AlternativeStoriesExerciseContent
   | MantraExerciseContent
-  | DelSabotajeALaAccionExerciseContent;
+  | DelSabotajeALaAccionExerciseContent
+  | MapOfUnsaidThingsExerciseContent
+  | DiscomfortCompassExerciseContent
+  | AssertivePhraseExerciseContent
+  | NoGuiltTechniquesExerciseContent
+  | PostBoundaryEmotionsExerciseContent
+  | CompassionateFirmnessExerciseContent
+  | SelfCareContractExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {

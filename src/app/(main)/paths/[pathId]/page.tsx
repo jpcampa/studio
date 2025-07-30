@@ -35,6 +35,13 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { MapOfUnsaidThingsExercise } from '@/components/paths/MapOfUnsaidThingsExercise';
+import { DiscomfortCompassExercise } from '@/components/paths/DiscomfortCompassExercise';
+import { AssertivePhraseExercise } from '@/components/paths/AssertivePhraseExercise';
+import { NoGuiltTechniquesExercise } from '@/components/paths/NoGuiltTechniquesExercise';
+import { PostBoundaryEmotionsExercise } from '@/components/paths/PostBoundaryEmotionsExercise';
+import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateFirmnessExercise';
+import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
 
 
 interface PathDetailPageProps {
@@ -621,6 +628,7 @@ ${progressText || 'No se registraron días.'}
                             mode="single"
                             selected={selectedDate}
                             onSelect={setSelectedDate}
+                            locale={es}
                             className="rounded-md border p-3"
                             components={{
                                 DayContent: ({ date, displayMonth }) => renderDayContent(date),
@@ -737,6 +745,20 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <DelSabotajeALaAccionExercise key={index} content={contentItem} />;
     case 'therapeuticNotebookReflection':
         return <TherapeuticNotebookReflectionExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'mapOfUnsaidThingsExercise':
+        return <MapOfUnsaidThingsExercise key={index} content={contentItem} />;
+    case 'discomfortCompassExercise':
+        return <DiscomfortCompassExercise key={index} content={contentItem} />;
+    case 'assertivePhraseExercise':
+        return <AssertivePhraseExercise key={index} content={contentItem} />;
+    case 'noGuiltTechniquesExercise':
+        return <NoGuiltTechniquesExercise key={index} content={contentItem} />;
+    case 'postBoundaryEmotionsExercise':
+        return <PostBoundaryEmotionsExercise key={index} content={contentItem} />;
+    case 'compassionateFirmnessExercise':
+        return <CompassionateFirmnessExercise key={index} content={contentItem} />;
+    case 'selfCareContractExercise':
+        return <SelfCareContractExercise key={index} content={contentItem} />;
     default:
       return null;
   }
