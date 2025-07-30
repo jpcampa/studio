@@ -29,6 +29,8 @@ import { DelSabotajeALaAccionExercise } from '@/components/paths/DelSabotajeALaA
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 
 interface PathDetailPageProps {
@@ -107,6 +109,459 @@ ${reflection}
     );
 }
 
+// ====================================================================
+// START OF RUTA 3 DYNAMIC COMPONENTS
+// ====================================================================
+
+function BlockageMapExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+    const { toast } = useToast();
+    const [step, setStep] = useState(0);
+    const [avoidedTask, setAvoidedTask] = useState('');
+    const [blockingThoughts, setBlockingThoughts] = useState('');
+    const [avoidedEmotions, setAvoidedEmotions] = useState<Record<string, boolean>>({});
+    const [otherEmotion, setOtherEmotion] = useState('');
+    const [escapeBehaviors, setEscapeBehaviors] = useState('');
+    const [consequences, setConsequences] = useState('');
+
+    if (content.type !== 'exercise') return null;
+
+    const emotionsOptions = [
+        { id: 'emo-anxiety', label: 'Ansiedad' },
+        { id: 'emo-insecurity', label: 'Inseguridad' },
+        { id: 'emo-judgment-fear', label: 'Miedo al juicio' },
+        { id: 'emo-shame', label: 'Vergüenza' },
+        { id: 'emo-guilt', label: 'Culpa' },
+        { id: 'emo-frustration', label: 'Frustración' },
+        { id: 'emo-apathy', label: 'Apatía o vacío emocional' },
+        { id: 'emo-sadness', label: 'Tristeza o desánimo' },
+        { id: 'emo-overwhelm', label: 'Agobio mental' },
+        { id: 'emo-resistance', label: 'Resistencia (“No quiero que me obliguen”)' },
+    ];
+
+    const handleSave = () => {
+        const selectedEmotions = emotionsOptions.filter(opt => avoidedEmotions[opt.id]).map(opt => opt.label);
+        if (avoidedEmotions['emo-other'] && otherEmotion) {
+            selectedEmotions.push(otherEmotion);
+        }
+
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+*Tarea evitada:*
+${avoidedTask || 'No especificada.'}
+
+*Pensamientos bloqueadores:*
+${blockingThoughts || 'No especificados.'}
+
+*Emociones evitadas:*
+${selectedEmotions.length > 0 ? selectedEmotions.map(e => `- ${e}`).join('\n') : 'No especificadas.'}
+
+*Conductas de escape:*
+${escapeBehaviors || 'No especificadas.'}
+
+*Consecuencias:*
+${consequences || 'No especificadas.'}
+        `;
+
+        addNotebookEntry({ title: 'Mi Mapa del Bloqueo Personal', content: notebookContent, pathId });
+        toast({ title: 'Mapa guardado', description: 'Tu Mapa del Bloqueo Personal se ha guardado en el cuaderno.' });
+        setStep(prev => prev + 1); // Move to final summary screen
+    };
+
+    const renderStep = () => {
+        switch (step) {
+            case 0: return (
+                <div className="text-center p-4">
+                    <p className="mb-4">¿Tienes una tarea pendiente que sigues posponiendo? Este ejercicio te ayudará a identificar qué está pasando dentro de ti. No hay respuestas correctas, solo pistas para entenderte mejor.</p>
+                    <Button onClick={() => setStep(1)}>Comenzar mi mapa <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                </div>
+            );
+            case 1: return (
+                <div className="p-4 space-y-4">
+                    <Label htmlFor="avoided-task">Piensa en una tarea concreta que llevas tiempo evitando.</Label>
+                    <Textarea id="avoided-task" value={avoidedTask} onChange={e => setAvoidedTask(e.target.value)} placeholder="Ej: Escribir un email importante" />
+                    <Button onClick={() => setStep(2)} className="w-full">Siguiente</Button>
+                </div>
+            );
+            case 2: return (
+                <div className="p-4 space-y-4">
+                    <Label htmlFor="blocking-thoughts">¿Qué pensamientos aparecen cuando piensas en esa tarea?</Label>
+                    <Textarea id="blocking-thoughts" value={blockingThoughts} onChange={e => setBlockingThoughts(e.target.value)} placeholder="Ej: Lo haré mal y me juzgarán" />
+                    <Button onClick={() => setStep(3)} className="w-full">Siguiente</Button>
+                </div>
+            );
+            case 3: return (
+                <div className="p-4 space-y-4">
+                    <Label>¿Qué emociones o sensaciones físicas intentas evitar?</Label>
+                    {emotionsOptions.map(opt => (
+                        <div key={opt.id} className="flex items-center space-x-2">
+                            <Checkbox id={opt.id} checked={avoidedEmotions[opt.id] || false} onCheckedChange={checked => setAvoidedEmotions(p => ({ ...p, [opt.id]: !!checked }))} />
+                            <Label htmlFor={opt.id} className="font-normal">{opt.label}</Label>
+                        </div>
+                    ))}
+                    <div className="flex items-center space-x-2">
+                        <Checkbox id="emo-other" checked={avoidedEmotions['emo-other'] || false} onCheckedChange={checked => setAvoidedEmotions(p => ({ ...p, 'emo-other': !!checked }))} />
+                        <Label htmlFor="emo-other" className="font-normal">Otra:</Label>
+                    </div>
+                    {avoidedEmotions['emo-other'] && <Textarea value={otherEmotion} onChange={e => setOtherEmotion(e.target.value)} placeholder="Describe la otra emoción" className="ml-6" />}
+                    <Button onClick={() => setStep(4)} className="w-full">Siguiente</Button>
+                </div>
+            );
+            case 4: return (
+                <div className="p-4 space-y-4">
+                    <Label htmlFor="escape-behaviors">¿Qué haces para evitarla?</Label>
+                    <Textarea id="escape-behaviors" value={escapeBehaviors} onChange={e => setEscapeBehaviors(e.target.value)} placeholder="Ej: Miro redes sociales, limpio compulsivamente..." />
+                    <Button onClick={() => setStep(5)} className="w-full">Siguiente</Button>
+                </div>
+            );
+            case 5: return (
+                <div className="p-4 space-y-4">
+                    <Label htmlFor="consequences">¿Qué consecuencias tiene para ti seguir evitándolo?</Label>
+                    <Textarea id="consequences" value={consequences} onChange={e => setConsequences(e.target.value)} placeholder="Ej: Me siento culpable, pierdo oportunidades..." />
+                    <Button onClick={handleSave} className="w-full">Ver mi mapa del bloqueo</Button>
+                </div>
+            );
+            case 6: // Summary screen
+                const selectedEmotions = emotionsOptions.filter(opt => avoidedEmotions[opt.id]).map(opt => opt.label);
+                if (avoidedEmotions['emo-other'] && otherEmotion) selectedEmotions.push(otherEmotion);
+                return (
+                    <div className="p-4 space-y-2">
+                        <h4 className="font-bold text-center text-lg">Tu Mapa del Bloqueo</h4>
+                        <p><strong>Tarea evitada:</strong> {avoidedTask || 'N/A'}</p>
+                        <p><strong>Pensamientos bloqueadores:</strong> {blockingThoughts || 'N/A'}</p>
+                        <p><strong>Emociones evitadas:</strong> {selectedEmotions.join(', ') || 'N/A'}</p>
+                        <p><strong>Conductas de escape:</strong> {escapeBehaviors || 'N/A'}</p>
+                        <p><strong>Consecuencias:</strong> {consequences || 'N/A'}</p>
+                        <p className="text-sm italic text-center pt-4">Este mapa no es para juzgarte. Es para ayudarte a ver el ciclo completo con más claridad. Entenderlo es el primer paso para liberarte.</p>
+                        <Button onClick={() => setStep(0)} variant="outline" className="w-full">Comenzar de nuevo</Button>
+                    </div>
+                );
+            default: return null;
+        }
+    };
+
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader>
+                <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>
+                {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+            </CardHeader>
+            <CardContent>
+                {renderStep()}
+            </CardContent>
+        </Card>
+    );
+}
+
+function CompassionateReflectionExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+     const { toast } = useToast();
+    const [step, setStep] = useState(0);
+    const [adviceToFriend, setAdviceToFriend] = useState('');
+    const [selfJudgment, setSelfJudgment] = useState('');
+    const [avoidedEmotions, setAvoidedEmotions] = useState<Record<string, boolean>>({});
+    const [aftermathEmotion, setAftermathEmotion] = useState('');
+    const [perfectionism, setPerfectionism] = useState<Record<string, boolean>>({});
+    const [flexibleThought, setFlexibleThought] = useState('');
+
+    if (content.type !== 'exercise') return null;
+
+    const handleSave = () => {
+         const notebookContent = `
+**Ejercicio: ${content.title}**
+
+*A alguien que quiero le diría:*
+${adviceToFriend || 'No especificado.'}
+
+*En ese momento pensé que:*
+${selfJudgment || 'No especificado.'}
+
+*Emociones que intenté evitar:*
+${Object.keys(avoidedEmotions).filter(k => avoidedEmotions[k]).join(', ') || 'No especificadas.'}
+
+*¿Qué sentí después de evitarlo?:*
+${aftermathEmotion || 'No especificado.'}
+
+*Exigencias detectadas:*
+${Object.keys(perfectionism).filter(k => perfectionism[k]).join(', ') || 'Ninguna.'}
+
+*Nueva forma de pensarlo:*
+${flexibleThought || 'No especificada.'}
+        `;
+        addNotebookEntry({ title: 'Mi Reflexión Compasiva', content: notebookContent, pathId });
+        toast({ title: 'Reflexión guardada', description: 'Tu reflexión se ha guardado en el cuaderno.' });
+        setStep(prev => prev + 1);
+    };
+
+     const renderStep = () => {
+        switch (step) {
+            case 0: return <div className="p-4 text-center"><p>Ahora, vamos a mirar dentro de ti, con respeto y sin crítica. No buscamos explicaciones perfectas, solo entender qué te estaba pasando.</p><Button onClick={() => setStep(1)}>Empezar la reflexión</Button></div>;
+            case 1: return <div className="p-4 space-y-2"><Label>Imagina que una persona a la que quieres mucho está en tu situación. ¿Qué le dirías?</Label><Textarea value={adviceToFriend} onChange={e => setAdviceToFriend(e.target.value)} placeholder="Le diría que..." /><Button onClick={() => setStep(2)} className="w-full mt-2">Continuar</Button></div>;
+            case 2: return <div className="p-4 space-y-2"><Label>Cuando te bloqueaste, ¿qué pensaste sobre ti?</Label><Textarea value={selfJudgment} onChange={e => setSelfJudgment(e.target.value)} placeholder="Pensé que no valía para esto..." /><p className="text-sm text-center text-primary">Es solo un pensamiento. No eres ese pensamiento.</p><Button onClick={() => setStep(3)} className="w-full mt-2">Siguiente</Button></div>;
+            case 3: return <div className="p-4 space-y-2"><Label>¿Qué emoción crees que intentabas evitar cuando procrastinaste?</Label>
+                <div className="space-y-1">
+                    <div className="flex items-center gap-2"><Checkbox id="fear" onCheckedChange={c => setAvoidedEmotions(p => ({...p, fear:!!c}))} /><Label htmlFor="fear" className="font-normal">Miedo al fallo</Label></div>
+                    <div className="flex items-center gap-2"><Checkbox id="shame" onCheckedChange={c => setAvoidedEmotions(p => ({...p, shame:!!c}))} /><Label htmlFor="shame" className="font-normal">Vergüenza</Label></div>
+                    <div className="flex items-center gap-2"><Checkbox id="guilt" onCheckedChange={c => setAvoidedEmotions(p => ({...p, guilt:!!c}))} /><Label htmlFor="guilt" className="font-normal">Culpa</Label></div>
+                </div>
+                <Label htmlFor="aftermath">¿Y qué sentiste después de evitarlo?</Label>
+                <Textarea id="aftermath" value={aftermathEmotion} onChange={e => setAftermathEmotion(e.target.value)} placeholder="Alivio momentáneo... y luego frustración." />
+                <Button onClick={() => setStep(4)} className="w-full mt-2">Siguiente</Button></div>;
+            case 4: return <div className="p-4 space-y-2"><Label>¿Te exigiste demasiado en ese momento?</Label>
+                 <div className="space-y-1">
+                    <div className="flex items-center gap-2"><Checkbox id="perfect" onCheckedChange={c => setPerfectionism(p => ({...p, perfect:!!c}))} /><Label htmlFor="perfect" className="font-normal">Pensé que, si no lo hacía perfecto, mejor no hacerlo.</Label></div>
+                    <div className="flex items-center gap-2"><Checkbox id="energy" onCheckedChange={c => setPerfectionism(p => ({...p, energy:!!c}))} /><Label htmlFor="energy" className="font-normal">Sentí que tenía que estar con energía total.</Label></div>
+                    <div className="flex items-center gap-2"><Checkbox id="no-error" onCheckedChange={c => setPerfectionism(p => ({...p, error:!!c}))} /><Label htmlFor="no-error" className="font-normal">Cualquier error me parecía inaceptable.</Label></div>
+                </div>
+                <Label htmlFor="flexible-thought">¿Cómo podrías pensarlo hoy con más flexibilidad?</Label>
+                <Textarea id="flexible-thought" value={flexibleThought} onChange={e => setFlexibleThought(e.target.value)} placeholder="Aunque no salga perfecto, un pequeño paso ya es avanzar." />
+                <Button onClick={handleSave} className="w-full mt-2">Ver mi reflexión completa</Button></div>;
+            case 5: return <div className="p-4 space-y-2"><h4 className="font-bold text-center text-lg">Tu Mapa de Comprensión Emocional</h4><p className="text-sm italic text-center">Has dado un paso valiente. Hablarte con amabilidad te ayuda a avanzar.</p><Button onClick={() => setStep(0)} variant="outline" className="w-full">Empezar de nuevo</Button></div>;
+            default: return null;
+        }
+    };
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+            <CardContent>{renderStep()}</CardContent>
+        </Card>
+    );
+}
+
+function TwoMinuteRuleExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+    const { toast } = useToast();
+    const [task, setTask] = useState('');
+    const [twoMinVersion, setTwoMinVersion] = useState('');
+    const [when, setWhen] = useState('');
+    const [saved, setSaved] = useState(false);
+
+    if (content.type !== 'exercise') return null;
+
+    const handleSave = (e: FormEvent) => {
+        e.preventDefault();
+        if (!task || !twoMinVersion || !when) {
+            toast({ title: 'Campos incompletos', description: 'Por favor, rellena todos los campos.', variant: 'destructive' });
+            return;
+        }
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+*Tarea que pospongo:*
+${task}
+
+*Mi versión de 2 minutos es:*
+${twoMinVersion}
+
+*Me comprometo a hacerlo:*
+${when}
+        `;
+        addNotebookEntry({ title: 'Mi Compromiso de 2 Minutos', content: notebookContent, pathId });
+        toast({ title: 'Compromiso Guardado', description: 'Tu plan de 2 minutos ha sido guardado.' });
+        setSaved(true);
+    };
+
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+            <CardContent>
+                <form onSubmit={handleSave} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="task">¿Qué tarea estás posponiendo?</Label>
+                        <Textarea id="task" value={task} onChange={e => setTask(e.target.value)} disabled={saved} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="twoMin">¿Cuál sería su versión de 2 minutos?</Label>
+                        <Textarea id="twoMin" value={twoMinVersion} onChange={e => setTwoMinVersion(e.target.value)} disabled={saved} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="when">¿Cuándo lo harás?</Label>
+                        <RadioGroup value={when} onValueChange={setWhen} disabled={saved}>
+                            <div className="flex items-center gap-2"><RadioGroupItem value="Ahora" id="now" /><Label htmlFor="now" className="font-normal">Ahora</Label></div>
+                            <div className="flex items-center gap-2"><RadioGroupItem value="En los próximos 10 minutos" id="in10" /><Label htmlFor="in10" className="font-normal">En los próximos 10 minutos</Label></div>
+                        </RadioGroup>
+                    </div>
+                    {!saved ? <Button type="submit" className="w-full">Guardar mi compromiso</Button> : <p className="text-center text-green-600">¡Compromiso guardado!</p>}
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
+
+function MicroPlanExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+    const { toast } = useToast();
+    const [moment, setMoment] = useState('');
+    const [action, setAction] = useState('');
+    const [step, setStep] = useState(0);
+
+    if (content.type !== 'exercise') return null;
+
+    const handleSave = () => {
+        if (!moment || !action) {
+            toast({title: 'Faltan datos', description: 'Por favor, completa ambos campos.', variant: 'destructive'});
+            return;
+        }
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+*Mi microplan de acción es:*
+Cuando ${moment}, voy a ${action}.
+        `;
+        addNotebookEntry({ title: 'Mi Microplan de Acción', content: notebookContent, pathId });
+        toast({title: 'Microplan Guardado', description: 'Tu frase de acción ha sido guardada.'});
+        setStep(3); // Go to final confirmation
+    };
+
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+            <CardContent>
+                {step === 0 && <div className="text-center p-4"><p className="mb-4">Planear con realismo es lo que necesitamos para avanzar. Crea tu microplan: una frase corta que una lo cotidiano con lo que quieres empezar.</p><Button onClick={() => setStep(1)}>Crear mi frase de acción</Button></div>}
+                {step === 1 && <div className="p-4 space-y-4"><Label>¿En qué momento cotidiano podrías activar tu gesto?</Label><Textarea value={moment} onChange={e => setMoment(e.target.value)} placeholder="Ej: Llegue a casa..." /><Button onClick={() => setStep(2)} className="w-full mt-2">Siguiente paso</Button></div>}
+                {step === 2 && <div className="p-4 space-y-4"><Label>¿Qué pequeña acción puedes vincular a ese momento?</Label><Textarea value={action} onChange={e => setAction(e.target.value)} placeholder="Ej: Salir a caminar 10 minutos..." /><Button onClick={handleSave} className="w-full mt-2">Ver mi frase</Button></div>}
+                {step === 3 && <div className="p-4 text-center space-y-4"><p className="font-bold">Tu frase final:</p><p className="italic">"Cuando {moment}, voy a {action}."</p><p className="text-sm text-muted-foreground">Esta frase no es una obligación: es una señal de autocuidado.</p><Button onClick={() => setStep(0)} variant="outline">Crear otro plan</Button></div>}
+            </CardContent>
+        </Card>
+    );
+}
+
+function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+    const { toast } = useToast();
+    const [habit, setHabit] = useState('');
+    const [futureSelf, setFutureSelf] = useState('');
+    const [emotions, setEmotions] = useState('');
+    const [thoughts, setThoughts] = useState('');
+    const [benefits, setBenefits] = useState('');
+    const [steps, setSteps] = useState('');
+    const [saved, setSaved] = useState(false);
+
+    if (content.type !== 'exercise') return null;
+
+    const handleSave = (e: FormEvent) => {
+        e.preventDefault();
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+*Hábito visualizado:* ${habit}
+*Cómo era mi yo futuro:* ${futureSelf}
+*Emociones que sentí:* ${emotions}
+*Pensamientos que aparecieron:* ${thoughts}
+*Beneficios en mi vida:* ${benefits}
+*Pasos que me ayudaron:* ${steps}
+        `;
+        addNotebookEntry({ title: 'Mi Visualización del Yo Futuro', content: notebookContent, pathId });
+        toast({ title: 'Visualización Guardada', description: 'Tu ejercicio se ha guardado en el cuaderno.' });
+        setSaved(true);
+    };
+
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+            <CardContent>
+                <form onSubmit={handleSave} className="space-y-4">
+                    <p className="text-sm">Después de realizar la visualización (ya sea leyéndola o escuchando el audio), responde a las siguientes preguntas para anclar la experiencia.</p>
+                    <div className="space-y-2"><Label htmlFor="habit">¿Qué hábito visualizaste?</Label><Textarea id="habit" value={habit} onChange={e => setHabit(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="future-self">¿Cómo era tu yo futuro?</Label><Textarea id="future-self" value={futureSelf} onChange={e => setFutureSelf(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="emotions">¿Qué emociones sentiste?</Label><Textarea id="emotions" value={emotions} onChange={e => setEmotions(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="thoughts">¿Qué pensamientos nuevos aparecieron?</Label><Textarea id="thoughts" value={thoughts} onChange={e => setThoughts(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="benefits">¿Qué beneficios viste en tu vida?</Label><Textarea id="benefits" value={benefits} onChange={e => setBenefits(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="steps">¿Qué pasos te ayudaron a llegar hasta ahí?</Label><Textarea id="steps" value={steps} onChange={e => setSteps(e.target.value)} disabled={saved} /></div>
+                    {!saved ? <Button type="submit" className="w-full">Guardar mi visualización</Button> : <p className="text-center text-green-600">¡Visualización guardada!</p>}
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
+
+function RealisticRitualExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+    const { toast } = useToast();
+    const [habit, setHabit] = useState('');
+    const [minVersion, setMinVersion] = useState('');
+    const [link, setLink] = useState('');
+    const [reminder, setReminder] = useState('');
+    const [saved, setSaved] = useState(false);
+
+    if (content.type !== 'exercise') return null;
+    
+    const handleSave = (e: FormEvent) => {
+        e.preventDefault();
+        if (!habit || !minVersion || !link || !reminder) {
+            toast({ title: 'Campos incompletos', description: 'Por favor, rellena todos los campos.', variant: 'destructive' });
+            return;
+        }
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+*Hábito que quiero mantener:*
+${habit}
+
+*Mi versión mínima viable:*
+${minVersion}
+
+*Lo vincularé a:*
+${link}
+
+*Para recordarlo o facilitarlo, voy a:*
+${reminder}
+        `;
+        addNotebookEntry({ title: 'Mi Ritual Realista', content: notebookContent, pathId });
+        toast({ title: 'Ritual Guardado', description: 'Tu ritual ha sido guardado.' });
+        setSaved(true);
+    };
+
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+            <CardContent>
+                <form onSubmit={handleSave} className="space-y-4">
+                    <div className="space-y-2"><Label htmlFor="habit-ritual">¿Qué hábito quiero mantener?</Label><Textarea id="habit-ritual" value={habit} onChange={e => setHabit(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="min-version">¿Cuál es su versión mínima viable?</Label><Textarea id="min-version" value={minVersion} onChange={e => setMinVersion(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="link">¿Cuándo o con qué lo vincularás?</Label><Textarea id="link" value={link} onChange={e => setLink(e.target.value)} disabled={saved} /></div>
+                    <div className="space-y-2"><Label htmlFor="reminder">¿Qué puedo hacer para recordarlo o facilitarlo?</Label><Textarea id="reminder" value={reminder} onChange={e => setReminder(e.target.value)} disabled={saved} /></div>
+                    {!saved ? <Button type="submit" className="w-full">Guardar mi ritual</Button> : <p className="text-center text-green-600">¡Ritual guardado!</p>}
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
+
+function GentleTrackingExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+    const { toast } = useToast();
+    const [weekWord, setWeekWord] = useState('');
+    const [saved, setSaved] = useState(false);
+    
+    if (content.type !== 'exercise') return null;
+
+    const handleSave = (e: FormEvent) => {
+        e.preventDefault();
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+Mi palabra de la semana para este hábito ha sido: **${weekWord}**
+        `;
+        addNotebookEntry({ title: 'Mi Seguimiento Amable', content: notebookContent, pathId });
+        toast({ title: 'Seguimiento Guardado', description: 'Tu palabra de la semana se ha guardado.' });
+        setSaved(true);
+    };
+    
+    return (
+        <Card className="bg-muted/30 my-6 shadow-md">
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+            <CardContent>
+                <form onSubmit={handleSave} className="space-y-4">
+                    <p className="text-sm">Usa el calendario para marcar tu progreso diario (✔, ~, X) y añade comentarios si lo necesitas.</p>
+                    <div className="p-4 border-2 border-dashed rounded-md text-center text-muted-foreground">
+                        <p>Calendario interactivo próximamente</p>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="week-word">Tu palabra de la semana</Label>
+                        <Textarea id="week-word" value={weekWord} onChange={e => setWeekWord(e.target.value)} placeholder="Ej: Constancia, Presencia, Avance..." disabled={saved} />
+                    </div>
+                    {!saved ? <Button type="submit" className="w-full">Guardar Palabra de la Semana</Button> : <p className="text-center text-green-600">¡Guardado!</p>}
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
+
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
@@ -136,9 +591,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         </Accordion>
       );
     case 'exercise':
-        if (contentItem.title === 'Ejercicio 2: Ensayo de Crisis Imaginaria') {
-            return <CrisisRehearsalExercise key={index} content={contentItem} pathId={pathId} />;
-        }
+        // RUTA 3 Ejercicios
         if (contentItem.title === 'Ejercicio 1: Mi Mapa del Bloqueo Personal') {
             return <BlockageMapExercise key={index} content={contentItem} pathId={pathId} />;
         }
@@ -160,6 +613,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         if (contentItem.title === 'Ejercicio 2: Seguimiento Amable + Refuerzo Visual') {
             return <GentleTrackingExercise key={index} content={contentItem} pathId={pathId} />;
         }
+        // Fallback for other exercises
         return (
             <Card key={index} className="bg-muted/30 my-6 shadow-md">
                 <CardHeader>
@@ -201,109 +655,6 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
   }
 };
 
-// Componente específico para el ejercicio de Ensayo de Crisis
-function CrisisRehearsalExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    const { toast } = useToast();
-    const [whatWouldYouDo, setWhatWouldYouDo] = useState('');
-    const [whatWouldYouSay, setWhatWouldYouSay] = useState('');
-    const [whatTool, setWhatTool] = useState('');
-    const [isSaved, setIsSaved] = useState(false);
-
-    if (content.type !== 'exercise') return null;
-
-    const handleSaveReflection = (e: FormEvent) => {
-        e.preventDefault();
-        if (!whatWouldYouDo.trim() || !whatWouldYouSay.trim() || !whatTool.trim()) {
-            toast({ title: "Reflexión Incompleta", description: "Por favor, completa todos los campos del ensayo.", variant: "destructive" });
-            return;
-        }
-
-        const reflectionContent = `
-**Ejercicio: ${content.title}**
-
-*He visualizado una situación de crisis pasada y reflexiono sobre cómo actuaría hoy:*
-
-**¿Qué haría diferente?**
-${whatWouldYouDo}
-
-**¿Qué me diría a mí mismo/a?**
-${whatWouldYouSay}
-
-**¿Qué herramienta usaría primero?**
-${whatTool}
-        `;
-
-        addNotebookEntry({
-            title: `Reflexión: ${content.title}`,
-            content: reflectionContent,
-            pathId: pathId,
-        });
-
-        toast({ title: "Ensayo Guardado", description: "Tu reflexión ha sido guardada en el Cuaderno Terapéutico." });
-        setIsSaved(true);
-    };
-
-    return (
-        <Card className="bg-muted/30 my-6 shadow-md">
-            <CardHeader>
-                <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{content.title}</CardTitle>
-                {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
-            </CardHeader>
-            <CardContent>
-                {content.content.map((item, i) => renderContent(item, i, pathId))}
-                <form onSubmit={handleSaveReflection} className="mt-4 space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="what-would-you-do">¿Qué harías diferente?</Label>
-                        <Textarea id="what-would-you-do" value={whatWouldYouDo} onChange={e => setWhatWouldYouDo(e.target.value)} disabled={isSaved} />
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="what-would-you-say">¿Qué te dirías?</Label>
-                        <Textarea id="what-would-you-say" value={whatWouldYouSay} onChange={e => setWhatWouldYouSay(e.target.value)} disabled={isSaved} />
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="what-tool">¿Qué herramienta usarías primero?</Label>
-                        <Textarea id="what-tool" value={whatTool} onChange={e => setWhatTool(e.target.value)} disabled={isSaved} />
-                    </div>
-                    {!isSaved ? (
-                        <Button type="submit" className="w-full">
-                            <Save className="mr-2 h-4 w-4" /> Guardar Ensayo en mi Cuaderno
-                        </Button>
-                    ) : (
-                        <div className="flex items-center justify-center p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-md">
-                            <CheckCircle className="mr-2 h-5 w-5" />
-                            <p className="font-medium">Tu ensayo ha sido guardado.</p>
-                        </div>
-                    )}
-                </form>
-            </CardContent>
-        </Card>
-    );
-}
-
-// START OF RUTA 3 COMPONENTS
-function BlockageMapExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    // This will be a multi-step form
-    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Blockage Map Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
-}
-function CompassionateReflectionExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Compassionate Reflection Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
-}
-function TwoMinuteRuleExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Two Minute Rule Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
-}
-function MicroPlanExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Micro Plan Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
-}
-function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Future Self Visualization</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
-}
-function RealisticRitualExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Realistic Ritual Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
-}
-function GentleTrackingExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
-    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Gentle Tracking Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
-}
-// END OF RUTA 3 COMPONENTS
 
 export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();
