@@ -34,6 +34,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 
 interface PathDetailPageProps {
@@ -592,8 +593,8 @@ ${progressText || 'No se registraron días.'}
         setSaved(true);
     };
     
-    const renderDayContent = (day: Date, date: Date) => {
-        const dateKey = format(date, 'yyyy-MM-dd');
+    const renderDayContent = (day: Date) => {
+        const dateKey = format(day, 'yyyy-MM-dd');
         const dayProgress = progress[dateKey];
         let icon = null;
         if (dayProgress?.status === 'done') icon = <CheckIcon className="h-4 w-4 text-green-500" />;
@@ -622,12 +623,12 @@ ${progressText || 'No se registraron días.'}
                             onSelect={setSelectedDate}
                             className="rounded-md border p-3"
                             components={{
-                                DayContent: ({ date, displayMonth }) => renderDayContent(date, date),
+                                DayContent: ({ date, displayMonth }) => renderDayContent(date),
                             }}
                         />
                          {selectedDate && (
                             <div className="w-full sm:w-auto flex-grow space-y-3">
-                                <p className="font-semibold text-center">Progreso para {format(selectedDate, "PPP")}</p>
+                                <p className="font-semibold text-center">Progreso para {format(selectedDate, "PPP", { locale: es })}</p>
                                 <div className="flex justify-around gap-2">
                                      <Button type="button" variant="outline" size="icon" onClick={() => handleDayStatusChange('done')} title="Lo hice"><CheckIcon className="h-5 w-5 text-green-500" /></Button>
                                      <Button type="button" variant="outline" size="icon" onClick={() => handleDayStatusChange('partial')} title="Lo hice parcialmente"><MinusIcon className="h-5 w-5 text-yellow-500" /></Button>
@@ -704,7 +705,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
             <Card key={index} className="bg-muted/30 my-6 shadow-md">
                 <CardHeader>
                     <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{contentItem.title}</CardTitle>
-                    {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
+                    {contentItem.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
                 </CardHeader>
                 <CardContent>
                     {contentItem.content.map((item, i) => renderContent(item, i, pathId))}
