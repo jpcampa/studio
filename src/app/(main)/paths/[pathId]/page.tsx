@@ -6,7 +6,7 @@ import { pathsData, Path, PathModule, ModuleContent } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check, Save, NotebookText, Map, TrafficCone, GitBranchPlus, Orbit, ArrowRight } from 'lucide-react';
+import { CheckCircle, BookOpen, Edit3, Clock, PlayCircle, ExternalLink, AlertTriangle, ChevronRight, Check, Save, NotebookText, Map, TrafficCone, GitBranchPlus, Orbit, ArrowRight, Calendar as CalendarIcon, X as XIcon, Minus as MinusIcon } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
@@ -31,6 +31,9 @@ import { Label } from '@/components/ui/label';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from "date-fns";
 
 
 interface PathDetailPageProps {
@@ -528,29 +531,109 @@ function GentleTrackingExercise({ content, pathId }: { content: ModuleContent; p
     const [weekWord, setWeekWord] = useState('');
     const [saved, setSaved] = useState(false);
     
-    if (content.type !== 'exercise') return null;
+    type TrackingStatus = 'done' | 'partial' | 'skipped';
+    type DailyProgress = {
+        status?: TrackingStatus;
+        comment?: string;
+    };
+    const [progress, setProgress] = useState<Record<string, DailyProgress>>({});
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+    
+    // Simple local storage for this exercise's state
+    const storageKey = `gentle-tracking-${pathId}`;
+    
+    useEffect(() => {
+        try {
+            const storedProgress = localStorage.getItem(storageKey);
+            if (storedProgress) {
+                setProgress(JSON.parse(storedProgress));
+            }
+        } catch (error) {
+            console.error("Error loading tracking progress from localStorage", error);
+        }
+    }, [storageKey]);
+
+    const saveProgress = (newProgress: Record<string, DailyProgress>) => {
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(newProgress));
+        } catch (error) {
+            console.error("Error saving tracking progress to localStorage", error);
+        }
+    };
+
+    const handleDayStatusChange = (status: TrackingStatus) => {
+        if (!selectedDate) return;
+        const dateKey = format(selectedDate, 'yyyy-MM-dd');
+        const newProgress = { ...progress, [dateKey]: { ...progress[dateKey], status } };
+        setProgress(newProgress);
+        saveProgress(newProgress);
+    };
 
     const handleSave = (e: FormEvent) => {
         e.preventDefault();
+        const progressText = Object.entries(progress)
+            .map(([date, data]) => {
+                const statusSymbol = data.status === 'done' ? '✔' : data.status === 'partial' ? '~' : 'X';
+                return `${format(new Date(date), 'dd/MM/yyyy')}: ${statusSymbol}`;
+            })
+            .join('\n');
+
         const notebookContent = `
 **Ejercicio: ${content.title}**
 
-Mi palabra de la semana para este hábito ha sido: **${weekWord}**
+*Seguimiento del Hábito:*
+${progressText || 'No se registraron días.'}
+
+*Mi palabra de la semana para este hábito ha sido:*
+**${weekWord || 'No especificada.'}**
         `;
         addNotebookEntry({ title: 'Mi Seguimiento Amable', content: notebookContent, pathId });
-        toast({ title: 'Seguimiento Guardado', description: 'Tu palabra de la semana se ha guardado.' });
+        toast({ title: 'Seguimiento Guardado', description: 'Tu progreso y palabra de la semana se han guardado.' });
         setSaved(true);
     };
     
+    const renderDayContent = (day: Date) => {
+        const dateKey = format(day, 'yyyy-MM-dd');
+        const dayProgress = progress[dateKey];
+        if (dayProgress?.status === 'done') return <div className="absolute inset-0 flex items-center justify-center"><CheckIcon className="h-4 w-4 text-green-500" /></div>;
+        if (dayProgress?.status === 'partial') return <div className="absolute inset-0 flex items-center justify-center"><MinusIcon className="h-4 w-4 text-yellow-500" /></div>;
+        if (dayProgress?.status === 'skipped') return <div className="absolute inset-0 flex items-center justify-center"><XIcon className="h-4 w-4 text-red-500" /></div>;
+        return null;
+    };
+
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
             <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
             <CardContent>
                 <form onSubmit={handleSave} className="space-y-4">
-                    <p className="text-sm">Usa el calendario para marcar tu progreso diario (✔, ~, X) y añade comentarios si lo necesitas.</p>
-                    <div className="p-4 border-2 border-dashed rounded-md text-center text-muted-foreground">
-                        <p>Calendario interactivo próximamente</p>
-                    </div>
+                     <p className="text-sm">Usa el calendario para marcar tu progreso diario (✔, ~, X) y añade comentarios si lo necesitas.</p>
+                     
+                     <div className="flex flex-col sm:flex-row gap-4 items-start">
+                        <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={setSelectedDate}
+                            className="rounded-md border"
+                            components={{
+                                DayContent: ({ date }) => (
+                                    <div className="relative w-full h-full">
+                                        {renderDayContent(date)}
+                                    </div>
+                                ),
+                            }}
+                        />
+                         {selectedDate && (
+                            <div className="w-full sm:w-auto flex-grow space-y-3">
+                                <p className="font-semibold text-center">Progreso para {format(selectedDate, "PPP")}</p>
+                                <div className="flex justify-around gap-2">
+                                     <Button type="button" variant="outline" size="icon" onClick={() => handleDayStatusChange('done')} title="Lo hice"><CheckIcon className="h-5 w-5 text-green-500" /></Button>
+                                     <Button type="button" variant="outline" size="icon" onClick={() => handleDayStatusChange('partial')} title="Lo hice parcialmente"><MinusIcon className="h-5 w-5 text-yellow-500" /></Button>
+                                     <Button type="button" variant="outline" size="icon" onClick={() => handleDayStatusChange('skipped')} title="No lo hice"><XIcon className="h-5 w-5 text-red-500" /></Button>
+                                </div>
+                            </div>
+                        )}
+                     </div>
+
                     <div className="space-y-2">
                         <Label htmlFor="week-word">Tu palabra de la semana</Label>
                         <Textarea id="week-word" value={weekWord} onChange={e => setWeekWord(e.target.value)} placeholder="Ej: Constancia, Presencia, Avance..." disabled={saved} />
