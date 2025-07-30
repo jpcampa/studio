@@ -592,13 +592,20 @@ ${progressText || 'No se registraron días.'}
         setSaved(true);
     };
     
-    const renderDayContent = (day: Date) => {
-        const dateKey = format(day, 'yyyy-MM-dd');
+    const renderDayContent = (day: Date, date: Date) => {
+        const dateKey = format(date, 'yyyy-MM-dd');
         const dayProgress = progress[dateKey];
-        if (dayProgress?.status === 'done') return <div className="absolute inset-0 flex items-center justify-center"><CheckIcon className="h-4 w-4 text-green-500" /></div>;
-        if (dayProgress?.status === 'partial') return <div className="absolute inset-0 flex items-center justify-center"><MinusIcon className="h-4 w-4 text-yellow-500" /></div>;
-        if (dayProgress?.status === 'skipped') return <div className="absolute inset-0 flex items-center justify-center"><XIcon className="h-4 w-4 text-red-500" /></div>;
-        return null;
+        let icon = null;
+        if (dayProgress?.status === 'done') icon = <CheckIcon className="h-4 w-4 text-green-500" />;
+        if (dayProgress?.status === 'partial') icon = <MinusIcon className="h-4 w-4 text-yellow-500" />;
+        if (dayProgress?.status === 'skipped') icon = <XIcon className="h-4 w-4 text-red-500" />;
+
+        return (
+            <div className="relative flex items-center justify-center h-full w-full">
+                {day.getDate()}
+                {icon && <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">{icon}</div>}
+            </div>
+        );
     };
 
     return (
@@ -613,13 +620,9 @@ ${progressText || 'No se registraron días.'}
                             mode="single"
                             selected={selectedDate}
                             onSelect={setSelectedDate}
-                            className="rounded-md border"
+                            className="rounded-md border p-3"
                             components={{
-                                DayContent: ({ date }) => (
-                                    <div className="relative w-full h-full">
-                                        {renderDayContent(date)}
-                                    </div>
-                                ),
+                                DayContent: ({ date, displayMonth }) => renderDayContent(date, date),
                             }}
                         />
                          {selectedDate && (
