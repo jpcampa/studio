@@ -372,7 +372,7 @@ ${when}
 
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
-            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}</CardHeader>
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
             <CardContent>
                 <form onSubmit={handleSave} className="space-y-4">
                     <div className="space-y-2">
@@ -423,7 +423,7 @@ Cuando ${moment}, voy a ${action}.
 
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
-            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}</CardHeader>
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
             <CardContent>
                 {step === 0 && <div className="text-center p-4"><p className="mb-4">Planear con realismo es lo que necesitamos para avanzar. Crea tu microplan: una frase corta que una lo cotidiano con lo que quieres empezar.</p><Button onClick={() => setStep(1)}>Crear mi frase de acción</Button></div>}
                 {step === 1 && <div className="p-4 space-y-4"><Label>¿En qué momento cotidiano podrías activar tu gesto?</Label><Textarea value={moment} onChange={e => setMoment(e.target.value)} placeholder="Ej: Llegue a casa..." /><Button onClick={() => setStep(2)} className="w-full mt-2">Siguiente paso</Button></div>}
@@ -465,7 +465,7 @@ function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleC
 
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
-            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}</CardHeader>
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
             <CardContent>
                 <form onSubmit={handleSave} className="space-y-4">
                     <p className="text-sm">Después de realizar la visualización (ya sea leyéndola o escuchando el audio), responde a las siguientes preguntas para anclar la experiencia.</p>
@@ -520,7 +520,7 @@ ${reminder}
 
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
-            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}</CardHeader>
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
             <CardContent>
                 <form onSubmit={handleSave} className="space-y-4">
                     <div className="space-y-2"><Label htmlFor="habit-ritual">¿Qué hábito quiero mantener?</Label><Textarea id="habit-ritual" value={habit} onChange={e => setHabit(e.target.value)} disabled={saved} /></div>
@@ -618,7 +618,7 @@ ${progressText || 'No se registraron días.'}
 
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
-            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}</CardHeader>
+            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
             <CardContent>
                 <form onSubmit={handleSave} className="space-y-4">
                      <p className="text-sm">Usa el calendario para marcar tu progreso diario (✔, ~, X) y añade comentarios si lo necesitas.</p>
@@ -750,19 +750,19 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'therapeuticNotebookReflection':
         return <TherapeuticNotebookReflectionExercise key={index} content={contentItem} pathId={pathId} />;
     case 'mapOfUnsaidThingsExercise':
-        return <MapOfUnsaidThingsExercise key={index} content={contentItem} />;
+        return <MapOfUnsaidThingsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'discomfortCompassExercise':
-        return <DiscomfortCompassExercise key={index} content={contentItem} />;
+        return <DiscomfortCompassExercise key={index} content={contentItem} pathId={pathId} />;
     case 'assertivePhraseExercise':
-        return <AssertivePhraseExercise key={index} content={contentItem} />;
+        return <AssertivePhraseExercise key={index} content={contentItem} pathId={pathId} />;
     case 'noGuiltTechniquesExercise':
-        return <NoGuiltTechniquesExercise key={index} content={contentItem} />;
+        return <NoGuiltTechniquesExercise key={index} content={contentItem} pathId={pathId} />;
     case 'postBoundaryEmotionsExercise':
-        return <PostBoundaryEmotionsExercise key={index} content={contentItem} />;
+        return <PostBoundaryEmotionsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'compassionateFirmnessExercise':
-        return <CompassionateFirmnessExercise key={index} content={contentItem} />;
+        return <CompassionateFirmnessExercise key={index} content={contentItem} pathId={pathId} />;
     case 'selfCareContractExercise':
-        return <SelfCareContractExercise key={index} content={contentItem} />;
+        return <SelfCareContractExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }
