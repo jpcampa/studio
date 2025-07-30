@@ -139,18 +139,26 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         if (contentItem.title === 'Ejercicio 2: Ensayo de Crisis Imaginaria') {
             return <CrisisRehearsalExercise key={index} content={contentItem} pathId={pathId} />;
         }
-        if (contentItem.content.some(c => c.type === 'paragraph' && c.text.includes('Ejercicio interactivo próximamente'))) {
-            return (
-                <Card key={index} className="bg-muted/30 my-6 shadow-md">
-                    <CardHeader>
-                        <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{contentItem.title}</CardTitle>
-                        {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-center text-muted-foreground italic p-4">Ejercicio interactivo próximamente.</p>
-                    </CardContent>
-                </Card>
-            );
+        if (contentItem.title === 'Ejercicio 1: Mi Mapa del Bloqueo Personal') {
+            return <BlockageMapExercise key={index} content={contentItem} pathId={pathId} />;
+        }
+        if (contentItem.title === 'Ejercicio 2: Reflexiona sin Culparte') {
+            return <CompassionateReflectionExercise key={index} content={contentItem} pathId={pathId} />;
+        }
+        if (contentItem.title === 'Ejercicio 1: La Regla de los 2 Minutos') {
+            return <TwoMinuteRuleExercise key={index} content={contentItem} pathId={pathId} />;
+        }
+        if (contentItem.title === 'Ejercicio 2: Tu Primer Microplan de Acción') {
+            return <MicroPlanExercise key={index} content={contentItem} pathId={pathId} />;
+        }
+        if (contentItem.title === 'Ejercicio 2: Visualización del Yo Futuro') {
+            return <FutureSelfVisualizationExercise key={index} content={contentItem} pathId={pathId} />;
+        }
+        if (contentItem.title === 'Ejercicio 1: Diseña tu Ritual Realista') {
+            return <RealisticRitualExercise key={index} content={contentItem} pathId={pathId} />;
+        }
+        if (contentItem.title === 'Ejercicio 2: Seguimiento Amable + Refuerzo Visual') {
+            return <GentleTrackingExercise key={index} content={contentItem} pathId={pathId} />;
         }
         return (
             <Card key={index} className="bg-muted/30 my-6 shadow-md">
@@ -271,6 +279,31 @@ ${whatTool}
         </Card>
     );
 }
+
+// START OF RUTA 3 COMPONENTS
+function BlockageMapExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    // This will be a multi-step form
+    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Blockage Map Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
+}
+function CompassionateReflectionExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Compassionate Reflection Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
+}
+function TwoMinuteRuleExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Two Minute Rule Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
+}
+function MicroPlanExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Micro Plan Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
+}
+function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Future Self Visualization</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
+}
+function RealisticRitualExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Realistic Ritual Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
+}
+function GentleTrackingExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
+    return <Card className="bg-muted/30 my-6 shadow-md"><CardHeader><CardTitle>Gentle Tracking Exercise</CardTitle></CardHeader><CardContent><p>Interactive content coming soon.</p></CardContent></Card>
+}
+// END OF RUTA 3 COMPONENTS
 
 export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
   const t = useTranslations();

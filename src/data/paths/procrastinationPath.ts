@@ -55,16 +55,14 @@ export const procrastinationPath: Path = {
           title: 'Ejercicio 1: Mi Mapa del Bloqueo Personal',
           objective: 'Con este ejercicio vas a descubrir por qué postergas ciertas tareas y qué emociones, pensamientos o situaciones están detrás. Al observarlo con claridad, podrás empezar a desmontarlo con más comprensión y menos culpa.',
           duration: '8 a 12 minutos',
-          content: [
-            { type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }
-          ],
+          content: [],
         },
         {
           type: 'exercise',
           title: 'Ejercicio 2: Reflexiona sin Culparte',
           objective: 'Este ejercicio te invita a observar con más comprensión lo que ocurre dentro de ti cuando procrastinas. El objetivo no es encontrar culpables, sino desarrollar una mirada más compasiva que te permita avanzar sin exigencia.',
           duration: '8 a 12 minutos',
-          content: [{ type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }],
+          content: [],
         },
         { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
             '¿Qué emociones intento evitar cuando postergo?',
@@ -145,14 +143,14 @@ export const procrastinationPath: Path = {
             title: 'Ejercicio 1: La Regla de los 2 Minutos',
             objective: 'Este ejercicio te ayudará a romper la inercia del bloqueo cuando una tarea te parece demasiado grande o lejana. Al reducirla a una acción de menos de dos minutos, activas tu sistema de recompensa y creas el primer impulso que te saca de la parálisis.',
             duration: '5 a 7 minutos',
-            content: [{ type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }],
+            content: [],
           },
           {
             type: 'exercise',
             title: 'Ejercicio 2: Tu Primer Microplan de Acción',
             objective: 'Con este ejercicio vas a crear una pequeña acción concreta para ponerte en marcha. No necesitas fuerza de voluntad infinita, solo claridad. Aprenderás a vincular un gesto sencillo a un momento cotidiano, para que tu cerebro lo reconozca como una señal de empezar.',
             duration: '5 a 8 minutos',
-            content: [{ type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }],
+            content: [],
           },
           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana: Rompe el Ciclo', prompts: [
               'Cada pequeña acción que hiciste esta semana ha sido un paso contra el estancamiento. Este es tu espacio para integrarlo y reconocerte.',
@@ -235,7 +233,7 @@ export const procrastinationPath: Path = {
             title: 'Ejercicio 2: Visualización del Yo Futuro',
             objective: 'Este ejercicio te permite conectar con una imagen clara y emocionalmente poderosa de ti misma o de ti mismo sosteniendo el hábito que deseas. Te ayuda a motivarte desde la identidad, no solo desde la obligación. Visualizarte avanzando te impulsa a actuar hoy.',
             duration: '10 a 15 minutos',
-            content: [{ type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }],
+            content: [],
           },
           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
               '¿Qué frases me sabotean más? ¿Y cómo puedo empezar a responderme con claridad y sin exigencia?',
@@ -289,14 +287,14 @@ export const procrastinationPath: Path = {
             title: 'Ejercicio 1: Diseña tu Ritual Realista',
             objective: 'Este ejercicio te ayuda a transformar un propósito en una práctica concreta, mínima y sostenible. Crear un ritual no es hacer algo grande, sino algo que puedas mantener en tu contexto real, con tus recursos actuales.',
             duration: '7-10 minutos',
-            content: [{ type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }],
+            content: [],
           },
           {
             type: 'exercise',
             title: 'Ejercicio 2: Seguimiento Amable + Refuerzo Visual',
             objective: 'Este ejercicio te permite registrar tus avances sin exigencia, reforzar tu constancia con símbolos positivos y conectar con una sensación de progreso real.',
             duration: '3 a 5 minutos al día',
-            content: [{ type: 'paragraph', text: 'Ejercicio interactivo próximamente.' }],
+            content: [],
           },
           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
               '¿Qué hábito me gustaría mantener a largo plazo?',
