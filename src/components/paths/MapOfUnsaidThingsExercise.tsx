@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Edit3, Save, CheckCircle, ArrowRight } from 'lucide-react';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import type { MapOfUnsaidThingsExerciseContent } from '@/data/paths/pathTypes';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 interface MapOfUnsaidThingsExerciseProps {
   content: MapOfUnsaidThingsExerciseContent;
