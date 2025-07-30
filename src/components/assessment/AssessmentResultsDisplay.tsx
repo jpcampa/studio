@@ -31,6 +31,7 @@ import { assessmentInterpretations, type InterpretationLevels } from '@/data/ass
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useRouter } from 'next/navigation';
 import { formatAssessmentTimestamp } from '@/data/assessmentHistoryStore';
+import { pathsData } from '@/data/pathsData';
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput | null;
@@ -220,11 +221,23 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       </div>
     );
   };
+  
+  const recommendedPaths = results.priorityAreas.map(areaName => {
+    const dimension = assessmentDimensions.find(d => d.name === areaName);
+    if (dimension && dimension.recommendedPathId) {
+        const path = pathsData.find(p => p.id === dimension.recommendedPathId);
+        if (path) {
+            return path;
+        }
+    }
+    return null;
+  }).filter((path): path is NonNullable<typeof path> => path !== null);
 
-  const startCarePath = (results.priorityAreas && results.priorityAreas.length > 0)
-    ? `/paths?start_with=${encodeURIComponent(results.priorityAreas[0])}`
+  const uniqueRecommendedPaths = Array.from(new Map(recommendedPaths.map(p => [p.id, p])).values());
+
+  const startCarePath = uniqueRecommendedPaths.length > 0
+    ? `/paths/${uniqueRecommendedPaths[0].id}`
     : "/paths";
-
 
   return (
     <div className="space-y-8">
@@ -407,8 +420,8 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center space-y-4 p-6 text-center">
-          {(results.priorityAreas && results.priorityAreas.length > 0) ? (
-            results.priorityAreas.map((areaName, index) => (
+          {uniqueRecommendedPaths.length > 0 ? (
+            uniqueRecommendedPaths.map((path, index) => (
               <Button
                 key={index}
                 asChild
@@ -416,16 +429,16 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
                 size="lg"
                 className="w-full max-w-sm sm:w-auto justify-center"
               >
-                <Link href={`/paths?start_with=${encodeURIComponent(areaName)}`}>
+                <Link href={`/paths/${path.id}`}>
                   <Milestone className="mr-2 h-5 w-5" />
-                  Comenzar Ruta: {areaName.split('(')[0].trim()}
+                  Comenzar Ruta: {path.title}
                 </Link>
               </Button>
             ))
           ) : (
             <>
               <p className="text-muted-foreground">
-                No se han identificado áreas prioritarias específicas en esta evaluación. Te invitamos a explorar todas nuestras rutas de desarrollo disponibles.
+                No se han identificado rutas específicas para tus áreas prioritarias. Te invitamos a explorar todas nuestras rutas de desarrollo disponibles.
               </p>
               <Button asChild variant="outline" size="lg" className="w-full max-w-sm sm:w-auto justify-center">
                 <Link href="/paths">
@@ -456,4 +469,3 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
     </div>
   );
 }
-

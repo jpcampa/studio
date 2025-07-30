@@ -10,6 +10,7 @@ export interface AssessmentDimension {
   name: string;
   definition: string;
   items: AssessmentItem[];
+  recommendedPathId?: string; // NEW: Explicitly link dimension to a path ID
 }
 
 export const assessmentDimensions: AssessmentDimension[] = [
@@ -17,6 +18,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim1',
     name: 'Calma en la Tormenta',
     definition: 'Capacidad para gestionar emociones difíciles, mantener el equilibrio en momentos de tensión y responder con serenidad frente a la incertidumbre o el conflicto.',
+    recommendedPathId: 'gestion-estres',
     items: [
       { id: 'dim1_item1', text: 'Suelo mantener la calma cuando las cosas se complican.' },
       { id: 'dim1_item2', text: 'Me desbordo fácilmente ante el estrés o la presión.', isInverse: true },
@@ -30,6 +32,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim2',
     name: 'Mente Abierta, Cambio Ágil',
     definition: 'Capacidad para abrirse a nuevas ideas, aceptar el cambio como parte natural de la vida y adaptarse mentalmente a escenarios inciertos o inesperados.',
+    recommendedPathId: 'tolerar-incertidumbre',
     items: [
       { id: 'dim2_item1', text: 'Me entusiasma aprender cosas nuevas, incluso si desafían lo que ya sé.' },
       { id: 'dim2_item2', text: 'Prefiero evitar los cambios y ceñirme a lo conocido.', isInverse: true },
@@ -43,6 +46,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim3',
     name: 'Foco y Constancia',
     definition: 'Capacidad de organizarse, mantenerse disciplinado/a y cumplir con lo que uno se propone, incluso cuando requiere esfuerzo o perseverancia.',
+    recommendedPathId: 'superar-procrastinacion',
     items: [
       { id: 'dim3_item1', text: 'Suelo cumplir mis objetivos aunque me cuesten.' },
       { id: 'dim3_item2', text: 'Me resulta difícil seguir una rutina durante mucho tiempo.', isInverse: true },
@@ -56,6 +60,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim4',
     name: 'Voz Propia',
     definition: 'Capacidad de expresar opiniones, necesidades y límites de forma clara y segura, manteniendo el respeto por uno mismo y por los demás.',
+    recommendedPathId: 'poner-limites',
     items: [
       { id: 'dim4_item1', text: 'Me siento con derecho a expresar lo que necesito, aunque sea incómodo.' },
       { id: 'dim4_item2', text: 'A veces callo lo que pienso por miedo a generar conflicto.', isInverse: true },
@@ -179,5 +184,3 @@ export const likertOptions = [
   { value: 4, label: 'Smile', description: 'De acuerdo' },
   { value: 5, label: 'Laugh', description: 'Totalmente de acuerdo' },
 ];
-
-    
