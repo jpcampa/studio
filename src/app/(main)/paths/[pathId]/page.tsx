@@ -713,7 +713,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
             <Card key={index} className="bg-muted/30 my-6 shadow-md">
                 <CardHeader>
                     <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{contentItem.title}</CardTitle>
-                    {contentItem.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+                    {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
                 </CardHeader>
                 <CardContent>
                     {contentItem.content.map((item, i) => renderContent(item, i, pathId))}
