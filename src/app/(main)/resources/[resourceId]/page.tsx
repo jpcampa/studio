@@ -1,8 +1,7 @@
 
 "use client";
 
-import { use } from 'react'; // Import use
-import { resourcesData, Resource } from '@/data/resourcesData';
+import { Resource, resourcesData } from '@/data/resourcesData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,15 +12,11 @@ import { BookOpen, Headphones, Zap, Clock, ArrowLeft, PlayCircle } from 'lucide-
 import { Progress } from '@/components/ui/progress';
 
 interface ResourceDetailPageProps {
-  params: Promise<{ resourceId: string }>;
+  params: { resourceId: string };
 }
 
-export default function ResourceDetailPage({ params: paramsPromise }: ResourceDetailPageProps) {
+export default function ResourceDetailPage({ params }: ResourceDetailPageProps) {
   const t = useTranslations();
-
-  // Unwrap the params Promise
-  const params = use(paramsPromise);
-
   const resource = resourcesData.find(r => r.id === params.resourceId);
 
   if (!resource) {

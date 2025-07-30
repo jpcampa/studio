@@ -1,7 +1,7 @@
 
 "use client";
 
-import { use, useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { pathsData, Path, PathModule, ModuleContent } from '@/data/pathsData';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,7 +45,7 @@ import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExe
 
 
 interface PathDetailPageProps {
-  params: Promise<{ pathId: string }>;
+  params: { pathId: string };
 }
 
 
@@ -769,12 +769,11 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
 };
 
 
-export default function PathDetailPage({ params: paramsPromise }: PathDetailPageProps) {
+export default function PathDetailPage({ params }: PathDetailPageProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const { loadPath, updateModuleCompletion: contextUpdateModuleCompletion } = useActivePath();
   
-  const params = use(paramsPromise); 
   const path = pathsData.find(p => p.id === params.pathId);
 
   const [completedModules, setCompletedModules] = useState<Set<string>>(new Set());
