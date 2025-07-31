@@ -40,8 +40,8 @@ export default function ResourceDetailPage({ params }: ResourceDetailPageProps) 
             <Image 
                 src={resource.imageUrl} 
                 alt={resource.title} 
-                layout="fill" 
-                objectFit="cover" 
+                fill
+                className="object-cover"
                 data-ai-hint={resource.dataAiHint || "resource details image"}
             />
             </div>
@@ -51,8 +51,8 @@ export default function ResourceDetailPage({ params }: ResourceDetailPageProps) 
               <Image 
                   src={resource.imageUrl} 
                   alt={resource.title} 
-                  layout="fill" 
-                  objectFit="cover" 
+                  fill
+                  className="object-cover"
                   data-ai-hint={resource.dataAiHint || "audio resource image"}
               />
             </div>
