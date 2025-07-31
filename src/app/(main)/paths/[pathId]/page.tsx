@@ -7,7 +7,7 @@ interface PathDetailPageProps {
   params: { pathId: string };
 }
 
-// ✅ OJO: aquí va async
+// ✅ Se corrige la doble declaración de 'async'
 export default async function PathDetailPage({ params }: PathDetailPageProps) {
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
