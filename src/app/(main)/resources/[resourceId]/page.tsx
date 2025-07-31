@@ -4,9 +4,7 @@ import { ResourceDetailClient } from '@/components/resources/ResourceDetailClien
 import { notFound } from 'next/navigation';
 
 interface ResourceDetailPageProps {
-  params: {
-    resourceId: string;
-  };
+  params: { resourceId: string };
 }
 
 // This is a Server Component.

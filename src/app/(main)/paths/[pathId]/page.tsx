@@ -4,9 +4,7 @@ import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
 
 interface PathDetailPageProps {
-  params: {
-    pathId: string;
-  };
+  params: { pathId: string };
 }
 
 // This is a Server Component. It fetches data.
