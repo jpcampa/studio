@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
 import { Loader2 } from 'lucide-react';
 
+
+
 export default function HomePage() {
   const { user, loading } = useUser();
   const router = useRouter();

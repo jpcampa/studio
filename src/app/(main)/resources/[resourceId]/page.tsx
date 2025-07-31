@@ -8,7 +8,7 @@ interface ResourceDetailPageProps {
 }
 
 // This is a Server Component.
-export default function ResourceDetailPage({ params }: ResourceDetailPageProps) {
+export default async function ResourceDetailPage({ params }: ResourceDetailPageProps) {
   const { resourceId } = params;
   const resource = resourcesData.find(r => r.id === resourceId);
 

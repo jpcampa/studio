@@ -7,8 +7,8 @@ interface PathDetailPageProps {
   params: { pathId: string };
 }
 
-// This is a Server Component. It fetches data.
-export default function PathDetailPage({ params }: PathDetailPageProps) {
+// ✅ OJO: aquí va async
+export default async function PathDetailPage({ params }: PathDetailPageProps) {
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 
@@ -16,11 +16,10 @@ export default function PathDetailPage({ params }: PathDetailPageProps) {
     notFound();
   }
 
-  // The Server Component passes the data to the Client Component.
   return <PathDetailClient path={path} />;
 }
 
-// This function helps Next.js know which paths to pre-render at build time.
+// ✅ Esto está correcto
 export async function generateStaticParams() {
   return pathsData.map((path) => ({
     pathId: path.id,
