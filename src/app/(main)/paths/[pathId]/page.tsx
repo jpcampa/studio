@@ -48,15 +48,6 @@ interface PathDetailPageProps {
   params: { pathId: string };
 }
 
-// This function tells Next.js which paths to pre-render at build time.
-// It's crucial for dynamic routes in production builds.
-export function generateStaticParams() {
-  return pathsData.map((path) => ({
-    pathId: path.id,
-  }));
-}
-
-
 // Componente para manejar las reflexiones del cuaderno terapéutico
 function TherapeuticNotebookReflectionExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
     const { toast } = useToast();
