@@ -1,5 +1,5 @@
 
-import { pathsData, Path } from '@/data/pathsData';
+import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
 

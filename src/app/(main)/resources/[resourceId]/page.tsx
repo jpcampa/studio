@@ -1,5 +1,5 @@
 
-import { Resource, resourcesData } from '@/data/resourcesData';
+import { resourcesData } from '@/data/resourcesData';
 import { ResourceDetailClient } from '@/components/resources/ResourceDetailClient';
 import { notFound } from 'next/navigation';
 
