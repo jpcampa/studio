@@ -42,6 +42,8 @@ import { NoGuiltTechniquesExercise } from '@/components/paths/NoGuiltTechniquesE
 import { PostBoundaryEmotionsExercise } from '@/components/paths/PostBoundaryEmotionsExercise';
 import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateFirmnessExercise';
 import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
+import type { ExerciseContent } from '@/data/paths/pathTypes';
+
 
 // Componente para manejar las reflexiones del cuaderno terapéutico
 function TherapeuticNotebookReflectionExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
@@ -528,7 +530,7 @@ ${reminder}
     );
 }
 
-function GentleTrackingExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+function GentleTrackingExercise({ content, pathId }: { content: ExerciseContent; pathId: string }) {
     const { toast } = useToast();
     const [weekWord, setWeekWord] = useState('');
     const [saved, setSaved] = useState(false);
@@ -541,7 +543,6 @@ function GentleTrackingExercise({ content, pathId }: { content: ModuleContent; p
     const [progress, setProgress] = useState<Record<string, DailyProgress>>({});
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
     
-    // Simple local storage for this exercise's state
     const storageKey = `gentle-tracking-${pathId}`;
     
     useEffect(() => {
