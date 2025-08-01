@@ -154,7 +154,7 @@ export default function MyAssessmentsPage() {
       console.log("MyAssessmentsPage: Raw API Response Text (first 500 chars before any parsing):", responseText.substring(0,500) + (responseText.length > 500 ? "..." : ""));
 
       let jsonToParse = responseText;
-      const varDumpRegex = /^string\(\d+\)\s*"(.*)"\s*$/s;
+      const varDumpRegex = /^string\(\d+\)\s*"([\s\S]*)"\s*$/;
       const match = responseText.match(varDumpRegex);
 
       if (match && match[1]) {
@@ -402,4 +402,3 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
-
