@@ -36,7 +36,7 @@ export async function knowledgeAssistant(input: KnowledgeAssistantInput): Promis
 
 const prompt = ai.definePrompt({
   name: 'knowledgeAssistantPrompt',
-  input: {schema: KnowledgeAssistantInputSchema},
+  input: {schema: KnowledgeAssistantInputSchema.extend({ knowledgeBaseContent: z.string() })},
   output: {schema: KnowledgeAssistantOutputSchema},
   prompt: `Eres un asistente experto que responde preguntas basándose EXCLUSIVAMENTE en la información contenida en los siguientes documentos.
 
@@ -59,12 +59,6 @@ const prompt = ai.definePrompt({
 
 **Respuesta (basada únicamente en los documentos):**
 `,
-  // We are injecting the knowledge base content directly into the prompt template.
-  // Note: This is a simple approach. For larger document sets, a vector database
-  // and retrieval system (like Genkit's indexing feature) would be more efficient.
-  custom: {
-    knowledgeBaseContent: knowledgeBaseContent,
-  }
 });
 
 const knowledgeAssistantFlow = ai.defineFlow(
@@ -74,8 +68,11 @@ const knowledgeAssistantFlow = ai.defineFlow(
     outputSchema: KnowledgeAssistantOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    // Pass the knowledge base content along with the user input to the prompt
+    const {output} = await prompt({
+      ...input,
+      knowledgeBaseContent: knowledgeBaseContent,
+    });
     return output!;
   }
 );
-
