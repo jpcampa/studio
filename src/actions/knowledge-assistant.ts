@@ -34,7 +34,7 @@ export async function sendMessageToKnowledgeAssistant(
   } catch (error) {
     console.error("Error sending message to knowledge assistant:", error);
     if (error instanceof z.ZodError) {
-      return { success: false; error: "Datos de mensaje inválidos: " + error.message };
+      return { success: false, error: "Datos de mensaje inválidos: " + error.message };
     }
     return { success: false, error: error instanceof Error ? error.message : "Error al comunicarse con el asistente." };
   }
