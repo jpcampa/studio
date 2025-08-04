@@ -26,7 +26,7 @@ const navItems = [
   { href: "/paths", labelKey: "navPaths", icon: Milestone },
   { href: "/therapeutic-notebook", labelKey: "navTherapeuticNotebook", icon: NotebookText },
   { href: "/chatbot", labelKey: "navChatbot", icon: Bot },
-  { href: "/knowledge-assistant", labelKey: "navKnowledgeAssistant", icon: FileQuestion },
+  // { href: "/knowledge-assistant", labelKey: "navKnowledgeAssistant", icon: FileQuestion },
   { href: "/resources", labelKey: "navResources", icon: Library },
 ];
 
