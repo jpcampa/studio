@@ -428,7 +428,6 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
                 className="w-full max-w-sm sm:w-auto justify-center"
               >
                 <Link href={`/paths/${path.id}`}>
-                  <Milestone className="mr-2 h-5 w-5" />
                   Comenzar Ruta: {path.title}
                 </Link>
               </Button>
