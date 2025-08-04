@@ -97,9 +97,8 @@ export function DeleteAccountForm() {
         return;
     }
     setIsSubmittingAction(true);
-    await formAction(new FormData()); 
-    // No necesitamos setIsSubmittingAction(false) aquí, el useEffect lo hará.
-    // setIsAlertDialogOpen(false); // Mantener abierto hasta que la acción termine y el useEffect reaccione
+    // @ts-ignore
+    await formAction(); 
   };
   
   if (userLoading) {
@@ -113,8 +112,6 @@ export function DeleteAccountForm() {
   
   return (
     <>
-      {/* El formAction se llama programáticamente */}
-      
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
         <AlertDialogTrigger asChild>
           <Button
