@@ -12,6 +12,7 @@ import type { PostBoundaryEmotionsExerciseContent } from '@/data/paths/pathTypes
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface PostBoundaryEmotionsExerciseProps {
   content: PostBoundaryEmotionsExerciseContent;
