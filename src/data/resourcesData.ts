@@ -73,17 +73,12 @@ export const resourcesData: Resource[] = [
     type: 'article',
     category: 'Estrés',
     summary: 'Por qué aparece, qué intenta decirte… y cómo recuperar el control sin luchar contra ti',
-    content: `¿Alguna vez has sentido que tu corazón se acelera sin razón aparente?
-¿Que tus pensamientos van más rápido que tú, y tu cuerpo responde como si algo estuviera en juego… aunque estés solo o sola, sentada frente al ordenador?
-Eso es ansiedad.
-Y aunque a veces parezca tu enemiga, en realidad, es una aliada mal entendida.
-
-**¿Qué es exactamente la ansiedad?**
+    content: `**¿Qué es exactamente la ansiedad?**
 La ansiedad es una respuesta automática del cuerpo y la mente ante algo que interpretamos como una amenaza.
 No siempre tiene forma concreta. A veces es un “¿y si…?”, un pensamiento fugaz o una sensación corporal que se intensifica sin previo aviso.
 Es una mezcla de pensamientos intensos, sensaciones físicas y conductas aprendidas.
 Y, aunque molesta, tiene un propósito: ayudarte a sobrevivir, anticiparte, protegerte.
-📍La clave no está en eliminarla… sino en comprenderla, regularla y cambiar tu diálogo con ella.
+La clave no está en eliminarla… sino en comprenderla, regularla y cambiar tu diálogo con ella.
 
 **¿Cómo se manifiesta la ansiedad?**
 La ansiedad no vive solo en tu mente. Se expresa en tres niveles interconectados:
@@ -131,7 +126,7 @@ No se trata de pensar en positivo, sino de pensar con más realismo y compasión
 - ¿Qué evidencia tengo de esto?
 - ¿Estoy generalizando o dramatizando?
 - ¿Qué pensaría una persona neutral?
-➡️ La ansiedad se reduce cuando cuestionas tus pensamientos, no tus emociones.
+La ansiedad se reduce cuando cuestionas tus pensamientos, no tus emociones.
 
 3. **Relajación y Respiración**
 Activar tu sistema parasimpático te ayuda a recuperar el control físico.
@@ -141,7 +136,7 @@ Hazlo por 3 minutos… y vuelve a ti.
 
 4. **Planificación + Microplaceres**
 La ansiedad necesita estructura y disfrute. Combina organización con placer.
-🗓 Organiza tu día y añade momentos pequeños de conexión:
+Organiza tu día y añade momentos pequeños de conexión:
 Una canción. Un paseo corto. Una conversación sin juicio.
 
 5. **Mindfulness y aceptación activa**
@@ -151,7 +146,7 @@ Recuerda: Tú no eres tu ansiedad. Tú eres quien la observa.
 
 6. **Comunicación asertiva**
 Expresar lo que sientes sin miedo al rechazo reduce la presión interna.
-✨ Usa frases como:
+Usa frases como:
 “Me gustaría…”, “Me siento así cuando…”, “Prefiero que…”
 Estás permitiendo que tu ansiedad hable… sin que grite.
 
@@ -176,9 +171,129 @@ Cuando aprendes a vivir con ella, sin miedo, se convierte en una señal, no una 
     type: 'article',
     category: 'Relaciones Sociales',
     summary: 'El rechazo sentimental activa las mismas zonas cerebrales que el dolor físico. Pero también existen herramientas reales y comprobadas que pueden ayudarte a recuperar tu equilibrio y reconstruirte desde dentro.',
-    content: `**El duelo que no siempre se ve, pero que duele de verdad**\n\nUna ruptura sentimental no es solo una tristeza pasajera. Es una experiencia de pérdida real que puede sacudir los cimientos de tu identidad, tu seguridad emocional y tu visión del futuro.\nY no es una exageración: múltiples estudios han demostrado que el cerebro reacciona al rechazo amoroso activando las mismas áreas implicadas en el dolor físico —como si el corazón roto fuera, también, un cuerpo herido.\nLo más complejo es que este tipo de dolor va acompañado de una montaña rusa emocional difícil de gestionar: tristeza profunda, ansiedad, orgullo herido, pensamientos obsesivos, culpa o una soledad que parece no acabar nunca. A veces incluso aparece el insomnio, la apatía o una sensación de pérdida de sentido vital.\nSentirse así no significa que estés “mal” ni que seas débil. Significa simplemente que estás atravesando un proceso humano… que, con apoyo y herramientas, también se puede transformar.\n\n**¿Por qué duele tanto? Lo que ocurre en tu mente (y tu cuerpo)**\n\nTras una ruptura, tu sistema nervioso entra en modo alarma: se activan los circuitos del miedo al abandono, de la autocrítica, de la búsqueda compulsiva de respuestas. Este estado puede generar desregulación emocional, agotamiento mental e incluso síntomas físicos como presión en el pecho, nudos en el estómago o dificultad para concentrarte.\nAdemás, la mente suele entrar en un patrón de rumiación: pensamientos repetitivos sobre lo que pasó, lo que no hiciste, lo que deberías haber dicho. Este bucle no ayuda a sanar: alimenta la angustia, refuerza creencias disfuncionales como “no merezco ser amada/o”, y te aleja del presente.\nPero no estás atrapada o atrapado ahí. Hay formas de intervenir, de comprenderte mejor y de reconstruir desde dentro.\n\n**¿Y ahora qué? Estrategias reales para reconstruirte**\n\nLa ciencia del bienestar emocional ha identificado varias herramientas que pueden ayudarte en este proceso. Aquí te compartimos algunas:\n**Reestructura tus pensamientos**\nNo creas todo lo que piensas cuando estás dolida/o. Algunas ideas que aparecen en este momento (“Nunca más voy a sentirme así”, “Estoy rota/o para siempre”) son distorsiones cognitivas fruto del dolor.\nPuedes aprender a detectarlas y darles forma más realista. Pregúntate, por ejemplo:\n- ¿Hay otra forma de interpretar lo que pasó?\n- ¿Qué creencias mías se han activado con esta experiencia?\n- ¿Realmente esta situación define todo mi valor como persona?\n\n**Regula tus emociones sin invalidarlas**\nAceptar que duele… también es parte de sanar. No necesitas apresurarte a “superarlo”.\nDate espacio para sentir, sin juzgar lo que surge: tristeza, enojo, miedo, nostalgia. Todo tiene un lugar.\nTécnicas como la acción opuesta (hacer lo contrario de lo que la emoción destructiva te pide), la validación emocional o el uso del cuerpo como ancla (respirar, caminar, mover el cuerpo) pueden ayudarte a recuperar la calma.\n\n**Conecta con el presente**\nEl mindfulness es una herramienta poderosa para romper la rumiación. Volver al cuerpo, a la respiración, a lo que sí está ocurriendo aquí y ahora, ayuda a que tu mente deje de habitar exclusivamente el pasado o las suposiciones del futuro.\nRecuerda: todo pasa. Esta emoción también.\n\n**Cultiva la autocompasión**\nNo necesitas ser dura/o contigo. Necesitas tratarte como lo harías con alguien a quien amas profundamente.\nPracticar frases compasivas, escribirte desde el cuidado, recordarte tus esfuerzos… son pequeños gestos que, repetidos, tienen un efecto enorme.\n\n**Lo que viene después del dolor: una nueva versión de ti**\n\nUna ruptura puede desestabilizarte, sí… pero también puede convertirse en un momento de autodescubrimiento.\nMuchas personas, al mirar atrás, reconocen que ese desgarro fue el inicio de un proceso profundo: aprendieron a poner límites, a reconocer sus necesidades, a elegir distinto.\nSanar no es olvidar. Es aprender a mirar el pasado con más comprensión y menos carga. Y darte la oportunidad de construir una relación distinta, empezando por la que tienes contigo.\n\n**Recuerda**\nAunque ahora sientas que todo se ha roto, hay dentro de ti una fuerza que permanece intacta: tu capacidad de reconstruirte con dignidad, sensibilidad y coraje.`,
+    content: `**El duelo que no siempre se ve, pero que duele de verdad**
+
+Una ruptura sentimental no es solo una tristeza pasajera. Es una experiencia de pérdida real que puede sacudir los cimientos de tu identidad, tu seguridad emocional y tu visión del futuro.
+Y no es una exageración: múltiples estudios han demostrado que el cerebro reacciona al rechazo amoroso activando las mismas áreas implicadas en el dolor físico —como si el corazón roto fuera, también, un cuerpo herido.
+Lo más complejo es que este tipo de dolor va acompañado de una montaña rusa emocional difícil de gestionar: tristeza profunda, ansiedad, orgullo herido, pensamientos obsesivos, culpa o una soledad que parece no acabar nunca. A veces incluso aparece el insomnio, la apatía o una sensación de pérdida de sentido vital.
+Sentirse así no significa que estés “mal” ni que seas débil. Significa simplemente que estás atravesando un proceso humano… que, con apoyo y herramientas, también se puede transformar.
+
+**¿Por qué duele tanto? Lo que ocurre en tu mente (y tu cuerpo)**
+
+Tras una ruptura, tu sistema nervioso entra en modo alarma: se activan los circuitos del miedo al abandono, de la autocrítica, de la búsqueda compulsiva de respuestas. Este estado puede generar desregulación emocional, agotamiento mental e incluso síntomas físicos como presión en el pecho, nudos en el estómago o dificultad para concentrarte.
+Además, la mente suele entrar en un patrón de rumiación: pensamientos repetitivos sobre lo que pasó, lo que no hiciste, lo que deberías haber dicho. Este bucle no ayuda a sanar: alimenta la angustia, refuerza creencias disfuncionales como “no merezco ser amada/o”, y te aleja del presente.
+Pero no estás atrapada o atrapado ahí. Hay formas de intervenir, de comprenderte mejor y de reconstruir desde dentro.
+
+**¿Y ahora qué? Estrategias reales para reconstruirte**
+
+La ciencia del bienestar emocional ha identificado varias herramientas que pueden ayudarte en este proceso. Aquí te compartimos algunas:
+**Reestructura tus pensamientos**
+No creas todo lo que piensas cuando estás dolida/o. Algunas ideas que aparecen en este momento (“Nunca más voy a sentirme así”, “Estoy rota/o para siempre”) son distorsiones cognitivas fruto del dolor.
+Puedes aprender a detectarlas y darles forma más realista. Pregúntate, por ejemplo:
+- ¿Hay otra forma de interpretar lo que pasó?
+- ¿Qué creencias mías se han activado con esta experiencia?
+- ¿Realmente esta situación define todo mi valor como persona?
+
+**Regula tus emociones sin invalidarlas**
+Aceptar que duele… también es parte de sanar. No necesitas apresurarte a “superarlo”.
+Date espacio para sentir, sin juzgar lo que surge: tristeza, enojo, miedo, nostalgia. Todo tiene un lugar.
+Técnicas como la acción opuesta (hacer lo contrario de lo que la emoción destructiva te pide), la validación emocional o el uso del cuerpo como ancla (respirar, caminar, mover el cuerpo) pueden ayudarte a recuperar la calma.
+
+**Conecta con el presente**
+El mindfulness es una herramienta poderosa para romper la rumiación. Volver al cuerpo, a la respiración, a lo que sí está ocurriendo aquí y ahora, ayuda a que tu mente deje de habitar exclusivamente el pasado o las suposiciones del futuro.
+Recuerda: todo pasa. Esta emoción también.
+
+**Cultiva la autocompasión**
+No necesitas ser dura/o contigo. Necesitas tratarte como lo harías con alguien a quien amas profundamente.
+Practicar frases compasivas, escribirte desde el cuidado, recordarte tus esfuerzos… son pequeños gestos que, repetidos, tienen un efecto enorme.
+
+**Lo que viene después del dolor: una nueva versión de ti**
+
+Una ruptura puede desestabilizarte, sí… pero también puede convertirse en un momento de autodescubrimiento.
+Muchas personas, al mirar atrás, reconocen que ese desgarro fue el inicio de un proceso profundo: aprendieron a poner límites, a reconocer sus necesidades, a elegir distinto.
+Sanar no es olvidar. Es aprender a mirar el pasado con más comprensión y menos carga. Y darte la oportunidad de construir una relación distinta, empezando por la que tienes contigo.
+
+**Recuerda**
+Aunque ahora sientas que todo se ha roto, hay dentro de ti una fuerza que permanece intacta: tu capacidad de reconstruirte con dignidad, sensibilidad y coraje.`,
     estimatedTime: '9 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'heartbreak healing relationship'
+  },
+  {
+    id: 'res8',
+    title: 'EL ESTRÉS NO ES EL ENEMIGO. ES UN MENSAJERO.',
+    type: 'article',
+    category: 'Estrés',
+    summary: 'Descubre cómo escucharlo, regularlo y convertirlo en tu aliado',
+    content: `**¿Y si el estrés no fuera el problema?**
+¿Y si lo que nos desestabiliza no es tener estrés… sino no saber qué hacer con él?
+Vivimos intentando escapar del estrés.
+Pero el estrés no se escapa. Se transforma.
+Y cuando aprendes a entenderlo, regularlo y canalizarlo, ya no es una amenaza.
+Es tu señal interna de que algo necesita atención, cambio, acción o cuidado.
+
+**¿Qué es exactamente el estrés?**
+El estrés es la respuesta natural de tu cuerpo y tu mente cuando sientes que una situación exige más de lo que crees poder dar.
+Es tu sistema de alerta evolutivo. Te prepara para actuar cuando algo se vuelve desafiante o potencialmente amenazante.
+Tu corazón late más rápido. Tu cuerpo libera cortisol y adrenalina. Tus sentidos se agudizan.
+En esencia: tu sistema nervioso se activa para protegerte o impulsarte.
+Según Lazarus y Folkman (1984), no todo depende del estímulo. Lo que define si algo te estresa es cómo lo interpretas:
+- ¿Esto es manejable?
+- ¿Tengo recursos?
+- ¿Puedo con esto?
+Tu percepción moldea tu reacción. Y por eso, dos personas pueden vivir el mismo evento con emociones completamente distintas.
+
+**No todo el estrés es malo: Eustrés vs. Distrés**
+Hay dos formas fundamentales en que tu cuerpo y tu mente viven el estrés:
+**Eustrés**
+Es el estrés positivo. El que te impulsa a actuar, a superarte, a sacar lo mejor de ti.
+Cuando lo que enfrentas es retador pero crees que puedes con ello, tu organismo se activa… y tú rindes al máximo.
+Mejora tu foco, creatividad, rendimiento y hasta fortalece vínculos.
+Ejemplo: esa adrenalina antes de hablar en público que te hace brillar.
+**Distrés**
+Es el estrés negativo. El que te abruma, bloquea o desborda.
+Aparece cuando la situación se percibe como incontrolable y te sientes solo, incapaz o agotado.
+Aquí el estrés se cronifica y empieza a doler: insomnio, tensión muscular, irritabilidad, dificultad para pensar con claridad.
+Ejemplo: cuando cada notificación del trabajo te hace apretar los dientes.
+
+**¿Qué pasa en tu cuerpo cuando te estresas?**
+Cuando detectas un peligro (real o simbólico), se activa el sistema nervioso simpático y el eje HHA (hipotálamo-hipófisis-adrenal).
+Esto desencadena tres fases:
+1. Alarma: Aumenta la frecuencia cardíaca, la respiración, la tensión. Tu cuerpo se prepara para luchar o huir.
+2. Resistencia: Si el estrés continúa, entras en modo “aguante”. Pero aquí empieza el desgaste.
+3. Agotamiento: Si no hay pausa ni regulación, tus recursos se agotan. Aparecen problemas físicos, emocionales y cognitivos.
+Un estudio de McGonigal (2012) mostró que la forma en que percibes el estrés puede cambiar su impacto en tu salud:
+Verlo como una señal de crecimiento, y no como una amenaza, reduce el riesgo cardiovascular y mejora la resiliencia.
+
+**¿Qué te estresa a ti?**
+Los estresores pueden ser externos o internos, y no siempre son evidentes:
+- Cambios vitales: mudanzas, separaciones, nuevas responsabilidades.
+- Conflictos internos: autoexigencia, miedo al rechazo, sensación de no llegar.
+- Estímulos físicos: ruido, calor, falta de sueño.
+- Sociales: críticas, aislamiento, exceso de demandas.
+Pero no solo importa qué ocurre. Importa también cómo lo interpretas y qué haces con ello.
+
+**¿Y entonces, cómo gestionarlo?**
+En Emotiva no te prometemos eliminar el estrés (porque es imposible).
+Te enseñamos a optimizarlo.
+Eso significa:
+- Reconocerlo a tiempo (¿cómo reacciona tu cuerpo y tu mente?).
+- Distinguir entre lo urgente y lo importante.
+- Validar tus emociones sin juzgarte.
+- Cuestionar tus pensamientos automáticos (“tengo que poder con todo”, “esto es un desastre”).
+- Activar tu sistema de calma con técnicas de respiración, visualización, pausa consciente o escritura emocional.
+- Redefinir tu relación con el estrés como una oportunidad de reconexión contigo.
+Porque cuando el estrés se vuelve crónico y silencioso, se vuelve peligroso.
+Pero cuando lo miras de frente, lo entiendes y lo regulas… te devuelve tu fuerza.
+
+**En resumen...**
+El estrés no es el problema.
+Es la brújula que señala que algo necesita atención.
+Si lo escuchas, lo regulas y lo integras, te vuelve más fuerte.
+Más consciente.
+Más tú.`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'stress brain science'
   }
 ];
