@@ -454,7 +454,7 @@ La próxima vez que algo te incomode emocionalmente, en lugar de reaccionar o ev
 Y prueba esto, como si cuidaras de una parte de ti que aún no sabe expresarse:
 1. **“Estoy sintiendo…”** → Nombra la emoción sin juzgarla. Solo reconoce su presencia.
 2. **“¿Qué puede estar faltando para mí en esta situación?”** → Sé curiosa o curioso, no crítica o crítico.
-3. **“Qué pequeño gesto puedo hacer para cuidar eso que necesito?”** → No hace falta resolverlo todo. Solo empezar.
+3. **“¿Qué pequeño gesto puedo hacer para cuidar eso que necesito?”** → No hace falta resolverlo todo. Solo empezar.
 Este simple cambio de enfoque transforma el malestar en una oportunidad de conexión contigo.
 No desde el juicio. Desde el cuidado.
 
@@ -568,5 +568,65 @@ Las relaciones humanas de calidad son medicina preventiva. Nutren, calman, regul
     estimatedTime: '8 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'relationships connection health'
+  },
+  {
+    id: 'res14',
+    title: 'DORMIR NO ES PAUSAR LA VIDA. ES DARLE SENTIDO.',
+    type: 'article',
+    category: 'Sueño y descanso',
+    summary: 'Lo que el sueño hace por ti, incluso cuando tú no haces nada.',
+    content: `**Dormir bien no es un capricho ni una pérdida de tiempo.**
+Es tan vital como respirar, comer o amar.
+Y sin embargo… lo descuidamos como si fuera opcional.
+Si supieras lo que hace tu cerebro mientras duermes, lo cuidarías como oro.
+Porque cuando duermes bien, no solo descansas. Te reparas. Te ordenas. Te preparas.
+
+**Dormir: el gran sistema operativo de tu cuerpo**
+El sueño es un proceso activo, complejo, orquestado por tu sistema nervioso central. No es un “apagado”, sino una serie de ciclos biológicos en los que tu cuerpo y tu mente hacen exactamente lo que necesitan para sobrevivir, sanar y aprender.
+Según el National Institute of Neurological Disorders and Stroke, dormir activa funciones clave como:
+- Restauración del sistema inmune y endocrino
+- Consolidación de la memoria y el aprendizaje
+- Eliminación de toxinas neuronales
+- Regulación emocional y toma de decisiones
+Y estudios de neuroimagen han mostrado que durante el sueño REM, las áreas del cerebro implicadas en la creatividad y la resolución de problemas se activan con fuerza. Es decir, tu mente resuelve mientras tú descansas.
+
+**NREM y REM: los dos mundos del sueño**
+Tu noche se divide en ciclos de unos 90 minutos, donde se alternan dos tipos de sueño:
+**Sueño NREM (sin movimientos oculares rápidos)**
+- Fases 1 y 2: transición al descanso. Tu cuerpo se relaja, baja la temperatura y la actividad cerebral disminuye.
+- Fases 3 y 4: sueño profundo o “de ondas lentas”. Aquí se da la regeneración física. Se libera hormona de crecimiento, se reparan tejidos, el sistema inmunológico se fortalece.
+**Sueño REM (movimientos oculares rápidos)**
+- Aparece después de unos 90 minutos y se alarga en cada ciclo nocturno.
+- Es el momento de los sueños vívidos y la restauración emocional y cognitiva: reorganizas recuerdos, consolidas aprendizajes, regulas emociones.
+Si interrumpes estos ciclos por estrés, dispositivos o insomnio, no solo estás más cansada o cansado. Estás impidiendo que tu sistema nervioso se regule por completo.
+
+**¿Y si no duermes bien?**
+Dormir poco o mal tiene consecuencias mucho más allá de bostezar.
+La evidencia científica es contundente:
+- A los 3 días sin buen sueño: disminuye tu atención sostenida, aumenta la irritabilidad y se alteran las respuestas inmunes.
+- A las 2 semanas: se multiplican los errores laborales, crecen los niveles de cortisol (la hormona del estrés) y aumenta el riesgo de ansiedad y depresión.
+- A largo plazo: la privación crónica de sueño se asocia con enfermedades cardiovasculares, obesidad, diabetes tipo 2 y deterioro cognitivo temprano.
+Un estudio publicado en Nature Neuroscience encontró que tras una sola noche con menos de 6 horas de sueño, se reduce la conectividad entre la amígdala y la corteza prefrontal —lo que significa más impulsividad emocional y menos control racional.
+Y esto, en el mundo laboral y personal, se traduce en malas decisiones, conflictos innecesarios y agotamiento.
+
+**Dormir bien es salud mental (y también rendimiento)**
+Dormir no solo te hace sentir mejor.
+Te vuelve más clara, más firme, más tú.
+Cuando descansas bien:
+- Piensas con más precisión.
+- Tomas mejores decisiones.
+- Regulas tus emociones con menos esfuerzo.
+- Afrontas imprevistos sin explotar.
+- Te sientes más tú en tu cuerpo, en tus vínculos, en tu propósito.
+Por eso, en Emotiva, no hablamos del sueño como un módulo aislado. Lo trabajamos como una base transversal del bienestar psicológico. Y si tu descanso falla, lo priorizamos: antes que el foco, antes que los límites, antes incluso que la motivación.
+
+**¿Y ahora qué?**
+Dormir bien no es algo que se logre solo con fuerza de voluntad.
+Pero sí se construye con constancia, conciencia y estrategias adecuadas.
+Y eso empieza por algo muy simple: entender que descansar es cuidarte.
+Y que cuidarte no es egoísmo, es inteligencia emocional aplicada.`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'sleep moon night'
   }
 ];
