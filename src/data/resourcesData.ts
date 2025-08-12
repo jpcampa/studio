@@ -408,5 +408,67 @@ Dormir bien no es el premio final, es la base para construir una vida más estab
     estimatedTime: '9 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'sleep moon night'
+  },
+  {
+    id: 'res11',
+    title: 'Cada emoción incómoda trae un mensaje. Y tú puedes aprender a traducirlo.',
+    type: 'article',
+    category: 'Bienestar Emocional',
+    summary: 'Emociones intensas, incomodidad persistente, sensación de estar fuera de lugar. A veces no estás siendo demasiado… solo estás necesitando algo que aún no sabes nombrar.',
+    content: `A veces lo que sientes no tiene nombre claro. No es exactamente ansiedad.
+Ni tristeza. Ni rabia.
+Es más bien una sensación de carga, de desajuste, de no estar bien… sin entender por qué.
+Y eso puede confundir, frustrar o hacerte dudar de ti misma o de ti mismo.
+Pero hay algo importante que nadie nos enseñó:
+- **Sentir no es un error.**
+- **Sentir incómodo tampoco lo es.**
+- **Sentir es una forma en la que tu cuerpo y tu mente intentan protegerte, cuidarte, guiarte.**
+
+Las emociones no son el problema. El problema es que aprendimos a callarlas.
+Desde pequeños, muchas veces escuchamos frases como:
+- “No llores por eso”
+- “No te enfades, no tiene sentido”
+- “No es para tanto”
+Y así fuimos aprendiendo que lo correcto era ocultar lo que sentíamos, disimular, complacer o seguir adelante sin mirar dentro.
+Pero lo cierto es que las emociones incómodas son mensajeras valiosas.
+Aparecen cuando algo importante para ti no está siendo cuidado:
+el respeto, la conexión, la tranquilidad, la libertad, el sentido…
+En lugar de ser “el problema”, la emoción es el semáforo que te indica que algo dentro necesita atención.
+No para que te sientas culpable, sino para que te escuches con más ternura.
+
+**Emoción ≠ debilidad. Emoción = necesidad no resuelta.**
+Cuando algo nos molesta, incomoda o duele por dentro, es fácil juzgarse:
+“Estoy exagerando”, “no debería sentir esto”, “soy demasiado sensible”.
+Pero detrás de cada emoción difícil suele haber algo que importa mucho para ti y que no está siendo satisfecho.
+Y ese algo merece ser escuchado, no reprimido.
+Veamos algunos ejemplos concretos:
+- **Siento ira** → Tal vez necesito justicia, respeto, ser tenida o tenido en cuenta.
+- **Siento celos** → Quizá necesito seguridad emocional, claridad, estabilidad en el vínculo.
+- **Siento apatía** → Puede que necesite descanso real, sentido vital, reconexión con lo que me inspira.
+- **Siento vergüenza** → Tal vez esté necesitando aceptación, dignidad, validación desde el afecto.
+Cuando comienzas a mirar tus emociones no como defectos sino como señales, algo cambia:
+Ya no te enfrentas a ellas. Empiezas a dialogar contigo. Y eso es el principio de un cuidado real.
+
+**¿Y si en lugar de ignorarte… empezaras a preguntarte?**
+La próxima vez que algo te incomode emocionalmente, en lugar de reaccionar o evadirte, respira.
+Y prueba esto, como si cuidaras de una parte de ti que aún no sabe expresarse:
+1. **“Estoy sintiendo…”** → Nombra la emoción sin juzgarla. Solo reconoce su presencia.
+2. **“¿Qué puede estar faltando para mí en esta situación?”** → Sé curiosa o curioso, no crítica o crítico.
+3. **“¿Qué pequeño gesto puedo hacer para cuidar eso que necesito?”** → No hace falta resolverlo todo. Solo empezar.
+Este simple cambio de enfoque transforma el malestar en una oportunidad de conexión contigo.
+No desde el juicio. Desde el cuidado.
+
+**CIERRE:**
+Si tus emociones te están doliendo, no es porque seas frágil.
+Es porque han estado intentando protegerte a su manera, desde hace tiempo.
+Y quizá por fin estás en el momento de escucharlas con más ternura y menos culpa.
+Sentir no te hace débil. Te hace humana. Te hace humano.
+Y escucharte, con respeto y compasión, no es rendirte.
+Es empezar a vivir de verdad.
+Sentir es el principio de cuidarte.
+Escucharte es el principio de vivir con más sentido`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'emotional intelligence journal'
   }
 ];
