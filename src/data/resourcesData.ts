@@ -415,7 +415,7 @@ Dormir bien no es el premio final, es la base para construir una vida más estab
     type: 'article',
     category: 'Bienestar Emocional',
     summary: 'Emociones intensas, incomodidad persistente, sensación de estar fuera de lugar. A veces no estás siendo demasiado… solo estás necesitando algo que aún no sabes nombrar.',
-    content: `A veces lo que sientes no tiene nombre claro. No es exactamente ansiedad.
+    content: `**A veces lo que sientes no tiene nombre claro. No es exactamente ansiedad.**
 Ni tristeza. Ni rabia.
 Es más bien una sensación de carga, de desajuste, de no estar bien… sin entender por qué.
 Y eso puede confundir, frustrar o hacerte dudar de ti misma o de ti mismo.
@@ -454,7 +454,7 @@ La próxima vez que algo te incomode emocionalmente, en lugar de reaccionar o ev
 Y prueba esto, como si cuidaras de una parte de ti que aún no sabe expresarse:
 1. **“Estoy sintiendo…”** → Nombra la emoción sin juzgarla. Solo reconoce su presencia.
 2. **“¿Qué puede estar faltando para mí en esta situación?”** → Sé curiosa o curioso, no crítica o crítico.
-3. **“¿Qué pequeño gesto puedo hacer para cuidar eso que necesito?”** → No hace falta resolverlo todo. Solo empezar.
+3. **“Qué pequeño gesto puedo hacer para cuidar eso que necesito?”** → No hace falta resolverlo todo. Solo empezar.
 Este simple cambio de enfoque transforma el malestar en una oportunidad de conexión contigo.
 No desde el juicio. Desde el cuidado.
 
@@ -628,5 +628,85 @@ Y que cuidarte no es egoísmo, es inteligencia emocional aplicada.`,
     estimatedTime: '8 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'sleep moon night'
+  },
+  {
+    id: 'res15',
+    title: '¿POR QUÉ ME DUELE TANTO NO SENTIRME VALORADO/A?',
+    type: 'article',
+    category: 'Autoestima',
+    summary: 'Cuando la mirada del otro llena un vacío que tú también puedes aprender a sostener.',
+    content: `**El anhelo de ser visto/a**
+
+Hay silencios que duelen más que un grito.
+Un mensaje que no llega. Una palabra que esperabas. Una ausencia que se alarga más de la cuenta.
+¿Te ha pasado?
+Haces algo con cariño… y si no te lo agradecen, te vienes abajo.
+No te escriben, no te reconocen, no te eligen… y de pronto sientes que tú tampoco vales tanto.
+No es una exageración. Es humano.
+Porque el ser humano es profundamente social, y nuestras interacciones moldean no solo cómo nos sentimos, sino quién creemos que somos.
+
+**¿Qué es la validación externa?**
+La validación externa es esa necesidad de recibir desde fuera (personas, redes, entorno) señales de que vales, que estás bien, que importas.
+Se expresa en frases como:
+•	“Si no le gusto, entonces algo malo hay en mí.”
+•	“Si no me lo reconocen, es que no lo he hecho suficientemente bien.”
+•	“Si me critican, significa que no soy capaz.”
+El problema no está en querer ser visto/a o reconocido/a (eso es natural), sino en creer que nuestro valor depende por completo de eso.
+Y cuando eso ocurre, empiezas a vivir bajo el peso de la aprobación ajena.
+
+**¿Qué ocurre en el cerebro cuando buscamos validación?**
+•	Cuando recibimos una señal positiva, el sistema de recompensa se activa (dopamina, oxitocina), y sentimos placer, seguridad, conexión.
+•	Pero cuando esa señal no llega —o llega como rechazo, crítica o indiferencia—, se activa el sistema de amenaza: amígdala, eje HHA, cortisol.
+Este vaivén genera una montaña rusa emocional, donde tu autoestima sube o baja en función de lo que ocurre fuera.
+Y con el tiempo, esa dependencia emocional se hace agotadora y dolorosa.
+
+**¿Dónde nace esta necesidad?**
+La necesidad excesiva de aprobación no aparece de la nada. Se construye.
+Y suele tener raíces en experiencias tempranas, como:
+•	Entornos donde el afecto dependía del buen comportamiento.
+•	Familias con normas rígidas, críticas o sobreprotección.
+•	Vivencias de abandono, indiferencia o rechazo.
+•	Modelos que premiaban más el resultado que el proceso.
+Todo esto deja huellas que, sin darnos cuenta, nos hacen buscar afuera una certeza que no aprendimos a generar dentro.
+Como explica Jeffrey Young en la terapia de esquemas, muchas personas desarrollan patrones como el de privación emocional o búsqueda de aprobación, creyendo que solo valen si complacen o cumplen expectativas.
+
+**¿Qué precio tiene vivir para agradar?**
+Tal vez dejas de decir lo que piensas para no incomodar.
+O haces lo que los demás esperan, aunque no te resuene.
+O aceptas críticas injustas solo para que no te rechacen.
+👉 El precio es la desconexión contigo mismo/a.
+👉 El precio es que la autenticidad queda escondida detrás de una máscara.
+👉 Y ese precio, tarde o temprano, acaba doliendo más que el rechazo.
+
+**¿Cómo lo gestionamos desde Emotiva?**
+Desde la psicología científica y el enfoque terapéutico de Emotiva, trabajamos este tema con herramientas como la Terapia Cognitivo-Conductual, el mindfulness, la autoobservación compasiva y el desarrollo de una autoimagen más firme y flexible.
+Aquí van algunas claves esenciales para empezar a transformar esta herida:
+**Cuestiona tus pensamientos automáticos**
+Cuando sientas que no te valoran, observa lo que te dices. ¿Es justo? ¿Es real?
+Reestructurar esas frases te ayudará a ver las cosas con más equilibrio y menos dureza.
+
+**Practica la autoafirmación diaria**
+Cada noche, escribe una frase amable sobre algo que hiciste o sentiste.
+Entrenar tu voz interna es un gesto pequeño, pero transforma cómo te miras.
+
+**Entrena tu asertividad**
+Aprende a decir “no” sin culpa y a expresar lo que necesitas sin miedo.
+Ser asertivo/a no es distanciarte: es cuidarte sin dejar de conectar.
+
+**Elige vínculos seguros y recíprocos**
+Rodéate de personas que te valoren por ser tú, no por lo que haces.
+La autenticidad florece en relaciones donde puedes bajar la guardia.
+
+**Date permiso para simplemente ser**
+Deja de exigirte perfección. Respira.
+Eres más que tus logros y tus miedos. Y ya mereces ser visto/a, tal como eres.
+
+**Una última idea para llevarte:**
+“No necesitas demostrar que vales.
+Lo que eres ya tiene valor, incluso cuando no te miran.
+Aprender a sostenerte con amor propio es el comienzo de la verdadera libertad.”`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'self esteem mirror'
   }
 ];
