@@ -302,14 +302,7 @@ Más tú.`,
     type: 'article',
     category: 'Relaciones Sociales',
     summary: 'No es magia. No es suerte. Es una combinación de habilidades sociales que podemos aprender, entrenar y potenciar.',
-    content: `Desde que nacemos, venimos programados para conectar.
-La evolución nos hizo animales sociales porque sobrevivimos mejor cuando colaboramos, sentimos y nos entendemos. Lo que antes nos salvaba del peligro, hoy es lo que nos sostiene emocionalmente.
-- La calidad de nuestras relaciones predice más nuestra salud que la dieta o el ejercicio.
-- El aislamiento social tiene más riesgo para el corazón que fumar 15 cigarrillos al día.
-- Y sí: las relaciones tóxicas literalmente nos “enferman”.
-Pero vamos a lo práctico…
-
-**¿Qué son las habilidades sociales?**
+    content: `**¿Qué son las habilidades sociales?**
 Son ese conjunto de comportamientos, emociones y pensamientos que usamos para interactuar con los demás de forma respetuosa, auténtica y eficaz.
 No nacemos con ellas: las aprendemos. Y lo mejor es que se pueden entrenar a cualquier edad.
 Las vamos adquiriendo:
@@ -364,5 +357,56 @@ Y conectar, la clave`,
     estimatedTime: '7 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'social skills connection'
+  },
+  {
+    id: 'res10',
+    title: 'DORMIR NO ES PERDER EL TIEMPO. ES RECUPERARTE PARA VIVIR MEJOR.',
+    type: 'article',
+    category: 'Sueño y descanso',
+    summary: 'Guía práctica (y realista) para transformar tu descanso desde hoy, sin fórmulas mágicas ni mitos.',
+    content: `La mayoría de las personas cree que el insomnio empieza en la cama.
+Pero no.
+Empieza antes: cuando tu mente va en quinta y tú intentas dormir en punto muerto.
+Cuando cenas mirando correos.
+Cuando usas la cama como despacho, sofá, refugio o trinchera.
+Dormir mal no siempre es tu culpa. Pero sí es tu responsabilidad —y tu derecho— cambiarlo.
+La buena noticia es que el sueño se entrena.
+Como se entrena la atención, la calma o la fuerza de voluntad. Y lo primero que necesitas para empezar ese entrenamiento no son pastillas ni fórmulas mágicas: es un terreno fértil. Una base. Eso es la higiene del sueño.
+
+**¿Qué es realmente la higiene del sueño?**
+No se trata solo de apagar la luz y evitar el café. La higiene del sueño es un conjunto de hábitos, condiciones ambientales y señales internas que preparan al cuerpo y al cerebro para descansar bien. Es el arte de decirle a tu sistema nervioso: “puedes bajar la guardia… estás a salvo”.
+Puede parecer simple, pero tiene un impacto profundo. Estudios clínicos han demostrado que cuando se aplican buenas prácticas de higiene del sueño dentro de un programa terapéutico (como el CBT-I), la eficacia mejora notablemente. En muchos casos, es incluso más efectiva a largo plazo que los medicamentos para el insomnio.
+
+**Reglas realistas (y sostenibles) para dormir mejor**
+Aquí no vas a encontrar promesas vacías. Pero sí una base sólida. Revisa estas prácticas y, si puedes, elige una o dos para comenzar esta semana. A veces, un pequeño cambio hace un gran clic.
+- **Mantén horarios regulares:** Acuéstate y levántate a la misma hora cada día (sí, también el fin de semana). Esto entrena a tu ritmo circadiano como si fuera un reloj biológico de precisión.
+- **Evita siestas largas:** Si las necesitas, que no pasen de 20-30 minutos y nunca después de las 17:00.
+- **Cuida lo que consumes:** Cafeína, nicotina, alcohol y azúcar cerca de la noche = enemigos del descanso. La ciencia lo deja claro: incluso una copa de vino a última hora puede alterar la calidad del sueño profundo.
+- **Haz ejercicio (pero no justo antes de dormir):** Múltiples estudios han confirmado que el ejercicio regular mejora la arquitectura del sueño. Pero ojo: si entrenas con intensidad por la noche, puedes activar demasiado el sistema nervioso.
+- **Diseña tu entorno como si fueras tu propio terapeuta del sueño:** Apaga pantallas al menos una hora antes de dormir. Ajusta la temperatura (ideal: entre 18 y 22°C). Oscuridad total. Sin ruidos bruscos. Que tu dormitorio sea un templo del descanso… no una sala de operaciones.
+- **Usa la cama solo para dormir (y para el sexo):** Leer, comer, pensar o revisar el móvil en la cama le envían al cerebro señales contradictorias. Queremos que al tumbarte, tu cuerpo diga: “¡hora de dormir!”
+- **Crea una rutina pre-sueño:** Repetir cada noche pequeños gestos (lavarte los dientes, preparar la ropa, apagar ciertas luces) funciona como un ritual de transición. Le dice a tu sistema nervioso: “todo está bien, puedes soltar”.
+- **Si no te duermes en 20 minutos… sal de la cama:** Y vuelve solo cuando tengas sueño. Parece raro, pero es una de las técnicas más efectivas del control del estímulo. Dormir no debe convertirse en un campo de batalla.
+
+**Cuando el insomnio no se va: ¿qué más puedes hacer?**
+Si llevas más de 3 meses con dificultades para dormir, estas recomendaciones por sí solas pueden no bastar. Ahí es donde entran otras estrategias basadas en evidencia:
+- **Reestructuración cognitiva:** detectar y cuestionar pensamientos distorsionados como “si no duermo me va a ir fatal mañana” o “nunca voy a dormir bien”. Estos pensamientos ansiógenos hiperactivan el sistema nervioso e interfieren con la conciliacion del sueño.
+- **Técnicas de relajación** como la respiración profunda y diafragmática o la relajación muscular progresiva de Jacobson.
+- **Reducción del tiempo en cama:** suena contraintuitivo, pero ayuda a aumentar la eficiencia del sueño.
+- **Exposición a luz natural por la mañana,** para reajustar tu ritmo circadiano.
+- **Evaluación de factores emocionales:** muchas veces el insomnio es un síntoma de fondo, no la raíz del problema.
+Todo esto lo integramos en nuestros programas en Emotiva, siempre desde una perspectiva amable, profesional y científicamente validada.
+
+**Dormir no es un lujo. Es una forma de cuidarte.**
+No necesitas ser perfecta o perfecto en todos estos hábitos. Solo empezar. Aunque sea con un gesto pequeño.
+Porque cuando duermes mejor, todo cambia:
+Tu cuerpo responde mejor al estrés.
+Tu memoria funciona con más claridad.
+Tus emociones se regulan con menos esfuerzo.
+Tus relaciones se vuelven más cálidas y sostenibles.
+Dormir bien no es el premio final, es la base para construir una vida más estable, creativa y viva.`,
+    estimatedTime: '9 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'sleep moon night'
   }
 ];
