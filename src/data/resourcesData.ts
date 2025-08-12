@@ -295,5 +295,74 @@ Más tú.`,
     estimatedTime: '8 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'stress brain science'
+  },
+  {
+    id: 'res9',
+    title: '¿POR QUÉ ALGUNAS PERSONAS SIMPLEMENTE… CAEN BIEN?',
+    type: 'article',
+    category: 'Relaciones Sociales',
+    summary: 'No es magia. No es suerte. Es una combinación de habilidades sociales que podemos aprender, entrenar y potenciar.',
+    content: `Desde que nacemos, venimos programados para conectar.
+La evolución nos hizo animales sociales porque sobrevivimos mejor cuando colaboramos, sentimos y nos entendemos. Lo que antes nos salvaba del peligro, hoy es lo que nos sostiene emocionalmente.
+- La calidad de nuestras relaciones predice más nuestra salud que la dieta o el ejercicio.
+- El aislamiento social tiene más riesgo para el corazón que fumar 15 cigarrillos al día.
+- Y sí: las relaciones tóxicas literalmente nos “enferman”.
+Pero vamos a lo práctico…
+
+**¿Qué son las habilidades sociales?**
+Son ese conjunto de comportamientos, emociones y pensamientos que usamos para interactuar con los demás de forma respetuosa, auténtica y eficaz.
+No nacemos con ellas: las aprendemos. Y lo mejor es que se pueden entrenar a cualquier edad.
+Las vamos adquiriendo:
+- Por observación (modelos).
+- Por ensayo y error (refuerzo).
+- Por la retroalimentación de los demás.
+- Y por nuestra forma de interpretar lo que ocurre (esquemas cognitivos).
+
+**Las 7 habilidades que te hacen socialmente atractivo o atractiva (sí, de verdad)**
+1. **Comunicación clara y coherente**
+- Hablas desde el “yo”, con emoción, sin rodeos ni ataques.
+- Tu tono, tu postura, tu mirada... acompañan lo que dices.
+- Eres capaz de decir lo que sientes sin herir.
+- Y lo más importante: sabes escuchar (de verdad).
+2. **Empatía auténtica**
+- Captas lo que no se dice.
+- Percibes emociones, gestos, silencios.
+- Te importa lo que le pasa al otro, y se nota.
+- La empatía es el lubricante natural de toda interacción humana.
+3. **Asertividad**
+- Dices lo que necesitas sin pisar a nadie.
+- Sabes poner límites, expresar desacuerdo y también pedir perdón.
+- Ser asertivo no es ser duro: es ser claro, firme y respetuoso.
+4. **Conciencia emocional y autocontrol**
+- Te conoces.
+- Sabes qué te molesta y por qué.
+- Y en lugar de estallar… gestionas.
+- Ser consciente de tus emociones mejora la conexión con los demás.
+5. **Sincronía y adaptabilidad**
+- Te “sintonizas” con el otro.
+- Te adaptas al ritmo de la conversación, al tono emocional, al contexto.
+- Esto crea rapport: ese “sentirnos en la misma onda”.
+6. **Refuerzo social positivo**
+- Sabes elogiar sin adular.
+- Reconoces lo bueno en los demás y lo expresas.
+- Sabes recibir cumplidos sin minimizarlos.
+- Eres esa persona que los demás recuerdan con una sonrisa.
+7. **Cuidado del vínculo**
+- No acumulas conflictos.
+- Buscas entender y reparar.
+- Valorás la calidad por encima de la cantidad de relaciones.
+- Aportas seguridad y apoyo emocional.
+
+**¿Y si no tengo estas habilidades?**
+La buena noticia es esta: TODAS se pueden entrenar.
+Desde Emotiva te enseñamos cómo. Paso a paso, con prácticas reales, psicoeducación basada en evidencia, y herramientas para que las relaciones de tu vida dejen de ser fuente de estrés… y se conviertan en fuente de bienestar.
+Porque conectar no es un lujo. Es una necesidad.
+Y las habilidades sociales no solo mejoran tu entorno… mejoran tu salud, tu rendimiento, tu autoestima y tu felicidad.
+
+Emotiva. Porque sentir es el comienzo.
+Y conectar, la clave`,
+    estimatedTime: '7 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'social skills connection'
   }
 ];
