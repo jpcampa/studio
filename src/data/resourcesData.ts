@@ -512,6 +512,7 @@ El primer paso no es abandonar el móvil, sino crear espacios de reconexión int
 No se trata de apagar el móvil 1 hora antes de dormir (que también ayuda), sino de preguntarte por qué lo usas. ¿Estás cansado/a? ¿Ansioso/a? ¿Evadiendo algo?
 Aprender a identificar tus necesidades reales es más potente que silenciar notificaciones.
 
+
 3. **Vuelve al contacto real (también contigo)**
 Nada reemplaza el poder de un abrazo, una mirada sostenida o una conversación honesta.
 Y si eso no es posible hoy… reconecta contigo. Con tu cuerpo, tu respiración, tu voz interior.
@@ -524,5 +525,48 @@ Y puedes elegir otra forma de estar en el mundo.”`,
     estimatedTime: '8 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'social media screen'
+  },
+  {
+    id: 'res13',
+    title: 'Relaciones que curan: cómo las buenas relaciones protegen tu salud física',
+    type: 'article',
+    category: 'Relaciones Sociales',
+    summary: 'Las relaciones interpersonales de calidad son mucho más que un bálsamo emocional: regulan tus hormonas, fortalecen tu sistema inmune y pueden alargar tu vida.',
+    content: `**¿Alguna vez has sentido que una conversación con alguien querido te “baja la fiebre emocional”? ¿O que un abrazo sincero te calma más que cualquier medicina? No es solo una sensación: es ciencia. Las relaciones humanas de calidad no solo alimentan nuestra mente y emociones, sino que tienen un impacto directo y profundo en nuestro cuerpo.**
+En Emotiva lo repetimos mucho: sentirte bien con las personas que te rodean no es un lujo emocional, es una necesidad biológica.
+
+**Tus relaciones hablan con tu cuerpo**
+Cada vez que tienes una interacción positiva con alguien –una conversación auténtica, un gesto amable, un momento de conexión– tu sistema nervioso responde. Se activa el sistema de recompensa cerebral, disminuye la actividad en los centros del miedo, y se liberan sustancias como la oxitocina, la dopamina o las endorfinas, que regulan el estrés, fortalecen tu sistema inmune y estabilizan funciones vitales como la presión arterial o el ritmo cardíaco.
+Las relaciones, incluso las rutinarias, actúan como termostatos biológicos, regulando constantemente nuestro equilibrio interno. Un contacto físico afectuoso, por ejemplo, puede calmar zonas del cerebro asociadas a la amenaza y activar regiones ligadas al placer y la seguridad.
+
+**Más allá del corazón: tu sistema inmunológico también escucha**
+Estudios recientes han demostrado que las relaciones afectivas intensas pueden influir en la activación o desactivación de genes, como los que regulan las células T del sistema inmunológico. En contextos de apoyo social, el cuerpo se defiende mejor frente a infecciones, inflamaciones y enfermedades crónicas.
+Una red social sólida aumenta la resiliencia biológica: amortigua el impacto del cortisol (hormona del estrés), reduce la inflamación sistémica, y mejora la recuperación tras intervenciones médicas. Por eso, las personas con relaciones cercanas y satisfactorias viven más, se recuperan antes y se enferman menos.
+
+**Amortiguador frente al deterioro y la enfermedad**
+En investigaciones médicas se ha observado que:
+- Las personas mayores con relaciones afectuosas tienen menor riesgo de recaída tras eventos cardíacos.
+- Los hombres con enfermedad coronaria y escaso apoyo social presentan un 40% más de obstrucción arterial.
+- Quienes tienen una red de apoyo amplia son menos vulnerables a infecciones comunes como los resfriados.
+Incluso el simple hecho de sentirse acompañado o comprendido reduce los niveles de ansiedad y puede mejorar la respuesta a tratamientos médicos. La soledad, en cambio, ha sido catalogada como un factor de riesgo equiparable al tabaquismo o la obesidad.
+
+**Relaciones que motivan a cuidarte**
+Una relación sana también actúa como catalizador de hábitos de vida más saludables. Las personas que se sienten queridas y valoradas tienden a:
+- Comer mejor.
+- Dormir más profundamente.
+- Realizar más ejercicio físico.
+- Evitar conductas de riesgo (como el abuso de sustancias o el sedentarismo).
+- Pedir ayuda cuando lo necesitan.
+El apoyo mutuo, la colaboración y la validación emocional fomentan la autoeficacia, es decir, la sensación interna de “puedo con esto”, tan clave en la prevención de recaídas y en la mejora del estado general de salud.
+
+**El perdón y la reparación también curan**
+Las relaciones de calidad no son perfectas, pero tienen algo valioso: la capacidad de repararse. Poder hablar tras un conflicto, perdonar, pedir perdón o sostener una emoción difícil juntos reduce el estrés, baja la presión arterial y fortalece el vínculo.
+Aferrarse al rencor, por el contrario, aumenta la respuesta inflamatoria, eleva la tensión arterial y debilita el sistema inmune. Por eso, trabajar en nuestras relaciones no es solo un asunto de corazón: también es una estrategia de cuidado del cuerpo.
+
+**En resumen**
+Las relaciones humanas de calidad son medicina preventiva. Nutren, calman, regulan y protegen. Son nuestras vitaminas emocionales y también nuestros escudos biológicos. Construir vínculos sanos no solo mejora tu estado de ánimo… puede literalmente mejorar tu salud y alargar tu vida`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'relationships connection health'
   }
 ];
