@@ -454,7 +454,7 @@ La próxima vez que algo te incomode emocionalmente, en lugar de reaccionar o ev
 Y prueba esto, como si cuidaras de una parte de ti que aún no sabe expresarse:
 1. **“Estoy sintiendo…”** → Nombra la emoción sin juzgarla. Solo reconoce su presencia.
 2. **“¿Qué puede estar faltando para mí en esta situación?”** → Sé curiosa o curioso, no crítica o crítico.
-3. **“¿Qué pequeño gesto puedo hacer para cuidar eso que necesito?”** → No hace falta resolverlo todo. Solo empezar.
+3. **“Qué pequeño gesto puedo hacer para cuidar eso que necesito?”** → No hace falta resolverlo todo. Solo empezar.
 Este simple cambio de enfoque transforma el malestar en una oportunidad de conexión contigo.
 No desde el juicio. Desde el cuidado.
 
@@ -470,5 +470,59 @@ Escucharte es el principio de vivir con más sentido`,
     estimatedTime: '8 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'emotional intelligence journal'
+  },
+  {
+    id: 'res12',
+    title: 'PANTALLAS, DOPAMINA Y SOLEDAD: EL CICLO SILENCIOSO',
+    type: 'article',
+    category: 'Bienestar Emocional',
+    summary: 'Nos distraemos para no sentir… pero lo que evitamos sigue ahí.',
+    content: `**Vivimos hiperconectados… pero emocionalmente ausentes**
+Puede que estés leyendo esto tras una hora de scroll en Instagram. O después de contestar 27 mensajes sin mirar realmente a nadie. O quizá ahora mismo, una parte de ti sienta cansancio… sin saber bien por qué.
+En Emotiva, lo hemos visto muchas veces: no es solo fatiga mental, es sobrecarga emocional disfrazada de hiperconexión digital.
+
+**¿Qué está pasando?**
+La ciencia lo explica. Nuestros dispositivos nos mantienen en un estado de estimulación constante, alternando entre microdosis de dopamina (likes, notificaciones, reels) y picos de ansiedad, comparación o vacío.
+Según un estudio de Twenge et al. (2019), el uso excesivo de pantallas se relaciona directamente con mayores niveles de soledad, insomnio y síntomas depresivos, especialmente en personas jóvenes y sensibles emocionalmente.
+La hiperconectividad digital activa nuestro sistema de recompensa (dopamina), pero no satisface nuestras necesidades emocionales reales: vinculación, calma, validación profunda. Como resultado, cuanto más conectados estamos en lo superficial, más desconectados nos sentimos por dentro.
+
+**¿Qué ocurre a nivel cerebral?**
+El cerebro busca placer rápido. Pero cuando el “premio” no viene acompañado de sentido, vínculo o atención plena, se genera un círculo adictivo:
+“Más scroll = más dopamina → menos regulación emocional → más necesidad de estímulo → más ansiedad → más scroll…”
+Además, la sobreexposición a estímulos visuales rápidos, el multitasking y la falta de pausas reales inhiben la corteza prefrontal (responsable de la toma de decisiones, atención y regulación emocional), mientras hiperactivan el sistema límbico (amenaza, impulsividad, huida).
+El resultado: agotamiento sin saber por qué. Incapacidad para concentrarse. Reacciones impulsivas. Insatisfacción. Soledad.
+
+**¿Y emocionalmente?**
+Muchas veces no estamos enganchados al móvil... sino huyendo de nuestro mundo interno.
+La psicología lo llama evasión experiencial: intentamos evitar pensamientos o emociones difíciles (como el miedo, el dolor o la incomodidad) sumergiéndonos en distracciones.
+Pero como señala Hayes et al. (2012), cuanto más evitamos sentir, más se perpetúa el malestar.
+A corto plazo parece funcionar. A largo plazo… nos deja más vacíos y desbordados.
+
+**¿Qué podemos hacer?**
+Desde Emotiva proponemos tres claves terapéuticas para romper este ciclo silencioso:
+
+1. **Haz pausas conscientes**
+El primer paso no es abandonar el móvil, sino crear espacios de reconexión interna. Aunque sea solo por 5 minutos: respira, escribe, observa cómo estás.
+ **Ejercicio express: 3-2-1.**
+- Nombra 3 emociones que sientes ahora.
+- 2 cosas que tu cuerpo necesita.
+- 1 acción amable que puedes hacer hoy por ti.
+
+2. **Pon límites digitales emocionales, no solo horarios**
+No se trata de apagar el móvil 1 hora antes de dormir (que también ayuda), sino de preguntarte por qué lo usas. ¿Estás cansado/a? ¿Ansioso/a? ¿Evadiendo algo?
+Aprender a identificar tus necesidades reales es más potente que silenciar notificaciones.
+
+3. **Vuelve al contacto real (también contigo)**
+Nada reemplaza el poder de un abrazo, una mirada sostenida o una conversación honesta.
+Y si eso no es posible hoy… reconecta contigo. Con tu cuerpo, tu respiración, tu voz interior.
+
+Una última idea para llevarte:
+“No estás mal por sentirte saturado o sola con tanta conexión.
+El problema no eres tú.
+Es el modelo.
+Y puedes elegir otra forma de estar en el mundo.”`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'social media screen'
   }
 ];
