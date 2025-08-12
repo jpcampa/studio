@@ -66,5 +66,108 @@ export const resourcesData: Resource[] = [
     estimatedTime: '8 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'emotional fatigue burnout'
+  },
+  {
+    id: 'res6',
+    title: 'ANSIEDAD: CUANDO LA MENTE SE ADELANTA Y EL CUERPO GRITA',
+    type: 'article',
+    category: 'Estrés',
+    summary: 'Por qué aparece, qué intenta decirte… y cómo recuperar el control sin luchar contra ti',
+    content: `¿Alguna vez has sentido que tu corazón se acelera sin razón aparente?
+¿Que tus pensamientos van más rápido que tú, y tu cuerpo responde como si algo estuviera en juego… aunque estés solo o sola, sentada frente al ordenador?
+Eso es ansiedad.
+Y aunque a veces parezca tu enemiga, en realidad, es una aliada mal entendida.
+
+**¿Qué es exactamente la ansiedad?**
+La ansiedad es una respuesta automática del cuerpo y la mente ante algo que interpretamos como una amenaza.
+No siempre tiene forma concreta. A veces es un “¿y si…?”, un pensamiento fugaz o una sensación corporal que se intensifica sin previo aviso.
+Es una mezcla de pensamientos intensos, sensaciones físicas y conductas aprendidas.
+Y, aunque molesta, tiene un propósito: ayudarte a sobrevivir, anticiparte, protegerte.
+📍La clave no está en eliminarla… sino en comprenderla, regularla y cambiar tu diálogo con ella.
+
+**¿Cómo se manifiesta la ansiedad?**
+La ansiedad no vive solo en tu mente. Se expresa en tres niveles interconectados:
+1. **Fisiológico:**
+- Tensión muscular constante (cuello, espalda, mandíbula).
+- Taquicardia, sudoración, insomnio, cambios de temperatura.
+- Irritabilidad sin motivo claro.
+2. **Cognitivo:**
+- Pensamientos catastróficos (“y si pasa lo peor…”).
+- Dificultad para concentrarte, hablar o recordar.
+- Rumiaciones y bucles mentales interminables.
+3. **Conductual:**
+- Evitación de situaciones.
+- Compulsiones (comer, revisar el móvil, trabajar de más).
+- Aislamiento, autoexigencia, sensación de desbordamiento.
+
+**¿De dónde viene todo esto?**
+La ansiedad no aparece por capricho. Es el resultado de una compleja interacción entre factores:
+**Biológicos y genéticos:**
+Tu sistema nervioso puede ser más reactivo. Es como tener un “detector de amenazas” hipersensible.
+**Aprendidos:**
+Lo que viste, lo que viviste, cómo te hablaron… enseñaron a tu cerebro a protegerte, a veces con excesiva precaución.
+- Si creciste entre críticas o sobreprotección, es probable que tu sistema de alerta se activara más rápido.
+- Aprendemos a tener miedo… y también podemos aprender a desaprenderlo.
+**Cognitivos:**
+Tus creencias automáticas (no soy suficiente, algo malo va a pasar, debo controlar todo) alimentan la ansiedad.
+No es el mundo el que te ataca. Es tu interpretación del mundo la que puede volverse amenazante.
+
+**¿Cómo se regula?**
+Desde Emotiva, abordamos la ansiedad desde el enfoque cognitivo-conductual y la neurociencia afectiva.
+No con frases vacías, sino con herramientas reales y entrenables.
+Aquí algunas de nuestras favoritas:
+
+1. **Auto-observación consciente**
+Aprende a notar qué te dispara la ansiedad. Usa el formato:
+SITUACIÓN – PIENSO – SIENTO – ACTÚO
+Ejemplo:
+- SITUACIÓN: Alguien no contesta tu mensaje.
+- PIENSO: “Ya no le importo”.
+- SIENTO: Inquietud, tristeza.
+- ACTÚO: Lo evito o le escribo compulsivamente.
+
+2. **Reestructuración Cognitiva**
+No se trata de pensar en positivo, sino de pensar con más realismo y compasión.
+- ¿Qué evidencia tengo de esto?
+- ¿Estoy generalizando o dramatizando?
+- ¿Qué pensaría una persona neutral?
+➡️ La ansiedad se reduce cuando cuestionas tus pensamientos, no tus emociones.
+
+3. **Relajación y Respiración**
+Activar tu sistema parasimpático te ayuda a recuperar el control físico.
+Prueba la técnica 5-5-5:
+Inhala 5 segundos, sostén 5, exhala 5.
+Hazlo por 3 minutos… y vuelve a ti.
+
+4. **Planificación + Microplaceres**
+La ansiedad necesita estructura y disfrute. Combina organización con placer.
+🗓 Organiza tu día y añade momentos pequeños de conexión:
+Una canción. Un paseo corto. Una conversación sin juicio.
+
+5. **Mindfulness y aceptación activa**
+No luches contra la ansiedad. Escúchala.
+Observa tus pensamientos como nubes que pasan.
+Recuerda: Tú no eres tu ansiedad. Tú eres quien la observa.
+
+6. **Comunicación asertiva**
+Expresar lo que sientes sin miedo al rechazo reduce la presión interna.
+✨ Usa frases como:
+“Me gustaría…”, “Me siento así cuando…”, “Prefiero que…”
+Estás permitiendo que tu ansiedad hable… sin que grite.
+
+7. **Prevención de recaídas: no es debilidad, es aprendizaje**
+Sentir ansiedad de nuevo no es “fracasar”.
+Es una oportunidad para aplicar lo aprendido.
+Cada “desliz” es un ensayo general para tu versión más libre y serena.
+
+**En resumen…**
+La ansiedad no es el enemigo.
+Es un sistema de alerta antiguo, que solo necesita ser escuchado, reentrenado y acompañado.
+Cuando aprendes a vivir con ella, sin miedo, se convierte en una señal, no una condena.
+
+“No tienes que dejar de sentir. Solo aprender a sentir sin que te destruya.”`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'anxiety stress brain'
   }
 ];
