@@ -43,11 +43,13 @@ import { PostBoundaryEmotionsExercise } from '@/components/paths/PostBoundaryEmo
 import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateFirmnessExercise';
 import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
 import type { ExerciseContent } from '@/data/paths/pathTypes';
+import { useUser } from '@/contexts/UserContext';
 
 
 // Componente para manejar las reflexiones del cuaderno terapéutico
 function TherapeuticNotebookReflectionExercise({ content, pathId }: { content: ModuleContent, pathId: string }) {
     const { toast } = useToast();
+    const { user } = useUser();
     const [reflection, setReflection] = useState('');
     const [isSaved, setIsSaved] = useState(false);
 
@@ -122,6 +124,7 @@ ${reflection}
 
 function BlockageMapExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
     const { toast } = useToast();
+    const { user } = useUser();
     const [step, setStep] = useState(0);
     const [avoidedTask, setAvoidedTask] = useState('');
     const [blockingThoughts, setBlockingThoughts] = useState('');
@@ -262,6 +265,7 @@ ${consequences || 'No especificadas.'}
 
 function CompassionateReflectionExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
      const { toast } = useToast();
+     const { user } = useUser();
     const [step, setStep] = useState(0);
     const [adviceToFriend, setAdviceToFriend] = useState('');
     const [selfJudgment, setSelfJudgment] = useState('');
@@ -336,6 +340,7 @@ ${flexibleThought || 'No especificada.'}
 
 function TwoMinuteRuleExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
     const { toast } = useToast();
+    const { user } = useUser();
     const [task, setTask] = useState('');
     const [twoMinVersion, setTwoMinVersion] = useState('');
     const [when, setWhen] = useState('');
@@ -395,6 +400,7 @@ ${when}
 
 function MicroPlanExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
     const { toast } = useToast();
+    const { user } = useUser();
     const [moment, setMoment] = useState('');
     const [action, setAction] = useState('');
     const [step, setStep] = useState(0);
@@ -432,6 +438,7 @@ Cuando ${moment}, voy a ${action}.
 
 function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
     const { toast } = useToast();
+    const { user } = useUser();
     const [habit, setHabit] = useState('');
     const [futureSelf, setFutureSelf] = useState('');
     const [emotions, setEmotions] = useState('');
@@ -480,6 +487,7 @@ function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleC
 
 function RealisticRitualExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
     const { toast } = useToast();
+    const { user } = useUser();
     const [habit, setHabit] = useState('');
     const [minVersion, setMinVersion] = useState('');
     const [link, setLink] = useState('');
@@ -532,6 +540,7 @@ ${reminder}
 
 function GentleTrackingExercise({ content, pathId }: { content: ExerciseContent; pathId: string }) {
     const { toast } = useToast();
+    const { user } = useUser();
     const [weekWord, setWeekWord] = useState('');
     const [saved, setSaved] = useState(false);
     

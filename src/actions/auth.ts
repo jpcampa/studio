@@ -6,6 +6,7 @@ import { encryptDataAES, decryptDataAES, forceEncryptStringAES, forceDecryptStri
 import { UserProvider, useUser } from "@/contexts/UserContext"; // Assuming useUser can be used server-side, or we pass user object
 import { t } from "@/lib/translations"; // Import translations for error messages
 import type { EmotionalEntry } from "@/data/emotionalEntriesStore";
+import type { NotebookEntry } from "@/data/therapeuticNotebookStore"; // Import NotebookEntry type
 
 // Define the User interface that actions will deal with
 // This should be compatible with the User interface in UserContext
@@ -88,6 +89,18 @@ const EmotionalEntrySchema = z.object({
   }),
 });
 const FetchedEmotionalEntriesSchema = z.array(EmotionalEntrySchema);
+
+// Schema for a single notebook entry from the API
+const NotebookEntrySchema = z.object({
+  id: z.string(),
+  timestamp: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Timestamp must be a valid ISO date string",
+  }),
+  title: z.string(),
+  content: z.string(),
+  pathId: z.string().optional().nullable(),
+});
+const FetchedNotebookEntriesSchema = z.array(NotebookEntrySchema);
 
 
 export async function registerUser(prevState: RegisterState, formData: FormData): Promise<RegisterState> {
@@ -240,6 +253,7 @@ export type LoginState = {
   user?: ActionUser | null;
   debugLoginApiUrl?: string;
   fetchedEmotionalEntries?: EmotionalEntry[] | null;
+  fetchedNotebookEntries?: NotebookEntry[] | null; // Add notebook entries
 };
 
 
@@ -257,6 +271,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
       user: null,
       debugLoginApiUrl: undefined,
       fetchedEmotionalEntries: null,
+      fetchedNotebookEntries: null,
     };
   }
 
@@ -278,6 +293,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         user: null,
         debugLoginApiUrl: undefined,
         fetchedEmotionalEntries: null,
+        fetchedNotebookEntries: null,
     };
   }
 
@@ -305,6 +321,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             user: null,
             debugLoginApiUrl: generatedLoginApiUrl,
             fetchedEmotionalEntries: null,
+            fetchedNotebookEntries: null,
         };
     }
 
@@ -316,6 +333,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         user: null,
         debugLoginApiUrl: generatedLoginApiUrl,
         fetchedEmotionalEntries: null,
+        fetchedNotebookEntries: null,
       };
     }
 
@@ -331,6 +349,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         user: null,
         debugLoginApiUrl: generatedLoginApiUrl,
         fetchedEmotionalEntries: null,
+        fetchedNotebookEntries: null,
       };
     }
 
@@ -379,6 +398,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
               user: null,
               debugLoginApiUrl: generatedLoginApiUrl,
               fetchedEmotionalEntries: null,
+              fetchedNotebookEntries: null,
             };
           }
 
@@ -390,25 +410,36 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             gender: validatedApiUserData.data.gender || null,
             initialEmotionalState: validatedApiUserData.data.initialEmotionalState || null,
           };
-          console.log("LoginUser action: User login successful. Now fetching activities...");
+          console.log("LoginUser action: User login successful. Now fetching activities and notebook entries...");
 
           // --- Fetch emotional activities ---
           const activitiesResult = await fetchUserActivities(actualId);
-          let fetchedEntries: EmotionalEntry[] | null = null;
+          let fetchedEmotionalEntries: EmotionalEntry[] | null = null;
           if (activitiesResult.success && activitiesResult.entries) {
-            fetchedEntries = activitiesResult.entries;
-            console.log("LoginUser action: Successfully fetched and validated emotional entries via fetchUserActivities:", fetchedEntries.length, "entries.");
+            fetchedEmotionalEntries = activitiesResult.entries;
+            console.log("LoginUser action: Successfully fetched and validated emotional entries via fetchUserActivities:", fetchedEmotionalEntries.length, "entries.");
           } else {
             console.warn("LoginUser action: Failed to fetch emotional entries via fetchUserActivities. Error:", activitiesResult.error);
-            // Non-critical, login succeeds, but entries might be missing.
           }
           // --- End fetching emotional activities ---
+          
+          // --- Fetch notebook entries ---
+          const notebookResult = await fetchNotebookEntries(actualId);
+          let fetchedNotebookEntries: NotebookEntry[] | null = null;
+          if (notebookResult.success && notebookResult.entries) {
+            fetchedNotebookEntries = notebookResult.entries;
+            console.log("LoginUser action: Successfully fetched and validated notebook entries:", fetchedNotebookEntries.length, "entries.");
+          } else {
+            console.warn("LoginUser action: Failed to fetch notebook entries. Error:", notebookResult.error);
+          }
+          // --- End fetching notebook entries ---
 
           return {
             message: t.loginSuccessMessage,
             user: userFromApi,
             debugLoginApiUrl: generatedLoginApiUrl,
-            fetchedEmotionalEntries: fetchedEntries,
+            fetchedEmotionalEntries: fetchedEmotionalEntries,
+            fetchedNotebookEntries: fetchedNotebookEntries,
           };
 
         } else {
@@ -419,6 +450,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             user: null,
             debugLoginApiUrl: generatedLoginApiUrl,
             fetchedEmotionalEntries: null,
+            fetchedNotebookEntries: null,
           };
         }
       } else {
@@ -429,6 +461,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             user: null,
             debugLoginApiUrl: generatedLoginApiUrl,
             fetchedEmotionalEntries: null,
+            fetchedNotebookEntries: null,
           };
       }
     } else if (loginApiResult.status === "NOOK") {
@@ -439,6 +472,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         user: null,
         debugLoginApiUrl: generatedLoginApiUrl,
         fetchedEmotionalEntries: null,
+        fetchedNotebookEntries: null,
       };
 
     } else {
@@ -449,6 +483,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         user: null,
         debugLoginApiUrl: generatedLoginApiUrl,
         fetchedEmotionalEntries: null,
+        fetchedNotebookEntries: null,
       };
     }
 
@@ -466,6 +501,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
       user: null,
       debugLoginApiUrl: generatedLoginApiUrl,
       fetchedEmotionalEntries: null,
+      fetchedNotebookEntries: null,
     };
   }
 }
@@ -899,3 +935,80 @@ export async function fetchUserActivities(
   }
 }
 
+// --- Fetch User Notebook Entries ---
+export async function fetchNotebookEntries(
+  userId: string
+): Promise<{ success: boolean; entries?: NotebookEntry[]; error?: string }> {
+  console.log(`fetchNotebookEntries action: Initiated for userId: ${userId}.`);
+
+  if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+    console.warn("fetchNotebookEntries action: Invalid or missing userId.");
+    return { success: false, error: "ID de usuario inválido." };
+  }
+
+  let encryptedUserId: string;
+  try {
+    encryptedUserId = forceEncryptStringAES(userId);
+  } catch (encError: any) {
+    console.error("fetchNotebookEntries action: Error encrypting userId:", encError);
+    return { success: false, error: "Error al preparar el ID de usuario para la solicitud." };
+  }
+
+  const notebookType = "getcuaderno";
+  const notebookApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${notebookType}&usuario=${encodeURIComponent(encryptedUserId)}`;
+  console.log("fetchNotebookEntries action: Fetching from URL:", notebookApiUrl.substring(0, 150) + "...");
+
+  try {
+    const signal = AbortSignal.timeout(API_TIMEOUT_MS);
+    const response = await fetch(notebookApiUrl, { signal });
+    const responseText = await response.text();
+    console.log("fetchNotebookEntries action: API call status:", response.status, "Raw Response Text:", responseText.substring(0, 500) + "...");
+
+    if (!response.ok) {
+      console.warn("fetchNotebookEntries action: Failed. Status:", response.status, "Response:", responseText);
+      return { success: false, error: `Error del servidor del cuaderno (HTTP ${response.status}): ${responseText.substring(0, 100)}` };
+    }
+
+    const apiResult: ExternalApiResponse = JSON.parse(responseText);
+    if (apiResult.status === "OK" && apiResult.data !== undefined) {
+      let potentialEntriesArray: any = null;
+
+      if (Array.isArray(apiResult.data)) {
+        potentialEntriesArray = apiResult.data;
+      } else if (typeof apiResult.data === 'string') {
+        const decrypted = decryptDataAES(apiResult.data);
+        if (decrypted && Array.isArray(decrypted)) {
+          potentialEntriesArray = decrypted;
+        } else {
+          console.warn("fetchNotebookEntries: Decrypted data is not an array or decryption failed.");
+        }
+      }
+
+      if (potentialEntriesArray && Array.isArray(potentialEntriesArray)) {
+        const validationResult = FetchedNotebookEntriesSchema.safeParse(potentialEntriesArray);
+        if (validationResult.success) {
+          console.log("fetchNotebookEntries: Successfully validated entries:", validationResult.data.length);
+          return { success: true, entries: validationResult.data };
+        } else {
+          console.warn("fetchNotebookEntries: Zod validation failed:", validationResult.error.flatten());
+          return { success: false, error: "Datos de cuaderno recibidos no son válidos." };
+        }
+      } else {
+        console.warn("fetchNotebookEntries: No valid array of entries obtained.");
+        return { success: false, error: "No se pudieron procesar los datos del cuaderno." };
+      }
+    } else if (apiResult.status === "OK" && apiResult.data === undefined) {
+      return { success: true, entries: [] };
+    } else {
+      console.warn("fetchNotebookEntries: API reported 'NOOK'. Message:", apiResult.message);
+      return { success: false, error: `El servidor del cuaderno indicó un problema: ${apiResult.message || 'Error desconocido.'}` };
+    }
+  } catch (error: any) {
+    console.error("fetchNotebookEntries action: Error during API call/processing:", error);
+    let errorMessage = "Error de red al obtener el cuaderno.";
+    if (error.name === 'AbortError') {
+      errorMessage = "Tiempo de espera agotado al conectar con el servidor del cuaderno.";
+    }
+    return { success: false, error: errorMessage };
+  }
+}

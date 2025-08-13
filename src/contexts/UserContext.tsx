@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { encryptDataAES, decryptDataAES } from '@/lib/encryption'; 
 import type { EmotionalEntry } from '@/data/emotionalEntriesStore';
 import { overwriteEmotionalEntries, clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
+import type { NotebookEntry } from '@/data/therapeuticNotebookStore'; // Import NotebookEntry
+import { overwriteNotebookEntries, clearAllNotebookEntries } from '@/data/therapeuticNotebookStore'; // Import notebook store functions
 
 
 export interface User {
@@ -22,7 +24,8 @@ const SIMULATED_USER_KEY = 'workwell-simulated-user';
 
 interface LoginContextPayload {
   user: User;
-  entries?: EmotionalEntry[] | null;
+  emotionalEntries?: EmotionalEntry[] | null;
+  notebookEntries?: NotebookEntry[] | null; // Add notebook entries to payload
 }
 
 interface UserContextType {
@@ -89,12 +92,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setUser(loginData.user);
       console.log("UserContext LOGIN_FUNC_TRY: setUser called with:", loginData.user);
       
-      if (loginData.entries && Array.isArray(loginData.entries)) {
-        overwriteEmotionalEntries(loginData.entries);
-        console.log("UserContext LOGIN_FUNC_TRY: Emotional entries overwritten from login data. Count:", loginData.entries.length);
+      // Handle emotional entries
+      if (loginData.emotionalEntries && Array.isArray(loginData.emotionalEntries)) {
+        overwriteEmotionalEntries(loginData.emotionalEntries);
+        console.log("UserContext LOGIN_FUNC_TRY: Emotional entries overwritten from login data. Count:", loginData.emotionalEntries.length);
       } else {
         clearAllEmotionalEntries(); 
         console.log("UserContext LOGIN_FUNC_TRY: Emotional entries cleared (none provided or fetch failed).");
+      }
+
+      // Handle notebook entries
+      if (loginData.notebookEntries && Array.isArray(loginData.notebookEntries)) {
+        overwriteNotebookEntries(loginData.notebookEntries);
+        console.log("UserContext LOGIN_FUNC_TRY: Notebook entries overwritten from login data. Count:", loginData.notebookEntries.length);
+      } else {
+        clearAllNotebookEntries();
+        console.log("UserContext LOGIN_FUNC_TRY: Notebook entries cleared (none provided or fetch failed).");
       }
 
       setLoading(false);
@@ -104,10 +117,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
       // Attempt to set user even if localStorage fails, but log the error
       setUser(loginData.user); 
       console.log("UserContext LOGIN_FUNC_CATCH: setUser (fallback) called with:", loginData.user);
-      if (loginData.entries && Array.isArray(loginData.entries)) {
-         overwriteEmotionalEntries(loginData.entries);
+      if (loginData.emotionalEntries && Array.isArray(loginData.emotionalEntries)) {
+         overwriteEmotionalEntries(loginData.emotionalEntries);
       } else {
          clearAllEmotionalEntries();
+      }
+      if (loginData.notebookEntries && Array.isArray(loginData.notebookEntries)) {
+        overwriteNotebookEntries(loginData.notebookEntries);
+      } else {
+        clearAllNotebookEntries();
       }
       setLoading(false);
       console.log("UserContext LOGIN_FUNC_CATCH: setLoading(false) (fallback) called.");
@@ -121,7 +139,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.removeItem(SIMULATED_USER_KEY);
       clearAllEmotionalEntries();
-      console.log("UserContext LOGOUT_FUNC: User and emotional entries removed from localStorage.");
+      clearAllNotebookEntries(); // Also clear notebook entries on logout
+      console.log("UserContext LOGOUT_FUNC: User, emotional, and notebook entries removed from localStorage.");
     } catch (error) {
       console.error("UserContext LOGOUT_FUNC: Error removing data from localStorage:", error);
     }
