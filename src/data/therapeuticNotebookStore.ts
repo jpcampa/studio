@@ -4,7 +4,8 @@
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { encryptDataAES, forceEncryptStringAES } from '@/lib/encryption';
-import { useUser } from '@/contexts/UserContext'; // Cannot be used here, but for context
+import type { User } from '@/contexts/UserContext';
+
 
 export interface NotebookEntry {
   id: string;
@@ -15,6 +16,7 @@ export interface NotebookEntry {
 }
 
 const NOTEBOOK_ENTRIES_KEY = "workwell-therapeutic-notebook";
+const DEBUG_NOTEBOOK_API_URL_KEY = "workwell-debug-notebook-url"; // Key for sessionStorage
 const MAX_NOTEBOOK_ENTRIES = 100;
 const API_BASE_URL_FOR_NOTEBOOK = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY_FOR_NOTEBOOK = "4463";
@@ -42,7 +44,8 @@ export function getNotebookEntries(): NotebookEntry[] {
 }
 
 /**
- * Adds a new entry to the therapeutic notebook and sends it to the server.
+ * Adds a new entry to the therapeutic notebook and triggers the server save.
+ * It now accepts the current user object to reliably get the user ID.
  */
 export function addNotebookEntry(newEntryData: Omit<NotebookEntry, 'id' | 'timestamp'>): NotebookEntry {
   if (typeof window === "undefined") {
@@ -67,76 +70,58 @@ export function addNotebookEntry(newEntryData: Omit<NotebookEntry, 'id' | 'times
     localStorage.setItem(NOTEBOOK_ENTRIES_KEY, JSON.stringify(updatedEntries));
     console.log("TherapeuticNotebookStore: Saved new entry to localStorage. Total entries now:", updatedEntries.length);
     
-    // Asynchronously send to server, fire and forget style from the component's perspective
+    // Send to server
     sendNotebookEntryToServer(newEntry);
 
     return newEntry;
   } catch (error) {
     console.error("Error saving notebook entry to localStorage:", error);
-    return newEntry; // Return the new entry even if saving fails
+    return newEntry;
   }
 }
 
 async function sendNotebookEntryToServer(entry: NotebookEntry) {
-    // This is tricky because we can't use useUser() hook here.
-    // A better approach would be to pass userId to addNotebookEntry.
-    // Let's assume for now we can get it from localStorage if the user is logged in.
-    const storedUser = localStorage.getItem('workwell-simulated-user');
-    if (!storedUser) {
+    const storedUserStr = localStorage.getItem('workwell-simulated-user');
+    if (!storedUserStr) {
         console.warn("sendNotebookEntryToServer: No user found in localStorage. Cannot send entry to server.");
         return;
     }
-    
-    let userId = '';
+
+    let user: User | null = null;
     try {
-        const decryptedUser = JSON.parse(storedUser);
-        if (decryptedUser && decryptedUser.id) {
-            userId = decryptedUser.id;
+        const decryptedUser = decryptDataAES(storedUserStr);
+        if (decryptedUser && typeof decryptedUser === 'object' && 'id' in decryptedUser) {
+            user = decryptedUser as User;
         }
-    } catch (e) {
-      // It's not JSON, so it might be an encrypted user object.
-      // We can't decrypt here without the key logic being available, so we'll just log and exit.
-      // This part is problematic and highlights a design limitation.
-      // A better design would pass userId into addNotebookEntry.
-      // Let's assume for now we can't get the ID this way reliably.
-      // THE LOGIC IN UserContext is better. We need a way to get the user ID here.
-      // A simple but not ideal way is to assume it's stored unencrypted for this to work
-      // or that the login process stores the ID separately.
-      // Let's stick to what we can do: the component that calls this *should* provide the ID.
-      // Let's refactor `addNotebookEntry` to accept an optional userId.
-      // But since we can't change all call sites, let's try a different approach.
-      // Let's just create the sending logic. The component will have to call it.
-      // The function signature of `addNotebookEntry` is already defined in multiple files.
-      // We'll proceed with a separate async export function.
-
-      console.error("sendNotebookEntryToServer: Could not parse user from localStorage to get ID.");
-      return;
+    } catch(e) {
+        console.error("sendNotebookEntryToServer: Error decrypting user from localStorage", e);
     }
-
-    if (!userId) {
-        console.warn("sendNotebookEntryToServer: Could not extract user ID. Cannot send entry to server.");
+    
+    if (!user || !user.id) {
+        console.error("sendNotebookEntryToServer: Could not get user ID. Aborting server save.");
         return;
     }
     
-    const payload: NotebookSavePayload = { entry, userId };
+    const payload: NotebookSavePayload = { entry, userId: user.id };
     const encryptedPayload = encryptDataAES(payload);
     const apiUrl = `${API_BASE_URL_FOR_NOTEBOOK}?apikey=${API_KEY_FOR_NOTEBOOK}&tipo=guardarcuaderno&datos=${encodeURIComponent(encryptedPayload)}`;
+    
+    // Store URL for debugging
+    sessionStorage.setItem(DEBUG_NOTEBOOK_API_URL_KEY, apiUrl);
+    // Dispatch a custom event to notify components that a new URL is available for debugging
+    window.dispatchEvent(new Event('notebook-url-updated'));
 
     try {
         console.log("sendNotebookEntryToServer: Sending entry to API. URL:", apiUrl.substring(0, 150) + "...");
         const response = await fetch(apiUrl, { signal: AbortSignal.timeout(API_TIMEOUT_MS) });
         if (response.ok) {
             const result = await response.json();
-            if (result.status === 'OK') {
-                console.log("sendNotebookEntryToServer: Notebook entry saved to server successfully.", result);
-            } else {
-                console.warn("sendNotebookEntryToServer: API reported 'NOOK' for notebook entry save.", result);
-            }
+            console.log("sendNotebookEntryToServer: API response:", result.status === 'OK' ? "Success" : "NOOK", result.message);
         } else {
-            console.error("sendNotebookEntryToServer: Failed to save notebook entry to API. Status:", response.status);
+            console.error("sendNotebookEntryToServer: Failed to save to API. Status:", response.status);
         }
     } catch (error) {
-        console.error("sendNotebookEntryToServer: Error sending notebook entry to API:", error);
+        console.error("sendNotebookEntryToServer: Error sending entry to API:", error);
     }
 }
 

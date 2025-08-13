@@ -4,18 +4,42 @@
 import { useState, useEffect } from "react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/lib/translations";
 import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/data/therapeuticNotebookStore";
-import { ArrowLeft, NotebookText, Calendar, ChevronRight } from "lucide-react";
+import { ArrowLeft, NotebookText, Calendar, ChevronRight, ShieldQuestion } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+
+const DEBUG_NOTEBOOK_API_URL_KEY = "workwell-debug-notebook-url";
 
 export default function TherapeuticNotebookPage() {
   const t = useTranslations();
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
+  const [debugUrl, setDebugUrl] = useState<string | null>(null);
+
+  const updateEntries = () => {
+    setEntries(getNotebookEntries());
+    // Also check for debug URL when entries are updated (e.g., after an exercise)
+    const storedUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_API_URL_KEY);
+    if (storedUrl) {
+      setDebugUrl(storedUrl);
+    }
+  };
 
   useEffect(() => {
-    setEntries(getNotebookEntries());
+    updateEntries(); // Initial load
+
+    // Listen for custom event to update URL when a new entry is added from another component
+    const handleUrlUpdate = () => {
+      const storedUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_API_URL_KEY);
+      setDebugUrl(storedUrl);
+    };
+
+    window.addEventListener('notebook-url-updated', handleUrlUpdate);
+
+    return () => {
+      window.removeEventListener('notebook-url-updated', handleUrlUpdate);
+    };
   }, []);
 
   return (
@@ -40,9 +64,28 @@ export default function TherapeuticNotebookPage() {
         </Button>
       </div>
 
+      {debugUrl && (
+        <Card className="shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
+          <CardHeader>
+            <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
+              <ShieldQuestion className="mr-2 h-5 w-5" />
+              URL de Guardado (Depuración)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground mb-2">
+              Esta es la última URL generada para guardar una entrada del cuaderno en la base de datos externa.
+            </p>
+            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+              <code>{debugUrl}</code>
+            </pre>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="space-y-6">
         {entries.length > 0 ? (
-          entries.map((entry, index) => (
+          entries.map((entry) => (
             <Card key={entry.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardHeader>
                 <CardTitle className="text-xl text-accent">{entry.title}</CardTitle>
