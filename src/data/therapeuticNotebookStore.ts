@@ -3,7 +3,7 @@
 
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { encryptDataAES, forceEncryptStringAES } from '@/lib/encryption';
+import { encryptDataAES, forceEncryptStringAES, decryptDataAES } from '@/lib/encryption';
 import type { User } from '@/contexts/UserContext';
 
 
