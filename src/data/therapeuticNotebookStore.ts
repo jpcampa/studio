@@ -3,7 +3,7 @@
 
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { encryptDataAES, forceEncryptStringAES, decryptDataAES } from '@/lib/encryption';
+import { encryptDataAES, decryptDataAES, forceEncryptStringAES } from '@/lib/encryption';
 import type { User } from '@/contexts/UserContext';
 
 
@@ -114,9 +114,19 @@ async function sendNotebookEntryToServer(entry: NotebookEntry) {
     try {
         console.log("sendNotebookEntryToServer: Sending entry to API. URL:", apiUrl.substring(0, 150) + "...");
         const response = await fetch(apiUrl, { signal: AbortSignal.timeout(API_TIMEOUT_MS) });
+        
         if (response.ok) {
-            const result = await response.json();
-            console.log("sendNotebookEntryToServer: API response:", result.status === 'OK' ? "Success" : "NOOK", result.message);
+            const responseText = await response.text();
+            if (responseText && responseText.trim() !== '') {
+                try {
+                    const result = JSON.parse(responseText);
+                    console.log("sendNotebookEntryToServer: API response:", result.status === 'OK' ? "Success" : "NOOK", result.message);
+                } catch (jsonError) {
+                    console.warn("sendNotebookEntryToServer: API responded with OK status, but failed to parse JSON. Raw text:", responseText, jsonError);
+                }
+            } else {
+                 console.log("sendNotebookEntryToServer: API responded with OK status but an empty body. Assuming success.");
+            }
         } else {
             console.error("sendNotebookEntryToServer: Failed to save to API. Status:", response.status);
         }
