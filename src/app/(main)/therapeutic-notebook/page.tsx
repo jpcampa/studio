@@ -7,38 +7,38 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/lib/translations";
 import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/data/therapeuticNotebookStore";
-import { ArrowLeft, NotebookText, Calendar, ChevronRight, ShieldQuestion } from "lucide-react";
+import { ArrowLeft, NotebookText, Calendar, ChevronRight, ShieldQuestion, Database, Code } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const DEBUG_NOTEBOOK_API_URL_KEY = "workwell-debug-notebook-url";
+const DEBUG_NOTEBOOK_PAYLOAD_KEY = "workwell-debug-notebook-payload";
 
 export default function TherapeuticNotebookPage() {
   const t = useTranslations();
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
   const [debugUrl, setDebugUrl] = useState<string | null>(null);
+  const [debugPayload, setDebugPayload] = useState<string | null>(null);
 
-  const updateEntries = () => {
+  const updateEntriesAndDebugInfo = () => {
     setEntries(getNotebookEntries());
-    // Also check for debug URL when entries are updated (e.g., after an exercise)
     const storedUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_API_URL_KEY);
+    const storedPayload = sessionStorage.getItem(DEBUG_NOTEBOOK_PAYLOAD_KEY);
     if (storedUrl) {
       setDebugUrl(storedUrl);
+    }
+    if (storedPayload) {
+      setDebugPayload(storedPayload);
     }
   };
 
   useEffect(() => {
-    updateEntries(); // Initial load
+    updateEntriesAndDebugInfo(); // Initial load
 
-    // Listen for custom event to update URL when a new entry is added from another component
-    const handleUrlUpdate = () => {
-      const storedUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_API_URL_KEY);
-      setDebugUrl(storedUrl);
-    };
-
-    window.addEventListener('notebook-url-updated', handleUrlUpdate);
+    // Listen for custom event to update URL and payload when a new entry is added from another component
+    window.addEventListener('notebook-url-updated', updateEntriesAndDebugInfo);
 
     return () => {
-      window.removeEventListener('notebook-url-updated', handleUrlUpdate);
+      window.removeEventListener('notebook-url-updated', updateEntriesAndDebugInfo);
     };
   }, []);
 
@@ -69,16 +69,32 @@ export default function TherapeuticNotebookPage() {
           <CardHeader>
             <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
               <ShieldQuestion className="mr-2 h-5 w-5" />
-              URL de Guardado (Depuración)
+              Datos de Guardado (Depuración)
             </CardTitle>
+            <CardDescription className="text-xs">
+              Esta es la información enviada al servidor al guardar la última entrada del cuaderno.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground mb-2">
-              Esta es la última URL generada para guardar una entrada del cuaderno en la base de datos externa.
-            </p>
-            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-              <code>{debugUrl}</code>
-            </pre>
+          <CardContent className="space-y-4">
+             <div>
+                <h4 className="text-sm font-semibold flex items-center mb-1">
+                  <Database className="mr-2 h-4 w-4" />
+                  Contenido Desencriptado (Payload)
+                </h4>
+                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                  <code>{debugPayload || 'No hay datos de payload para mostrar.'}</code>
+                </pre>
+             </div>
+             <Separator />
+             <div>
+                 <h4 className="text-sm font-semibold flex items-center mb-1">
+                    <Code className="mr-2 h-4 w-4" />
+                    URL Final (Encriptada)
+                </h4>
+                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                  <code>{debugUrl}</code>
+                </pre>
+             </div>
           </CardContent>
         </Card>
       )}

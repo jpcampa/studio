@@ -3,7 +3,7 @@
 
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { encryptDataAES, decryptDataAES, forceEncryptStringAES } from '@/lib/encryption';
+import { decryptDataAES, encryptDataAES, forceEncryptStringAES } from '@/lib/encryption';
 import type { User } from '@/contexts/UserContext';
 
 
@@ -17,6 +17,7 @@ export interface NotebookEntry {
 
 const NOTEBOOK_ENTRIES_KEY = "workwell-therapeutic-notebook";
 const DEBUG_NOTEBOOK_API_URL_KEY = "workwell-debug-notebook-url"; // Key for sessionStorage
+const DEBUG_NOTEBOOK_PAYLOAD_KEY = "workwell-debug-notebook-payload"; // Key for sessionStorage
 const MAX_NOTEBOOK_ENTRIES = 100;
 const API_BASE_URL_FOR_NOTEBOOK = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY_FOR_NOTEBOOK = "4463";
@@ -103,6 +104,10 @@ async function sendNotebookEntryToServer(entry: NotebookEntry) {
     }
     
     const payload: NotebookSavePayload = { entry, userId: user.id };
+    
+    // Store decrypted payload for debugging
+    sessionStorage.setItem(DEBUG_NOTEBOOK_PAYLOAD_KEY, JSON.stringify(payload, null, 2));
+
     const encryptedPayload = encryptDataAES(payload);
     const apiUrl = `${API_BASE_URL_FOR_NOTEBOOK}?apikey=${API_KEY_FOR_NOTEBOOK}&tipo=guardarcuaderno&datos=${encodeURIComponent(encryptedPayload)}`;
     
@@ -114,9 +119,9 @@ async function sendNotebookEntryToServer(entry: NotebookEntry) {
     try {
         console.log("sendNotebookEntryToServer: Sending entry to API. URL:", apiUrl.substring(0, 150) + "...");
         const response = await fetch(apiUrl, { signal: AbortSignal.timeout(API_TIMEOUT_MS) });
+        const responseText = await response.text();
         
         if (response.ok) {
-            const responseText = await response.text();
             if (responseText && responseText.trim() !== '') {
                 try {
                     const result = JSON.parse(responseText);
@@ -128,7 +133,7 @@ async function sendNotebookEntryToServer(entry: NotebookEntry) {
                  console.log("sendNotebookEntryToServer: API responded with OK status but an empty body. Assuming success.");
             }
         } else {
-            console.error("sendNotebookEntryToServer: Failed to save to API. Status:", response.status);
+            console.error("sendNotebookEntryToServer: Failed to save to API. Status:", response.status, "Response Text:", responseText);
         }
     } catch (error) {
         console.error("sendNotebookEntryToServer: Error sending entry to API:", error);
