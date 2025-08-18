@@ -32,7 +32,25 @@ export function SemaforoEmocionalExercise({ content, pathId }: SemaforoEmocional
   
   const renderStep = () => {
     switch(step) {
-      case 0: return <div className="p-4 space-y-4 text-center"><p>Escanea tu cuerpo, tu mente y tus emociones y selecciona en qué "luz" estás ahora.</p><RadioGroup value={light} onValueChange={(v) => setLight(v as any)} className="flex justify-around py-4">{['verde', 'ambar', 'rojo'].map(color => <Label key={color} htmlFor={`light-${color}`} className={cn("flex items-center justify-center h-20 w-20 rounded-full border-4 cursor-pointer", light === color ? `border-${color}-500 bg-${color}-100` : 'border-gray-300 bg-gray-50', color === 'verde' ? 'border-green-500 bg-green-100' : '', color === 'ambar' ? 'border-yellow-500 bg-yellow-100' : '', color === 'rojo' ? 'border-red-500 bg-red-100' : '')}><RadioGroupItem value={color as 'verde' | 'ambar' | 'rojo'} id={`light-${color}`} className="sr-only" /><TrafficCone className={cn("h-10 w-10", color === 'verde' ? 'text-green-600' : '', color === 'ambar' ? 'text-yellow-600' : '', color === 'rojo' ? 'text-red-600' : '')} /></Label>)}</RadioGroup><Button onClick={() => setStep(1)} className="w-full" disabled={!light}>Siguiente</Button></div>;
+      case 0: return <div className="p-4 space-y-4 text-center"><p>Escanea tu cuerpo, tu mente y tus emociones y selecciona en qué "luz" estás ahora.</p><RadioGroup value={light} onValueChange={(v) => setLight(v as any)} className="flex justify-around py-4">{['verde', 'ambar', 'rojo'].map(color => <Label key={color} htmlFor={`light-${color}`} 
+      className={cn("flex items-center justify-center h-20 w-20 rounded-full border-4 cursor-pointer transition-all", 
+          light === color ? {
+              'border-green-500 bg-green-200 dark:bg-green-800': color === 'verde',
+              'border-amber-500 bg-amber-200 dark:bg-amber-800': color === 'ambar',
+              'border-red-500 bg-red-200 dark:bg-red-800': color === 'rojo',
+          } : {
+              'border-green-200 bg-green-50 dark:bg-green-900/50': color === 'verde',
+              'border-amber-200 bg-amber-50 dark:bg-amber-900/50': color === 'ambar',
+              'border-red-200 bg-red-50 dark:bg-red-900/50': color === 'rojo',
+          }
+      )}>
+          <RadioGroupItem value={color as 'verde' | 'ambar' | 'rojo'} id={`light-${color}`} className="sr-only" />
+          <TrafficCone className={cn("h-10 w-10", {
+              'text-green-600 dark:text-green-300': color === 'verde',
+              'text-amber-600 dark:text-amber-300': color === 'ambar',
+              'text-red-600 dark:text-red-300': color === 'rojo',
+          })} />
+      </Label>)}</RadioGroup><Button onClick={() => setStep(1)} className="w-full" disabled={!light}>Siguiente</Button></div>;
       case 1:
         let suggestions, title;
         if(light === 'verde') { title='Bienestar emocional presente'; suggestions = 'Agradece algo, regálate un momento consciente.'; }
@@ -50,3 +68,4 @@ export function SemaforoEmocionalExercise({ content, pathId }: SemaforoEmocional
     </Card>
   );
 }
+
