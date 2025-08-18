@@ -23,6 +23,7 @@ export default function TherapeuticNotebookPage() {
   const [debugSavePayload, setDebugSavePayload] = useState<string | null>(null);
   const [debugFetchUrl, setDebugFetchUrl] = useState<string | null>(null);
 
+  // This function will be called to refresh the state from localStorage
   const updateEntriesAndDebugInfo = () => {
     setEntries(getNotebookEntries());
     const storedSaveUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_SAVE_URL_KEY);
@@ -35,21 +36,17 @@ export default function TherapeuticNotebookPage() {
   };
 
   useEffect(() => {
-    // Initial load and also re-load when user context changes (e.g., after login)
-    if (!userLoading) {
-        updateEntriesAndDebugInfo();
-    }
-    
-    // Listen for custom event to update URL and payload when a new entry is added from another component
-    const handleUpdate = () => updateEntriesAndDebugInfo();
-    window.addEventListener('notebook-url-updated', handleUpdate);
-    window.addEventListener('notebook-updated', handleUpdate); // Listen for general updates
+    // Initial load when the component mounts
+    updateEntriesAndDebugInfo();
 
+    // Set up an event listener for when the notebook is updated elsewhere
+    window.addEventListener('notebook-updated', updateEntriesAndDebugInfo);
+
+    // Clean up the event listener when the component unmounts
     return () => {
-      window.removeEventListener('notebook-url-updated', handleUpdate);
-      window.removeEventListener('notebook-updated', handleUpdate);
+      window.removeEventListener('notebook-updated', updateEntriesAndDebugInfo);
     };
-  }, [user, userLoading]); // Add user and userLoading as dependencies
+  }, []); // Empty dependency array ensures this runs only once on mount and unmount
 
   return (
     <div className="container mx-auto py-8 space-y-8">
