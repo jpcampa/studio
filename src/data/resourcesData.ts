@@ -190,7 +190,7 @@ La ciencia del bienestar emocional ha identificado varias herramientas que puede
 **Reestructura tus pensamientos**
 No creas todo lo que piensas cuando estás dolida/o. Algunas ideas que aparecen en este momento (“Nunca más voy a sentirme así”, “Estoy rota/o para siempre”) son distorsiones cognitivas fruto del dolor.
 Puedes aprender a detectarlas y darles forma más realista. Pregúntate, por ejemplo:
-- ¿Hay otra forma de interpretar lo que pasó?
+- ¿Qué evidencia tengo de que esto va a pasar?
 - ¿Qué creencias mías se han activado con esta experiencia?
 - ¿Realmente esta situación define todo mi valor como persona?
 
@@ -442,7 +442,7 @@ Cuando algo nos molesta, incomoda o duele por dentro, es fácil juzgarse:
 Pero detrás de cada emoción difícil suele haber algo que importa mucho para ti y que no está siendo satisfecho.
 Y ese algo merece ser escuchado, no reprimido.
 Veamos algunos ejemplos concretos:
-- **Siento ira** → Tal vez necesito justicia, respeto, o ser tenida o tenido en cuenta.
+- **Siento ira** → Tal vez necesite respeto, justicia, o ser tenida o tenido en cuenta.
 - **Siento celos** → Quizá necesito seguridad emocional, claridad, estabilidad en el vínculo.
 - **Siento apatía** → Puede que necesite descanso real, sentido vital, reconexión con lo que me inspira.
 - **Siento vergüenza** → Tal vez esté necesitando aceptación, dignidad, validación desde el afecto.
@@ -799,7 +799,7 @@ Este tipo de pensamiento te ayuda a:
 - Encontrar soluciones y sentirte con más control.
 - Pasar del bloqueo a la acción.
 Por ejemplo:
-“No lo hice perfecto” puede transformarse en “No salió como quería, pero hice lo mejor que pude con lo que tenía”.
+“No lo hice perfecto” puede transformarse en “No salió como quería, pero hice lo mejor que pude con lo que tenía”.
 
 **¿Cómo saber si estoy rumiando o analizando de forma útil?**
 Aquí va una guía simple:
@@ -832,7 +832,51 @@ Y ahí es donde empieza tu poder.`,
     estimatedTime: '7 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
     dataAiHint: 'rumination overthinking anxiety'
+  },
+  {
+    id: 'res18',
+    title: 'LO QUE NO DICES, TU CUERPO LO GRITA: SOMATIZACIÓN Y ESTRÉS EMOCIONAL',
+    type: 'article',
+    category: 'Bienestar Emocional',
+    summary: 'Dolores de cabeza, insomnio o fatiga sin causa médica clara pueden ser formas de tu cuerpo de pedirte escucha.',
+    content: `**¿Te ha pasado sentir dolor de estómago cuando estás muy nerviosa? ¿O que te duele el cuello o la cabeza después de un conflicto emocional?**
+Esto no es casualidad. Es una señal. Cuando no logras expresar lo que sientes, o cuando vives en tensión constante, tu cuerpo puede empezar a hablar por ti. A eso lo llamamos somatización: cuando emociones no procesadas se manifiestan a través de síntomas físicos que no se explican del todo por una causa médica.
+Pero atención: no significa que estás inventando. El dolor, el malestar o el insomnio son reales. Lo que cambia es su origen: muchas veces no está en el cuerpo… sino en lo que el cuerpo intenta contarte.
+
+**¿Por qué ocurre la somatización?**
+La somatización aparece por una combinación compleja de emociones no expresadas, pensamientos distorsionados, atención excesiva al cuerpo y aprendizajes inconscientes. Aquí van algunos ejemplos para entenderlo mejor:
+- Si creciste creyendo que no podías equivocarte, cada error puede activar dolor de pecho, nudo en el estómago o fatiga.
+- Si aprendiste a reprimir lo que sientes para evitar conflictos, es probable que tu cuerpo lo exprese por ti: con migrañas, tensión muscular, o dificultades para respirar.
+- Si estás constantemente alerta, tu sistema nervioso interpreta todo como una amenaza. Y eso se siente en el cuerpo.
+Además, cuando no distinguimos bien entre pensamiento, emoción y sensación física, confundimos el malestar: decimos “siento que no valgo” y creemos que es una emoción… cuando en realidad es un pensamiento que genera ansiedad y síntomas físicos.
+
+**El cuerpo no se equivoca: te está protegiendo**
+La teoría polivagal nos ayuda a entenderlo: tu cuerpo reacciona frente al estrés como si estuviera ante un peligro real. Se activa el “modo supervivencia” y entonces aparecen síntomas como:
+- Respiración agitada
+- Dolores musculares
+- Opresión en el pecho
+- Problemas gastrointestinales
+- Agotamiento extremo
+Esto ocurre porque el sistema nervioso no distingue entre un tigre real y un jefe que te hace sentir en peligro emocional. La reacción fisiológica es similar.
+Y si estas señales se repiten a lo largo del tiempo, se convierten en respuestas automáticas: es como si el cuerpo “aprendiera” que ciertas emociones no pueden expresarse… así que las manifiesta con síntomas.
+
+**¿Qué hacer cuando el cuerpo habla?**
+No se trata de ignorar el cuerpo, ni de asumir que todo es psicológico. Se trata de empezar a integrar lo que sientes por dentro con lo que experimentas por fuera. Algunas claves para lograrlo:
+1. Ponle nombre a lo que sientes. Pregúntate: ¿qué emoción podría estar detrás de este síntoma? ¿Rabia, miedo, tristeza, culpa?
+2. Identifica el pensamiento asociado. ¿Qué te dices a ti misma o a ti mismo cuando aparece el malestar? (Ejemplo: “No debería haber dicho eso”, “Esto es peligroso”, “Van a pensar que soy débil”).
+3. Cuida tu atención. Si estás todo el tiempo escaneando tu cuerpo en busca de señales, puedes amplificarlas sin darte cuenta. Practica volver al presente, sin juzgar.
+4. Busca nuevas formas de expresión. Escribir, hablar con alguien de confianza, dibujar o moverte con conciencia puede ayudarte a liberar emociones atrapadas.
+5. No minimices ni te asustes. El cuerpo no es tu enemigo. Es tu aliado: te está avisando que necesita algo.
+
+**En resumen**
+- La somatización es una respuesta real a un malestar emocional no expresado.
+- Aparece cuando pensamientos, emociones y sensaciones físicas se confunden o reprimen.
+- El cuerpo actúa como mensajero: si no escuchas el mensaje, sube el volumen.
+- Aprender a leer el cuerpo con curiosidad y compasión es el primer paso para cuidarte de verdad.
+
+Escuchar tu cuerpo no es debilidad. Es el comienzo del autocuidado real.`,
+    estimatedTime: '8 min lectura',
+    imageUrl: 'https://placehold.co/600x400.png',
+    dataAiHint: 'somatization stress body'
   }
 ];
-
-    
