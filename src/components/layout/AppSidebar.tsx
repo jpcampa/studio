@@ -14,7 +14,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History, NotebookText, FileQuestion } from "lucide-react";
+import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History, NotebookText, FileQuestion, HeartPulse } from "lucide-react";
 import { useTranslations } from "@/lib/translations";
 import { useUser } from "@/contexts/UserContext";
 import { Logo } from "@/components/Logo";
@@ -24,6 +24,7 @@ const navItems = [
   { href: "/assessment/intro", labelKey: "navAssessment", icon: ClipboardList }, 
   { href: "/my-assessments", labelKey: "navMyAssessments", icon: History },
   { href: "/paths", labelKey: "navPaths", icon: Milestone },
+  { href: "/emotional-log", labelKey: "navMyEmotions", icon: HeartPulse },
   { href: "/therapeutic-notebook", labelKey: "navTherapeuticNotebook", icon: NotebookText },
   { href: "/chatbot", labelKey: "navChatbot", icon: Bot },
   // { href: "/knowledge-assistant", labelKey: "navKnowledgeAssistant", icon: FileQuestion },

@@ -44,6 +44,7 @@ export const t = {
   navSettings: "Configuración",
   navMyAssessments: "Mis Evaluaciones",
   navTherapeuticNotebook: "Cuaderno Terapéutico",
+  navMyEmotions: "Mis Emociones",
   // Welcome Page / Dashboard (Old, parts might be reused or removed)
   welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.",
   startYourJourney: "Comienza tu viaje hacia el bienestar",
@@ -103,8 +104,8 @@ export const t = {
 
   // Assessment Intro Page
   assessmentIntroPageTitle: "Bienvenido/a a tu primer paso",
-  assessmentIntroPageTagline: "Este cuestionario no es solo una evaluación.\nEs un momento contigo. Una invitación a mirar hacia dentro con honestidad, curiosidad y sin juicio.",
-  assessmentIntroPageMainText1: "Vas a encontrar frases que hablan de ti: cómo sueles sentirte, pensar, actuar… y cómo estás viviendo tu presente emocional.\nAlgunas te resultarán fáciles. Otras te harán parar y reflexionar. Y eso está bien.\nCada respuesta es un paso más hacia tu bienestar.",
+  assessmentIntroPageTagline: "Este cuestionario no es solo una evaluación.\\nEs un momento contigo. Una invitación a mirar hacia dentro con honestidad, curiosidad y sin juicio.",
+  assessmentIntroPageMainText1: "Vas a encontrar frases que hablan de ti: cómo sueles sentirte, pensar, actuar… y cómo estás viviendo tu presente emocional.\\nAlgunas te resultarán fáciles. Otras te harán parar y reflexionar. Y eso está bien.\\nCada respuesta es un paso más hacia tu bienestar.",
   assessmentIntroPagePurposeTitle: "¿Para qué sirve?",
   assessmentIntroPagePurpose1: "Conocerte mejor.",
   assessmentIntroPagePurpose2: "Detectar tus necesidades actuales.",
@@ -122,7 +123,7 @@ export const t = {
   assessmentIntroPageWhatToKnowPrivacyText: "Tus respuestas son confidenciales y no se comparten.",
   assessmentIntroPageImportantLabel: "Importante:",
   assessmentIntroPageImportantText: "Esta evaluación no es un diagnóstico formal ni sustituye un proceso terapéutico clínico.",
-  assessmentIntroPageFinalWords: "Tómate tu tiempo. Respira. Responde con sinceridad.\nEste camino empieza en ti. Y no estarás solo/a.",
+  assessmentIntroPageFinalWords: "Tómate tu tiempo. Respira. Responde con sinceridad.\\nEste camino empieza en ti. Y no estarás solo/a.",
   assessmentIntroPageStartButton: "Comenzar Evaluación",
 
   // Assessment Results Intro Page
@@ -132,7 +133,7 @@ export const t = {
   assessmentResultsIntroListItem1: "Un resumen visual claro.",
   assessmentResultsIntroListItem2: "Una lectura profesional de tus fortalezas y ámbitos en desarrollo.",
   assessmentResultsIntroListItem3: "Sugerencias prácticas para cuidarte desde dentro.",
-  assessmentResultsIntroMainText3: "Este perfil no te etiqueta ni te limita.\nEs una guía flexible para avanzar con más consciencia, claridad y dirección.",
+  assessmentResultsIntroMainText3: "Este perfil no te etiqueta ni te limita.\\nEs una guía flexible para avanzar con más consciencia, claridad y dirección.",
   assessmentResultsIntroMainText4: "Además, hemos activado para ti rutas personalizadas basadas en tu estilo emocional.",
   assessmentResultsIntroViewProfileButton: "Ver mi perfil emocional",
 
@@ -301,10 +302,10 @@ export const t = {
 
   // Welcome Page
   welcomePageTitle: "Bienvenido/a: Este espacio es para ti",
-  welcomePageMainText1: "Hay momentos en los que algo dentro de nosotros pide atención.\nTal vez te sientes apagado/a, desbordado/a, desconectado/a… o simplemente sabes que podrías estar mejor, con más claridad, energía o sentido.",
-  welcomePageMainText2: "Esta app nace para acompañarte en ese camino.\nAquí no hay etiquetas, diagnósticos ni exigencias. Solo un espacio íntimo, diseñado con base científica y con mucho respeto, para ayudarte a entender cómo estás, qué necesitas y por dónde puedes empezar a cuidarte de verdad.\nA través de una evaluación breve y sencilla, descubrirás tu perfil personal y emocional actual. No para juzgarte, sino para ofrecerte un mapa que te oriente. A partir de ahí, activaremos rutas personalizadas con prácticas breves, validadas y pensadas para mejorar tu bienestar día a día.",
+  welcomePageMainText1: "Hay momentos en los que algo dentro de nosotros pide atención.\\nTal vez te sientes apagado/a, desbordado/a, desconectado/a… o simplemente sabes que podrías estar mejor, con más claridad, energía o sentido.",
+  welcomePageMainText2: "Esta app nace para acompañarte en ese camino.\\nAquí no hay etiquetas, diagnósticos ni exigencias. Solo un espacio íntimo, diseñado con base científica y con mucho respeto, para ayudarte a entender cómo estás, qué necesitas y por dónde puedes empezar a cuidarte de verdad.\\nA través de una evaluación breve y sencilla, descubrirás tu perfil personal y emocional actual. No para juzgarte, sino para ofrecerte un mapa que te oriente. A partir de ahí, activaremos rutas personalizadas con prácticas breves, validadas y pensadas para mejorar tu bienestar día a día.",
   welcomePageLegalDisclaimer: "Aviso legal: Esta app no sustituye un proceso terapéutico clínico. Es una herramienta profesional de acompañamiento emocional y crecimiento personal.",
-  welcomePageMotivationalQuote: "Estás a un clic de comenzar a escucharte de verdad.\nY eso, aunque no lo parezca, ya es un acto de valentía.",
+  welcomePageMotivationalQuote: "Estás a un clic de comenzar a escucharte de verdad.\\nY eso, aunque no lo parezca, ya es un acto de valentía.",
   welcomePageStartAssessmentButton: "Iniciar mi evaluación personalizada",
   welcomePageSkipToDashboardButton: "Ir al Panel Principal",
 };
