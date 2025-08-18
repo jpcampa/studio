@@ -69,7 +69,7 @@ export const resourcesData: Resource[] = [
   },
   {
     id: 'res6',
-    title: 'ANSIEDAD: CUANDO LA MENTE SE ADELANTA Y EL CUERPO GRITA',
+    title: 'Ansiedad: Cuando la mente se adelanta y el cuerpo grita',
     type: 'article',
     category: 'Estrés',
     summary: 'Por qué aparece, qué intenta decirte… y cómo recuperar el control sin luchar contra ti',
@@ -167,7 +167,7 @@ Cuando aprendes a vivir con ella, sin miedo, se convierte en una señal, no una 
   },
   {
     id: 'res7',
-    title: 'LO QUE LA CIENCIA SABE DEL CORAZÓN ROTO (Y CÓMO PUEDES EMPEZAR A SANAR)',
+    title: 'Lo que la ciencia sabe del corazón roto (y cómo puedes empezar a sanar)',
     type: 'article',
     category: 'Relaciones Sociales',
     summary: 'El rechazo sentimental activa las mismas zonas cerebrales que el dolor físico. Pero también existen herramientas reales y comprobadas que pueden ayudarte a recuperar tu equilibrio y reconstruirte desde dentro.',
@@ -221,7 +221,7 @@ Aunque ahora sientas que todo se ha roto, hay dentro de ti una fuerza que perman
   },
   {
     id: 'res8',
-    title: 'EL ESTRÉS NO ES EL ENEMIGO. ES UN MENSAJERO.',
+    title: 'El estrés no es el enemigo. Es un mensajero.',
     type: 'article',
     category: 'Estrés',
     summary: 'Descubre cómo escucharlo, regularlo y convertirlo en tu aliado',
@@ -298,7 +298,7 @@ Más tú.`,
   },
   {
     id: 'res9',
-    title: '¿POR QUÉ ALGUNAS PERSONAS SIMPLEMENTE… CAEN BIEN?',
+    title: '¿Por qué algunas personas simplemente… caen bien?',
     type: 'article',
     category: 'Relaciones Sociales',
     summary: 'No es magia. No es suerte. Es una combinación de habilidades sociales que podemos aprender, entrenar y potenciar.',
@@ -360,7 +360,7 @@ Y conectar, la clave`,
   },
   {
     id: 'res10',
-    title: 'DORMIR NO ES PERDER EL TIEMPO. ES RECUPERARTE PARA VIVIR MEJOR.',
+    title: 'Dormir no es perder el tiempo. Es recuperarte para vivir mejor.',
     type: 'article',
     category: 'Sueño y descanso',
     summary: 'Guía práctica (y realista) para transformar tu descanso desde hoy, sin fórmulas mágicas ni mitos.',
@@ -473,7 +473,7 @@ Escucharte es el principio de vivir con más sentido`,
   },
   {
     id: 'res12',
-    title: 'PANTALLAS, DOPAMINA Y SOLEDAD: EL CICLO SILENCIOSO',
+    title: 'Pantallas, dopamina y soledad: El ciclo silencioso',
     type: 'article',
     category: 'Bienestar Emocional',
     summary: 'Nos distraemos para no sentir… pero lo que evitamos sigue ahí.',
@@ -528,7 +528,7 @@ Y puedes elegir otra forma de estar en el mundo.”`,
   },
   {
     id: 'res13',
-    title: 'Relaciones que curan: cómo las buenas relaciones protegen tu salud física',
+    title: 'Relaciones que curan: Cómo las buenas relaciones protegen tu salud física',
     type: 'article',
     category: 'Relaciones Sociales',
     summary: 'Las relaciones interpersonales de calidad son mucho más que un bálsamo emocional: regulan tus hormonas, fortalecen tu sistema inmune y pueden alargar tu vida.',
@@ -567,11 +567,11 @@ Aferrarse al rencor, por el contrario, aumenta la respuesta inflamatoria, eleva 
 Las relaciones humanas de calidad son medicina preventiva. Nutren, calman, regulan y protegen. Son nuestras vitaminas emocionales y también nuestros escudos biológicos. Construir vínculos sanos no solo mejora tu estado de ánimo… puede literalmente mejorar tu salud y alargar tu vida`,
     estimatedTime: '9 min lectura',
     imageUrl: 'https://placehold.co/600x400.png',
-    dataAiHint: 'relationships connection health'
+    dataAiHint: 'relationships connection couple'
   },
   {
     id: 'res14',
-    title: 'DORMIR NO ES PAUSAR LA VIDA. ES DARLE SENTIDO.',
+    title: 'Dormir no es pausar la vida. Es darle sentido.',
     type: 'article',
     category: 'Sueño y descanso',
     summary: 'Lo que el sueño hace por ti, incluso cuando tú no haces nada.',
@@ -631,7 +631,7 @@ Y que cuidarte no es egoísmo, es inteligencia emocional aplicada.`,
   },
   {
     id: 'res15',
-    title: '¿POR QUÉ ME DUELE TANTO NO SENTIRME VALORADO/A?',
+    title: '¿Por qué me duele tanto no sentirme valorado/a?',
     type: 'article',
     category: 'Autoestima',
     summary: 'Cuando la mirada del otro llena un vacío que tú también puedes aprender a sostener.',
@@ -711,7 +711,7 @@ Aprender a sostenerte con amor propio es el comienzo de la verdadera libertad.�
   },
   {
     id: 'res16',
-    title: 'VÍNCULOS QUE NUTREN: LO QUE TIENEN EN COMÚN LAS RELACIONES QUE DE VERDAD NOS CUIDAN',
+    title: 'Vínculos que nutren: Lo que tienen en común las relaciones que de verdad nos cuidan',
     type: 'article',
     category: 'Relaciones Sociales',
     summary: 'Claves psicológicas y neuroemocionales de los vínculos que cuidan',
@@ -770,7 +770,7 @@ Y tú mereces relaciones que te abracen sin disfrazarte.`,
   },
   {
     id: 'res17',
-    title: 'CUANDO PENSAR DEMASIADO TE ENREDA: RUMIACIÓN VS ANÁLISIS ÚTIL',
+    title: 'Cuando pensar demasiado te enreda: Rumiación vs Análisis útil',
     type: 'article',
     category: 'Bienestar Emocional',
     summary: 'Descubre la diferencia entre analizar con claridad y quedarte atrapado o atrapada en la rumiación.',
@@ -835,7 +835,7 @@ Y ahí es donde empieza tu poder.`,
   },
   {
     id: 'res18',
-    title: 'LO QUE NO DICES, TU CUERPO LO GRITA: SOMATIZACIÓN Y ESTRÉS EMOCIONAL',
+    title: 'Lo que no dices, tu cuerpo lo grita: Somatización y estrés emocional',
     type: 'article',
     category: 'Bienestar Emocional',
     summary: 'Dolores de cabeza, insomnio o fatiga sin causa médica clara pueden ser formas de tu cuerpo de pedirte escucha.',
@@ -850,7 +850,8 @@ La somatización aparece por una combinación compleja de emociones no expresada
 - Si estás constantemente alerta, tu sistema nervioso interpreta todo como una amenaza. Y eso se siente en el cuerpo.
 Además, cuando no distinguimos bien entre pensamiento, emoción y sensación física, confundimos el malestar: decimos “siento que no valgo” y creemos que es una emoción… cuando en realidad es un pensamiento que genera ansiedad y síntomas físicos.
 
-**El cuerpo no se equivoca: te está protegiendo**
+
+El cuerpo no se equivoca: te está protegiendo
 La teoría polivagal nos ayuda a entenderlo: tu cuerpo reacciona frente al estrés como si estuviera ante un peligro real. Se activa el “modo supervivencia” y entonces aparecen síntomas como:
 - Respiración agitada
 - Dolores musculares
@@ -862,17 +863,17 @@ Y si estas señales se repiten a lo largo del tiempo, se convierten en respuesta
 
 **¿Qué hacer cuando el cuerpo habla?**
 No se trata de ignorar el cuerpo, ni de asumir que todo es psicológico. Se trata de empezar a integrar lo que sientes por dentro con lo que experimentas por fuera. Algunas claves para lograrlo:
-1. Ponle nombre a lo que sientes. Pregúntate: ¿qué emoción podría estar detrás de este síntoma? ¿Rabia, miedo, tristeza, culpa?
-2. Identifica el pensamiento asociado. ¿Qué te dices a ti misma o a ti mismo cuando aparece el malestar? (Ejemplo: “No debería haber dicho eso”, “Esto es peligroso”, “Van a pensar que soy débil”).
-3. Cuida tu atención. Si estás todo el tiempo escaneando tu cuerpo en busca de señales, puedes amplificarlas sin darte cuenta. Practica volver al presente, sin juzgar.
-4. Busca nuevas formas de expresión. Escribir, hablar con alguien de confianza, dibujar o moverte con conciencia puede ayudarte a liberar emociones atrapadas.
-5. No minimices ni te asustes. El cuerpo no es tu enemigo. Es tu aliado: te está avisando que necesita algo.
+1.	Ponle nombre a lo que sientes. Pregúntate: ¿qué emoción podría estar detrás de este síntoma? ¿Rabia, miedo, tristeza, culpa?
+2.	Identifica el pensamiento asociado. ¿Qué te dices a ti misma o a ti mismo cuando aparece el malestar? (Ejemplo: “No debería haber dicho eso”, “Esto es peligroso”, “Van a pensar que soy débil”).
+3.	Cuida tu atención. Si estás todo el tiempo escaneando tu cuerpo en busca de señales, puedes amplificarlas sin darte cuenta. Practica volver al presente, sin juzgar.
+4.	Busca nuevas formas de expresión. Escribir, hablar con alguien de confianza, dibujar o moverte con conciencia puede ayudarte a liberar emociones atrapadas.
+5.	No minimices ni te asustes. El cuerpo no es tu enemigo. Es tu aliado: te está avisando que necesita algo.
 
 **En resumen**
-- La somatización es una respuesta real a un malestar emocional no expresado.
-- Aparece cuando pensamientos, emociones y sensaciones físicas se confunden o reprimen.
-- El cuerpo actúa como mensajero: si no escuchas el mensaje, sube el volumen.
-- Aprender a leer el cuerpo con curiosidad y compasión es el primer paso para cuidarte de verdad.
+✔ La somatización es una respuesta real a un malestar emocional no expresado.
+✔ Aparece cuando pensamientos, emociones y sensaciones físicas se confunden o reprimen.
+✔ El cuerpo actúa como mensajero: si no escuchas el mensaje, sube el volumen.
+✔ Aprender a leer el cuerpo con curiosidad y compasión es el primer paso para cuidarte de verdad.
 
 Escuchar tu cuerpo no es debilidad. Es el comienzo del autocuidado real.`,
     estimatedTime: '8 min lectura',
@@ -880,3 +881,5 @@ Escuchar tu cuerpo no es debilidad. Es el comienzo del autocuidado real.`,
     dataAiHint: 'somatization stress body'
   }
 ];
+
+    
