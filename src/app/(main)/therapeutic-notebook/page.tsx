@@ -7,46 +7,32 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/lib/translations";
 import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/data/therapeuticNotebookStore";
-import { ArrowLeft, NotebookText, Calendar, ChevronRight, ShieldQuestion, Database, Code } from "lucide-react";
+import { ArrowLeft, NotebookText, Calendar, ChevronRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useUser } from "@/contexts/UserContext"; // Import useUser
-
-const DEBUG_NOTEBOOK_SAVE_URL_KEY = "workwell-debug-notebook-url";
-const DEBUG_NOTEBOOK_SAVE_PAYLOAD_KEY = "workwell-debug-notebook-payload";
-const DEBUG_NOTEBOOK_FETCH_URL_KEY = "workwell-debug-notebook-fetch-url";
+import { useUser } from "@/contexts/UserContext";
 
 export default function TherapeuticNotebookPage() {
   const t = useTranslations();
-  const { user, loading: userLoading } = useUser(); // Get user and loading state
+  const { user, loading: userLoading } = useUser();
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
-  const [debugSaveUrl, setDebugSaveUrl] = useState<string | null>(null);
-  const [debugSavePayload, setDebugSavePayload] = useState<string | null>(null);
-  const [debugFetchUrl, setDebugFetchUrl] = useState<string | null>(null);
 
-  // This function will be called to refresh the state from localStorage
+  // Esta función se llamará para refrescar el estado desde localStorage
   const updateEntriesAndDebugInfo = () => {
     setEntries(getNotebookEntries());
-    const storedSaveUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_SAVE_URL_KEY);
-    const storedSavePayload = sessionStorage.getItem(DEBUG_NOTEBOOK_SAVE_PAYLOAD_KEY);
-    const storedFetchUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_FETCH_URL_KEY);
-
-    if (storedSaveUrl) setDebugSaveUrl(storedSaveUrl);
-    if (storedSavePayload) setDebugSavePayload(storedSavePayload);
-    if (storedFetchUrl) setDebugFetchUrl(storedFetchUrl);
   };
 
   useEffect(() => {
-    // Initial load when the component mounts
+    // Carga inicial cuando el componente se monta
     updateEntriesAndDebugInfo();
 
-    // Set up an event listener for when the notebook is updated elsewhere
+    // Configurar un event listener para cuando el cuaderno se actualice en otro lugar
     window.addEventListener('notebook-updated', updateEntriesAndDebugInfo);
 
-    // Clean up the event listener when the component unmounts
+    // Limpiar el event listener cuando el componente se desmonte
     return () => {
       window.removeEventListener('notebook-updated', updateEntriesAndDebugInfo);
     };
-  }, []); // Empty dependency array ensures this runs only once on mount and unmount
+  }, []); // El array de dependencias vacío asegura que esto se ejecute solo una vez al montar y desmontar
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -69,56 +55,6 @@ export default function TherapeuticNotebookPage() {
           </Link>
         </Button>
       </div>
-
-      {(debugSaveUrl || debugFetchUrl) && (
-        <Card className="shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
-          <CardHeader>
-            <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
-              <ShieldQuestion className="mr-2 h-5 w-5" />
-              Datos de API (Depuración)
-            </CardTitle>
-            <CardDescription className="text-xs">
-              Esta es la información de las llamadas al servidor para guardar y cargar las entradas del cuaderno.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-             {debugSavePayload && (
-                <div>
-                    <h4 className="text-sm font-semibold flex items-center mb-1">
-                      <Database className="mr-2 h-4 w-4" />
-                      Contenido Guardado (Desencriptado)
-                    </h4>
-                    <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                      <code>{debugSavePayload}</code>
-                    </pre>
-                </div>
-             )}
-             {debugSaveUrl && (
-                <div>
-                     <h4 className="text-sm font-semibold flex items-center mb-1">
-                        <Code className="mr-2 h-4 w-4" />
-                        URL Final de Guardado (Encriptada)
-                    </h4>
-                    <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                      <code>{debugSaveUrl}</code>
-                    </pre>
-                </div>
-             )}
-             {(debugSaveUrl && debugFetchUrl) && <Separator />}
-             {debugFetchUrl && (
-                <div>
-                    <h4 className="text-sm font-semibold flex items-center mb-1">
-                        <Code className="mr-2 h-4 w-4" />
-                        URL de Carga de Datos (Encriptada)
-                    </h4>
-                    <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                        <code>{debugFetchUrl}</code>
-                    </pre>
-                </div>
-             )}
-          </CardContent>
-        </Card>
-      )}
 
       <div className="space-y-6">
         {entries.length > 0 ? (
@@ -151,7 +87,7 @@ export default function TherapeuticNotebookPage() {
           <Card className="text-center py-12 px-6">
             <CardContent>
               <NotebookText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg font-medium text-muted-foreground">Aún no tienes entradas en tu cuaderno. Completa los ejercicios de reflexión en las rutas para empezar.</p>
+              <p className="text-lg font-medium text-muted-foreground">{t.noNotebookEntries}</p>
             </CardContent>
           </Card>
         )}
