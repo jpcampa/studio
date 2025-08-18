@@ -957,6 +957,10 @@ export async function fetchNotebookEntries(
   const notebookType = "getcuaderno";
   const notebookApiUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=${notebookType}&usuario=${encodeURIComponent(encryptedUserId)}`;
   console.log("fetchNotebookEntries action: Fetching from URL:", notebookApiUrl.substring(0, 150) + "...");
+  
+  if (typeof window !== 'undefined') {
+    sessionStorage.setItem('workwell-debug-notebook-fetch-url', notebookApiUrl);
+  }
 
   try {
     const signal = AbortSignal.timeout(API_TIMEOUT_MS);
@@ -985,12 +989,34 @@ export async function fetchNotebookEntries(
       }
 
       if (potentialEntriesArray && Array.isArray(potentialEntriesArray)) {
-        const validationResult = FetchedNotebookEntriesSchema.safeParse(potentialEntriesArray);
+        const transformedEntries = potentialEntriesArray.map((rawEntry: any) => {
+            if (Array.isArray(rawEntry) && rawEntry.length >= 4) {
+                // Assuming structure [idcuaderno, fechahora, titulo, contenido, (opcional) pathId]
+                let timestamp = rawEntry[1];
+                try {
+                    timestamp = new Date(rawEntry[1]).toISOString();
+                } catch(e) {
+                    console.warn(`Could not parse notebook date ${rawEntry[1]}. Using original.`);
+                }
+                return {
+                    id: String(rawEntry[0]),
+                    timestamp: timestamp,
+                    title: String(rawEntry[2]),
+                    content: String(rawEntry[3]),
+                    pathId: rawEntry.length > 4 ? String(rawEntry[4]) : null,
+                };
+            }
+            return rawEntry;
+        }).filter(entry => entry && typeof entry === 'object');
+
+        console.log("fetchNotebookEntries: Transformed notebook entries before Zod validation:", JSON.stringify(transformedEntries, null, 2).substring(0, 500) + "...");
+        const validationResult = FetchedNotebookEntriesSchema.safeParse(transformedEntries);
+        
         if (validationResult.success) {
           console.log("fetchNotebookEntries: Successfully validated entries:", validationResult.data.length);
           return { success: true, entries: validationResult.data, debugApiUrl: notebookApiUrl };
         } else {
-          console.warn("fetchNotebookEntries: Zod validation failed:", validationResult.error.flatten());
+          console.warn("fetchNotebookEntries: Zod validation failed for notebook entries:", validationResult.error.flatten());
           return { success: false, error: "Datos de cuaderno recibidos no son válidos.", debugApiUrl: notebookApiUrl };
         }
       } else {
@@ -1012,3 +1038,5 @@ export async function fetchNotebookEntries(
     return { success: false, error: errorMessage, debugApiUrl: notebookApiUrl };
   }
 }
+
+      
