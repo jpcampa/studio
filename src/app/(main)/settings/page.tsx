@@ -50,7 +50,7 @@ export default function SettingsPage() {
   }, [user]);
 
   useEffect(() => {
-    setAppVersion(`B-1.0-06-2025`);
+    setAppVersion(`B-1.0-08-2025`);
   }, []);
 
   const ageRanges = [
@@ -309,4 +309,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
