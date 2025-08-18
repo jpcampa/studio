@@ -44,6 +44,7 @@ import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateF
 import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
 import type { ExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
+import { Badge } from '@/components/ui/badge';
 
 
 // Componente para manejar las reflexiones del cuaderno terapéutico
@@ -314,7 +315,7 @@ ${flexibleThought || 'No especificada.'}
                     <div className="flex items-center gap-2"><Checkbox id="shame" onCheckedChange={c => setAvoidedEmotions(p => ({...p, shame:!!c}))} /><Label htmlFor="shame" className="font-normal">Vergüenza</Label></div>
                     <div className="flex items-center gap-2"><Checkbox id="guilt" onCheckedChange={c => setAvoidedEmotions(p => ({...p, guilt:!!c}))} /><Label htmlFor="guilt" className="font-normal">Culpa</Label></div>
                 </div>
-                <Label htmlFor="aftermath">¿Y qué sentiste después de evitarlo?</Label>
+                <Label htmlFor="aftermath">¿Y qué sentí después de evitarlo?</Label>
                 <Textarea id="aftermath" value={aftermathEmotion} onChange={e => setAftermathEmotion(e.target.value)} placeholder="Alivio momentáneo... y luego frustración." />
                 <Button onClick={() => setStep(4)} className="w-full mt-2">Siguiente</Button></div>;
             case 4: return <div className="p-4 space-y-2"><Label>¿Te exigiste demasiado en ese momento?</Label>
@@ -872,18 +873,26 @@ export function PathDetailClient({ path }: { path: Path }) {
 
       <div className="space-y-6">
         {path.modules.map((module: PathModule, index: number) => (
-          <Card key={module.id} className={`shadow-lg transition-all duration-300 hover:shadow-xl ${completedModules.has(module.id) ? 'opacity-80 border-green-500' : 'border-transparent'}`}>
+          <Card key={module.id} className={`shadow-lg transition-all duration-300 hover:shadow-xl ${completedModules.has(module.id) ? 'border-green-500/50 bg-green-50/30 dark:bg-green-900/10' : 'border-transparent'}`}>
             <CardHeader>
-              <div className="flex items-center gap-4">
-                {getModuleIcon(module.type)}
-                <div>
-                  <CardTitle className="text-xl text-accent">{module.title}</CardTitle>
-                  {module.estimatedTime && (
-                    <CardDescription className="flex items-center text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4 mr-1" /> {module.estimatedTime}
-                    </CardDescription>
-                  )}
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex items-center gap-4">
+                  {getModuleIcon(module.type)}
+                  <div>
+                    <CardTitle className="text-xl text-accent">{module.title}</CardTitle>
+                    {module.estimatedTime && (
+                      <CardDescription className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4 mr-1" /> {module.estimatedTime}
+                      </CardDescription>
+                    )}
+                  </div>
                 </div>
+                 {completedModules.has(module.id) && (
+                  <Badge variant="secondary" className="border-green-600 bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200">
+                    <CheckCircle className="mr-1.5 h-4 w-4" />
+                    Completado
+                  </Badge>
+                )}
               </div>
             </CardHeader>
             <CardContent>
