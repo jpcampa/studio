@@ -348,7 +348,7 @@ function TwoMinuteRuleExercise({ content, pathId }: { content: ModuleContent; pa
     const [saved, setSaved] = useState(false);
 
     if (content.type !== 'exercise') return null;
-
+    
     const handleSave = (e: FormEvent) => {
         e.preventDefault();
         if (!task || !twoMinVersion || !when) {
@@ -673,6 +673,15 @@ import { EmpathicShieldVisualizationExercise } from './EmpathicShieldVisualizati
 import { EmotionalInvolvementTrafficLightExercise } from './EmotionalInvolvementTrafficLightExercise';
 import { SignificantRelationshipsInventoryExercise } from './SignificantRelationshipsInventoryExercise';
 import { RelationalCommitmentExercise } from './RelationalCommitmentExercise';
+// RUTA 6 imports
+import { DetectiveDeEmocionesExercise } from './DetectiveDeEmocionesExercise';
+import { UnaPalabraCadaDiaExercise } from './UnaPalabraCadaDiaExercise';
+import { MapaEmocionNecesidadCuidadoExercise } from './MapaEmocionNecesidadCuidadoExercise';
+import { CartaDesdeLaEmocionExercise } from './CartaDesdeLaEmocionExercise';
+import { MapaEmocionalRepetidoExercise } from './MapaEmocionalRepetidoExercise';
+import { SemaforoEmocionalExercise } from './SemaforoEmocionalExercise';
+import { MeditacionGuiadaSinJuicioExercise } from './MeditacionGuiadaSinJuicioExercise';
+import { DiarioMeDiCuentaExercise } from './DiarioMeDiCuentaExercise';
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
@@ -722,7 +731,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
             return <RealisticRitualExercise key={index} content={contentItem} pathId={pathId} />;
         }
         if (contentItem.title === 'Ejercicio 2: Seguimiento Amable + Refuerzo Visual') {
-            return <GentleTrackingExercise key={index} content={contentItem} pathId={pathId} />;
+            return <GentleTrackingExercise key={index} content={contentItem as ExerciseContent} pathId={pathId} />;
         }
         // Fallback for other exercises
         return (
@@ -792,6 +801,23 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
       return <SignificantRelationshipsInventoryExercise key={index} content={contentItem} pathId={pathId} />;
     case 'relationalCommitmentExercise':
       return <RelationalCommitmentExercise key={index} content={contentItem as RelationalCommitmentExerciseContent} pathId={pathId} />;
+    // RUTA 6
+    case 'detectiveDeEmocionesExercise':
+        return <DetectiveDeEmocionesExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'unaPalabraCadaDiaExercise':
+        return <UnaPalabraCadaDiaExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'mapaEmocionNecesidadCuidadoExercise':
+        return <MapaEmocionNecesidadCuidadoExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'cartaDesdeLaEmocionExercise':
+        return <CartaDesdeLaEmocionExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'mapaEmocionalRepetidoExercise':
+        return <MapaEmocionalRepetidoExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'semaforoEmocionalExercise':
+        return <SemaforoEmocionalExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'meditacionGuiadaSinJuicioExercise':
+        return <MeditacionGuiadaSinJuicioExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'diarioMeDiCuentaExercise':
+        return <DiarioMeDiCuentaExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }

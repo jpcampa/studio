@@ -4,6 +4,7 @@ import { uncertaintyPath } from './paths/uncertaintyPath';
 import { procrastinationPath } from './paths/procrastinationPath';
 import { settingBoundariesPath } from './paths/settingBoundariesPath';
 import { empathyPath } from './paths/empathyPath';
+import { selfUnderstandingPath } from './paths/selfUnderstandingPath';
 
 // Re-export types for easy access in other parts of the application
 export type { PathModule, CollapsibleContent, ExerciseContent, ModuleContent };
@@ -24,4 +25,5 @@ export const pathsData: Path[] = [
   procrastinationPath,
   settingBoundariesPath,
   empathyPath,
+  selfUnderstandingPath,
 ];

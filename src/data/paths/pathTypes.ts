@@ -218,6 +218,63 @@ export type RelationalCommitmentExerciseContent = {
     duration?: string;
 };
 
+// RUTA 6
+export type DetectiveDeEmocionesExerciseContent = {
+    type: 'detectiveDeEmocionesExercise';
+    title: 'EJERCICIO 1: “DETECTIVE DE EMOCIONES”';
+    objective?: string;
+    duration?: string;
+};
+
+export type UnaPalabraCadaDiaExerciseContent = {
+    type: 'unaPalabraCadaDiaExercise';
+    title: 'EJERCICIO 2: “UNA PALABRA CADA DÍA”';
+    objective?: string;
+    duration?: string;
+};
+
+export type MapaEmocionNecesidadCuidadoExerciseContent = {
+    type: 'mapaEmocionNecesidadCuidadoExercise';
+    title: 'EJERCICIO 1: MAPA EMOCIÓN – NECESIDAD – CUIDADO';
+    objective?: string;
+    duration?: string;
+};
+
+export type CartaDesdeLaEmocionExerciseContent = {
+    type: 'cartaDesdeLaEmocionExercise';
+    title: 'EJERCICIO 2: CARTA DESDE LA EMOCIÓN';
+    objective?: string;
+    duration?: string;
+};
+
+export type MapaEmocionalRepetidoExerciseContent = {
+    type: 'mapaEmocionalRepetidoExercise';
+    title: 'EJERCICIO 1: MAPA EMOCIONAL REPETIDO';
+    objective?: string;
+    duration?: string;
+};
+
+export type SemaforoEmocionalExerciseContent = {
+    type: 'semaforoEmocionalExercise';
+    title: 'EJERCICIO 2: SEMÁFORO EMOCIONAL INTERACTIVO';
+    objective?: string;
+    duration?: string;
+};
+
+export type MeditacionGuiadaSinJuicioExerciseContent = {
+    type: 'meditacionGuiadaSinJuicioExercise';
+    title: 'EJERCICIO 1: MEDITACIÓN GUIADA SIN JUICIO';
+    objective?: string;
+    duration?: string;
+};
+
+export type DiarioMeDiCuentaExerciseContent = {
+    type: 'diarioMeDiCuentaExercise';
+    title: 'EJERCICIO 2: DIARIO DEL “ME DI CUENTA”';
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -253,7 +310,16 @@ export type ModuleContent =
   | EmpathicShieldVisualizationExerciseContent
   | EmotionalInvolvementTrafficLightExerciseContent
   | SignificantRelationshipsInventoryExerciseContent
-  | RelationalCommitmentExerciseContent;
+  | RelationalCommitmentExerciseContent
+  // RUTA 6
+  | DetectiveDeEmocionesExerciseContent
+  | UnaPalabraCadaDiaExerciseContent
+  | MapaEmocionNecesidadCuidadoExerciseContent
+  | CartaDesdeLaEmocionExerciseContent
+  | MapaEmocionalRepetidoExerciseContent
+  | SemaforoEmocionalExerciseContent
+  | MeditacionGuiadaSinJuicioExerciseContent
+  | DiarioMeDiCuentaExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
