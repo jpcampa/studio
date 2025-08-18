@@ -151,6 +151,8 @@ export function overwriteNotebookEntries(entries: NotebookEntry[]): void {
     const entriesToStore = sortedEntries.slice(0, MAX_NOTEBOOK_ENTRIES);
     localStorage.setItem(NOTEBOOK_ENTRIES_KEY, JSON.stringify(entriesToStore));
     console.log("TherapeuticNotebookStore: Overwritten local notebook with API data. Total records:", entriesToStore.length);
+    // Dispatch a custom event to notify components that the notebook has been updated
+    window.dispatchEvent(new Event('notebook-updated'));
   } catch (error) {
     console.error("Error overwriting notebook entries in localStorage:", error);
   }
@@ -177,6 +179,8 @@ export function clearAllNotebookEntries(): void {
   try {
     localStorage.removeItem(NOTEBOOK_ENTRIES_KEY);
     console.log("Therapeutic notebook entries cleared from localStorage.");
+     // Dispatch a custom event to notify components that the notebook has been cleared
+    window.dispatchEvent(new Event('notebook-updated'));
   } catch (error) {
     console.error("Error clearing notebook entries from localStorage:", error);
   }

@@ -9,6 +9,7 @@ import { useTranslations } from "@/lib/translations";
 import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/data/therapeuticNotebookStore";
 import { ArrowLeft, NotebookText, Calendar, ChevronRight, ShieldQuestion, Database, Code } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useUser } from "@/contexts/UserContext"; // Import useUser
 
 const DEBUG_NOTEBOOK_SAVE_URL_KEY = "workwell-debug-notebook-url";
 const DEBUG_NOTEBOOK_SAVE_PAYLOAD_KEY = "workwell-debug-notebook-payload";
@@ -16,6 +17,7 @@ const DEBUG_NOTEBOOK_FETCH_URL_KEY = "workwell-debug-notebook-fetch-url";
 
 export default function TherapeuticNotebookPage() {
   const t = useTranslations();
+  const { user, loading: userLoading } = useUser(); // Get user and loading state
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
   const [debugSaveUrl, setDebugSaveUrl] = useState<string | null>(null);
   const [debugSavePayload, setDebugSavePayload] = useState<string | null>(null);
@@ -33,16 +35,21 @@ export default function TherapeuticNotebookPage() {
   };
 
   useEffect(() => {
-    updateEntriesAndDebugInfo(); // Initial load
-
+    // Initial load and also re-load when user context changes (e.g., after login)
+    if (!userLoading) {
+        updateEntriesAndDebugInfo();
+    }
+    
     // Listen for custom event to update URL and payload when a new entry is added from another component
     const handleUpdate = () => updateEntriesAndDebugInfo();
     window.addEventListener('notebook-url-updated', handleUpdate);
+    window.addEventListener('notebook-updated', handleUpdate); // Listen for general updates
 
     return () => {
       window.removeEventListener('notebook-url-updated', handleUpdate);
+      window.removeEventListener('notebook-updated', handleUpdate);
     };
-  }, []);
+  }, [user, userLoading]); // Add user and userLoading as dependencies
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -147,7 +154,7 @@ export default function TherapeuticNotebookPage() {
           <Card className="text-center py-12 px-6">
             <CardContent>
               <NotebookText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg font-medium text-muted-foreground">{t.noNotebookEntries}</p>
+              <p className="text-lg font-medium text-muted-foreground">Aún no tienes entradas en tu cuaderno. Completa los ejercicios de reflexión en las rutas para empezar.</p>
             </CardContent>
           </Card>
         )}
