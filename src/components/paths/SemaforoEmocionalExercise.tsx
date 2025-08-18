@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
-import { Edit3, CheckCircle, Save, TrafficLight } from 'lucide-react';
+import { Edit3, CheckCircle, Save, TrafficCone } from 'lucide-react';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import type { SemaforoEmocionalExerciseContent } from '@/data/paths/pathTypes';
 import { cn } from '@/lib/utils';
@@ -32,7 +32,7 @@ export function SemaforoEmocionalExercise({ content, pathId }: SemaforoEmocional
   
   const renderStep = () => {
     switch(step) {
-      case 0: return <div className="p-4 space-y-4 text-center"><p>Escanea tu cuerpo, tu mente y tus emociones y selecciona en qué "luz" estás ahora.</p><RadioGroup value={light} onValueChange={(v) => setLight(v as any)} className="flex justify-around py-4">{['verde', 'ambar', 'rojo'].map(color => <Label key={color} htmlFor={`light-${color}`} className={cn("flex items-center justify-center h-20 w-20 rounded-full border-4 cursor-pointer", light === color ? `border-${color}-500 bg-${color}-100` : 'border-gray-300 bg-gray-50', color === 'verde' ? 'border-green-500 bg-green-100' : '', color === 'ambar' ? 'border-yellow-500 bg-yellow-100' : '', color === 'rojo' ? 'border-red-500 bg-red-100' : '')}><RadioGroupItem value={color} id={`light-${color}`} className="sr-only" /><TrafficLight className={cn("h-10 w-10", color === 'verde' ? 'text-green-600' : '', color === 'ambar' ? 'text-yellow-600' : '', color === 'rojo' ? 'text-red-600' : '')} /></Label>)}</RadioGroup><Button onClick={() => setStep(1)} className="w-full" disabled={!light}>Siguiente</Button></div>;
+      case 0: return <div className="p-4 space-y-4 text-center"><p>Escanea tu cuerpo, tu mente y tus emociones y selecciona en qué "luz" estás ahora.</p><RadioGroup value={light} onValueChange={(v) => setLight(v as any)} className="flex justify-around py-4">{['verde', 'ambar', 'rojo'].map(color => <Label key={color} htmlFor={`light-${color}`} className={cn("flex items-center justify-center h-20 w-20 rounded-full border-4 cursor-pointer", light === color ? `border-${color}-500 bg-${color}-100` : 'border-gray-300 bg-gray-50', color === 'verde' ? 'border-green-500 bg-green-100' : '', color === 'ambar' ? 'border-yellow-500 bg-yellow-100' : '', color === 'rojo' ? 'border-red-500 bg-red-100' : '')}><RadioGroupItem value={color as 'verde' | 'ambar' | 'rojo'} id={`light-${color}`} className="sr-only" /><TrafficCone className={cn("h-10 w-10", color === 'verde' ? 'text-green-600' : '', color === 'ambar' ? 'text-yellow-600' : '', color === 'rojo' ? 'text-red-600' : '')} /></Label>)}</RadioGroup><Button onClick={() => setStep(1)} className="w-full" disabled={!light}>Siguiente</Button></div>;
       case 1:
         let suggestions, title;
         if(light === 'verde') { title='Bienestar emocional presente'; suggestions = 'Agradece algo, regálate un momento consciente.'; }
