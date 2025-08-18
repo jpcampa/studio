@@ -227,7 +227,7 @@ export const empathyPath: Path = {
             'La empatía real es estar presente sin desaparecer, comprender sin absorber.',
             'Cuidar desde la culpa o el miedo agota y genera autoabandono.',
             'Puedes entender al otro sin compartir su opinión ni justificar su dolor.',
-            'Técnicas como el escudo empático o el semáforo emocional te ayudan a proteger tu energía.',
+            'Técnicas como el escudo empático o el semáforo emocional te ayudan a proteger tu energía sin dejar de vincularte.',
           ]
         },
         { type: 'quote', text: 'Puedes estar con el otro sin dejar de estar contigo. La empatía que no te borra… es la que más alumbra.' },
@@ -259,7 +259,7 @@ export const empathyPath: Path = {
         { type: 'title', text: 'Técnicas Específicas' },
         {
           type: 'significantRelationshipsInventoryExercise',
-          title: 'EJERCICIO 1: INVENTARIO DE RELACIONES SIGNIFICATIVAS',
+          title: 'EJERCICIO1: INVENTARIO DE RELACIONES SIGNIFICATIVAS',
           objective: 'En este ejercicio vas a crear tu propio mapa de apoyo emocional, identificando a esas personas que cumplen tres funciones clave para tu bienestar: te sostienen, te inspiran y respetan tu proceso.',
           duration: '10-15 min',
         },

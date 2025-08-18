@@ -163,7 +163,7 @@ export type SelfCareContractExerciseContent = {
 // RUTA 5
 export type AuthenticityThermometerExerciseContent = {
     type: 'authenticityThermometerExercise';
-    title: string;
+    title: 'EJERCICIO 1 – MI TERMÓMETRO DE AUTENTICIDAD';
     objective?: string;
     duration?: string;
 };
