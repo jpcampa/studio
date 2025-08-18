@@ -1,3 +1,4 @@
+
 export type ParagraphContent = {
   type: 'paragraph';
   text: string;
@@ -159,6 +160,64 @@ export type SelfCareContractExerciseContent = {
     duration?: string;
 };
 
+// RUTA 5
+export type AuthenticityThermometerExerciseContent = {
+    type: 'authenticityThermometerExercise';
+    title: string;
+    objective?: string;
+    duration?: string;
+};
+
+export type EmpatheticDialogueExerciseContent = {
+    type: 'empatheticDialogueExercise';
+    title: 'Ejercicio 2: DIÁLOGO INTERNO EMPÁTICO';
+    objective?: string;
+    duration?: string;
+};
+
+export type EmpathicMirrorExerciseContent = {
+    type: 'empathicMirrorExercise';
+    title: 'EJERCICIO 1: EL ESPEJO EMPÁTICO';
+    objective?: string;
+    duration?: string;
+};
+
+export type ValidationIn3StepsExerciseContent = {
+    type: 'validationIn3StepsExercise';
+    title: 'EJERCICIO 2: VALIDACIÓN EN 3 PASOS';
+    objective?: string;
+    duration?: string;
+};
+
+export type EmpathicShieldVisualizationExerciseContent = {
+    type: 'empathicShieldVisualizationExercise';
+    title: 'EJERCICIO 1: VISUALIZACIÓN GUIADA: EL ESCUDO EMPÁTICO';
+    objective?: string;
+    duration?: string;
+    content?: { type: 'paragraph', text: string }[]; // Para la versión escrita
+};
+
+export type EmotionalInvolvementTrafficLightExerciseContent = {
+    type: 'emotionalInvolvementTrafficLightExercise';
+    title: 'Ejercicio 2: Semáforo de implicación emocional';
+    objective?: string;
+    duration?: string;
+};
+
+export type SignificantRelationshipsInventoryExerciseContent = {
+    type: 'significantRelationshipsInventoryExercise';
+    title: 'EJERCICIO1: INVENTARIO DE RELACIONES SIGNIFICATIVAS';
+    objective?: string;
+    duration?: string;
+};
+
+export type RelationalCommitmentExerciseContent = {
+    type: 'relationalCommitmentExercise';
+    title: 'EJERCICIO 2: MI COMPROMISO RELACIONAL';
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -185,7 +244,16 @@ export type ModuleContent =
   | NoGuiltTechniquesExerciseContent
   | PostBoundaryEmotionsExerciseContent
   | CompassionateFirmnessExerciseContent
-  | SelfCareContractExerciseContent;
+  | SelfCareContractExerciseContent
+  // RUTA 5
+  | AuthenticityThermometerExerciseContent
+  | EmpatheticDialogueExerciseContent
+  | EmpathicMirrorExerciseContent
+  | ValidationIn3StepsExerciseContent
+  | EmpathicShieldVisualizationExerciseContent
+  | EmotionalInvolvementTrafficLightExerciseContent
+  | SignificantRelationshipsInventoryExerciseContent
+  | RelationalCommitmentExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {

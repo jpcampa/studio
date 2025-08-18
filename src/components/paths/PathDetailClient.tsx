@@ -42,7 +42,7 @@ import { NoGuiltTechniquesExercise } from '@/components/paths/NoGuiltTechniquesE
 import { PostBoundaryEmotionsExercise } from '@/components/paths/PostBoundaryEmotionsExercise';
 import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateFirmnessExercise';
 import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
-import type { ExerciseContent } from '@/data/paths/pathTypes';
+import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
 
@@ -665,7 +665,14 @@ ${progressText || 'No se registraron días.'}
 // ====================================================================
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
-
+import { AuthenticityThermometerExercise } from './AuthenticityThermometerExercise';
+import { EmpatheticDialogueExercise } from './EmpatheticDialogueExercise';
+import { EmpathicMirrorExercise } from './EmpathicMirrorExercise';
+import { ValidationIn3StepsExercise } from './ValidationIn3StepsExercise';
+import { EmpathicShieldVisualizationExercise } from './EmpathicShieldVisualizationExercise';
+import { EmotionalInvolvementTrafficLightExercise } from './EmotionalInvolvementTrafficLightExercise';
+import { SignificantRelationshipsInventoryExercise } from './SignificantRelationshipsInventoryExercise';
+import { RelationalCommitmentExercise } from './RelationalCommitmentExercise';
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
@@ -768,6 +775,23 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <CompassionateFirmnessExercise key={index} content={contentItem} pathId={pathId} />;
     case 'selfCareContractExercise':
         return <SelfCareContractExercise key={index} content={contentItem} pathId={pathId} />;
+    // RUTA 5
+    case 'authenticityThermometerExercise':
+      return <AuthenticityThermometerExercise key={index} content={contentItem as AuthenticityThermometerExerciseContent} pathId={pathId} />;
+    case 'empatheticDialogueExercise':
+      return <EmpatheticDialogueExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'empathicMirrorExercise':
+      return <EmpathicMirrorExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'validationIn3StepsExercise':
+      return <ValidationIn3StepsExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'empathicShieldVisualizationExercise':
+      return <EmpathicShieldVisualizationExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'emotionalInvolvementTrafficLightExercise':
+      return <EmotionalInvolvementTrafficLightExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'significantRelationshipsInventoryExercise':
+      return <SignificantRelationshipsInventoryExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'relationalCommitmentExercise':
+      return <RelationalCommitmentExercise key={index} content={contentItem as RelationalCommitmentExerciseContent} pathId={pathId} />;
     default:
       return null;
   }
