@@ -98,7 +98,7 @@ const NotebookEntrySchema = z.object({
   }),
   title: z.string(),
   content: z.string(),
-  pathId: z.string().optional().nullable(),
+  pathId: z.string().optional().nullable().transform(val => val ?? undefined),
 });
 const FetchedNotebookEntriesSchema = z.array(NotebookEntrySchema);
 
@@ -1042,3 +1042,4 @@ export async function fetchNotebookEntries(
       
 
     
+
