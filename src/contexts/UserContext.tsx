@@ -25,7 +25,7 @@ const SIMULATED_USER_KEY = 'workwell-simulated-user';
 interface LoginContextPayload {
   user: User;
   emotionalEntries?: EmotionalEntry[] | null;
-  notebookEntries?: NotebookEntry[] | null; // Add notebook entries to payload
+  notebookEntries?: NotebookEntry[] | null; 
 }
 
 interface UserContextType {
@@ -187,5 +187,3 @@ export function useUser() {
   }
   return context;
 }
-
-      

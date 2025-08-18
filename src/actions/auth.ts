@@ -253,7 +253,7 @@ export type LoginState = {
   user?: ActionUser | null;
   debugLoginApiUrl?: string;
   fetchedEmotionalEntries?: EmotionalEntry[] | null;
-  fetchedNotebookEntries?: NotebookEntry[] | null; // Add notebook entries
+  fetchedNotebookEntries?: NotebookEntry[] | null;
 };
 
 
@@ -1012,5 +1012,3 @@ export async function fetchNotebookEntries(
     return { success: false, error: errorMessage };
   }
 }
-
-      

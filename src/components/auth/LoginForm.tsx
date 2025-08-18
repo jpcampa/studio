@@ -23,6 +23,7 @@ const initialState: LoginState = {
   user: null,
   debugLoginApiUrl: undefined,
   fetchedEmotionalEntries: null,
+  fetchedNotebookEntries: null,
 };
 
 function SubmitButton() {
@@ -64,10 +65,11 @@ export function LoginForm() {
     console.log(`LoginForm ACTION_EFFECT: Checking conditions - isLoginSuccessMessage: ${isLoginSuccessMessage} (Expected: "${expectedSuccessMessage}", Actual: "${state.message}"), isUserValid: ${isUserValid}, User from state:`, state.user);
 
     if (isLoginSuccessMessage && isUserValid) {
-      console.log("LoginForm ACTION_EFFECT: Login success conditions met. Calling loginContext with user:", state.user, "and entries:", state.fetchedEmotionalEntries);
+      console.log("LoginForm ACTION_EFFECT: Login success conditions met. Calling loginContext with user:", state.user, "and entries:", state.fetchedEmotionalEntries, "and notebook entries:", state.fetchedNotebookEntries);
       loginContext({ 
         user: state.user as ContextUser, 
-        entries: state.fetchedEmotionalEntries ?? null 
+        emotionalEntries: state.fetchedEmotionalEntries ?? null,
+        notebookEntries: state.fetchedNotebookEntries ?? null,
       });
       toast({
         title: t.login,
@@ -210,5 +212,3 @@ export function LoginForm() {
     </Card>
   );
 }
-
-    
