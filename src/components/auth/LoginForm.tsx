@@ -17,11 +17,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2, Eye, EyeOff } from "lucide-react"; 
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
+const DEBUG_NOTEBOOK_FETCH_URL_KEY = "workwell-debug-notebook-fetch-url";
+
 const initialState: LoginState = {
   message: null,
   errors: {},
   user: null,
   debugLoginApiUrl: undefined,
+  debugFetchNotebookUrl: undefined,
   fetchedEmotionalEntries: null,
   fetchedNotebookEntries: null,
 };
@@ -53,6 +56,11 @@ export function LoginForm() {
     if (state.debugLoginApiUrl) {
       console.log("LoginForm ACTION_EFFECT: Saving debugLoginApiUrl to sessionStorage:", state.debugLoginApiUrl);
       sessionStorage.setItem('workwell-debug-login-url', state.debugLoginApiUrl);
+    }
+    
+    if (state.debugFetchNotebookUrl) {
+      console.log("LoginForm ACTION_EFFECT: Saving debugFetchNotebookUrl to sessionStorage:", state.debugFetchNotebookUrl);
+      sessionStorage.setItem(DEBUG_NOTEBOOK_FETCH_URL_KEY, state.debugFetchNotebookUrl);
     }
 
     const loginSuccessMessageKey = "loginSuccessMessage" as keyof typeof t;

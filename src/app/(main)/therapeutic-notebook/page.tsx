@@ -10,35 +10,37 @@ import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/
 import { ArrowLeft, NotebookText, Calendar, ChevronRight, ShieldQuestion, Database, Code } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-const DEBUG_NOTEBOOK_API_URL_KEY = "workwell-debug-notebook-url";
-const DEBUG_NOTEBOOK_PAYLOAD_KEY = "workwell-debug-notebook-payload";
+const DEBUG_NOTEBOOK_SAVE_URL_KEY = "workwell-debug-notebook-url";
+const DEBUG_NOTEBOOK_SAVE_PAYLOAD_KEY = "workwell-debug-notebook-payload";
+const DEBUG_NOTEBOOK_FETCH_URL_KEY = "workwell-debug-notebook-fetch-url";
 
 export default function TherapeuticNotebookPage() {
   const t = useTranslations();
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
-  const [debugUrl, setDebugUrl] = useState<string | null>(null);
-  const [debugPayload, setDebugPayload] = useState<string | null>(null);
+  const [debugSaveUrl, setDebugSaveUrl] = useState<string | null>(null);
+  const [debugSavePayload, setDebugSavePayload] = useState<string | null>(null);
+  const [debugFetchUrl, setDebugFetchUrl] = useState<string | null>(null);
 
   const updateEntriesAndDebugInfo = () => {
     setEntries(getNotebookEntries());
-    const storedUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_API_URL_KEY);
-    const storedPayload = sessionStorage.getItem(DEBUG_NOTEBOOK_PAYLOAD_KEY);
-    if (storedUrl) {
-      setDebugUrl(storedUrl);
-    }
-    if (storedPayload) {
-      setDebugPayload(storedPayload);
-    }
+    const storedSaveUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_SAVE_URL_KEY);
+    const storedSavePayload = sessionStorage.getItem(DEBUG_NOTEBOOK_SAVE_PAYLOAD_KEY);
+    const storedFetchUrl = sessionStorage.getItem(DEBUG_NOTEBOOK_FETCH_URL_KEY);
+
+    if (storedSaveUrl) setDebugSaveUrl(storedSaveUrl);
+    if (storedSavePayload) setDebugSavePayload(storedSavePayload);
+    if (storedFetchUrl) setDebugFetchUrl(storedFetchUrl);
   };
 
   useEffect(() => {
     updateEntriesAndDebugInfo(); // Initial load
 
     // Listen for custom event to update URL and payload when a new entry is added from another component
-    window.addEventListener('notebook-url-updated', updateEntriesAndDebugInfo);
+    const handleUpdate = () => updateEntriesAndDebugInfo();
+    window.addEventListener('notebook-url-updated', handleUpdate);
 
     return () => {
-      window.removeEventListener('notebook-url-updated', updateEntriesAndDebugInfo);
+      window.removeEventListener('notebook-url-updated', handleUpdate);
     };
   }, []);
 
@@ -64,37 +66,52 @@ export default function TherapeuticNotebookPage() {
         </Button>
       </div>
 
-      {debugUrl && (
+      {(debugSaveUrl || debugFetchUrl) && (
         <Card className="shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
           <CardHeader>
             <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
               <ShieldQuestion className="mr-2 h-5 w-5" />
-              Datos de Guardado (Depuración)
+              Datos de API (Depuración)
             </CardTitle>
             <CardDescription className="text-xs">
-              Esta es la información enviada al servidor al guardar la última entrada del cuaderno.
+              Esta es la información de las llamadas al servidor para guardar y cargar las entradas del cuaderno.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-             <div>
-                <h4 className="text-sm font-semibold flex items-center mb-1">
-                  <Database className="mr-2 h-4 w-4" />
-                  Contenido Desencriptado (Payload)
-                </h4>
-                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                  <code>{debugPayload || 'No hay datos de payload para mostrar.'}</code>
-                </pre>
-             </div>
-             <Separator />
-             <div>
-                 <h4 className="text-sm font-semibold flex items-center mb-1">
-                    <Code className="mr-2 h-4 w-4" />
-                    URL Final (Encriptada)
-                </h4>
-                <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-                  <code>{debugUrl}</code>
-                </pre>
-             </div>
+             {debugSavePayload && (
+                <div>
+                    <h4 className="text-sm font-semibold flex items-center mb-1">
+                      <Database className="mr-2 h-4 w-4" />
+                      Contenido Guardado (Desencriptado)
+                    </h4>
+                    <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                      <code>{debugSavePayload}</code>
+                    </pre>
+                </div>
+             )}
+             {debugSaveUrl && (
+                <div>
+                     <h4 className="text-sm font-semibold flex items-center mb-1">
+                        <Code className="mr-2 h-4 w-4" />
+                        URL Final de Guardado (Encriptada)
+                    </h4>
+                    <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                      <code>{debugSaveUrl}</code>
+                    </pre>
+                </div>
+             )}
+             {(debugSaveUrl && debugFetchUrl) && <Separator />}
+             {debugFetchUrl && (
+                <div>
+                    <h4 className="text-sm font-semibold flex items-center mb-1">
+                        <Code className="mr-2 h-4 w-4" />
+                        URL de Carga de Datos (Encriptada)
+                    </h4>
+                    <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+                        <code>{debugFetchUrl}</code>
+                    </pre>
+                </div>
+             )}
           </CardContent>
         </Card>
       )}

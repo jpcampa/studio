@@ -252,6 +252,7 @@ export type LoginState = {
   message?: string | null;
   user?: ActionUser | null;
   debugLoginApiUrl?: string;
+  debugFetchNotebookUrl?: string;
   fetchedEmotionalEntries?: EmotionalEntry[] | null;
   fetchedNotebookEntries?: NotebookEntry[] | null;
 };
@@ -269,7 +270,6 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Error de validación.",
       user: null,
-      debugLoginApiUrl: undefined,
       fetchedEmotionalEntries: null,
       fetchedNotebookEntries: null,
     };
@@ -291,7 +291,6 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
         message: "Error interno al preparar los datos para el inicio de sesión.",
         errors: { _form: ["No se pudieron encriptar las credenciales de forma segura."] },
         user: null,
-        debugLoginApiUrl: undefined,
         fetchedEmotionalEntries: null,
         fetchedNotebookEntries: null,
     };
@@ -438,6 +437,7 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
             message: t.loginSuccessMessage,
             user: userFromApi,
             debugLoginApiUrl: generatedLoginApiUrl,
+            debugFetchNotebookUrl: notebookResult.debugApiUrl,
             fetchedEmotionalEntries: fetchedEmotionalEntries,
             fetchedNotebookEntries: fetchedNotebookEntries,
           };
@@ -938,7 +938,7 @@ export async function fetchUserActivities(
 // --- Fetch User Notebook Entries ---
 export async function fetchNotebookEntries(
   userId: string
-): Promise<{ success: boolean; entries?: NotebookEntry[]; error?: string }> {
+): Promise<{ success: boolean; entries?: NotebookEntry[]; error?: string; debugApiUrl?: string; }> {
   console.log(`fetchNotebookEntries action: Initiated for userId: ${userId}.`);
 
   if (!userId || typeof userId !== 'string' || userId.trim() === '') {
@@ -966,7 +966,7 @@ export async function fetchNotebookEntries(
 
     if (!response.ok) {
       console.warn("fetchNotebookEntries action: Failed. Status:", response.status, "Response:", responseText);
-      return { success: false, error: `Error del servidor del cuaderno (HTTP ${response.status}): ${responseText.substring(0, 100)}` };
+      return { success: false, error: `Error del servidor del cuaderno (HTTP ${response.status}): ${responseText.substring(0, 100)}`, debugApiUrl: notebookApiUrl };
     }
 
     const apiResult: ExternalApiResponse = JSON.parse(responseText);
@@ -988,20 +988,20 @@ export async function fetchNotebookEntries(
         const validationResult = FetchedNotebookEntriesSchema.safeParse(potentialEntriesArray);
         if (validationResult.success) {
           console.log("fetchNotebookEntries: Successfully validated entries:", validationResult.data.length);
-          return { success: true, entries: validationResult.data };
+          return { success: true, entries: validationResult.data, debugApiUrl: notebookApiUrl };
         } else {
           console.warn("fetchNotebookEntries: Zod validation failed:", validationResult.error.flatten());
-          return { success: false, error: "Datos de cuaderno recibidos no son válidos." };
+          return { success: false, error: "Datos de cuaderno recibidos no son válidos.", debugApiUrl: notebookApiUrl };
         }
       } else {
         console.warn("fetchNotebookEntries: No valid array of entries obtained.");
-        return { success: false, error: "No se pudieron procesar los datos del cuaderno." };
+        return { success: false, error: "No se pudieron procesar los datos del cuaderno.", debugApiUrl: notebookApiUrl };
       }
     } else if (apiResult.status === "OK" && apiResult.data === undefined) {
-      return { success: true, entries: [] };
+      return { success: true, entries: [], debugApiUrl: notebookApiUrl };
     } else {
       console.warn("fetchNotebookEntries: API reported 'NOOK'. Message:", apiResult.message);
-      return { success: false, error: `El servidor del cuaderno indicó un problema: ${apiResult.message || 'Error desconocido.'}` };
+      return { success: false, error: `El servidor del cuaderno indicó un problema: ${apiResult.message || 'Error desconocido.'}`, debugApiUrl: notebookApiUrl };
     }
   } catch (error: any) {
     console.error("fetchNotebookEntries action: Error during API call/processing:", error);
@@ -1009,6 +1009,6 @@ export async function fetchNotebookEntries(
     if (error.name === 'AbortError') {
       errorMessage = "Tiempo de espera agotado al conectar con el servidor del cuaderno.";
     }
-    return { success: false, error: errorMessage };
+    return { success: false, error: errorMessage, debugApiUrl: notebookApiUrl };
   }
 }
