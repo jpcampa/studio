@@ -275,6 +275,84 @@ export type DiarioMeDiCuentaExerciseContent = {
     duration?: string;
 };
 
+// RUTA 7
+export type ValuesCompassExerciseContent = {
+    type: 'valuesCompassExercise';
+    title: 'EJERCICIO 1: MI BRÚJULA DE VALORES';
+    objective?: string;
+    duration?: string;
+};
+
+export type EnergySenseMapExerciseContent = {
+    type: 'energySenseMapExercise';
+    title: 'EJERCICIO 2: MAPA DE ENERGÍA VS. SENTIDO';
+    objective?: string;
+    duration?: string;
+};
+
+export type DetoursInventoryExerciseContent = {
+    type: 'detoursInventoryExercise';
+    title: 'EJERCICIO 1: INVENTARIO DE DESVÍOS';
+    objective?: string;
+    duration?: string;
+};
+
+export type PresentVsEssentialSelfExerciseContent = {
+    type: 'presentVsEssentialSelfExercise';
+    title: 'EJERCICIO 2: VISUALIZACIÓN DEL YO PRESENTE VS. YO ESENCIAL';
+    objective?: string;
+    duration?: string;
+};
+
+export type MentalNoiseTrafficLightExerciseContent = {
+    type: 'mentalNoiseTrafficLightExercise';
+    title: 'MICROPRÁCTICA OPCIONAL: SEMÁFORO DEL RUIDO MENTAL';
+    objective?: string;
+    duration?: string;
+};
+
+export type DirectedDecisionsExerciseContent = {
+    type: 'directedDecisionsExercise';
+    title: 'EJERCICIO 1: DECISIONES CON DIRECCIÓN';
+    objective?: string;
+    duration?: string;
+};
+
+export type SenseChecklistExerciseContent = {
+    type: 'senseChecklistExercise';
+    title: 'EJERCICIO 2: CHECKLIST DEL SENTIDO';
+    objective?: string;
+    duration?: string;
+};
+
+export type UnfulfilledNeedsExerciseContent = {
+    type: 'unfulfilledNeedsExercise';
+    title: 'MICROPRÁCTICA OPCIONAL: LO QUE NO HICE… Y SÍ ME NUTRÍA';
+    objective?: string;
+    duration?: string;
+};
+
+export type BraveRoadmapExerciseContent = {
+    type: 'braveRoadmapExercise';
+    title: 'EJERCICIO 1: MI HOJA DE RUTA VALIENTE';
+    objective?: string;
+    duration?: string;
+};
+
+export type EssentialReminderExerciseContent = {
+    type: 'essentialReminderExercise';
+    title: 'EJERCICIO 2: MI RECORDATORIO ESENCIAL';
+    objective?: string;
+    duration?: string;
+};
+
+export type ThoughtsThatBlockPurposeExerciseContent = {
+    type: 'thoughtsThatBlockPurposeExercise';
+    title: 'MICROPRÁCTICA OPCIONAL: ¿QUÉ PENSAMIENTOS ME ALEJAN DE MI PROPÓSITO?';
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -319,7 +397,19 @@ export type ModuleContent =
   | MapaEmocionalRepetidoExerciseContent
   | SemaforoEmocionalExerciseContent
   | MeditacionGuiadaSinJuicioExerciseContent
-  | DiarioMeDiCuentaExerciseContent;
+  | DiarioMeDiCuentaExerciseContent
+  // RUTA 7
+  | ValuesCompassExerciseContent
+  | EnergySenseMapExerciseContent
+  | DetoursInventoryExerciseContent
+  | PresentVsEssentialSelfExerciseContent
+  | MentalNoiseTrafficLightExerciseContent
+  | DirectedDecisionsExerciseContent
+  | SenseChecklistExerciseContent
+  | UnfulfilledNeedsExerciseContent
+  | BraveRoadmapExerciseContent
+  | EssentialReminderExerciseContent
+  | ThoughtsThatBlockPurposeExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {

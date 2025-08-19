@@ -682,6 +682,19 @@ import { MapaEmocionalRepetidoExercise } from './MapaEmocionalRepetidoExercise';
 import { SemaforoEmocionalExercise } from './SemaforoEmocionalExercise';
 import { MeditacionGuiadaSinJuicioExercise } from './MeditacionGuiadaSinJuicioExercise';
 import { DiarioMeDiCuentaExercise } from './DiarioMeDiCuentaExercise';
+// RUTA 7 imports
+import { ValuesCompassExercise } from './ValuesCompassExercise';
+import { EnergySenseMapExercise } from './EnergySenseMapExercise';
+import { DetoursInventoryExercise } from './DetoursInventoryExercise';
+import { PresentVsEssentialSelfExercise } from './PresentVsEssentialSelfExercise';
+import { MentalNoiseTrafficLightExercise } from './MentalNoiseTrafficLightExercise';
+import { DirectedDecisionsExercise } from './DirectedDecisionsExercise';
+import { SenseChecklistExercise } from './SenseChecklistExercise';
+import { UnfulfilledNeedsExercise } from './UnfulfilledNeedsExercise';
+import { BraveRoadmapExercise } from './BraveRoadmapExercise';
+import { EssentialReminderExercise } from './EssentialReminderExercise';
+import { ThoughtsThatBlockPurposeExercise } from './ThoughtsThatBlockPurposeExercise';
+
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
@@ -818,6 +831,29 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <MeditacionGuiadaSinJuicioExercise key={index} content={contentItem} pathId={pathId} />;
     case 'diarioMeDiCuentaExercise':
         return <DiarioMeDiCuentaExercise key={index} content={contentItem} pathId={pathId} />;
+    // RUTA 7
+    case 'valuesCompassExercise':
+        return <ValuesCompassExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'energySenseMapExercise':
+        return <EnergySenseMapExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'detoursInventoryExercise':
+        return <DetoursInventoryExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'presentVsEssentialSelfExercise':
+        return <PresentVsEssentialSelfExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'mentalNoiseTrafficLightExercise':
+        return <MentalNoiseTrafficLightExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'directedDecisionsExercise':
+        return <DirectedDecisionsExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'senseChecklistExercise':
+        return <SenseChecklistExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'unfulfilledNeedsExercise':
+        return <UnfulfilledNeedsExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'braveRoadmapExercise':
+        return <BraveRoadmapExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'essentialReminderExercise':
+        return <EssentialReminderExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'thoughtsThatBlockPurposeExercise':
+        return <ThoughtsThatBlockPurposeExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }
