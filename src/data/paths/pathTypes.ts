@@ -353,6 +353,63 @@ export type ThoughtsThatBlockPurposeExerciseContent = {
     duration?: string;
 };
 
+// RUTA 8
+export type ResilienceTimelineExerciseContent = {
+    type: 'resilienceTimelineExercise';
+    title: 'EJERCICIO 1: LÍNEA DEL TIEMPO RESILIENTE';
+    objective: string;
+    duration: string;
+};
+
+export type PersonalDefinitionExerciseContent = {
+    type: 'personalDefinitionExercise';
+    title: 'Técnica 2: Mi definición personal de resiliencia';
+    objective: string;
+    duration: string;
+};
+
+export type AnchorInStormExerciseContent = {
+    type: 'anchorInStormExercise';
+    title: 'EJERCICIO 1: MI ANCLA EN LA TORMENTA';
+    objective: string;
+    duration: string;
+};
+
+export type IntensityScaleExerciseContent = {
+    type: 'intensityScaleExercise';
+    title: 'EJERCICIO 2: MI ESCALA DE INTENSIDAD Y PLAN DE AUTORREGULACIÓN';
+    objective: string;
+    duration: string;
+};
+
+export type BraveDecisionsWheelExerciseContent = {
+    type: 'braveDecisionsWheelExercise';
+    title: 'EJERCICIO 1: RUEDA DE DECISIONES VALIENTES';
+    objective: string;
+    duration: string;
+};
+
+export type PlanABExerciseContent = {
+    type: 'planABExercise';
+    title: 'EJERCICIO 2: Plan A / Plan B emocional (versión ampliada)';
+    objective: string;
+    duration: string;
+};
+
+export type ChangeTimelineExerciseContent = {
+    type: 'changeTimelineExercise';
+    title: 'EJERCICIO 1: MI LÍNEA DEL CAMBIO';
+    objective: string;
+    duration: string;
+};
+
+export type MyPactExerciseContent = {
+    type: 'myPactExercise';
+    title: 'EJERCICIO 2: MI PACTO CONMIGO';
+    objective: string;
+    duration: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -409,7 +466,16 @@ export type ModuleContent =
   | UnfulfilledNeedsExerciseContent
   | BraveRoadmapExerciseContent
   | EssentialReminderExerciseContent
-  | ThoughtsThatBlockPurposeExerciseContent;
+  | ThoughtsThatBlockPurposeExerciseContent
+  // RUTA 8
+  | ResilienceTimelineExerciseContent
+  | PersonalDefinitionExerciseContent
+  | AnchorInStormExerciseContent
+  | IntensityScaleExerciseContent
+  | BraveDecisionsWheelExerciseContent
+  | PlanABExerciseContent
+  | ChangeTimelineExerciseContent
+  | MyPactExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {

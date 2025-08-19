@@ -694,6 +694,15 @@ import { UnfulfilledNeedsExercise } from './UnfulfilledNeedsExercise';
 import { BraveRoadmapExercise } from './BraveRoadmapExercise';
 import { EssentialReminderExercise } from './EssentialReminderExercise';
 import { ThoughtsThatBlockPurposeExercise } from './ThoughtsThatBlockPurposeExercise';
+// RUTA 8 imports
+import { ResilienceTimelineExercise } from './ResilienceTimelineExercise';
+import { PersonalDefinitionExercise } from './PersonalDefinitionExercise';
+import { AnchorInStormExercise } from './AnchorInStormExercise';
+import { IntensityScaleExercise } from './IntensityScaleExercise';
+import { BraveDecisionsWheelExercise } from './BraveDecisionsWheelExercise';
+import { PlanABExercise } from './PlanABExercise';
+import { ChangeTimelineExercise } from './ChangeTimelineExercise';
+import { MyPactExercise } from './MyPactExercise';
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
@@ -854,6 +863,23 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <EssentialReminderExercise key={index} content={contentItem} pathId={pathId} />;
     case 'thoughtsThatBlockPurposeExercise':
         return <ThoughtsThatBlockPurposeExercise key={index} content={contentItem} pathId={pathId} />;
+    // RUTA 8
+    case 'resilienceTimelineExercise':
+        return <ResilienceTimelineExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'personalDefinitionExercise':
+        return <PersonalDefinitionExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'anchorInStormExercise':
+        return <AnchorInStormExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'intensityScaleExercise':
+        return <IntensityScaleExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'braveDecisionsWheelExercise':
+        return <BraveDecisionsWheelExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'planABExercise':
+        return <PlanABExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'changeTimelineExercise':
+        return <ChangeTimelineExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'myPactExercise':
+        return <MyPactExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }
