@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -7,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import type { CoherenceCompassExerciseContent } from '@/data/paths/pathTypes';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Edit3 } from 'lucide-react';
 
 interface CoherenceCompassExerciseProps {
   content: CoherenceCompassExerciseContent;
@@ -105,5 +106,3 @@ export function CoherenceCompassExercise({ content, pathId }: CoherenceCompassEx
         </Card>
     );
 }
-
-    
