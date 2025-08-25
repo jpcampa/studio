@@ -410,6 +410,63 @@ export type MyPactExerciseContent = {
     duration: string;
 };
 
+// RUTA 9
+export type CoherenceCompassExerciseContent = {
+    type: 'coherenceCompassExercise';
+    title: 'EJERCICIO 1: MI BRÚJULA DE COHERENCIA';
+    objective?: string;
+    duration?: string;
+};
+
+export type SmallDecisionsLogExerciseContent = {
+    type: 'smallDecisionsLogExercise';
+    title: 'EJERCICIO 2: REGISTRO DE DECISIONES PEQUEÑAS';
+    objective?: string;
+    duration?: string;
+};
+
+export type InternalTensionsMapExerciseContent = {
+    type: 'internalTensionsMapExercise';
+    title: 'EJERCICIO 1: MAPA DE TENSIONES INTERNAS';
+    objective?: string;
+    duration?: string;
+};
+
+export type EthicalMirrorExerciseContent = {
+    type: 'ethicalMirrorExercise';
+    title: 'EJERCICIO 2: EL ESPEJO ÉTICO';
+    objective?: string;
+    duration?: string;
+};
+
+export type IntegrityDecisionsExerciseContent = {
+    type: 'integrityDecisionsExercise';
+    title: 'EJERCICIO 1: DECISIONES CON INTEGRIDAD';
+    objective?: string;
+    duration?: string;
+};
+
+export type NonNegotiablesExerciseContent = {
+    type: 'nonNegotiablesExercise';
+    title: 'EJERCICIO 2: LISTA DE NO NEGOCIABLES PERSONALES';
+    objective?: string;
+    duration?: string;
+};
+
+export type EnvironmentEvaluationExerciseContent = {
+    type: 'environmentEvaluationExercise';
+    title: 'EJERCICIO 1: EVALUACIÓN DE ENTORNOS CLAVE';
+    objective?: string;
+    duration?: string;
+};
+
+export type PersonalManifestoExerciseContent = {
+    type: 'personalManifestoExercise';
+    title: 'EJERCICIO 2: TU MANIFIESTO DE COHERENCIA';
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -475,14 +532,25 @@ export type ModuleContent =
   | BraveDecisionsWheelExerciseContent
   | PlanABExerciseContent
   | ChangeTimelineExerciseContent
-  | MyPactExerciseContent;
+  | MyPactExerciseContent
+  // RUTA 9
+  | CoherenceCompassExerciseContent
+  | SmallDecisionsLogExerciseContent
+  | InternalTensionsMapExerciseContent
+  | EthicalMirrorExerciseContent
+  | IntegrityDecisionsExerciseContent
+  | NonNegotiablesExerciseContent
+  | EnvironmentEvaluationExerciseContent
+  | PersonalManifestoExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
   id: string;
-  title: string; // e.g., "Semana 1: Comprende el Estrés"
+  title: string; // Spanish
   type: 'introduction' | 'skill_practice' | 'summary'; // Categorizes the module's role in the path
   content: ModuleContent[]; // An array of different content blocks that make up the module
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
 };
+
+    

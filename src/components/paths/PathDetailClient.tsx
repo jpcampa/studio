@@ -703,6 +703,15 @@ import { BraveDecisionsWheelExercise } from './BraveDecisionsWheelExercise';
 import { PlanABExercise } from './PlanABExercise';
 import { ChangeTimelineExercise } from './ChangeTimelineExercise';
 import { MyPactExercise } from './MyPactExercise';
+// RUTA 9 imports
+import { CoherenceCompassExercise } from './CoherenceCompassExercise';
+import { SmallDecisionsLogExercise } from './SmallDecisionsLogExercise';
+import { InternalTensionsMapExercise } from './InternalTensionsMapExercise';
+import { EthicalMirrorExercise } from './EthicalMirrorExercise';
+import { IntegrityDecisionsExercise } from './IntegrityDecisionsExercise';
+import { NonNegotiablesExercise } from './NonNegotiablesExercise';
+import { EnvironmentEvaluationExercise } from './EnvironmentEvaluationExercise';
+import { PersonalManifestoExercise } from './PersonalManifestoExercise';
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
@@ -880,6 +889,23 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <ChangeTimelineExercise key={index} content={contentItem} pathId={pathId} />;
     case 'myPactExercise':
         return <MyPactExercise key={index} content={contentItem} pathId={pathId} />;
+    // RUTA 9
+    case 'coherenceCompassExercise':
+      return <CoherenceCompassExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'smallDecisionsLogExercise':
+      return <SmallDecisionsLogExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'internalTensionsMapExercise':
+      return <InternalTensionsMapExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'ethicalMirrorExercise':
+      return <EthicalMirrorExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'integrityDecisionsExercise':
+      return <IntegrityDecisionsExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'nonNegotiablesExercise':
+      return <NonNegotiablesExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'environmentEvaluationExercise':
+      return <EnvironmentEvaluationExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'personalManifestoExercise':
+      return <PersonalManifestoExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }
