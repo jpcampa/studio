@@ -51,6 +51,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const [currentItemIndexInDimension, setCurrentItemIndexInDimension] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false); // Nuevo estado
 
   const currentDimension = assessmentDimensions[currentDimensionIndex];
   const currentItem = currentDimension?.items[currentItemIndexInDimension];
@@ -61,30 +62,33 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
 
   useEffect(() => {
-    if (!currentItem || showDimensionCompletedDialog || answers[currentItem.id] === undefined) {
+    // Solo avanzar si el usuario ha interactuado y la pregunta actual tiene respuesta
+    if (!currentItem || showDimensionCompletedDialog || answers[currentItem.id] === undefined || !hasInteracted) {
       return;
     }
   
-    // This effect runs if currentItem exists, dialog is not showing, and currentItem HAS an answer.
-    // This is intended to auto-advance.
+    // Resetear la interacción para que no avance automáticamente al navegar hacia atrás
+    setHasInteracted(false);
+
     const timer = setTimeout(() => {
       const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
   
       if (isLastItemInDimension) {
-        if (!isSubmitting) { // Avoid dialog if already submitting from elsewhere
+        if (!isSubmitting) { 
             setShowDimensionCompletedDialog(true);
         }
       } else {
         setCurrentItemIndexInDimension(prev => prev + 1);
       }
-    }, 500); // Increased delay slightly for better UX with animation
+    }, 500); 
   
     return () => clearTimeout(timer);
-  }, [answers, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, setCurrentItemIndexInDimension, setShowDimensionCompletedDialog, currentDimension, isSubmitting]);
+  }, [answers, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, isSubmitting, hasInteracted]);
 
 
   const handleAnswerChange = (itemId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [itemId]: parseInt(value) }));
+    setHasInteracted(true); // Marcar que ha habido una interacción
   };
 
   const handleDialogContinue = () => {
@@ -93,15 +97,14 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       setCurrentDimensionIndex(prev => prev + 1);
       setCurrentItemIndexInDimension(0);
     } else {
-      // This means it's the last dimension, and "Continue" was effectively "Finish Assessment"
       submitFullAssessment();
     }
   };
   
   const handleGoBack = () => {
+    setHasInteracted(false); // Asegurarse de que no avance solo al ir atrás
     if (showDimensionCompletedDialog) {
         setShowDimensionCompletedDialog(false);
-        // We stay on the last item of the current dimension, ready to be edited.
         return;
     }
 
@@ -117,9 +120,8 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
   const handleSaveForLater = () => {
     console.log("Guardar para luego - Respuestas actuales:", answers);
-    // Potentially save `answers` and `currentDimensionIndex`/`currentItemIndexInDimension` to localStorage
-    setShowDimensionCompletedDialog(false); // Close dialog
-    router.push('/dashboard'); // Navigate away
+    setShowDimensionCompletedDialog(false);
+    router.push('/dashboard');
   };
 
   const submitFullAssessment = async (e?: FormEvent) => {
@@ -131,7 +133,6 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
     if (!allAnswered) {
        console.warn("Intento de envío final, pero no todas las preguntas están respondidas.");
-       // Ideally, show a user message or prevent this state
        return;
     }
     await onSubmit(answers);
@@ -173,7 +174,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             <div 
               key={currentItem.id} 
               className={cn(
-                "py-4", // Removed border-t and border-b
+                "py-4", 
                 "animate-in fade-in-0 slide-in-from-bottom-5 duration-500" 
               )}
             >
