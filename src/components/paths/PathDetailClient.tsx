@@ -721,6 +721,15 @@ import { CompassionateResponsibilityContractExercise } from './CompassionateResp
 import { CriticismToGuideExercise } from './CriticismToGuideExercise';
 import { InfluenceWheelExercise } from './InfluenceWheelExercise';
 import { PersonalCommitmentDeclarationExercise } from './PersonalCommitmentDeclarationExercise';
+// RUTA 11 imports
+import { SupportMapExercise } from './SupportMapExercise';
+import { BlockingThoughtsExercise } from './BlockingThoughtsExercise';
+import { NutritiveDrainingSupportMapExercise } from './NutritiveDrainingSupportMapExercise';
+import { NourishingConversationExercise } from './NourishingConversationExercise';
+import { ClearRequestMapExercise } from './ClearRequestMapExercise';
+import { SupportBankExercise } from './SupportBankExercise';
+import { MutualCareCommitmentExercise } from './MutualCareCommitmentExercise';
+import { SymbolicSupportCircleExercise } from './SymbolicSupportCircleExercise';
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
@@ -838,7 +847,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'emotionalInvolvementTrafficLightExercise':
       return <EmotionalInvolvementTrafficLightExercise key={index} content={contentItem} pathId={pathId} />;
     case 'significantRelationshipsInventoryExercise':
-      return <SignificantRelationshipsInventoryExercise key={index} content={contentItem} pathId={pathId} />;
+      return <SignificantRelationshipsInventoryExercise key={index} content={contentItem as RelationalCommitmentExerciseContent} pathId={pathId} />;
     case 'relationalCommitmentExercise':
       return <RelationalCommitmentExercise key={index} content={contentItem as RelationalCommitmentExerciseContent} pathId={pathId} />;
     // RUTA 6
@@ -932,6 +941,23 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
       return <InfluenceWheelExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'personalCommitmentDeclarationExercise':
       return <PersonalCommitmentDeclarationExercise key={index} content={contentItem as any} pathId={pathId} />;
+    // RUTA 11
+    case 'supportMapExercise':
+      return <SupportMapExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'blockingThoughtsExercise':
+      return <BlockingThoughtsExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'nutritiveDrainingSupportMapExercise':
+      return <NutritiveDrainingSupportMapExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'nourishingConversationExercise':
+      return <NourishingConversationExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'clearRequestMapExercise':
+        return <ClearRequestMapExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'supportBankExercise':
+        return <SupportBankExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'mutualCareCommitmentExercise':
+        return <MutualCareCommitmentExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'symbolicSupportCircleExercise':
+        return <SymbolicSupportCircleExercise key={index} content={contentItem as any} pathId={pathId} />;
     default:
       return null;
   }

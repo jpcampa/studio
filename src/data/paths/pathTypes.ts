@@ -1,4 +1,5 @@
 
+
 export type ParagraphContent = {
   type: 'paragraph';
   text: string;
@@ -524,6 +525,63 @@ export type PersonalCommitmentDeclarationExerciseContent = {
     duration: string;
 };
 
+// RUTA 11
+export type SupportMapExerciseContent = {
+    type: 'supportMapExercise';
+    title: 'EJERCICIO1: MAPA DE RELACIONES Y APOYO';
+    objective?: string;
+    duration?: string;
+};
+
+export type BlockingThoughtsExerciseContent = {
+    type: 'blockingThoughtsExercise';
+    title: 'EJERCICIO 2: REGISTRO DE PENSAMIENTOS BLOQUEANTES AL PEDIR AYUDA';
+    objective?: string;
+    duration?: string;
+};
+
+export type NutritiveDrainingSupportMapExerciseContent = {
+    type: 'nutritiveDrainingSupportMapExercise';
+    title: 'EJERCICIO 1: MAPA DE APOYOS NUTRITIVOS Y DRENANTES';
+    objective?: string;
+    duration?: string;
+};
+
+export type NourishingConversationExerciseContent = {
+    type: 'nourishingConversationExercise';
+    title: 'EJERCICIO 2: LA CONVERSACIÓN QUE NUTRE';
+    objective?: string;
+    duration?: string;
+};
+
+export type ClearRequestMapExerciseContent = {
+    type: 'clearRequestMapExercise';
+    title: 'EJERCICIO 1: EL MAPA DE PETICIONES CLARAS';
+    objective?: string;
+    duration?: string;
+};
+
+export type SupportBankExerciseContent = {
+    type: 'supportBankExercise';
+    title: 'EJERCICIO 2: EL BANCO DE APOYOS';
+    objective?: string;
+    duration?: string;
+};
+
+export type MutualCareCommitmentExerciseContent = {
+    type: 'mutualCareCommitmentExercise';
+    title: 'EJERCICIO 1: MI COMPROMISO CON EL CUIDADO MUTUO';
+    objective?: string;
+    duration?: string;
+};
+
+export type SymbolicSupportCircleExerciseContent = {
+    type: 'symbolicSupportCircleExercise';
+    title: 'EJERCICIO 2: CÍRCULO DE SOSTÉN SIMBÓLICO';
+    objective?: string;
+    duration?: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -607,7 +665,16 @@ export type ModuleContent =
   | CompassionateResponsibilityContractExerciseContent
   | CriticismToGuideExerciseContent
   | InfluenceWheelExerciseContent
-  | PersonalCommitmentDeclarationExerciseContent;
+  | PersonalCommitmentDeclarationExerciseContent
+  // RUTA 11
+  | SupportMapExerciseContent
+  | BlockingThoughtsExerciseContent
+  | NutritiveDrainingSupportMapExerciseContent
+  | NourishingConversationExerciseContent
+  | ClearRequestMapExerciseContent
+  | SupportBankExerciseContent
+  | MutualCareCommitmentExerciseContent
+  | SymbolicSupportCircleExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
