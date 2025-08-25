@@ -7,7 +7,8 @@ import { empathyPath } from './paths/empathyPath';
 import { selfUnderstandingPath } from './paths/selfUnderstandingPath';
 import { purposePath } from './paths/purposePath';
 import { resiliencePath } from './paths/resiliencePath';
-import { coherencePath } from './paths/coherencePath'; // Import the new path
+import { coherencePath } from './paths/coherencePath';
+import { responsibilityPath } from './paths/responsibilityPath'; // Import the new path
 
 // Re-export types for easy access in other parts of the application
 export type { PathModule, CollapsibleContent, ExerciseContent, ModuleContent };
@@ -31,7 +32,6 @@ export const pathsData: Path[] = [
   selfUnderstandingPath,
   purposePath,
   resiliencePath,
-  coherencePath, // Add the new path to the array
+  coherencePath,
+  responsibilityPath, // Add the new path to the array
 ];
-
-    

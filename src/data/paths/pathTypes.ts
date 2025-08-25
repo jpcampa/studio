@@ -467,6 +467,63 @@ export type PersonalManifestoExerciseContent = {
     duration?: string;
 };
 
+// RUTA 10
+export type ComplaintTransformationExerciseContent = {
+    type: 'complaintTransformationExercise';
+    title: 'EJERCICIO 1: TABLA “ME QUEJO DE… / LO QUE SÍ PUEDO HACER ES…”';
+    objective: string;
+    duration: string;
+};
+
+export type GuiltRadarExerciseContent = {
+    type: 'guiltRadarExercise';
+    title: 'EJERCICIO 2: MI RADAR DE CULPA';
+    objective: string;
+    duration: string;
+};
+
+export type AcceptanceWritingExerciseContent = {
+    type: 'acceptanceWritingExercise';
+    title: 'EJERCICIO 1: ESO PASÓ. ¿Y AHORA QUÉ?';
+    objective: string;
+    duration: string;
+};
+
+export type SelfAcceptanceAudioExerciseContent = {
+    type: 'selfAcceptanceAudioExercise';
+    title: 'EJERCICIO 2: PRÁCTICA DE AUTOACEPTACIÓN GUIADA';
+    objective: string;
+    duration: string;
+};
+
+export type CompassionateResponsibilityContractExerciseContent = {
+    type: 'compassionateResponsibilityContractExercise';
+    title: 'EJERCICIO 1: MI CONTRATO DE AUTORRESPONSABILIDAD COMPASIVA';
+    objective: string;
+    duration: string;
+};
+
+export type CriticismToGuideExerciseContent = {
+    type: 'criticismToGuideExercise';
+    title: 'EJERCICIO 2: TRANSFORMA TU CRÍTICA EN GUÍA';
+    objective: string;
+    duration: string;
+};
+
+export type InfluenceWheelExerciseContent = {
+    type: 'influenceWheelExercise';
+    title: 'EJERCICIO 1: RUEDA DE MI ZONA DE INFLUENCIA';
+    objective: string;
+    duration: string;
+};
+
+export type PersonalCommitmentDeclarationExerciseContent = {
+    type: 'personalCommitmentDeclarationExercise';
+    title: 'Técnica 2 — Mi declaración de compromiso personal';
+    objective: string;
+    duration: string;
+};
+
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -541,7 +598,16 @@ export type ModuleContent =
   | IntegrityDecisionsExerciseContent
   | NonNegotiablesExerciseContent
   | EnvironmentEvaluationExerciseContent
-  | PersonalManifestoExerciseContent;
+  | PersonalManifestoExerciseContent
+  // RUTA 10
+  | ComplaintTransformationExerciseContent
+  | GuiltRadarExerciseContent
+  | AcceptanceWritingExerciseContent
+  | SelfAcceptanceAudioExerciseContent
+  | CompassionateResponsibilityContractExerciseContent
+  | CriticismToGuideExerciseContent
+  | InfluenceWheelExerciseContent
+  | PersonalCommitmentDeclarationExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
@@ -552,5 +618,3 @@ export type PathModule = {
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
 };
-
-    

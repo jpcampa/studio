@@ -712,6 +712,15 @@ import { IntegrityDecisionsExercise } from './IntegrityDecisionsExercise';
 import { NonNegotiablesExercise } from './NonNegotiablesExercise';
 import { EnvironmentEvaluationExercise } from './EnvironmentEvaluationExercise';
 import { PersonalManifestoExercise } from './PersonalManifestoExercise';
+// RUTA 10 imports
+import { ComplaintTransformationExercise } from './ComplaintTransformationExercise';
+import { GuiltRadarExercise } from './GuiltRadarExercise';
+import { AcceptanceWritingExercise } from './AcceptanceWritingExercise';
+import { SelfAcceptanceAudioExercise } from './SelfAcceptanceAudioExercise';
+import { CompassionateResponsibilityContractExercise } from './CompassionateResponsibilityContractExercise';
+import { CriticismToGuideExercise } from './CriticismToGuideExercise';
+import { InfluenceWheelExercise } from './InfluenceWheelExercise';
+import { PersonalCommitmentDeclarationExercise } from './PersonalCommitmentDeclarationExercise';
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
@@ -906,6 +915,23 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
       return <EnvironmentEvaluationExercise key={index} content={contentItem} pathId={pathId} />;
     case 'personalManifestoExercise':
       return <PersonalManifestoExercise key={index} content={contentItem} pathId={pathId} />;
+    // RUTA 10
+    case 'complaintTransformationExercise':
+      return <ComplaintTransformationExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'guiltRadarExercise':
+      return <GuiltRadarExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'acceptanceWritingExercise':
+      return <AcceptanceWritingExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'selfAcceptanceAudioExercise':
+      return <SelfAcceptanceAudioExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'compassionateResponsibilityContractExercise':
+      return <CompassionateResponsibilityContractExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'criticismToGuideExercise':
+      return <CriticismToGuideExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'influenceWheelExercise':
+      return <InfluenceWheelExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'personalCommitmentDeclarationExercise':
+      return <PersonalCommitmentDeclarationExercise key={index} content={contentItem as any} pathId={pathId} />;
     default:
       return null;
   }
