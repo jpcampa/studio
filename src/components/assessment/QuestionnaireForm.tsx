@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
-import { Loader2, ArrowRight, CheckCircle, Save, Info } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle, Save, Info, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
   AlertDialog, 
@@ -97,6 +97,23 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       submitFullAssessment();
     }
   };
+  
+  const handleGoBack = () => {
+    if (showDimensionCompletedDialog) {
+        setShowDimensionCompletedDialog(false);
+        // We stay on the last item of the current dimension, ready to be edited.
+        return;
+    }
+
+    if (currentItemIndexInDimension > 0) {
+      setCurrentItemIndexInDimension(prev => prev - 1);
+    } else if (currentDimensionIndex > 0) {
+      const prevDimensionIndex = currentDimensionIndex - 1;
+      const prevDimension = assessmentDimensions[prevDimensionIndex];
+      setCurrentDimensionIndex(prevDimensionIndex);
+      setCurrentItemIndexInDimension(prevDimension.items.length - 1);
+    }
+  };
 
   const handleSaveForLater = () => {
     console.log("Guardar para luego - Respuestas actuales:", answers);
@@ -127,6 +144,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const isLastDimension = currentDimensionIndex === assessmentDimensions.length - 1;
   const isLastItemOfLastDimension = isLastDimension && currentItemIndexInDimension === currentDimension.items.length - 1;
   const allItemsAnswered = assessmentDimensions.every(dim => dim.items.every(item => answers.hasOwnProperty(item.id)));
+  const isFirstQuestion = currentDimensionIndex === 0 && currentItemIndexInDimension === 0;
 
   const itemProgressText = t.itemProgress
     .replace('{currentItem}', (currentItemIndexInDimension + 1).toString())
@@ -212,13 +230,16 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
                 </Alert>
             </CardContent>
         )}
-        <CardFooter className="flex flex-col sm:flex-row justify-end items-center mt-4 p-4 border-t">
-          {/* Previous Dimension Button Removed */}
+        <CardFooter className="flex flex-col sm:flex-row justify-between items-center mt-4 p-4 border-t">
+          <Button variant="outline" onClick={handleGoBack} disabled={isFirstQuestion && !showDimensionCompletedDialog}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Anterior
+          </Button>
           {isLastItemOfLastDimension && answers[currentItem.id] !== undefined && !showDimensionCompletedDialog && (
             <Button 
               onClick={submitFullAssessment} 
               disabled={isSubmitting || !allItemsAnswered}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto mt-2 sm:mt-0"
             >
               {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
               {t.finishAssessment}

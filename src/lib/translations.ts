@@ -103,7 +103,7 @@ export const t = {
 
   // Assessment Intro Page
   assessmentIntroPageTitle: "Bienvenido/a a tu primer paso",
-  assessmentIntroPageTagline: "Este cuestionario no es solo una evaluación.\\nEs un momento contigo. Una invitación a mirar hacia dentro con honestidad, curiosidad y sin juicio.",
+  assessmentIntroPageTagline: "Este cuestionario no es solo una evaluación. Es un momento contigo. Una invitación a mirar hacia dentro con honestidad, curiosidad y sin juicio.",
   assessmentIntroPageMainText1: "Vas a encontrar frases que hablan de ti: cómo sueles sentirte, pensar, actuar… y cómo estás viviendo tu presente emocional.\\nAlgunas te resultarán fáciles. Otras te harán parar y reflexionar. Y eso está bien.\\nCada respuesta es un paso más hacia tu bienestar.",
   assessmentIntroPagePurposeTitle: "¿Para qué sirve?",
   assessmentIntroPagePurpose1: "Conocerte mejor.",
