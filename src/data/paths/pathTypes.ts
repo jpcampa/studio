@@ -655,14 +655,14 @@ export type VisualizacionGuiadaCuerpoAnsiedadExerciseContent = {
 
 export type StopExerciseContent = {
     type: 'stopExercise';
-    title: 'EJERCICIO 1: STOPPonle un alto al piloto automático';
+    title: 'EJERCICIO 1: STOP - Ponle un alto al piloto automático';
     objective: string;
     duration: string;
 };
 
 export type QuestionYourIfsExerciseContent = {
     type: 'questionYourIfsExercise';
-    title: 'EJERCICIO 2: CUESTIONA TUS “¿Y SI…?” CON LA LUPA DE LA REALIDAD';
+    title: 'EJERCICIO 2: Cuestiona tus “¿Y si…?” con la lupa de la realidad';
     objective: string;
     duration: string;
 };
@@ -801,4 +801,5 @@ export type PathModule = {
   dataAiHint?: string; // For images if any
 };
 
+    
     

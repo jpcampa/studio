@@ -665,6 +665,19 @@ ${progressText || 'No se registraron días.'}
 // ====================================================================
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
+
+// ====================================================================
+// START OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+import { StopExercise } from './StopExercise';
+import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
+import { ExposureLadderExercise } from './ExposureLadderExercise';
+import { CalmVisualizationExercise } from './CalmVisualizationExercise';
+// ====================================================================
+// END OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+
+
 import { AuthenticityThermometerExercise } from './AuthenticityThermometerExercise';
 import { EmpatheticDialogueExercise } from './EmpatheticDialogueExercise';
 import { EmpathicMirrorExercise } from './EmpathicMirrorExercise';
@@ -992,6 +1005,14 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <AnsiedadTieneSentidoExercise key={index} content={contentItem} pathId={pathId} />;
     case 'visualizacionGuiadaCuerpoAnsiedadExercise':
         return <VisualizacionGuiadaCuerpoAnsiedadExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'stopExercise':
+        return <StopExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'questionYourIfsExercise':
+        return <QuestionYourIfsExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'exposureLadderExercise':
+        return <ExposureLadderExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'calmVisualizationExercise':
+        return <CalmVisualizationExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }
@@ -1155,4 +1176,5 @@ export function PathDetailClient({ path }: { path: Path }) {
   );
 }
 
+    
     
