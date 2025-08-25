@@ -51,8 +51,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const [currentItemIndexInDimension, setCurrentItemIndexInDimension] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
-  const [shouldAdvance, setShouldAdvance] = useState(false); // Nuevo estado para controlar el avance
-
+  
   const currentDimension = assessmentDimensions[currentDimensionIndex];
   const currentItem = currentDimension?.items[currentItemIndexInDimension];
 
@@ -60,32 +59,25 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   
   const itemsInCurrentDimensionProgress = currentDimension ? Math.round(((currentItemIndexInDimension +1) / currentDimension.items.length) * 100) : 0;
 
+  const handleNextStep = () => {
+    const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
 
-  useEffect(() => {
-    // Si la flag para avanzar está activada
-    if (shouldAdvance && currentItem) {
-      setShouldAdvance(false); // Reseteamos la flag inmediatamente
-
-      const timer = setTimeout(() => {
-        const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
-    
-        if (isLastItemInDimension) {
-          if (!isSubmitting) { 
-              setShowDimensionCompletedDialog(true);
-          }
-        } else {
-          setCurrentItemIndexInDimension(prev => prev + 1);
-        }
-      }, 500); 
-    
-      return () => clearTimeout(timer);
+    if (isLastItemInDimension) {
+      if (!isSubmitting) { 
+        setShowDimensionCompletedDialog(true);
+      }
+    } else {
+      setCurrentItemIndexInDimension(prev => prev + 1);
     }
-  }, [shouldAdvance, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, isSubmitting]);
-
+  };
 
   const handleAnswerChange = (itemId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [itemId]: parseInt(value) }));
-    setShouldAdvance(true); // Activamos la flag para avanzar
+    
+    // Trigger auto-advance only on new interaction
+    setTimeout(() => {
+        handleNextStep();
+    }, 500); 
   };
 
   const handleDialogContinue = () => {
@@ -99,7 +91,6 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   };
   
   const handleGoBack = () => {
-    setShouldAdvance(false); // Nos aseguramos de que no avance solo al ir para atrás
     if (showDimensionCompletedDialog) {
         setShowDimensionCompletedDialog(false);
         return;
