@@ -51,7 +51,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const [currentItemIndexInDimension, setCurrentItemIndexInDimension] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false); // Nuevo estado
+  const [shouldAdvance, setShouldAdvance] = useState(false); // Nuevo estado para controlar el avance
 
   const currentDimension = assessmentDimensions[currentDimensionIndex];
   const currentItem = currentDimension?.items[currentItemIndexInDimension];
@@ -62,33 +62,30 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
 
   useEffect(() => {
-    // Solo avanzar si el usuario ha interactuado y la pregunta actual tiene respuesta
-    if (!currentItem || showDimensionCompletedDialog || answers[currentItem.id] === undefined || !hasInteracted) {
-      return;
-    }
-  
-    // Resetear la interacción para que no avance automáticamente al navegar hacia atrás
-    setHasInteracted(false);
+    // Si la flag para avanzar está activada
+    if (shouldAdvance && currentItem) {
+      setShouldAdvance(false); // Reseteamos la flag inmediatamente
 
-    const timer = setTimeout(() => {
-      const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
-  
-      if (isLastItemInDimension) {
-        if (!isSubmitting) { 
-            setShowDimensionCompletedDialog(true);
+      const timer = setTimeout(() => {
+        const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
+    
+        if (isLastItemInDimension) {
+          if (!isSubmitting) { 
+              setShowDimensionCompletedDialog(true);
+          }
+        } else {
+          setCurrentItemIndexInDimension(prev => prev + 1);
         }
-      } else {
-        setCurrentItemIndexInDimension(prev => prev + 1);
-      }
-    }, 500); 
-  
-    return () => clearTimeout(timer);
-  }, [answers, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, isSubmitting, hasInteracted]);
+      }, 500); 
+    
+      return () => clearTimeout(timer);
+    }
+  }, [shouldAdvance, currentItem, currentDimension?.items.length, currentItemIndexInDimension, showDimensionCompletedDialog, isSubmitting]);
 
 
   const handleAnswerChange = (itemId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [itemId]: parseInt(value) }));
-    setHasInteracted(true); // Marcar que ha habido una interacción
+    setShouldAdvance(true); // Activamos la flag para avanzar
   };
 
   const handleDialogContinue = () => {
@@ -102,7 +99,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   };
   
   const handleGoBack = () => {
-    setHasInteracted(false); // Asegurarse de que no avance solo al ir atrás
+    setShouldAdvance(false); // Nos aseguramos de que no avance solo al ir para atrás
     if (showDimensionCompletedDialog) {
         setShowDimensionCompletedDialog(false);
         return;
