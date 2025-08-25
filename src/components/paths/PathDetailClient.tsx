@@ -739,6 +739,9 @@ import { MotivationIn3LayersExercise } from './MotivationIn3LayersExercise';
 import { VisualizeDayExercise } from './VisualizeDayExercise';
 import { IlluminatingMemoriesAlbumExercise } from './IlluminatingMemoriesAlbumExercise';
 import { PositiveEmotionalFirstAidKitExercise } from './PositiveEmotionalFirstAidKitExercise';
+// RUTA 13 (NUEVA) IMPORTS
+import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
+import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
@@ -984,6 +987,11 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <IlluminatingMemoriesAlbumExercise key={index} content={contentItem} pathId={pathId} />;
     case 'positiveEmotionalFirstAidKitExercise':
         return <PositiveEmotionalFirstAidKitExercise key={index} content={contentItem} pathId={pathId} />;
+    // RUTA 13 (NUEVA)
+    case 'ansiedadTieneSentidoExercise':
+        return <AnsiedadTieneSentidoExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'visualizacionGuiadaCuerpoAnsiedadExercise':
+        return <VisualizacionGuiadaCuerpoAnsiedadExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }
@@ -1146,3 +1154,5 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
+
+    

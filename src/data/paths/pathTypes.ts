@@ -638,6 +638,50 @@ export type PositiveEmotionalFirstAidKitExerciseContent = {
   duration?: string;
 };
 
+// RUTA 13 (NUEVA)
+export type AnsiedadTieneSentidoExerciseContent = {
+    type: 'ansiedadTieneSentidoExercise';
+    title: 'MI ANSIEDAD TIENE SENTIDO CUANDO…';
+    objective: string;
+    duration: string;
+};
+
+export type VisualizacionGuiadaCuerpoAnsiedadExerciseContent = {
+    type: 'visualizacionGuiadaCuerpoAnsiedadExercise';
+    title: 'VISUALIZACIÓN GUIADA DEL CUERPO EN ANSIEDAD';
+    objective: string;
+    duration: string;
+};
+
+export type StopExerciseContent = {
+    type: 'stopExercise';
+    title: 'EJERCICIO 1: STOPPonle un alto al piloto automático';
+    objective: string;
+    duration: string;
+};
+
+export type QuestionYourIfsExerciseContent = {
+    type: 'questionYourIfsExercise';
+    title: 'EJERCICIO 2: CUESTIONA TUS “¿Y SI…?” CON LA LUPA DE LA REALIDAD';
+    objective: string;
+    duration: string;
+};
+
+export type ExposureLadderExerciseContent = {
+    type: 'exposureLadderExercise';
+    title: 'EJERCICIO 1: ESCALERA DE EXPOSICIÓN PERSONAL';
+    objective: string;
+    duration: string;
+};
+
+export type CalmVisualizationExerciseContent = {
+    type: 'calmVisualizationExercise';
+    title: 'EJERCICIO 2: “ME VEO HACIÉNDOLO CON CALMA”';
+    objective: string;
+    duration: string;
+};
+
+
 // A union type for all possible content block types within a module
 export type ModuleContent =
   | ParagraphContent
@@ -738,7 +782,14 @@ export type ModuleContent =
   | MotivationIn3LayersExerciseContent
   | VisualizeDayExerciseContent
   | IlluminatingMemoriesAlbumExerciseContent
-  | PositiveEmotionalFirstAidKitExerciseContent;
+  | PositiveEmotionalFirstAidKitExerciseContent
+  // RUTA 13 (NUEVA)
+  | AnsiedadTieneSentidoExerciseContent
+  | VisualizacionGuiadaCuerpoAnsiedadExerciseContent
+  | StopExerciseContent
+  | QuestionYourIfsExerciseContent
+  | ExposureLadderExerciseContent
+  | CalmVisualizationExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
@@ -749,3 +800,5 @@ export type PathModule = {
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
 };
+
+    
