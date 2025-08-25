@@ -99,7 +99,6 @@ export const t = {
   viewAssessmentResultsButton: "Ver Resultados",
   assessmentDateLabel: "Evaluación del {date}",
   noAssessmentsFound: "Aún no has completado ninguna evaluación.",
-  priorityAreaLabel: "Área prioritaria",
 
 
   // Assessment Intro Page
@@ -152,6 +151,13 @@ export const t = {
   continueLearning: "Seguir Aprendiendo",
   modulesLeftTooltip: "{count} módulos restantes en '{pathTitle}'",
   allPaths: "Volver a todas las Rutas",
+  myPathsSummaryTitle: "Mi Resumen de Rutas",
+  myPathsSummaryDescription: "Aquí puedes ver tu progreso en todas las rutas de desarrollo.",
+  viewMyPathsSummaryButton: "Ver mi resumen de rutas",
+  completedModules: "{completed} de {total} módulos",
+  continuePath: "Continuar Ruta",
+  startPath: "Comenzar Ruta",
+  pathNotStarted: "Aún no has comenzado esta ruta.",
   // Chatbot
   chatbotTitle: "Mentor Emocional AI",
   chatbotWelcome: "Hola, estoy aquí para escucharte y acompañarte. ¿En qué quieres trabajar hoy?",

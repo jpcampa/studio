@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -7,7 +6,7 @@ import { pathsData, Path } from '@/data/pathsData';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BookCheck } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useActivePath } from '@/contexts/ActivePathContext'; // Importar el contexto
@@ -30,21 +29,17 @@ export default function PathsPage() {
     }
   }, [searchParams]);
 
-  // Limpiar la ruta activa al salir de la página de listado de rutas,
-  // si no se quiere que el badge persista globalmente.
-  // Opcional: Podría ser mejor limpiarlo al navegar a una sección completamente diferente (ej. dashboard).
-  // Por ahora, lo dejamos así para que el badge se quite si el usuario vuelve aquí.
-  // useEffect(() => {
-  //   return () => {
-  //     clearActivePath();
-  //   };
-  // }, [clearActivePath]);
-
   return (
     <div className="container mx-auto py-8">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-primary mb-4">{t.pathsTitle}</h1>
-        <p className="text-lg text-muted-foreground">{t.selectPathPrompt}</p>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t.selectPathPrompt}</p>
+         <Button asChild variant="outline" className="mt-6">
+          <Link href="/paths/my-summary">
+            <BookCheck className="mr-2 h-4 w-4" />
+            {t.viewMyPathsSummaryButton}
+          </Link>
+        </Button>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -60,7 +55,7 @@ export default function PathsPage() {
                   <Image 
                     src={`https://placehold.co/600x400.png`} 
                     alt={path.title} 
-                    fill // Reemplaza layout="fill" objectFit="cover"
+                    fill
                     className="object-cover"
                     data-ai-hint={path.dataAiHint}
                   />
@@ -70,7 +65,6 @@ export default function PathsPage() {
               <CardDescription className="text-sm min-h-[40px]">{path.description}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-              {/* Optionally list first few modules or a summary */}
             </CardContent>
             <CardFooter>
               <Button asChild className="w-full">
