@@ -730,6 +730,15 @@ import { ClearRequestMapExercise } from './ClearRequestMapExercise';
 import { SupportBankExercise } from './SupportBankExercise';
 import { MutualCareCommitmentExercise } from './MutualCareCommitmentExercise';
 import { SymbolicSupportCircleExercise } from './SymbolicSupportCircleExercise';
+// RUTA 12 IMPORTS
+import { EmotionalGratificationMapExercise } from './EmotionalGratificationMapExercise';
+import { DailyEnergyCheckExercise } from './DailyEnergyCheckExercise';
+import { DailyWellbeingPlanExercise } from './DailyWellbeingPlanExercise';
+import { MorningRitualExercise } from './MorningRitualExercise';
+import { MotivationIn3LayersExercise } from './MotivationIn3LayersExercise';
+import { VisualizeDayExercise } from './VisualizeDayExercise';
+import { IlluminatingMemoriesAlbumExercise } from './IlluminatingMemoriesAlbumExercise';
+import { PositiveEmotionalFirstAidKitExercise } from './PositiveEmotionalFirstAidKitExercise';
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
@@ -958,6 +967,23 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <MutualCareCommitmentExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'symbolicSupportCircleExercise':
         return <SymbolicSupportCircleExercise key={index} content={contentItem as any} pathId={pathId} />;
+    // RUTA 12
+    case 'emotionalGratificationMapExercise':
+        return <EmotionalGratificationMapExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'dailyEnergyCheckExercise':
+        return <DailyEnergyCheckExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'dailyWellbeingPlanExercise':
+        return <DailyWellbeingPlanExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'morningRitualExercise':
+        return <MorningRitualExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'motivationIn3LayersExercise':
+        return <MotivationIn3LayersExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'visualizeDayExercise':
+        return <VisualizeDayExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'illuminatingMemoriesAlbumExercise':
+        return <IlluminatingMemoriesAlbumExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'positiveEmotionalFirstAidKitExercise':
+        return <PositiveEmotionalFirstAidKitExercise key={index} content={contentItem} pathId={pathId} />;
     default:
       return null;
   }

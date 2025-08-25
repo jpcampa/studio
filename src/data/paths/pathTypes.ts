@@ -1,5 +1,4 @@
 
-
 export type ParagraphContent = {
   type: 'paragraph';
   text: string;
@@ -582,6 +581,62 @@ export type SymbolicSupportCircleExerciseContent = {
     duration?: string;
 };
 
+// RUTA 12
+export type EmotionalGratificationMapExerciseContent = {
+  type: 'emotionalGratificationMapExercise';
+  title: 'EJERCICIO 1: MAPA DE GRATIFICACIÓN EMOCIONAL';
+  objective?: string;
+  duration?: string;
+};
+
+export type DailyEnergyCheckExerciseContent = {
+  type: 'dailyEnergyCheckExercise';
+  title: 'EJERCICIO 2: MINI-CHECK DE ENERGÍA DIARIA';
+  objective?: string;
+  duration?: string;
+};
+
+export type DailyWellbeingPlanExerciseContent = {
+  type: 'dailyWellbeingPlanExercise';
+  title: 'EJERCICIO 1: MI PLAN DIARIO DE BIENESTAR: 3 MICROHÁBITOS CLAVE';
+  objective?: string;
+  duration?: string;
+};
+
+export type MorningRitualExerciseContent = {
+  type: 'morningRitualExercise';
+  title: 'EJERCICIO 2: MI RITUAL DE INICIO: UNA MAÑANA AMABLE Y CONSCIENTE';
+  objective?: string;
+  duration?: string;
+};
+
+export type MotivationIn3LayersExerciseContent = {
+  type: 'motivationIn3LayersExercise';
+  title: 'EJERCICIO 1: MOTIVACIÓN EN 3 CAPAS';
+  objective?: string;
+  duration?: string;
+};
+
+export type VisualizeDayExerciseContent = {
+  type: 'visualizeDayExercise';
+  title: 'EJERCICIO 2: VISUALIZACIÓN DEL DÍA QUE QUIERO VIVIR';
+  objective?: string;
+  duration?: string;
+};
+
+export type IlluminatingMemoriesAlbumExerciseContent = {
+  type: 'illuminatingMemoriesAlbumExercise';
+  title: 'EJERCICIO 1: MI ÁLBUM DE RECUERDOS QUE ILUMINAN';
+  objective?: string;
+  duration?: string;
+};
+
+export type PositiveEmotionalFirstAidKitExerciseContent = {
+  type: 'positiveEmotionalFirstAidKitExercise';
+  title: 'EJERCICIO 2: MI BOTIQUÍN EMOCIONAL POSITIVO';
+  objective?: string;
+  duration?: string;
+};
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -674,7 +729,16 @@ export type ModuleContent =
   | ClearRequestMapExerciseContent
   | SupportBankExerciseContent
   | MutualCareCommitmentExerciseContent
-  | SymbolicSupportCircleExerciseContent;
+  | SymbolicSupportCircleExerciseContent
+  // RUTA 12
+  | EmotionalGratificationMapExerciseContent
+  | DailyEnergyCheckExerciseContent
+  | DailyWellbeingPlanExerciseContent
+  | MorningRitualExerciseContent
+  | MotivationIn3LayersExerciseContent
+  | VisualizeDayExerciseContent
+  | IlluminatingMemoriesAlbumExerciseContent
+  | PositiveEmotionalFirstAidKitExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
