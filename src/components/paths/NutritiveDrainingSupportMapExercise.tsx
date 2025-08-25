@@ -37,7 +37,7 @@ export function NutritiveDrainingSupportMapExercise({ content, pathId }: Nutriti
   
   const handleSave = (e: FormEvent) => {
     e.preventDefault();
-    const notebookContent = `**Ejercicio: ${content.title}**\n\n`;
+    let notebookContent = `**Ejercicio: ${content.title}**\n\n`;
     relations.filter(r => r.name).forEach(r => {
         notebookContent += `- ${r.name}: ${r.sensation}\n`;
     });
