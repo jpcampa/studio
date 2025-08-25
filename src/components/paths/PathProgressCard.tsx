@@ -43,7 +43,7 @@ export function PathProgressCard({ path }: PathProgressCardProps) {
         <div className="flex justify-between items-start">
           <CardTitle className="text-xl text-accent">{path.title}</CardTitle>
           {isCompleted && (
-            <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-500">
+            <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-500 relative z-10">
               <CheckCircle className="h-4 w-4 mr-1" />
               Completada
             </Badge>
