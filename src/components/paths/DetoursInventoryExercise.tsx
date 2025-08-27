@@ -135,7 +135,7 @@ export function DetoursInventoryExercise({ content, pathId }: DetoursInventoryEx
                 </div>
                 <div className="space-y-2">
                     <Label>¿Qué parte de ti busca protección o alivio?</Label>
-                    {partOptions.map(p => <div key={p.id} className="flex items-center space-x-2"><Checkbox id={p.id} checked={!!reflection.parts[p.id]} onCheckedChange={c => setReflection(p => ({...p, parts: {...p.parts, [p.id]:!!c}}))} /><Label htmlFor={p.id} className="font-normal">{p.label}</Label></div>)}
+                    {partOptions.map(p => <div key={p.id} className="flex items-center space-x-2"><Checkbox id={p.id} checked={!!reflection.parts[p.id]} onCheckedChange={c => setReflection(p_state => ({...p_state, parts: {...p_state.parts, [p.id]:!!c}}))} /><Label htmlFor={p.id} className="font-normal">{p.label}</Label></div>)}
                 </div>
                 <Button onClick={next} className="w-full">Ir al compromiso de cambio</Button>
              </div>
