@@ -42,7 +42,7 @@ import { NoGuiltTechniquesExercise } from '@/components/paths/NoGuiltTechniquesE
 import { PostBoundaryEmotionsExercise } from '@/components/paths/PostBoundaryEmotionsExercise';
 import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateFirmnessExercise';
 import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
-import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent } from '@/data/paths/pathTypes';
+import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
 
@@ -734,7 +734,7 @@ import { CompassionateResponsibilityContractExercise } from './CompassionateResp
 import { CriticismToGuideExercise } from './CriticismToGuideExercise';
 import { InfluenceWheelExercise } from './InfluenceWheelExercise';
 import { PersonalCommitmentDeclarationExercise } from './PersonalCommitmentDeclarationExercise';
-// RUTA 11 imports
+// RUTA 11
 import { SupportMapExercise } from './SupportMapExercise';
 import { BlockingThoughtsExercise } from './BlockingThoughtsExercise';
 import { NutritiveDrainingSupportMapExercise } from './NutritiveDrainingSupportMapExercise';
@@ -743,7 +743,7 @@ import { ClearRequestMapExercise } from './ClearRequestMapExercise';
 import { SupportBankExercise } from './SupportBankExercise';
 import { MutualCareCommitmentExercise } from './MutualCareCommitmentExercise';
 import { SymbolicSupportCircleExercise } from './SymbolicSupportCircleExercise';
-// RUTA 12 IMPORTS
+// RUTA 12
 import { EmotionalGratificationMapExercise } from './EmotionalGratificationMapExercise';
 import { DailyEnergyCheckExercise } from './DailyEnergyCheckExercise';
 import { DailyWellbeingPlanExercise } from './DailyWellbeingPlanExercise';
@@ -752,7 +752,7 @@ import { MotivationIn3LayersExercise } from './MotivationIn3LayersExercise';
 import { VisualizeDayExercise } from './VisualizeDayExercise';
 import { IlluminatingMemoriesAlbumExercise } from './IlluminatingMemoriesAlbumExercise';
 import { PositiveEmotionalFirstAidKitExercise } from './PositiveEmotionalFirstAidKitExercise';
-// RUTA 13 (NUEVA) IMPORTS
+// RUTA 13 (NUEVA)
 import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
 import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
 
@@ -872,7 +872,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'emotionalInvolvementTrafficLightExercise':
       return <EmotionalInvolvementTrafficLightExercise key={index} content={contentItem} pathId={pathId} />;
     case 'significantRelationshipsInventoryExercise':
-      return <SignificantRelationshipsInventoryExercise key={index} content={contentItem as RelationalCommitmentExerciseContent} pathId={pathId} />;
+      return <SignificantRelationshipsInventoryExercise key={index} content={contentItem as SignificantRelationshipsInventoryExerciseContent} pathId={pathId} />;
     case 'relationalCommitmentExercise':
       return <RelationalCommitmentExercise key={index} content={contentItem as RelationalCommitmentExerciseContent} pathId={pathId} />;
     // RUTA 6
