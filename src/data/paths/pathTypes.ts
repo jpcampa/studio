@@ -519,7 +519,7 @@ export type InfluenceWheelExerciseContent = {
 
 export type PersonalCommitmentDeclarationExerciseContent = {
     type: 'personalCommitmentDeclarationExercise';
-    title: 'Técnica 2 — Mi declaración de compromiso personal';
+    title: string;
     objective: string;
     duration: string;
 };
@@ -800,6 +800,3 @@ export type PathModule = {
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
 };
-
-    
-    
