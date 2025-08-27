@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Edit3, Save, ArrowRight, CheckCircle } from 'lucide-react';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import type { DetoursInventoryExerciseContent } from '@/data/paths/pathTypes';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 interface DetoursInventoryExerciseProps {
   content: DetoursInventoryExerciseContent;
@@ -170,4 +171,3 @@ export function DetoursInventoryExercise({ content, pathId }: DetoursInventoryEx
     </Card>
   );
 }
-
