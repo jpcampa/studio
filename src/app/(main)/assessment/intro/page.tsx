@@ -28,7 +28,7 @@ export default function AssessmentIntroPage() {
   return (
     <div className="container mx-auto py-8 flex justify-center">
       <Card className="w-full max-w-3xl shadow-xl my-8 overflow-hidden">
-        <div className="relative h-64 w-full">
+        <CardHeader className="p-0 relative h-64 w-full">
             <Image 
                 src="https://workwellfut.com/imgapp/800x300/imagenEvaluacion.jpg"
                 alt="Evaluación de bienestar" 
@@ -41,14 +41,14 @@ export default function AssessmentIntroPage() {
                     target.src = 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
                 }}
             />
-        </div>
-        <CardHeader className="text-center pb-6">
-          <BookOpen className="mx-auto h-16 w-16 text-primary mb-4 -mt-12 bg-background rounded-full p-2 border-4 border-background" />
-          <CardTitle className="text-3xl md:text-4xl font-bold text-primary">
-            {t.assessmentIntroPageTitle}
-          </CardTitle>
+            <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-center p-4">
+                <BookOpen className="h-16 w-16 text-white mb-4 bg-primary/50 rounded-full p-2 border-2 border-white/80" />
+                <CardTitle className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+                    {t.assessmentIntroPageTitle}
+                </CardTitle>
+            </div>
         </CardHeader>
-        <CardContent className="space-y-8 px-6 md:px-10 text-base leading-relaxed text-foreground">
+        <CardContent className="space-y-8 px-6 md:px-10 pt-8 text-base leading-relaxed text-foreground">
           <p className="text-center italic text-lg md:text-xl text-muted-foreground whitespace-pre-line">
             {t.assessmentIntroPageTagline}
           </p>
