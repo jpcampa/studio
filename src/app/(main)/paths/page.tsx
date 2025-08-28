@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -50,17 +51,20 @@ export default function PathsPage() {
             className={`shadow-xl hover:shadow-2xl transition-shadow duration-300 flex flex-col ${highlightedPathId === path.id ? 'ring-2 ring-primary scale-105' : ''}`}
           >
             <CardHeader>
-              {path.dataAiHint && (
-                <div className="relative h-48 w-full mb-4 rounded-t-lg overflow-hidden">
-                  <Image 
-                    src={`https://placehold.co/600x400.png`} 
-                    alt={path.title} 
-                    fill
-                    className="object-cover"
-                    data-ai-hint={path.dataAiHint}
-                  />
-                </div>
-              )}
+              <div className="relative h-48 w-full mb-4 rounded-t-lg overflow-hidden">
+                <Image 
+                  src={`https://workwellfut.com/imgapp/600x400/${path.id}.png`} 
+                  alt={path.title} 
+                  fill
+                  className="object-cover"
+                  data-ai-hint={path.dataAiHint || path.title}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null; // prevents looping
+                    target.src = 'https://workwellfut.com/imgapp/600x400/default.png';
+                  }}
+                />
+              </div>
               <CardTitle className="text-2xl text-accent">{path.title}</CardTitle>
               <CardDescription className="text-sm min-h-[40px]">{path.description}</CardDescription>
             </CardHeader>

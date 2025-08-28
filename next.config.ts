@@ -23,6 +23,12 @@ const baseNextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'workwellfut.com',
+        port: '',
+        pathname: '/imgapp/600x400/**',
+      },
     ],
   },
 };
