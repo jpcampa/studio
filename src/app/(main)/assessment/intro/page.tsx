@@ -2,6 +2,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
@@ -26,9 +27,23 @@ export default function AssessmentIntroPage() {
 
   return (
     <div className="container mx-auto py-8 flex justify-center">
-      <Card className="w-full max-w-3xl shadow-xl my-8">
+      <Card className="w-full max-w-3xl shadow-xl my-8 overflow-hidden">
+        <div className="relative h-64 w-full">
+            <Image 
+                src="https://workwellfut.com/imgapp/800x300/imagenEvaluacion.jpg"
+                alt="Evaluación de bienestar" 
+                fill 
+                className="object-cover"
+                data-ai-hint="wellness assessment concept"
+                onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null; // prevents looping
+                    target.src = 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+                }}
+            />
+        </div>
         <CardHeader className="text-center pb-6">
-          <BookOpen className="mx-auto h-16 w-16 text-primary mb-4" />
+          <BookOpen className="mx-auto h-16 w-16 text-primary mb-4 -mt-12 bg-background rounded-full p-2 border-4 border-background" />
           <CardTitle className="text-3xl md:text-4xl font-bold text-primary">
             {t.assessmentIntroPageTitle}
           </CardTitle>
