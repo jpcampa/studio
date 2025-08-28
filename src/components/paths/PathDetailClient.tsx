@@ -716,7 +716,7 @@ import { BraveDecisionsWheelExercise } from './BraveDecisionsWheelExercise';
 import { PlanABExercise } from './PlanABExercise';
 import { ChangeTimelineExercise } from './ChangeTimelineExercise';
 import { MyPactExercise } from './MyPactExercise';
-// RUTA 9 imports
+// RUTA 9
 import { CoherenceCompassExercise } from './CoherenceCompassExercise';
 import { SmallDecisionsLogExercise } from './SmallDecisionsLogExercise';
 import { InternalTensionsMapExercise } from './InternalTensionsMapExercise';
@@ -725,7 +725,7 @@ import { IntegrityDecisionsExercise } from './IntegrityDecisionsExercise';
 import { NonNegotiablesExercise } from './NonNegotiablesExercise';
 import { EnvironmentEvaluationExercise } from './EnvironmentEvaluationExercise';
 import { PersonalManifestoExercise } from './PersonalManifestoExercise';
-// RUTA 10 imports
+// RUTA 10
 import { ComplaintTransformationExercise } from './ComplaintTransformationExercise';
 import { GuiltRadarExercise } from './GuiltRadarExercise';
 import { AcceptanceWritingExercise } from './AcceptanceWritingExercise';
@@ -1092,25 +1092,23 @@ export function PathDetailClient({ path }: { path: Path }) {
   return (
     <div className="container mx-auto py-8">
       <Card className="mb-12 shadow-xl overflow-hidden">
-        {path.dataAiHint && (
-          <div className="relative h-64 w-full">
+        <div className="relative h-64 w-full">
             <Image 
-              src={`https://placehold.co/800x300.png`} 
-              alt={path.title} 
-              fill 
-              className="object-cover"
-              data-ai-hint={path.dataAiHint} 
+                src={`https://workwellfut.com/imgapp/800x300/${encodeURIComponent(path.title.replace(':', ''))}_800x300.jpg`}
+                alt={path.title} 
+                fill 
+                className="object-cover"
+                data-ai-hint={path.dataAiHint || path.title}
+                onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null; // prevents looping
+                    target.src = 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+                }}
             />
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-4">
               <h1 className="text-3xl md:text-5xl font-bold text-white text-center drop-shadow-lg">{path.title}</h1>
             </div>
-          </div>
-        )}
-        {!path.dataAiHint && (
-             <CardHeader className="bg-muted/30 p-8 text-center">
-                <h1 className="text-4xl font-bold text-primary">{path.title}</h1>
-             </CardHeader>
-        )}
+        </div>
         <CardContent className="p-8">
           <p className="text-lg text-muted-foreground mt-2 text-center">{path.description}</p>
         </CardContent>
@@ -1178,3 +1176,4 @@ export function PathDetailClient({ path }: { path: Path }) {
 
     
     
+
