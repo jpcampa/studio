@@ -53,7 +53,7 @@ export default function PathsPage() {
             <CardHeader>
               <div className="relative h-48 w-full mb-4 rounded-t-lg overflow-hidden">
                 <Image 
-                  src={`https://workwellfut.com/imgapp/600x400/${path.id}.png`} 
+                  src={`https://workwellfut.com/imgapp/600x400/${encodeURIComponent(path.title)}_600x400.jpg`} 
                   alt={path.title} 
                   fill
                   className="object-cover"
