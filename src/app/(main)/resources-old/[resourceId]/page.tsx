@@ -1,6 +1,6 @@
 
-import { resourcesData } from '@/data/resourcesData';
-import { ResourceDetailClient } from '@/components/resources/ResourceDetailClient';
+import { resourcesData } from '@/data/resourcesDataOld';
+import { ResourceDetailClient } from '@/components/resources-old/ResourceDetailClient';
 import { notFound } from 'next/navigation';
 
 interface ResourceDetailPageProps {

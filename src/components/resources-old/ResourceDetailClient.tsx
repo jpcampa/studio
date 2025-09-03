@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Resource } from '@/data/resourcesData';
+import { Resource } from '@/data/resourcesDataOld';
 import { useTranslations } from '@/lib/translations';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -92,8 +92,8 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
       </Card>
       <div className="mt-8 text-center">
         <Button variant="outline" asChild>
-          <Link href="/resources">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Volver a Recursos
+          <Link href="/resources-old">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Volver a Recursos (Antiguo)
           </Link>
         </Button>
       </div>

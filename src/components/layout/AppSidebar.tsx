@@ -14,7 +14,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History, NotebookText, FileQuestion, HeartPulse } from "lucide-react";
+import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History, NotebookText, FileQuestion, HeartPulse, Archive } from "lucide-react";
 import { useTranslations } from "@/lib/translations";
 import { useUser } from "@/contexts/UserContext";
 import { Logo } from "@/components/Logo";
@@ -29,6 +29,10 @@ const navItems = [
   { href: "/chatbot", labelKey: "navChatbot", icon: Bot },
   // { href: "/knowledge-assistant", labelKey: "navKnowledgeAssistant", icon: FileQuestion },
   { href: "/resources", labelKey: "navResources", icon: Library },
+];
+
+const oldNavItems = [
+  { href: "/resources-old", label: "Recursos (Antiguo)", icon: Archive },
 ];
 
 const settingsNavItems = [
@@ -46,6 +50,9 @@ export function AppSidebar() {
     }
     if (href === "/my-assessments") {
         return pathname.startsWith("/my-assessments") || pathname.startsWith("/assessment/history-results");
+    }
+    if (href === "/resources") {
+        return pathname.startsWith("/resources") && !pathname.startsWith("/resources-old");
     }
     return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
   }
@@ -67,6 +74,21 @@ export function AppSidebar() {
                 <Link href={item.href}>
                   <item.icon />
                   <span>{t[item.labelKey as keyof typeof t]}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+          <SidebarSeparator />
+          {oldNavItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive(item.href)}
+                tooltip={item.label}
+              >
+                <Link href={item.href}>
+                  <item.icon />
+                  <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
