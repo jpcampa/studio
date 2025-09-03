@@ -87,7 +87,7 @@ async function CategoryPage({ params }: { params: { slug: string } }) {
            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || post.jetpack_featured_media_url;
            return (
             <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                {imageUrl && (
+                {/* {imageUrl && (
                 <div className="relative h-48 w-full rounded-t-lg overflow-hidden">
                     <Image
                     src={imageUrl}
@@ -97,12 +97,12 @@ async function CategoryPage({ params }: { params: { slug: string } }) {
                     data-ai-hint="blog post topic"
                     />
                 </div>
-                )}
+                )} */}
                 <CardHeader>
                 <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                 </CardHeader>
                 <CardContent className="flex-grow">
-                <CardDescription dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
+                <div className="prose prose-sm dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
                 </CardContent>
                 <CardFooter className="flex-col items-start gap-4">
                 <div className="flex items-center text-xs text-muted-foreground">

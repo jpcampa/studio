@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 0; // Revalidate on every request
 
 // Generate static paths for all posts
 export async function generateStaticParams() {
@@ -70,7 +70,7 @@ async function PostPage({ params }: { params: { slug: string } }) {
   return (
     <div className="container mx-auto py-8 max-w-4xl">
       <Card className="shadow-xl overflow-hidden">
-        {imageUrl && (
+        {/* {imageUrl && (
           <div className="relative h-48 md:h-72 w-full">
             <Image
               src={imageUrl}
@@ -81,7 +81,7 @@ async function PostPage({ params }: { params: { slug: string } }) {
               data-ai-hint="blog post topic"
             />
           </div>
-        )}
+        )} */}
         <CardHeader className="border-b">
           <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
           <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
@@ -96,13 +96,13 @@ async function PostPage({ params }: { params: { slug: string } }) {
         <CardContent className="py-6 px-6 md:px-8">
           <div
             className="prose prose-lg dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
+            dangerouslySetInnerHTML={{ __html: post.content.rendered }}
           />
-          <Button asChild className="mt-6">
+          {/* <Button asChild className="mt-6">
             <a href={post.link} target="_blank" rel="noopener noreferrer">
               Leer artículo completo en WorkWell <ExternalLink className="ml-2 h-4 w-4" />
             </a>
-          </Button>
+          </Button> */}
         </CardContent>
       </Card>
       <div className="mt-8 text-center">
