@@ -13,6 +13,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 //   skipWaiting: true, 
 // });
 
+// IMPORTANT: After changing this file, you MUST restart the Next.js development server
+// for the changes to take effect. This is the cause of persistent image errors.
 const baseNextConfig: NextConfig = {
   /* config options here */
   images: {
