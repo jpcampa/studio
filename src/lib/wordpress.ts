@@ -139,12 +139,22 @@ export async function getCategoryBySlug(slug: string): Promise<WPCategory | null
  */
 export async function getAllResourcePosts(): Promise<WPPost[]> {
     try {
-        const categories = await getResourcesCategories();
-        if (!categories || categories.length === 0) {
+        const allCategories = await fetchWithCache(`${API_BASE_URL}/categories?per_page=100`);
+        const parentCategory = allCategories.find((cat: WPCategory) => cat.slug === PARENT_CATEGORY_NAME);
+        if (!parentCategory) {
+            console.warn(`Parent category "${PARENT_CATEGORY_NAME}" not found for post pre-rendering.`);
             return [];
         }
-        const categoryIds = categories.map(cat => cat.id);
-        const posts: WPPost[] = await fetchWithCache(`${API_BASE_URL}/posts?categories=${categoryIds.join(',')}&per_page=100&_fields=id,slug,title`);
+        
+        const subCategoryIds = allCategories
+            .filter((cat: WPCategory) => cat.parent === parentCategory.id)
+            .map((cat: WPCategory) => cat.id);
+        
+        const allResourceCategoryIds = [parentCategory.id, ...subCategoryIds];
+        
+        if (allResourceCategoryIds.length === 0) return [];
+        
+        const posts: WPPost[] = await fetchWithCache(`${API_BASE_URL}/posts?categories=${allResourceCategoryIds.join(',')}&per_page=100&_fields=id,slug,title`);
         return posts;
     } catch (error) {
         console.error("Error fetching all resource posts:", error);
