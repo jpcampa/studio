@@ -8,6 +8,9 @@ import Image from 'next/image';
 import { Clock, ArrowLeft, Calendar } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
+
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -25,21 +28,52 @@ export async function generateStaticParams() {
 
 
 async function PostPage({ params }: { params: { slug: string } }) {
-  const posts: WPPost[] = await getPostBySlug(params.slug);
+  let posts: WPPost[] = [];
+  let error: string | null = null;
+  
+  try {
+      posts = await getPostBySlug(params.slug);
+  } catch(e) {
+      console.error(`Error fetching post for slug ${params.slug}:`, e);
+      error = "No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.";
+  }
 
+
+  if (error) {
+    return (
+        <div className="container mx-auto py-8 text-center">
+             <Alert variant="destructive" className="max-w-xl mx-auto">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Error de Conexión</AlertTitle>
+                <AlertDescription>
+                    {error}
+                </AlertDescription>
+            </Alert>
+             <div className="mt-8 text-center">
+                <Button variant="outline" asChild>
+                <Link href="/resources">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Volver a Recursos
+                </Link>
+                </Button>
+            </div>
+        </div>
+    )
+  }
+  
   if (!posts || posts.length === 0) {
     notFound();
   }
 
   const post = posts[0];
+  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || post.jetpack_featured_media_url;
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
       <Card className="shadow-xl overflow-hidden">
-        {post.jetpack_featured_media_url && (
+        {imageUrl && (
           <div className="relative h-48 md:h-72 w-full">
             <Image
-              src={post.jetpack_featured_media_url}
+              src={imageUrl}
               alt={post.title.rendered}
               fill
               className="object-cover"

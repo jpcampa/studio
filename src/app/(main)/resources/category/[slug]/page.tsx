@@ -6,10 +6,11 @@ import Image from 'next/image';
 import { ArrowRight, Clock, FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { notFound } from 'next/navigation';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
 
 export const revalidate = 3600; // Revalidate every hour
 
-// Generate static paths for all categories
 export async function generateStaticParams() {
   const categories = await getResourcesCategories();
   if (!categories || categories.length === 0) {
@@ -22,13 +23,36 @@ export async function generateStaticParams() {
 
 async function CategoryPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const [posts, category] = await Promise.all([
-    getPostsByCategorySlug(slug),
-    getCategoryBySlug(slug),
-  ]);
+  let posts: WPPost[] = [];
+  let category: WPCategory | null = null;
+  let error: string | null = null;
 
-  if (!category || posts.length === 0) {
+  try {
+      [posts, category] = await Promise.all([
+        getPostsByCategorySlug(slug),
+        getCategoryBySlug(slug),
+      ]);
+  } catch (e) {
+      console.error(`Error fetching data for category ${slug}:`, e);
+      error = "No se pudo cargar el contenido. Por favor, inténtalo de nuevo más tarde.";
+  }
+
+  if (!category) {
     notFound();
+  }
+
+  if (error) {
+    return (
+        <div className="container mx-auto py-8 text-center">
+             <Alert variant="destructive" className="max-w-xl mx-auto">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Error de Conexión</AlertTitle>
+                <AlertDescription>
+                    {error}
+                </AlertDescription>
+            </Alert>
+        </div>
+    )
   }
 
   return (
@@ -54,39 +78,48 @@ async function CategoryPage({ params }: { params: { slug: string } }) {
         </Button>
       </div>
 
+    {posts.length > 0 ? (
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {posts.map((post: WPPost) => (
-          <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            {post.jetpack_featured_media_url && (
-              <div className="relative h-48 w-full rounded-t-lg overflow-hidden">
-                <Image
-                  src={post.jetpack_featured_media_url}
-                  alt={post.title.rendered}
-                  fill
-                  className="object-cover"
-                  data-ai-hint="blog post topic"
-                />
-              </div>
-            )}
-            <CardHeader>
-              <CardTitle className="text-xl text-accent">{post.title.rendered}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <CardDescription dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
-            </CardContent>
-            <CardFooter className="flex-col items-start gap-4">
-               <div className="flex items-center text-xs text-muted-foreground">
-                <Clock className="h-3 w-3 mr-1.5" /> {post.reading_time} min de lectura
-              </div>
-              <Button asChild variant="outline" className="w-full">
-                <Link href={`/resources/post/${post.slug}`}>
-                  Leer más <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+        {posts.map((post: WPPost) => {
+           const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || post.jetpack_featured_media_url;
+           return (
+            <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                {imageUrl && (
+                <div className="relative h-48 w-full rounded-t-lg overflow-hidden">
+                    <Image
+                    src={imageUrl}
+                    alt={post.title.rendered}
+                    fill
+                    className="object-cover"
+                    data-ai-hint="blog post topic"
+                    />
+                </div>
+                )}
+                <CardHeader>
+                <CardTitle className="text-xl text-accent">{post.title.rendered}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                <CardDescription dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
+                </CardContent>
+                <CardFooter className="flex-col items-start gap-4">
+                <div className="flex items-center text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3 mr-1.5" /> {post.reading_time} min de lectura
+                </div>
+                <Button asChild variant="outline" className="w-full">
+                    <Link href={`/resources/post/${post.slug}`}>
+                    Leer más <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
+                </CardFooter>
+            </Card>
+           )
+        })}
       </div>
+       ) : (
+        <div className="text-center text-muted-foreground mt-12">
+          <p>No se encontraron artículos en esta categoría.</p>
+        </div>
+      )}
     </div>
   );
 }

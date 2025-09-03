@@ -2,10 +2,38 @@
 import { getResourcesCategories, type WPCategory } from '@/lib/wordpress';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { ArrowRight, FolderKanban } from 'lucide-react';
+import { ArrowRight, FolderKanban, AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 async function ResourcesPage() {
-  const categories: WPCategory[] = await getResourcesCategories();
+  let categories: WPCategory[] = [];
+  let error: string | null = null;
+  
+  try {
+      categories = await getResourcesCategories();
+  } catch (e) {
+      console.error("Error fetching categories for ResourcesPage:", e);
+      error = "No se pudo cargar las categorías de recursos. Por favor, verifica la conexión con el servidor o inténtalo más tarde.";
+  }
+
+
+  if(error) {
+    return (
+        <div className="container mx-auto py-8 text-center">
+            <h1 className="text-4xl font-bold text-primary mb-4">Recursos</h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+                Explora nuestra biblioteca de artículos para nutrir tu bienestar.
+            </p>
+             <Alert variant="destructive" className="max-w-xl mx-auto">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Error de Conexión</AlertTitle>
+                <AlertDescription>
+                    {error}
+                </AlertDescription>
+            </Alert>
+        </div>
+    )
+  }
 
   return (
     <div className="container mx-auto py-8">
