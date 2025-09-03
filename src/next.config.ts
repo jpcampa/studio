@@ -14,29 +14,16 @@ const isDev = process.env.NODE_ENV !== 'production';
 // });
 
 // IMPORTANT: After changing this file, you MUST restart the Next.js development server
-// for the changes to take effect. This is the cause of persistent image errors.
+// for the changes to take effect.
 const baseNextConfig: NextConfig = {
   /* config options here */
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'workwellfut.com',
-        port: '',
-        pathname: '/imgapp/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'workwellfut.hl1450.dinaserver.com',
-        port: '',
-        pathname: '/**',
-      },
+    // Using the 'domains' property as a more direct alternative to remotePatterns
+    // to ensure the configuration is picked up correctly.
+    domains: [
+      'placehold.co',
+      'workwellfut.com',
+      'workwellfut.hl1450.dinaserver.com',
     ],
   },
 };
