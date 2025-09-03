@@ -29,6 +29,12 @@ const baseNextConfig: NextConfig = {
         port: '',
         pathname: '/imgapp/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'workwellfut.hl1450.dinaserver.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
