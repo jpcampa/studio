@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ArrowRight, FolderKanban, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
+export const revalidate = 0; // Fetch on every request
+
 async function ResourcesPage() {
   let categories: WPCategory[] = [];
   let error: string | null = null;
@@ -52,9 +54,7 @@ async function ResourcesPage() {
                 <Card className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col h-full">
                   <CardHeader>
                     <FolderKanban className="h-10 w-10 text-primary mb-4" />
-                    <CardTitle className="text-2xl text-accent group-hover:text-primary transition-colors">
-                      {category.name}
-                    </CardTitle>
+                    <CardTitle className="text-2xl text-accent group-hover:text-primary transition-colors" dangerouslySetInnerHTML={{ __html: category.name }}/>
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <CardDescription dangerouslySetInnerHTML={{ __html: category.description || 'Explora los artículos de esta categoría.' }} />

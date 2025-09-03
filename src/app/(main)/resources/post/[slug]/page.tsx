@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, ArrowLeft, Calendar } from 'lucide-react';
+import { Clock, ArrowLeft, Calendar, ExternalLink } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -83,9 +83,7 @@ async function PostPage({ params }: { params: { slug: string } }) {
           </div>
         )}
         <CardHeader className="border-b">
-          <CardTitle className="text-3xl md:text-4xl font-bold text-primary">
-            {post.title.rendered}
-          </CardTitle>
+          <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
           <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
             <span className="flex items-center">
               <Calendar className="h-4 w-4 mr-1.5" /> Publicado el {format(parseISO(post.date), "dd 'de' MMMM, yyyy", { locale: es })}
@@ -97,9 +95,14 @@ async function PostPage({ params }: { params: { slug: string } }) {
         </CardHeader>
         <CardContent className="py-6 px-6 md:px-8">
           <div
-            className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-primary prose-a:text-accent hover:prose-a:text-accent/80"
-            dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+            className="prose prose-lg dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
           />
+          <Button asChild className="mt-6">
+            <a href={post.link} target="_blank" rel="noopener noreferrer">
+              Leer artículo completo en WorkWell <ExternalLink className="ml-2 h-4 w-4" />
+            </a>
+          </Button>
         </CardContent>
       </Card>
       <div className="mt-8 text-center">

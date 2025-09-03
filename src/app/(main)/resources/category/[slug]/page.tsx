@@ -9,16 +9,21 @@ import { notFound } from 'next/navigation';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 0; // Fetch on every request
 
 export async function generateStaticParams() {
-  const categories = await getResourcesCategories();
-  if (!categories || categories.length === 0) {
+  try {
+    const categories = await getResourcesCategories();
+    if (!categories || categories.length === 0) {
+      return [];
+    }
+    return categories.map((category) => ({
+      slug: category.slug,
+    }));
+  } catch (error) {
+    console.error("Error generating static params for categories:", error);
     return [];
   }
-  return categories.map((category) => ({
-    slug: category.slug,
-  }));
 }
 
 async function CategoryPage({ params }: { params: { slug: string } }) {
@@ -37,7 +42,7 @@ async function CategoryPage({ params }: { params: { slug: string } }) {
       error = "No se pudo cargar el contenido. Por favor, inténtalo de nuevo más tarde.";
   }
 
-  if (!category) {
+  if (!category && !error) {
     notFound();
   }
 
@@ -59,10 +64,8 @@ async function CategoryPage({ params }: { params: { slug: string } }) {
     <div className="container mx-auto py-8">
       <div className="text-center mb-12">
         <FolderOpen className="h-12 w-12 text-primary mx-auto mb-4" />
-        <h1 className="text-4xl font-bold text-primary mb-4">
-          {category.name}
-        </h1>
-        {category.description && (
+        <h1 className="text-4xl font-bold text-primary mb-4" dangerouslySetInnerHTML={{ __html: category?.name || '' }} />
+        {category?.description && (
           <div
             className="text-lg text-muted-foreground max-w-2xl mx-auto"
             dangerouslySetInnerHTML={{ __html: category.description }}
@@ -96,7 +99,7 @@ async function CategoryPage({ params }: { params: { slug: string } }) {
                 </div>
                 )}
                 <CardHeader>
-                <CardTitle className="text-xl text-accent">{post.title.rendered}</CardTitle>
+                <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                 </CardHeader>
                 <CardContent className="flex-grow">
                 <CardDescription dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />

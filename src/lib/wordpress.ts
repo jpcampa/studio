@@ -3,6 +3,7 @@ export interface WPPost {
   id: number;
   date: string; // ISO 8601 format
   slug: string;
+  link: string; // URL to the post
   title: {
     rendered: string;
   };
@@ -46,7 +47,7 @@ function calculateReadingTime(content: string): number {
 
 async function fetchWithCache(url: string): Promise<any> {
     try {
-        const res = await fetch(url, { cache: 'no-store' }); // Fetch on every request
+        const res = await fetch(url, { next: { revalidate: 0 } }); // Fetch on every request, no cache
         if (!res.ok) {
             const errorBody = await res.text();
             console.error(`Failed to fetch ${url}. Status: ${res.status}. Body: ${errorBody}`);
