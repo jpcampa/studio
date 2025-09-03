@@ -40,9 +40,11 @@ function calculateReadingTime(content: string): number {
   return 0;
 }
 
-async function fetchWithCache(url: string, revalidate: number = 3600): Promise<any> {
+async function fetchWithCache(url: string): Promise<any> {
     try {
-        const res = await fetch(url, { next: { revalidate } });
+        // Changed from { next: { revalidate: 3600 } } to { cache: 'no-store' }
+        // This ensures data is fetched on every request, showing new posts immediately.
+        const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) {
             // Log the server's response for more context on the error
             const errorBody = await res.text();
