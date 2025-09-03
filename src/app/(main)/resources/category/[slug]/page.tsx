@@ -1,5 +1,5 @@
 
-import { getPostsByCategorySlug, getCategoryBySlug, type WPPost, type WPCategory } from '@/lib/wordpress';
+import { getPostsByCategorySlug, getCategoryBySlug, getResourcesCategories, type WPPost, type WPCategory } from '@/lib/wordpress';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,6 +7,14 @@ import { ArrowRight, Clock, FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const revalidate = 3600; // Revalidate every hour
+
+// Generate static paths for all categories
+export async function generateStaticParams() {
+  const categories = await getResourcesCategories();
+  return categories.map((category) => ({
+    slug: category.slug,
+  }));
+}
 
 async function CategoryPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
