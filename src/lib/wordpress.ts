@@ -41,11 +41,19 @@ function calculateReadingTime(content: string): number {
 }
 
 async function fetchWithCache(url: string, revalidate: number = 3600): Promise<any> {
-    const res = await fetch(url, { next: { revalidate } });
-    if (!res.ok) {
-        throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
+    try {
+        const res = await fetch(url, { next: { revalidate } });
+        if (!res.ok) {
+            // Log the server's response for more context on the error
+            const errorBody = await res.text();
+            console.error(`Failed to fetch ${url}. Status: ${res.status}. Body: ${errorBody}`);
+            throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
+        }
+        return res.json();
+    } catch (error) {
+        console.error(`Network or fetch error for ${url}:`, error);
+        throw error; // Re-throw the error to be caught by the calling function
     }
-    return res.json();
 }
 
 /**
@@ -57,6 +65,7 @@ export async function getResourcesCategories(): Promise<WPCategory[]> {
     const allCategories: WPCategory[] = await fetchWithCache(`${API_BASE_URL}/categories?per_page=100`);
     
     const parentCategory = allCategories.find(cat => cat.slug === PARENT_CATEGORY_NAME);
+    
     if (!parentCategory) {
       console.warn(`Parent category "${PARENT_CATEGORY_NAME}" not found.`);
       return [];
@@ -66,7 +75,7 @@ export async function getResourcesCategories(): Promise<WPCategory[]> {
     return subCategories;
   } catch (error) {
     console.error("Error fetching resources categories:", error);
-    return [];
+    return []; // Return empty array on failure to prevent build errors
   }
 }
 
@@ -76,7 +85,7 @@ export async function getResourcesCategories(): Promise<WPCategory[]> {
 export async function getPostsByCategorySlug(slug: string): Promise<WPPost[]> {
   try {
     const categories: WPCategory[] = await fetchWithCache(`${API_BASE_URL}/categories?slug=${slug}`);
-    if (categories.length === 0) {
+    if (!categories || categories.length === 0) {
       console.warn(`Category with slug "${slug}" not found.`);
       return [];
     }
@@ -122,5 +131,23 @@ export async function getCategoryBySlug(slug: string): Promise<WPCategory | null
     } catch (error) {
         console.error(`Error fetching category by slug "${slug}":`, error);
         return null;
+    }
+}
+
+/**
+ * Fetches all posts under the main 'recursos' category for static generation.
+ */
+export async function getAllResourcePosts(): Promise<WPPost[]> {
+    try {
+        const categories = await getResourcesCategories();
+        if (!categories || categories.length === 0) {
+            return [];
+        }
+        const categoryIds = categories.map(cat => cat.id);
+        const posts: WPPost[] = await fetchWithCache(`${API_BASE_URL}/posts?categories=${categoryIds.join(',')}&per_page=100&_fields=id,slug,title`);
+        return posts;
+    } catch (error) {
+        console.error("Error fetching all resource posts:", error);
+        return [];
     }
 }

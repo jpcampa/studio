@@ -1,5 +1,5 @@
 
-import { getPostBySlug, getPostsByCategorySlug, type WPPost, getResourcesCategories } from '@/lib/wordpress';
+import { getPostBySlug, getAllResourcePosts, type WPPost } from '@/lib/wordpress';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,12 +13,12 @@ export const revalidate = 3600; // Revalidate every hour
 
 // Generate static paths for all posts
 export async function generateStaticParams() {
-    const categories = await getResourcesCategories();
-    const allPosts = await Promise.all(
-        categories.map(category => getPostsByCategorySlug(category.slug))
-    );
+    const allPosts = await getAllResourcePosts();
+    if (!allPosts || allPosts.length === 0) {
+        return [];
+    }
 
-    return allPosts.flat().map((post) => ({
+    return allPosts.map((post) => ({
         slug: post.slug,
     }));
 }
