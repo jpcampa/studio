@@ -44,6 +44,7 @@ async function PostPage({ params }: { params: { slug: string } }) {
               fill
               className="object-cover"
               priority
+              data-ai-hint="blog post topic"
             />
           </div>
         )}
