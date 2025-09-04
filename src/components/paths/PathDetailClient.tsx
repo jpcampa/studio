@@ -1099,11 +1099,6 @@ export function PathDetailClient({ path }: { path: Path }) {
                 fill 
                 className="object-cover"
                 data-ai-hint={path.dataAiHint || path.title}
-                onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null; // prevents looping
-                    target.src = 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
-                }}
             />
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-4">
               <h1 className="text-3xl md:text-5xl font-bold text-white text-center drop-shadow-lg">{path.title}</h1>
@@ -1173,7 +1168,3 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
-
-    
-    
-

@@ -53,11 +53,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
                         fill 
                         className="object-cover"
                         data-ai-hint="resource article header"
-                        onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.onerror = null;
-                            target.src = 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
-                        }}
                     />
                 </div>
             )}

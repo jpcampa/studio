@@ -65,11 +65,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                                 fill 
                                 className="object-cover"
                                 data-ai-hint="resource article"
-                                onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    target.onerror = null; // prevents looping
-                                    target.src = 'https://workwellfut.com/imgapp/600x400/default.png';
-                                }}
                             />
                         </div>
                     )}

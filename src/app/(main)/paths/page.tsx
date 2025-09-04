@@ -58,11 +58,6 @@ export default function PathsPage() {
                   fill
                   className="object-cover"
                   data-ai-hint={path.dataAiHint || path.title}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null; // prevents looping
-                    target.src = 'https://workwellfut.com/imgapp/600x400/default.png';
-                  }}
                 />
               </div>
               <CardTitle className="text-2xl text-accent">{path.title}</CardTitle>
