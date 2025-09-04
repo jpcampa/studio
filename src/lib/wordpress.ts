@@ -1,3 +1,4 @@
+
 // src/lib/wordpress.ts
 import "server-only";
 
@@ -27,7 +28,7 @@ export interface WpCategory {
   parent: number;
 }
 
-const API_BASE_URL = "https://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
+const API_BASE_URL = "http://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
 const RECURSOS_CATEGORY_ID = 15; // Asumimos que el ID de la categoría "Recursos" es 15.
 
 async function fetchWithCache(url: string): Promise<any> {
