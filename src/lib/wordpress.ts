@@ -31,7 +31,7 @@ export interface WPCategory {
   parent: number;
 }
 
-const API_BASE_URL = 'http://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2';
+const API_BASE_URL = 'https://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2';
 const PARENT_CATEGORY_NAME = 'recursos';
 
 // Function to calculate reading time
