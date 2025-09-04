@@ -1,17 +1,14 @@
-
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
-import { getResourcesCategories } from '@/data/resourcesData';
-import { ArrowRight, BookOpen } from 'lucide-react';
+import { getResourcesCategories } from '@/lib/wordpress'; // Updated import
+import { ArrowRight, BookOpen, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
-
 
 export default async function ResourcesPage() {
   const t = useTranslations();
-  const categories = getResourcesCategories();
+  const { categories, error } = await getResourcesCategories();
   
   return (
     <div className="container mx-auto py-8">
@@ -22,13 +19,20 @@ export default async function ResourcesPage() {
         </p>
       </div>
 
-      {categories.length === 0 && (
+      {error && (
+        <Alert variant="destructive" className="max-w-2xl mx-auto">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {!error && categories.length === 0 && (
          <div className="text-center text-muted-foreground">
           <p>No se encontraron categorías con artículos publicados en este momento.</p>
         </div>
       )}
 
-      {categories.length > 0 && (
+      {!error && categories.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((category) => (
             <Link key={category.id} href={`/resources/category/${category.slug}`} legacyBehavior>
