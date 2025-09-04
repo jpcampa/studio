@@ -29,7 +29,7 @@ export interface WpCategory {
 }
 
 const API_BASE_URL = "http://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
-const RECURSOS_CATEGORY_ID = 15; // Asumimos que el ID de la categoría "Recursos" es 15.
+const RECURSOS_CATEGORY_ID = 3; // Corregido al ID de la categoría "Recursos".
 
 async function fetchWithCache(url: string): Promise<any> {
   try {
