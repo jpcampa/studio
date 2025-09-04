@@ -33,8 +33,8 @@ interface WpCategory {
 
 async function fetchWithCache(url: string): Promise<any> {
   try {
-    // Using revalidate: 0 ensures we get fresh data on every request, solving the caching issue.
-    const res = await fetch(url, { next: { revalidate: 0 } });
+    // Change caching strategy to 'no-store' for a more direct fetch.
+    const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) {
       const errorBody = await res.text();
       console.error(`Failed to fetch ${url}. Status: ${res.status}. Body: ${errorBody}`);
@@ -63,7 +63,6 @@ export async function getPostsByCategorySlug(slug: string): Promise<WpPost[]> {
     notFound();
   }
   const categoryId = categories[0].id;
-  // _embed=true is the correct way to include featured images
   const url = `${API_BASE_URL}/posts?categories=${categoryId}&_embed=true&per_page=100`;
   return fetchWithCache(url);
 }
