@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
         hostname: 'workwellfut.com',
       },
       {
-        protocol: 'http',
+        protocol: 'https',
         hostname: 'workwellfut.hl1450.dinaserver.com',
       },
     ],

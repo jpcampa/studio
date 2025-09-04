@@ -1,62 +1,74 @@
 
-import { resourcesData } from '@/data/resourcesData';
+import { getPostBySlug, getAllPostSlugs } from '@/lib/wordpress';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, ArrowLeft, Calendar, BookOpen, Headphones, Zap } from 'lucide-react';
+import { Clock, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
 
 export async function generateStaticParams() {
-    return resourcesData.map((resource) => ({
-        slug: resource.id,
-    }));
+    return getAllPostSlugs();
 }
 
-function PostPage({ params }: { params: { slug: string } }) {
-  const post = resourcesData.find(p => p.id === params.slug);
+export default async function PostPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  let post = null;
+  let error = null;
 
-  if (!post) {
-    notFound();
+  try {
+    post = await getPostBySlug(slug);
+  } catch (e) {
+    console.error(`PostPage: Failed to fetch post for slug ${slug}`, e);
+    error = "No se pudo cargar el artículo. Puede que no exista o haya un problema de conexión.";
   }
   
-  const getResourceTypeIcon = (type: 'article' | 'audio' | 'exercise') => {
-    switch (type) {
-      case 'article': return <BookOpen className="h-5 w-5 mr-2 text-primary" />;
-      case 'audio': return <Headphones className="h-5 w-5 mr-2 text-primary" />;
-      case 'exercise': return <Zap className="h-5 w-5 mr-2 text-primary" />;
-      default: return <BookOpen className="h-5 w-5 mr-2 text-primary" />;
-    }
-  };
+  if (!post) {
+      notFound();
+  }
 
+  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
-      <Card className="shadow-xl overflow-hidden">
-        <CardHeader className="border-b">
-           <div className="flex items-center justify-between mb-3">
-            <Badge variant="outline">{post.category}</Badge>
-            <div className="flex items-center text-sm text-muted-foreground">
-             {getResourceTypeIcon(post.type)}
-             <span className="capitalize">{post.type}</span>
+      {error && (
+         <Alert variant="destructive" className="mb-8">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {post && (
+        <Card className="shadow-xl overflow-hidden">
+          <CardHeader className="border-b p-0">
+             {/* {imageUrl && (
+              <div className="relative h-72 w-full">
+                <Image
+                  src={imageUrl}
+                  alt={post.title.rendered}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )} */}
+            <div className="p-6">
+                <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
+                    <span className="flex items-center">
+                    <Clock className="h-4 w-4 mr-1.5" /> Publicado el {new Date(post.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </span>
+                </CardDescription>
             </div>
-          </div>
-          <CardTitle className="text-3xl md:text-4xl font-bold text-primary">{post.title}</CardTitle>
-          <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
-            <span className="flex items-center">
-              <Clock className="h-4 w-4 mr-1.5" /> {post.estimatedTime}
-            </span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="py-6 px-6 md:px-8">
-          <div
-            className="prose prose-lg dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.content?.replace(/\n/g, '<br />') || '' }}
-          />
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent className="py-6 px-6 md:px-8">
+             <div className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+          </CardContent>
+        </Card>
+      )}
+
       <div className="mt-8 text-center">
         <Button variant="outline" asChild>
           <Link href="/resources">
@@ -67,5 +79,3 @@ function PostPage({ params }: { params: { slug: string } }) {
     </div>
   );
 }
-
-export default PostPage;

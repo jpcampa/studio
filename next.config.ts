@@ -1,40 +1,27 @@
 
 import type {NextConfig} from 'next';
-// Temporarily comment out PWA related imports
-// import withPWAInit from 'next-pwa';
 
-const isDev = process.env.NODE_ENV !== 'production';
+// IMPORTANTE: Después de cambiar este archivo, DEBES reiniciar el servidor de desarrollo de Next.js
+// para que los cambios en la configuración de imágenes (remotePatterns) se apliquen.
+// Pulsa Ctrl+C en tu terminal y vuelve a ejecutar `npm run dev`.
 
-// Temporarily comment out PWA initialization
-// const withPWA = withPWAInit({
-//   dest: 'public',
-//   disable: isDev, 
-//   register: true,
-//   skipWaiting: true, 
-// });
-
-const baseNextConfig: NextConfig = {
-  /* config options here */
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'workwellfut.com',
-        port: '',
-        pathname: '/imgapp/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'workwellfut.hl1450.dinaserver.com',
       },
     ],
   },
 };
 
-// Temporarily disable PWA by not wrapping the config
-// const finalConfig = isDev ? baseNextConfig : withPWA(baseNextConfig);
-const finalConfig = baseNextConfig; // PWA functionality is completely disabled for now
-
-export default finalConfig;
+export default nextConfig;
