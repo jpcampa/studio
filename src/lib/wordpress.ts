@@ -1,7 +1,7 @@
 // src/lib/wordpress.ts
 import { notFound } from 'next/navigation';
 
-const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
+const API_BASE_URL = "https://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
 
 interface WpPost {
   id: number;
@@ -52,29 +52,46 @@ async function fetchWithCache(url: string): Promise<any> {
 export async function getResourcesCategories(): Promise<WpCategory[]> {
   // hide_empty=true is crucial for the user's request
   const url = `${API_BASE_URL}/categories?hide_empty=true&per_page=50`;
-  return fetchWithCache(url);
+  try {
+    return await fetchWithCache(url);
+  } catch (error) {
+    console.error("getResourcesCategories failed:", error);
+    // In case of a fetch failure, return an empty array to avoid crashing the page.
+    // The page component will handle displaying an error message.
+    return [];
+  }
 }
 
 // Gets all posts for a given category slug
 export async function getPostsByCategorySlug(slug: string): Promise<WpPost[]> {
-  const categories = await fetchWithCache(`${API_BASE_URL}/categories?slug=${slug}`);
-  if (!categories || categories.length === 0) {
-    console.warn(`No category found for slug: ${slug}`);
-    notFound();
+  try {
+    const categories = await fetchWithCache(`${API_BASE_URL}/categories?slug=${slug}`);
+    if (!categories || categories.length === 0) {
+      console.warn(`No category found for slug: ${slug}`);
+      notFound();
+    }
+    const categoryId = categories[0].id;
+    const url = `${API_BASE_URL}/posts?categories=${categoryId}&_embed=true&per_page=100`;
+    return await fetchWithCache(url);
+  } catch (error) {
+     console.error(`getPostsByCategorySlug failed for slug ${slug}:`, error);
+     return [];
   }
-  const categoryId = categories[0].id;
-  const url = `${API_BASE_URL}/posts?categories=${categoryId}&_embed=true&per_page=100`;
-  return fetchWithCache(url);
 }
 
 // Gets a single post by its slug
-export async function getPostBySlug(slug: string): Promise<WpPost> {
-  const posts = await fetchWithCache(`${API_BASE_URL}/posts?slug=${slug}&_embed=true`);
-  if (!posts || posts.length === 0) {
-    console.warn(`No post found for slug: ${slug}`);
-    notFound();
+export async function getPostBySlug(slug: string): Promise<WpPost | null> {
+  try {
+    const posts = await fetchWithCache(`${API_BASE_URL}/posts?slug=${slug}&_embed=true`);
+    if (!posts || posts.length === 0) {
+      console.warn(`No post found for slug: ${slug}`);
+      return null;
+    }
+    return posts[0];
+  } catch(error) {
+    console.error(`getPostBySlug failed for slug ${slug}:`, error);
+    return null;
   }
-  return posts[0];
 }
 
 // Gets all post slugs for generateStaticParams
