@@ -1,10 +1,6 @@
 
 import type {NextConfig} from 'next';
 
-// IMPORTANTE: Después de cambiar este archivo, DEBES reiniciar el servidor de desarrollo de Next.js
-// para que los cambios en la configuración de imágenes (remotePatterns) se apliquen.
-// Pulsa Ctrl+C en tu terminal y vuelve a ejecutar `npm run dev`.
-
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -17,9 +13,13 @@ const nextConfig: NextConfig = {
         hostname: 'workwellfut.com',
       },
       {
-        protocol: 'https',
+        protocol: 'http',
         hostname: 'workwellfut.hl1450.dinaserver.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'workwellfut.hl1450.dinaserver.com',
+      }
     ],
   },
 };

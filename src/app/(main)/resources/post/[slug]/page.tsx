@@ -1,12 +1,11 @@
 
-import { getPostBySlug, getAllPostSlugs } from '@/lib/wordpress';
+import { getPostBySlug, getAllPostSlugs } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, ArrowLeft, ArrowRight } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Clock, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
@@ -16,35 +15,20 @@ export async function generateStaticParams() {
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  let post = null;
-  let error = null;
-
-  try {
-    post = await getPostBySlug(slug);
-  } catch (e) {
-    console.error(`PostPage: Failed to fetch post for slug ${slug}`, e);
-    error = "No se pudo cargar el artículo. Puede que no exista o haya un problema de conexión.";
-  }
+  const post = getPostBySlug(slug);
   
   if (!post) {
       notFound();
   }
 
-  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  const imageUrl = post.featured_media_url;
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
-      {error && (
-         <Alert variant="destructive" className="mb-8">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
       {post && (
         <Card className="shadow-xl overflow-hidden">
           <CardHeader className="border-b p-0">
-             {/* {imageUrl && (
+             {imageUrl && (
               <div className="relative h-72 w-full">
                 <Image
                   src={imageUrl}
@@ -53,7 +37,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                   className="object-cover"
                 />
               </div>
-            )} */}
+            )}
             <div className="p-6">
                 <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                 <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">

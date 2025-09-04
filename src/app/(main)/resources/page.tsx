@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
-import { getResourcesCategories } from '@/lib/wordpress';
+import { getResourcesCategories } from '@/data/resourcesData';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
@@ -11,16 +11,8 @@ import { AlertTriangle } from 'lucide-react';
 
 export default async function ResourcesPage() {
   const t = useTranslations();
-  let categories = [];
-  let error = null;
-
-  try {
-    categories = await getResourcesCategories();
-  } catch (e) {
-    console.error("ResourcesPage: Failed to fetch categories", e);
-    error = "No se pudieron cargar las categorías desde el blog. Por favor, revisa la conexión y la configuración de la API de WordPress.";
-  }
-
+  const categories = getResourcesCategories();
+  
   return (
     <div className="container mx-auto py-8">
       <div className="text-center mb-12">
@@ -30,14 +22,7 @@ export default async function ResourcesPage() {
         </p>
       </div>
 
-      {error && (
-         <Alert variant="destructive" className="mb-8 max-w-2xl mx-auto">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {!error && categories.length === 0 && (
+      {categories.length === 0 && (
          <div className="text-center text-muted-foreground">
           <p>No se encontraron categorías con artículos publicados en este momento.</p>
         </div>
