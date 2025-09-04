@@ -29,11 +29,12 @@ export interface WpCategory {
 }
 
 const API_BASE_URL = "http://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
-const RECURSOS_CATEGORY_ID = 3; // Corregido al ID de la categoría "Recursos".
+const RECURSOS_CATEGORY_ID = 3; 
 
 async function fetchWithCache(url: string): Promise<any> {
   try {
-    const res = await fetch(url, { cache: 'no-store' });
+    // Se elimina la configuración de caché explícita para usar el comportamiento por defecto de Next.js
+    const res = await fetch(url);
     if (!res.ok) {
       const errorBody = await res.text();
       console.error(`Failed to fetch ${url}. Status: ${res.status}. Body: ${errorBody}`);
@@ -52,7 +53,6 @@ async function fetchWithCache(url: string): Promise<any> {
 // Gets all sub-categories of "Recursos" that have at least one post
 export async function getResourcesCategories(): Promise<{ categories: WpCategory[], error?: string }> {
   try {
-    // Usamos el ID directamente en lugar de buscarlo por slug
     const url = `${API_BASE_URL}/categories?parent=${RECURSOS_CATEGORY_ID}&hide_empty=true&per_page=50`;
     const categories: WpCategory[] = await fetchWithCache(url);
     
