@@ -28,6 +28,7 @@ export interface WpCategory {
 }
 
 const API_BASE_URL = "https://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
+const RECURSOS_CATEGORY_ID = 15; // Asumimos que el ID de la categoría "Recursos" es 15.
 
 async function fetchWithCache(url: string): Promise<any> {
   try {
@@ -39,7 +40,7 @@ async function fetchWithCache(url: string): Promise<any> {
     }
     return res.json();
   } catch (error: any) {
-    console.error(`Network error fetching ${url}:`, error.message, error.cause);
+    console.error(`Network error fetching ${url}:`, error.message);
     if (error.cause?.code === 'ENOTFOUND') {
       console.error("This is a DNS resolution error. Ensure the hostname is correct and reachable from the server environment.");
     }
@@ -47,30 +48,11 @@ async function fetchWithCache(url: string): Promise<any> {
   }
 }
 
-// Function to get the ID of the parent "Recursos" category
-async function getParentCategoryId(slug: string = 'recursos'): Promise<number | null> {
-    try {
-        const categories: WpCategory[] = await fetchWithCache(`${API_BASE_URL}/categories?slug=${slug}`);
-        if (categories.length > 0) {
-            return categories[0].id;
-        }
-        return null;
-    } catch (error) {
-        console.error("Error fetching parent category ID:", error);
-        return null;
-    }
-}
-
 // Gets all sub-categories of "Recursos" that have at least one post
 export async function getResourcesCategories(): Promise<{ categories: WpCategory[], error?: string }> {
   try {
-    const parentCategoryId = await getParentCategoryId('recursos');
-    if (parentCategoryId === null) {
-        console.warn("Parent category 'recursos' not found.");
-        return { categories: [], error: "La categoría principal 'Recursos' no fue encontrada en el blog." };
-    }
-
-    const url = `${API_BASE_URL}/categories?parent=${parentCategoryId}&hide_empty=true&per_page=50`;
+    // Usamos el ID directamente en lugar de buscarlo por slug
+    const url = `${API_BASE_URL}/categories?parent=${RECURSOS_CATEGORY_ID}&hide_empty=true&per_page=50`;
     const categories: WpCategory[] = await fetchWithCache(url);
     
     return { categories };
@@ -89,7 +71,7 @@ export async function getPostsByCategory(categoryId: number): Promise<{ posts: W
 
     const formattedPosts = posts.map(post => ({
       ...post,
-      featured_media_url: post['_embedded']?.['wp:featuredmedia']?.[0]?.source_url || undefined
+      featured_media_url: (post as any)['_embedded']?.['wp:featuredmedia']?.[0]?.source_url || undefined
     }));
 
     return { posts: formattedPosts };
@@ -110,7 +92,7 @@ export async function getPostBySlug(slug: string): Promise<{ post: WpPost | null
     const post = posts[0];
     const formattedPost = {
         ...post,
-        featured_media_url: post['_embedded']?.['wp:featuredmedia']?.[0]?.source_url || undefined
+        featured_media_url: (post as any)['_embedded']?.['wp:featuredmedia']?.[0]?.source_url || undefined
     };
     return { post: formattedPost };
   } catch (error: any) {
