@@ -23,39 +23,45 @@ export interface WpCategory {
   id: number;
   count: number;
   description: string;
+  link: string;
   name: string;
   slug: string;
+  taxonomy: string;
   parent: number;
 }
 
 const API_BASE_URL = "http://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
 const RECURSOS_CATEGORY_ID = 3; 
 
-async function fetchWithCache(url: string): Promise<any> {
+async function fetchWithCache(url: string): Promise<{ data: any, error?: string }> {
   try {
-    // Se elimina la configuración de caché explícita para usar el comportamiento por defecto de Next.js
+    // Se simplifica la llamada fetch a su forma más básica y estándar.
     const res = await fetch(url);
+    
     if (!res.ok) {
       const errorBody = await res.text();
       console.error(`Failed to fetch ${url}. Status: ${res.status}. Body: ${errorBody}`);
-      throw new Error(`Failed to fetch data from WordPress API. Status: ${res.status}`);
+      return { data: null, error: `Error del servidor de WordPress (HTTP ${res.status}).` };
     }
-    return res.json();
+    const data = await res.json();
+    return { data };
   } catch (error: any) {
     console.error(`Network error fetching ${url}:`, error.message);
     if (error.cause?.code === 'ENOTFOUND') {
       console.error("This is a DNS resolution error. Ensure the hostname is correct and reachable from the server environment.");
     }
-    throw new Error(`Network error while fetching WordPress data: ${error.message}`);
+    return { data: null, error: "No se pudieron cargar las categorías desde el blog. Por favor, revisa la conexión y la configuración de la API de WordPress." };
   }
 }
 
 // Gets all sub-categories of "Recursos" that have at least one post
 export async function getResourcesCategories(): Promise<{ categories: WpCategory[], error?: string }> {
   try {
-    const url = `${API_BASE_URL}/categories?parent=${RECURSOS_CATEGORY_ID}&hide_empty=true&per_page=50`;
-    const categories: WpCategory[] = await fetchWithCache(url);
-    
+    const url = `${API_BASE_URL}/categories?parent=${RECURSOS_CATEGORY_ID}&hide_empty=true&per_page=100`;
+    const { data: categories, error } = await fetchWithCache(url);
+    if (error) {
+        return { categories: [], error };
+    }
     return { categories };
   } catch (error: any) {
     console.error("Error in getResourcesCategories:", error);
@@ -68,11 +74,14 @@ export async function getResourcesCategories(): Promise<{ categories: WpCategory
 export async function getPostsByCategory(categoryId: number): Promise<{ posts: WpPost[], error?: string }> {
   try {
     const url = `${API_BASE_URL}/posts?categories=${categoryId}&_embed&per_page=100`;
-    const posts: WpPost[] = await fetchWithCache(url);
+    const { data: posts, error } = await fetchWithCache(url);
+     if (error) {
+        return { posts: [], error };
+    }
 
-    const formattedPosts = posts.map(post => ({
+    const formattedPosts = posts.map((post: any) => ({ // Use 'any' temporarily to access _embedded
       ...post,
-      featured_media_url: (post as any)['_embedded']?.['wp:featuredmedia']?.[0]?.source_url || undefined
+      featured_media_url: post['_embedded']?.['wp:featuredmedia']?.[0]?.source_url || undefined
     }));
 
     return { posts: formattedPosts };
@@ -86,8 +95,11 @@ export async function getPostsByCategory(categoryId: number): Promise<{ posts: W
 export async function getPostBySlug(slug: string): Promise<{ post: WpPost | null, error?: string }> {
   try {
     const url = `${API_BASE_URL}/posts?slug=${slug}&_embed`;
-    const posts: WpPost[] = await fetchWithCache(url);
-    if (posts.length === 0) {
+    const { data: posts, error } = await fetchWithCache(url);
+     if (error) {
+        return { post: null, error };
+    }
+    if (!posts || posts.length === 0) {
       return { post: null };
     }
     const post = posts[0];
@@ -106,8 +118,11 @@ export async function getPostBySlug(slug: string): Promise<{ post: WpPost | null
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
     try {
         const url = `${API_BASE_URL}/posts?per_page=100&_fields=slug`;
-        const posts: { slug: string }[] = await fetchWithCache(url);
-        return posts.map(post => ({ slug: post.slug }));
+        const { data: posts, error } = await fetchWithCache(url);
+        if (error || !posts) {
+            return [];
+        }
+        return posts.map((post: { slug: string }) => ({ slug: post.slug }));
     } catch (error) {
         console.error("Error fetching all post slugs:", error);
         return [];
@@ -117,8 +132,11 @@ export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
 // Gets all category slugs for generateStaticParams
 export async function getAllCategorySlugs(): Promise<{ slug: string }[]> {
     try {
-        const { categories } = await getResourcesCategories();
-        return categories.map(category => ({ slug: category.slug }));
+        const { categories, error } = await getResourcesCategories();
+        if (error || !categories) {
+            return [];
+        }
+        return categories.map((category: WpCategory) => ({ slug: category.slug }));
     } catch (error) {
         console.error("Error fetching all category slugs:", error);
         return [];
