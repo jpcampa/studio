@@ -1,4 +1,5 @@
-import { getPostBySlug, getAllPostSlugs } from '@/lib/wordpress'; // Updated import
+
+import { getPostBySlug, getAllPostSlugs } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,13 +9,13 @@ import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export async function generateStaticParams() {
-    // This function now correctly uses the new wordpress helper
     return getAllPostSlugs();
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const { post, error } = await getPostBySlug(slug);
+  const post = getPostBySlug(slug);
+  const error = null;
   
   if (error) {
     return (
@@ -38,15 +39,30 @@ export default async function PostPage({ params }: { params: { slug: string } })
       notFound();
   }
 
-  const imageUrl = post.featured_media_url;
+  const imageUrl = post.featured_media_url || 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
       <Card className="shadow-xl overflow-hidden">
         <CardHeader className="border-b p-0">
-            {/* Image rendering is disabled for now */}
+            {imageUrl && (
+                <div className="relative h-64 w-full">
+                    <Image 
+                        src={imageUrl} 
+                        alt={post.title} 
+                        fill 
+                        className="object-cover"
+                        data-ai-hint="resource article header"
+                        onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.onerror = null;
+                            target.src = 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+                        }}
+                    />
+                </div>
+            )}
             <div className="p-6">
-                <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                <CardTitle className="text-3xl md:text-4xl font-bold text-primary">{post.title}</CardTitle>
                 <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
                     <span className="flex items-center">
                     <Clock className="h-4 w-4 mr-1.5" /> Publicado el {new Date(post.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -55,7 +71,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </div>
         </CardHeader>
         <CardContent className="py-6 px-6 md:px-8">
-            <div className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+            <div className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
         </CardContent>
       </Card>
 

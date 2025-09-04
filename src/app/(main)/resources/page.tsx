@@ -1,15 +1,17 @@
+
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
-import { getResourcesCategories } from '@/lib/wordpress'; // Updated import
+import { resourcesCategories } from '@/data/resourcesData';
 import { ArrowRight, BookOpen, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default async function ResourcesPage() {
   const t = useTranslations();
-  const { categories, error } = await getResourcesCategories();
-  
+  const categories = resourcesCategories;
+  const error = null; // No hay error al usar datos locales
+
   return (
     <div className="container mx-auto py-8">
       <div className="text-center mb-12">
@@ -40,7 +42,7 @@ export default async function ResourcesPage() {
                 <Card className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col h-full">
                   <CardHeader>
                     <BookOpen className="h-10 w-10 text-primary mb-4" />
-                    <CardTitle className="text-2xl text-accent group-hover:text-primary transition-colors" dangerouslySetInnerHTML={{ __html: category.name }}/>
+                    <CardTitle className="text-2xl text-accent group-hover:text-primary transition-colors">{category.name}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <CardDescription>Explora los {category.count} artículos y ejercicios sobre {category.name.toLowerCase()}.</CardDescription>
