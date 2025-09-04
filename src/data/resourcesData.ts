@@ -110,7 +110,7 @@ No es el mundo el que te ataca. Es tu interpretación del mundo la que puede vol
 **¿Cómo se regula?**
 Desde Emotiva, abordamos la ansiedad desde el enfoque cognitivo-conductual y la neurociencia afectiva.
 No con frases vacías, sino con herramientas reales y entrenables.
-Aquí algunas de nuestras favoritas:
+Aquí van algunas de nuestras favoritas:
 
 1. **Auto-observación consciente**
 Aprende a notar qué te dispara la ansiedad. Usa el formato:
@@ -881,5 +881,3 @@ Escuchar tu cuerpo no es debilidad. Es el comienzo del autocuidado real.`,
     dataAiHint: 'somatization stress body'
   }
 ];
-
-    

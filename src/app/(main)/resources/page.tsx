@@ -1,67 +1,53 @@
 
-import { getResourcesCategories, type WPCategory } from '@/lib/wordpress';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+"use client";
+
 import Link from 'next/link';
-import { ArrowRight, FolderKanban, AlertTriangle } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { resourcesData, Resource } from '@/data/resourcesData';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { useTranslations } from '@/lib/translations';
+import { BookOpen, Headphones, Zap, ArrowRight, Clock } from 'lucide-react';
 
-export const revalidate = 0; // Fetch on every request
+// Helper to get unique categories
+const getUniqueCategories = (resources: Resource[]) => {
+  const categories = resources.map(r => r.category);
+  return [...new Set(categories)];
+};
 
-async function ResourcesPage() {
-  let categories: WPCategory[] = [];
-  let error: string | null = null;
-  
-  try {
-      categories = await getResourcesCategories();
-  } catch (e) {
-      console.error("Error fetching categories for ResourcesPage:", e);
-      error = "No se pudo cargar las categorías de recursos. Por favor, verifica la conexión con el servidor o inténtalo más tarde.";
-  }
+export default function ResourcesPage() {
+  const t = useTranslations();
+  const categories = getUniqueCategories(resourcesData);
 
-
-  if(error) {
-    return (
-        <div className="container mx-auto py-8 text-center">
-            <h1 className="text-4xl font-bold text-primary mb-4">Recursos</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-                Explora nuestra biblioteca de artículos para nutrir tu bienestar.
-            </p>
-             <Alert variant="destructive" className="max-w-xl mx-auto">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Error de Conexión</AlertTitle>
-                <AlertDescription>
-                    {error}
-                </AlertDescription>
-            </Alert>
-        </div>
-    )
-  }
+  const getCategorySlug = (categoryName: string) => {
+    return categoryName.toLowerCase().replace(/\s+/g, '-');
+  };
 
   return (
     <div className="container mx-auto py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-primary mb-4">Recursos</h1>
+        <h1 className="text-4xl font-bold text-primary mb-4">{t.resourcesTitle}</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Explora nuestra biblioteca de artículos para nutrir tu bienestar.
+          {t.resourcesIntro}
         </p>
       </div>
 
       {categories.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((category) => (
-            <Link key={category.id} href={`/resources/category/${category.slug}`} legacyBehavior>
+            <Link key={category} href={`/resources/category/${getCategorySlug(category)}`} legacyBehavior>
               <a className="block group">
                 <Card className="shadow-lg hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col h-full">
                   <CardHeader>
-                    <FolderKanban className="h-10 w-10 text-primary mb-4" />
-                    <CardTitle className="text-2xl text-accent group-hover:text-primary transition-colors" dangerouslySetInnerHTML={{ __html: category.name }}/>
+                    <BookOpen className="h-10 w-10 text-primary mb-4" />
+                    <CardTitle className="text-2xl text-accent group-hover:text-primary transition-colors">{category}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex-grow">
-                    <CardDescription dangerouslySetInnerHTML={{ __html: category.description || 'Explora los artículos de esta categoría.' }} />
+                    <CardDescription>Explora los artículos y ejercicios sobre {category.toLowerCase()}.</CardDescription>
                   </CardContent>
                   <CardContent>
                      <div className="flex items-center text-sm text-primary font-semibold">
-                      Ver artículos <ArrowRight className="ml-2 h-4 w-4" />
+                      Ver categoría <ArrowRight className="ml-2 h-4 w-4" />
                     </div>
                   </CardContent>
                 </Card>
@@ -77,5 +63,3 @@ async function ResourcesPage() {
     </div>
   );
 }
-
-export default ResourcesPage;

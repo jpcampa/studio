@@ -1,108 +1,60 @@
 
-import { getPostBySlug, getAllResourcePosts, type WPPost } from '@/lib/wordpress';
+import { resourcesData } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, ArrowLeft, Calendar, ExternalLink } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
+import { Clock, ArrowLeft, Calendar, BookOpen, Headphones, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 
-export const revalidate = 0; // Revalidate on every request
-
-// Generate static paths for all posts
 export async function generateStaticParams() {
-    const allPosts = await getAllResourcePosts();
-    if (!allPosts || allPosts.length === 0) {
-        return [];
-    }
-
-    return allPosts.map((post) => ({
-        slug: post.slug,
+    return resourcesData.map((resource) => ({
+        slug: resource.id,
     }));
 }
 
+function PostPage({ params }: { params: { slug: string } }) {
+  const post = resourcesData.find(p => p.id === params.slug);
 
-async function PostPage({ params }: { params: { slug: string } }) {
-  let posts: WPPost[] = [];
-  let error: string | null = null;
-  
-  try {
-      posts = await getPostBySlug(params.slug);
-  } catch(e) {
-      console.error(`Error fetching post for slug ${params.slug}:`, e);
-      error = "No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.";
-  }
-
-
-  if (error) {
-    return (
-        <div className="container mx-auto py-8 text-center">
-             <Alert variant="destructive" className="max-w-xl mx-auto">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Error de Conexión</AlertTitle>
-                <AlertDescription>
-                    {error}
-                </AlertDescription>
-            </Alert>
-             <div className="mt-8 text-center">
-                <Button variant="outline" asChild>
-                <Link href="/resources">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Volver a Recursos
-                </Link>
-                </Button>
-            </div>
-        </div>
-    )
-  }
-  
-  if (!posts || posts.length === 0) {
+  if (!post) {
     notFound();
   }
+  
+  const getResourceTypeIcon = (type: 'article' | 'audio' | 'exercise') => {
+    switch (type) {
+      case 'article': return <BookOpen className="h-5 w-5 mr-2 text-primary" />;
+      case 'audio': return <Headphones className="h-5 w-5 mr-2 text-primary" />;
+      case 'exercise': return <Zap className="h-5 w-5 mr-2 text-primary" />;
+      default: return <BookOpen className="h-5 w-5 mr-2 text-primary" />;
+    }
+  };
 
-  const post = posts[0];
-  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || post.jetpack_featured_media_url;
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
       <Card className="shadow-xl overflow-hidden">
-        {/* {imageUrl && (
-          <div className="relative h-48 md:h-72 w-full">
-            <Image
-              src={imageUrl}
-              alt={post.title.rendered}
-              fill
-              className="object-cover"
-              priority
-              data-ai-hint="blog post topic"
-            />
-          </div>
-        )} */}
         <CardHeader className="border-b">
-          <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+           <div className="flex items-center justify-between mb-3">
+            <Badge variant="outline">{post.category}</Badge>
+            <div className="flex items-center text-sm text-muted-foreground">
+             {getResourceTypeIcon(post.type)}
+             <span className="capitalize">{post.type}</span>
+            </div>
+          </div>
+          <CardTitle className="text-3xl md:text-4xl font-bold text-primary">{post.title}</CardTitle>
           <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
             <span className="flex items-center">
-              <Calendar className="h-4 w-4 mr-1.5" /> Publicado el {format(parseISO(post.date), "dd 'de' MMMM, yyyy", { locale: es })}
-            </span>
-            <span className="flex items-center">
-              <Clock className="h-4 w-4 mr-1.5" /> {post.reading_time} min de lectura
+              <Clock className="h-4 w-4 mr-1.5" /> {post.estimatedTime}
             </span>
           </CardDescription>
         </CardHeader>
         <CardContent className="py-6 px-6 md:px-8">
           <div
             className="prose prose-lg dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+            dangerouslySetInnerHTML={{ __html: post.content?.replace(/\n/g, '<br />') || '' }}
           />
-          {/* <Button asChild className="mt-6">
-            <a href={post.link} target="_blank" rel="noopener noreferrer">
-              Leer artículo completo en WorkWell <ExternalLink className="ml-2 h-4 w-4" />
-            </a>
-          </Button> */}
         </CardContent>
       </Card>
       <div className="mt-8 text-center">
