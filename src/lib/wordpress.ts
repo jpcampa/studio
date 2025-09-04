@@ -33,8 +33,8 @@ interface WpCategory {
 
 async function fetchWithCache(url: string): Promise<any> {
   try {
-    // Change caching strategy to 'no-store' for a more direct fetch.
-    const res = await fetch(url, { cache: 'no-store' });
+    // Using 'no-cache' to force DNS resolution and bypass potential persistent connection issues.
+    const res = await fetch(url, { cache: 'no-cache' });
     if (!res.ok) {
       const errorBody = await res.text();
       console.error(`Failed to fetch ${url}. Status: ${res.status}. Body: ${errorBody}`);
