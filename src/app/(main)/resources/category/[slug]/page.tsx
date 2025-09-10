@@ -7,19 +7,20 @@ import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
 import { getPostsByCategory, getAllCategorySlugs, getCategoryBySlug } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import type { PageProps } from 'next';
 
-interface CategoryPageProps {
-    params: {
-        slug: string;
-    };
-}
+// Corrected props definition to align with Next.js 15
+type CategoryPageProps = {
+  params: { slug: string };
+};
+
 
 export async function generateStaticParams() {
     return getAllCategorySlugs();
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { slug } = params;
+  const { slug } = params; // No await needed here as generateStaticParams resolves it
   const category = getCategoryBySlug(slug);
 
   if (!category) {
