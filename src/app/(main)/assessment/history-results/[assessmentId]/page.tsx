@@ -4,12 +4,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { AssessmentResultsDisplay } from '@/components/assessment/AssessmentResultsDisplay';
-import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { useTranslations } from '@/lib/translations';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
+// NOTA: Esta es una página de cliente, por lo que useParams() funciona como se espera
+// y no necesita la corrección de PageProps del lado del servidor.
 export default function HistoricalAssessmentResultsPage() {
   const t = useTranslations();
   const router = useRouter();
@@ -93,4 +94,3 @@ export default function HistoricalAssessmentResultsPage() {
     </div>
   );
 }
-

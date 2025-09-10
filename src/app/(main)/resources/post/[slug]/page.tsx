@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { PageProps } from 'next';
+import type { PageProps } from '@/types/page-props';
 
 export async function generateStaticParams() {
     return getAllPostSlugs();
