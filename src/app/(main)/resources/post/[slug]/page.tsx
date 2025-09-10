@@ -7,13 +7,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { PageProps } from '@/types/page-props';
+import type { RoutePageProps } from '@/types/page-props';
 
 export async function generateStaticParams() {
     return getAllPostSlugs();
 }
 
-export default async function PostPage({ params }: PageProps<{ slug: string }>) {
+export default async function PostPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   const error = null;

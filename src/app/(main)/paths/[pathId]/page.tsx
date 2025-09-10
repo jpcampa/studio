@@ -2,9 +2,9 @@
 import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
-import type { PageProps } from '@/types/page-props';
+import type { RoutePageProps } from '@/types/page-props';
 
-export default async function PathDetailPage({ params }: PageProps<{ pathId: string }>) {
+export default async function PathDetailPage({ params }: RoutePageProps<{ pathId: string }>) {
   const { pathId } = await params;
   const path = pathsData.find(p => p.id === pathId);
 

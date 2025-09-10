@@ -7,13 +7,13 @@ import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
 import { getPostsByCategory, getAllCategorySlugs, getCategoryBySlug } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { PageProps } from '@/types/page-props';
+import type { RoutePageProps } from '@/types/page-props';
 
 export async function generateStaticParams() {
     return getAllCategorySlugs();
 }
 
-export default async function CategoryPage({ params }: PageProps<{ slug: string }>) {
+export default async function CategoryPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = await params; 
   const category = getCategoryBySlug(slug);
 

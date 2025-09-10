@@ -1,9 +1,8 @@
-
-// Tipo compatible con el App Router de Next 15
-export type PageProps<
-  TParams extends object = {},
-  TSearchParams extends object = {}
+// Props compatibles con Next 15 (App Router): params/searchParams SON Promise.
+export type RoutePageProps<
+  TParams extends Record<string, any> = {},
+  TSearchParams extends Record<string, any> = {}
 > = {
-  params: TParams | Promise<TParams>;
-  searchParams?: TSearchParams | Promise<TSearchParams>;
+  params: Promise<TParams>;
+  searchParams?: Promise<TSearchParams>;
 };
