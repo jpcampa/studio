@@ -8,11 +8,17 @@ import { getPostsByCategory, getAllCategorySlugs, getCategoryBySlug } from '@/da
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
+interface CategoryPageProps {
+    params: {
+        slug: string;
+    };
+}
+
 export async function generateStaticParams() {
     return getAllCategorySlugs();
 }
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = params;
   const category = getCategoryBySlug(slug);
 
