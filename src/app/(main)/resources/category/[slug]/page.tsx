@@ -9,18 +9,12 @@ import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { PageProps } from 'next';
 
-// Corrected props definition to align with Next.js 15
-type CategoryPageProps = {
-  params: { slug: string };
-};
-
-
 export async function generateStaticParams() {
     return getAllCategorySlugs();
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { slug } = params; // No await needed here as generateStaticParams resolves it
+export default async function CategoryPage({ params }: PageProps<{ slug: string }>) {
+  const { slug } = await params; 
   const category = getCategoryBySlug(slug);
 
   if (!category) {
