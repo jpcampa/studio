@@ -30,12 +30,11 @@ export interface WpCategory {
   parent: number;
 }
 
-const API_BASE_URL = "http://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
+const API_BASE_URL = "https://workwellfut.hl1450.dinaserver.com/wp-json/wp/v2";
 const RECURSOS_CATEGORY_ID = 3; 
 
 async function fetchWithCache(url: string): Promise<{ data: any, error?: string }> {
   try {
-    // Se simplifica la llamada fetch a su forma más básica y estándar.
     const res = await fetch(url);
     
     if (!res.ok) {
