@@ -4,30 +4,25 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getAllCategorySlugs, getResourcesCategories, WpCategory } from '@/lib/wordpress';
+import { getPostsByCategory, getCategoryBySlug, getAllCategorySlugs, type ResourceCategory } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
-
-async function getCategoryBySlug(slug: string): Promise<WpCategory | undefined> {
-    const { categories } = await getResourcesCategories();
-    return categories.find(cat => cat.slug === slug);
-}
-
 
 export async function generateStaticParams() {
     return getAllCategorySlugs();
 }
 
 export default async function CategoryPage({ params }: RoutePageProps<{ slug: string }>) {
-  const { slug } = await params; 
-  const category = await getCategoryBySlug(slug);
+  const { slug } = await params;
+  const category = getCategoryBySlug(slug);
 
   if (!category) {
     notFound();
   }
   
-  const { posts, error } = await getPostsByCategory(category.id);
+  const posts = getPostsByCategory(slug);
+  const error = null;
 
   return (
     <div className="container mx-auto py-8">
@@ -67,17 +62,17 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
                          <div className="relative h-48 w-full mb-4 rounded-t-lg overflow-hidden">
                             <Image 
                                 src={imageUrl}
-                                alt={post.title.rendered} 
+                                alt={post.title} 
                                 fill 
                                 className="object-cover"
                                 data-ai-hint="resource article"
                             />
                         </div>
                     )}
-                    <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title.rendered }}/>
+                    <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title }}/>
                   </CardHeader>
                   <CardContent className="flex-grow">
-                    <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
+                    <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt }}/>
                   </CardContent>
                   <CardFooter>
                     <Button asChild variant="outline" className="w-full">

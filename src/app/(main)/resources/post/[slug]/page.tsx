@@ -1,5 +1,5 @@
 
-import { getPostBySlug, getAllPostSlugs } from '@/lib/wordpress';
+import { getPostBySlug, getAllPostSlugs } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,8 @@ export async function generateStaticParams() {
 
 export default async function PostPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = await params;
-  const { post, error } = await getPostBySlug(slug);
+  const post = getPostBySlug(slug);
+  const error = null;
   
   if (error) {
     return (
@@ -49,7 +50,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
                 <div className="relative h-64 w-full">
                     <Image 
                         src={imageUrl} 
-                        alt={post.title.rendered} 
+                        alt={post.title} 
                         fill 
                         className="object-cover"
                         data-ai-hint="resource article header"
@@ -57,7 +58,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
                 </div>
             )}
             <div className="p-6">
-                <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title }} />
                 <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
                     <span className="flex items-center">
                     <Clock className="h-4 w-4 mr-1.5" /> Publicado el {new Date(post.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -66,7 +67,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
             </div>
         </CardHeader>
         <CardContent className="py-6 px-6 md:px-8">
-            <div className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+            <div className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
         </CardContent>
       </Card>
 
