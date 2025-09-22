@@ -173,7 +173,7 @@ export const stressManagementPath: Path = {
                 type: 'collapsible',
                 title: '¿Por qué es importante todo esto?',
                 content: [
-                    { type: 'paragraph', text: 'Porque entender cómo funciona tu cuerpo te ayuda a dejar de luchar contra él. Si sientes ansiedad, no es que estés “exagerando” o que no sepas controlarte. Es tu sistema de defensa intentando protegerte. Lo que necesitas no es pelear con él, sino enseñarle que ya no hay peligro.\nY eso se hace desde lo corporal: con respiraciones, con movimientos suaves, con contacto reconfortante.\nEn esta semana, vas a practicar técnicas que activan tu sistema de calma:\n•\tRespiraciones que calman el sistema nervioso.\n•\tTécnicas para volver al presente con los sentidos.\n•\tGestos que le recuerdan a tu cuerpo que está a salvo.\nNo se trata de “calmarte a la fuerza”. Se trata de crear las condiciones para que tu cuerpo pueda hacerlo por sí mismo. Y eso, aunque parezca pequeño, es un acto profundo de cuidado.' },
+                    { type: 'paragraph', text: 'Porque entender cómo funciona tu cuerpo te ayuda a dejar de luchar contra él. Si sientes ansiedad, no es que estés “exagerando” o que no sepas controlarte. Es tu sistema de defensa intentando protegerte. Lo que necesitas no es pelear con él, sino enseñarle que ya no hay peligro.\nY eso se hace desde lo corporal: con respiraciones, con movimientos suaves, con contacto reconfortante.\nEn esta semana, vas a practicar técnicas que activan tu sistema de calma:\n•\tRespiraciones que calman el sistema nervioso.\n•\tTécnicas para volver al presente con los sentidos.\n•\tGestos que le recuerdan a tu cuerpo que está a salvo.\nNo se trata de “calmarte a la fuerza”. Se trata de crear las condiciones para que tu cuerpo pueda hacerlo por sí mismo. Y eso, aunque parezca pequeño, es un acto profundo de cuidado.' }
                 ]
             },
             { type: 'title', text: 'Técnicas Específicas' },
@@ -201,7 +201,7 @@ export const stressManagementPath: Path = {
             ], audioUrl: 'https://workwellfut.com/audios/R1%20respiracio%CC%81n%204-2-6.m4a'},
             { type: 'exercise', title: 'Respiración diafragmática (versión guiada paso a paso)', objective: 'Calmar tu sistema nervioso y recuperar el equilibrio interno.', content: [
                 { type: 'paragraph', text: 'Guía: texto con apoyo visual\n🎧 Disponible también en formato audio.' }
-            ], audioUrl: 'https://workwellfut.com/audios/R1%20respiraci%C3%B3n%20diafragm%C3%A1tica.m4a'},
+            ], audioUrl: 'https://workwellfut.com/www/audios/R1_respiracion_diafragmatica.m4a'},
             { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
                 { type: 'paragraph', text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.\n🎧 Disponible también en formato audio.' }
             ]},
