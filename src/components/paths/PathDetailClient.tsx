@@ -184,7 +184,7 @@ ${consequences || 'No especificadas.'}
             case 0: return (
                 <div className="text-center p-4">
                     <p className="mb-4">¿Tienes una tarea pendiente que sigues posponiendo? Este ejercicio te ayudará a identificar qué está pasando dentro de ti. No hay respuestas correctas, solo pistas para entenderte mejor.</p>
-                    <Button onClick={() => setStep(1)}>Comenzar mi mapa <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                    <Button onClick={() => setStep(1)}>Comenzar mi mapa <ArrowRight className="mr-2 h-4 w-4" /></Button>
                 </div>
             );
             case 1: return (
@@ -817,7 +817,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
                 <CardContent>
                     {contentItem.audioUrl && (
                         <div className="mb-4">
-                            <audio controls className="w-full">
+                            <audio controls controlsList="nodownload" className="w-full">
                                 <source src={contentItem.audioUrl} type="audio/mp4" />
                                 Tu navegador no soporta el elemento de audio.
                             </audio>
