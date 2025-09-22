@@ -807,7 +807,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         if (contentItem.title === 'Ejercicio 2: Seguimiento Amable + Refuerzo Visual') {
             return <GentleTrackingExercise key={index} content={contentItem as ExerciseContent} pathId={pathId} />;
         }
-        // Fallback for other exercises
+        // Fallback for other exercises, including audio player logic
         return (
             <Card key={index} className="bg-muted/30 my-6 shadow-md">
                 <CardHeader>
@@ -815,6 +815,14 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
                     {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
                 </CardHeader>
                 <CardContent>
+                    {contentItem.audioUrl && (
+                        <div className="mb-4">
+                            <audio controls className="w-full">
+                                <source src={contentItem.audioUrl} type="audio/mp4" />
+                                Tu navegador no soporta el elemento de audio.
+                            </audio>
+                        </div>
+                    )}
                     {contentItem.content.map((item, i) => renderContent(item, i, pathId))}
                 </CardContent>
                 {contentItem.duration && <CardFooter className="text-xs text-muted-foreground"><Clock className="mr-2 h-3 w-3" />Duración sugerida: {contentItem.duration}</CardFooter>}

@@ -31,6 +31,7 @@ export type ExerciseContent = {
     objective?: string;
     duration?: string;
     content: ModuleContent[];
+    audioUrl?: string; // NEW: Added audioUrl property
 };
 
 export type StressMapExerciseContent = {
