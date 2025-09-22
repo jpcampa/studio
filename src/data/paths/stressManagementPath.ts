@@ -1,3 +1,4 @@
+
 import type { Path } from '../pathsData';
 
 export const stressManagementPath: Path = {
@@ -198,22 +199,22 @@ export const stressManagementPath: Path = {
             { type: 'exercise', title: 'Respiración 4–2–6 con gesto de autocuidado', objective: 'Salir del modo estrés y activar el modo calma.', content: [
                 { type: 'paragraph', text: '1.\tInhala por la nariz durante 4 segundos.\n2.\tMantén el aire 2 segundos.\n3.\tExhala lentamente por la boca durante 6 segundos.\n4.\tMientras respiras, coloca una mano sobre el pecho o el abdomen, como gesto de cuidado hacia ti.\nPractica esta respiración durante 1 o 2 minutos, varias veces al día o en momentos de tensión.\n' }
             ], audioUrl: 'https://workwellfut.com/audios/R1%20respiracio%CC%81n%204-2-6.m4a'},
-            { type: 'exercise', title: '🫁 Respiración diafragmática (versión guiada paso a paso)', objective: 'Calmar tu sistema nervioso y recuperar el equilibrio interno.', content: [
+            { type: 'exercise', title: 'Respiración diafragmática (versión guiada paso a paso)', objective: 'Calmar tu sistema nervioso y recuperar el equilibrio interno.', content: [
                 { type: 'paragraph', text: 'Guía: texto con apoyo visual\n🎧 Disponible también en formato audio.' }
             ], audioUrl: 'https://workwellfut.com/audios/R1%20respiraci%C3%B3n%20diafragm%C3%A1tica.m4a'},
-            { type: 'exercise', title: '👣 Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
+            { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
                 { type: 'paragraph', text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.\n🎧 Disponible también en formato audio.' }
             ]},
-            { type: 'exercise', title: '🧘 Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [
+            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [
                 { type: 'paragraph', text: '🎧 Disponible en formato audio.' }
             ]},
-            { type: 'exercise', title: '💪 Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', content: [
+            { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', content: [
                 { type: 'paragraph', text: '🎧 A través de un audio o video guiado, irás tensando y soltando diferentes grupos musculares (piernas, abdomen, cara, hombros…).\nEste ejercicio te ayudará a sentir alivio físico y a reconocer cómo tu cuerpo acumula tensión.' }
             ]},
-            { type: 'exercise', title: '🤗 Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', content: [
+            { type: 'exercise', title: 'Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', content: [
                 { type: 'paragraph', text: 'Opciones que puedes probar:\n•\tAutoabrazo firme: Cruza los brazos sobre tu pecho y mantén la presión mientras respiras.\n•\tBalanceo suave: Sentado/a o de pie, realiza un vaivén rítmico con el cuerpo.\n•\tManta con peso (o varias mantas dobladas): Cúbrete durante unos minutos para activar el sistema de regulación interna.\nEstas prácticas envían señales de seguridad al cerebro. Úsalas tras situaciones exigentes o como parte de tu rutina diaria.' }
             ]},
-            { type: 'exercise', title: '❄️ Contacto frío breve (reset inmediato)', objective: 'Interrumpir una activación emocional intensa.', content: [
+            { type: 'exercise', title: 'Contacto frío breve (reset inmediato)', objective: 'Interrumpir una activación emocional intensa.', content: [
                 { type: 'paragraph', text: 'Cómo aplicarlo:\n1.\tHumedece una toalla o paño con agua fría.\n2.\tAplícalo entre 10 y 20 segundos en:\no\tLa nuca\no\tLas muñecas\no\tLa parte interna de los brazos o las mejillas\n3.\tRespira mientras sientes el contacto del frío.\nSi estás fuera de casa, puedes usar agua del grifo o un cubito envuelto en tela.\nEste pequeño “shock” activa una respuesta calmante en tu cuerpo y te ayuda a pausar el bucle de ansiedad.' }
             ]},
             { type: 'title', text: 'Resumen Clave' },
