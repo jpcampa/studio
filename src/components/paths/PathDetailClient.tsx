@@ -42,7 +42,7 @@ import { NoGuiltTechniquesExercise } from '@/components/paths/NoGuiltTechniquesE
 import { PostBoundaryEmotionsExercise } from '@/components/paths/PostBoundaryEmotionsExercise';
 import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateFirmnessExercise';
 import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
-import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
+import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent, SelfAcceptanceAudioExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
 
@@ -978,8 +978,10 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
       return <GuiltRadarExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'acceptanceWritingExercise':
       return <AcceptanceWritingExercise key={index} content={contentItem as any} pathId={pathId} />;
-    case 'selfAcceptanceAudioExercise':
-      return <SelfAcceptanceAudioExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'selfAcceptanceAudioExercise': {
+        const exerciseContent = contentItem as SelfAcceptanceAudioExerciseContent;
+        return <SelfAcceptanceAudioExercise key={index} content={exerciseContent} pathId={pathId} audioUrl={exerciseContent.audioUrl} />;
+    }
     case 'compassionateResponsibilityContractExercise':
       return <CompassionateResponsibilityContractExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'criticismToGuideExercise':

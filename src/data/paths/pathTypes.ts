@@ -498,6 +498,7 @@ export type SelfAcceptanceAudioExerciseContent = {
     title: 'EJERCICIO 2: PRÁCTICA DE AUTOACEPTACIÓN GUIADA';
     objective: string;
     duration: string;
+    audioUrl?: string;
 };
 
 export type CompassionateResponsibilityContractExerciseContent = {

@@ -11,9 +11,10 @@ import { useToast } from '@/hooks/use-toast';
 interface SelfAcceptanceAudioExerciseProps {
   content: SelfAcceptanceAudioExerciseContent;
   pathId: string;
+  audioUrl?: string; // Make audioUrl an optional prop
 }
 
-export function SelfAcceptanceAudioExercise({ content, pathId }: SelfAcceptanceAudioExerciseProps) {
+export function SelfAcceptanceAudioExercise({ content, pathId, audioUrl }: SelfAcceptanceAudioExerciseProps) {
   const { toast } = useToast();
   const [viewMode, setViewMode] = useState<'audio' | 'text'>('audio');
   const [isCompleted, setIsCompleted] = useState(false);
@@ -41,9 +42,18 @@ export function SelfAcceptanceAudioExercise({ content, pathId }: SelfAcceptanceA
                 
                 {viewMode === 'audio' && (
                     <div className="p-4 border rounded-lg bg-background text-center">
-                        <PlayCircle className="h-16 w-16 text-primary mx-auto mb-4" />
-                        <p className="font-semibold">Práctica de Autoaceptación Guiada</p>
-                        <p className="text-sm text-muted-foreground">Audio no disponible en la demo. Cambia a la versión de texto para leer la guía.</p>
+                        {audioUrl ? (
+                             <audio controls controlsList="nodownload" className="w-full">
+                                <source src={audioUrl} type="audio/mp3" />
+                                Tu navegador no soporta el elemento de audio.
+                            </audio>
+                        ) : (
+                            <>
+                                <PlayCircle className="h-16 w-16 text-primary mx-auto mb-4" />
+                                <p className="font-semibold">Práctica de Autoaceptación Guiada</p>
+                                <p className="text-sm text-muted-foreground">Audio no disponible. Cambia a la versión de texto para leer la guía.</p>
+                            </>
+                        )}
                     </div>
                 )}
 
