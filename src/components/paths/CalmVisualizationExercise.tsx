@@ -7,18 +7,19 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Edit3, CheckCircle, PlayCircle, BookOpen } from 'lucide-react';
+import { Edit3, CheckCircle, PlayCircle, BookOpen, Save } from 'lucide-react';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import type { CalmVisualizationExerciseContent } from '@/data/paths/pathTypes';
 
 interface CalmVisualizationExerciseProps {
   content: CalmVisualizationExerciseContent;
   pathId: string;
+  audioUrl?: string; // Add audioUrl prop
 }
 
-export function CalmVisualizationExercise({ content, pathId }: CalmVisualizationExerciseProps) {
+export function CalmVisualizationExercise({ content, pathId, audioUrl }: CalmVisualizationExerciseProps) {
   const { toast } = useToast();
-  const [viewMode, setViewMode] = useState<'audio' | 'text'>('audio');
+  const [viewMode, setViewMode] = useState<'audio' | 'text'>(audioUrl ? 'audio' : 'text');
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleComplete = () => {
@@ -44,9 +45,18 @@ export function CalmVisualizationExercise({ content, pathId }: CalmVisualization
                 
                 {viewMode === 'audio' && (
                     <div className="p-4 border rounded-lg bg-background text-center">
-                        <PlayCircle className="h-16 w-16 text-primary mx-auto mb-4" />
-                        <p className="font-semibold">Visualización Guiada de Calma</p>
-                        <p className="text-sm text-muted-foreground">Audio no disponible en la demo. Cambia a la versión de texto para leer la guía.</p>
+                        {audioUrl ? (
+                            <audio controls controlsList="nodownload" className="w-full">
+                                <source src={audioUrl} type="audio/mp3" />
+                                Tu navegador no soporta el elemento de audio.
+                            </audio>
+                        ) : (
+                            <>
+                                <PlayCircle className="h-16 w-16 text-primary mx-auto mb-4" />
+                                <p className="font-semibold">Visualización Guiada de Calma</p>
+                                <p className="text-sm text-muted-foreground">Audio no disponible. Cambia a la versión de texto para leer la guía.</p>
+                            </>
+                        )}
                     </div>
                 )}
 
@@ -72,5 +82,7 @@ export function CalmVisualizationExercise({ content, pathId }: CalmVisualization
     </Card>
   );
 }
+
+    
 
     
