@@ -108,9 +108,7 @@ export const anxietyPath: Path = {
           },
           { type: 'title', text: 'Técnicas Específicas de Relajación' },
           { type: 'paragraph', text: 'A continuación, te presentamos una serie de técnicas físicas de regulación emocional, validadas por la ciencia, que puedes practicar a diario. Elige las que más te ayuden y repítelas con constancia.' },
-          { type: 'exercise', title: 'Respiración diafragmática (versión guiada paso a paso)', objective: 'Calmar tu sistema nervioso y recuperar el equilibrio interno.', content: [
-                {type: 'paragraph', text: 'Guía: texto con apoyo visual'}
-            ], audioUrl: 'https://workwellfut.com/audios/R1_respiracion_diafragmatica.m4a'},
+         
           { type: 'collapsible', title: 'Exhalación Prolongada (1:2)', content: [{ type: 'paragraph', text: 'Alarga más la exhalación que la inhalación (ej: inhala 3, exhala 6). Este gesto activa el nervio vago y baja la frecuencia cardíaca de forma rápida.' }] },
           { type: 'collapsible', title: 'Relajación Muscular Progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Tensa y suelta diferentes grupos musculares (piernas, abdomen, cara...). Ayuda a liberar la tensión física acumulada y a reconocer cuándo estás tenso/a.' }] },
           { type: 'collapsible', title: 'Body Scan Breve (Escaneo Corporal)', content: [{ type: 'paragraph', text: 'Recorre mentalmente tu cuerpo de pies a cabeza, observando lo que sientes sin juzgar. Aumenta la tolerancia a los síntomas de ansiedad.' }] },
