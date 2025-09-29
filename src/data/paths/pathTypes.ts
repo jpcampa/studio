@@ -305,6 +305,7 @@ export type PresentVsEssentialSelfExerciseContent = {
     title: 'EJERCICIO 2: VISUALIZACIÓN DEL YO PRESENTE VS. YO ESENCIAL';
     objective?: string;
     duration?: string;
+    audioUrl?: string;
 };
 
 export type MentalNoiseTrafficLightExerciseContent = {
