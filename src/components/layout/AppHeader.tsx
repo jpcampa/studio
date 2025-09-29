@@ -12,7 +12,8 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuPortal,
-  DropdownMenuSubContent
+  DropdownMenuSubContent,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, User as UserIcon, Settings as SettingsIcon, Sun, Moon, Laptop, ListChecks } from "lucide-react";
