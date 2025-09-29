@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuPortal,
@@ -25,7 +24,7 @@ import { useTheme } from "next-themes";
 import { useActivePath } from "@/contexts/ActivePathContext";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { usePathname } from "next/navigation"; // Import usePathname
+import { usePathname } from "next/navigation";
 
 export function AppHeader() {
   const { user, logout } = useUser();
@@ -33,11 +32,10 @@ export function AppHeader() {
   const { isMobile } = useSidebar();
   const { theme, setTheme } = useTheme();
   const { activePath } = useActivePath();
-  const pathname = usePathname(); // Get current pathname
+  const pathname = usePathname();
 
   const modulesRemaining = activePath ? activePath.totalModules - activePath.completedModuleIds.length : 0;
 
-  // Determine if the badge should be shown based on refined logic
   let showProgressBadge = false;
   if (activePath && modulesRemaining > 0) {
     const isCurrentlyOnActivePathPage = pathname === `/paths/${activePath.id}`;
@@ -46,20 +44,19 @@ export function AppHeader() {
       showProgressBadge = true;
     }
   }
-  if (activePath) {
-    console.log("AppHeader: activePath", activePath, "modulesRemaining", modulesRemaining, "pathname", pathname, "showProgressBadge", showProgressBadge);
-  }
-
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
       <div className="flex items-center gap-2">
         <SidebarTrigger />
-        {isMobile && <Logo />}
+      </div>
+
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <Logo />
       </div>
       
       <div className="flex items-center gap-4">
-        {showProgressBadge && activePath && ( // Ensure activePath is not null here
+        {showProgressBadge && activePath && (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" asChild className="relative">
