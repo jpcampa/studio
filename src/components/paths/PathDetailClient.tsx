@@ -818,7 +818,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
                     {contentItem.audioUrl && (
                         <div className="mb-4">
                             <audio controls controlsList="nodownload" className="w-full">
-                                <source src={contentItem.audioUrl} type="audio/mp4" />
+                                <source src={contentItem.audioUrl} type="audio/mp3" />
                                 Tu navegador no soporta el elemento de audio.
                             </audio>
                         </div>

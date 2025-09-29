@@ -207,10 +207,10 @@ export const stressManagementPath: Path = {
             ], audioUrl: 'https://workwellfut.com/audios/rm/R1_anclaje_sensorial_inmediato.mp3'},
             { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [
                 { type: 'paragraph', text: '🎧 Disponible en formato audio.' }
-            ]},
+            ], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
             { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', content: [
                 { type: 'paragraph', text: '🎧 A través de un audio o video guiado, irás tensando y soltando diferentes grupos musculares (piernas, abdomen, cara, hombros…).\nEste ejercicio te ayudará a sentir alivio físico y a reconocer cómo tu cuerpo acumula tensión.' }
-            ]},
+            ], audioUrl: 'https://workwellfut.com/audios/rm/R1-parte-1-respiracion-muscular-progresiva.mp3'},
             { type: 'exercise', title: 'Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', content: [
                 { type: 'paragraph', text: 'Opciones que puedes probar:\n•\tAutoabrazo firme: Cruza los brazos sobre tu pecho y mantén la presión mientras respiras.\n•\tBalanceo suave: Sentado/a o de pie, realiza un vaivén rítmico con el cuerpo.\n•\tManta con peso (o varias mantas dobladas): Cúbrete durante unos minutos para activar el sistema de regulación interna.\nEstas prácticas envían señales de seguridad al cerebro. Úsalas tras situaciones exigentes o como parte de tu rutina diaria.' }
             ]},

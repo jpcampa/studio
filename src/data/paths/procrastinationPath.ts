@@ -1,3 +1,4 @@
+
 import type { Path } from '../pathsData';
 
 export const procrastinationPath: Path = {
@@ -233,6 +234,7 @@ export const procrastinationPath: Path = {
             title: 'Ejercicio 2: Visualización del Yo Futuro',
             objective: 'Este ejercicio te permite conectar con una imagen clara y emocionalmente poderosa de ti misma o de ti mismo sosteniendo el hábito que deseas. Te ayuda a motivarte desde la identidad, no solo desde la obligación. Visualizarte avanzando te impulsa a actuar hoy.',
             duration: '10 a 15 minutos',
+            audioUrl: 'https://workwellfut.com/audios/rm/R3_Visualizacion_del_yo_futuro.mp3',
             content: [],
           },
           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
