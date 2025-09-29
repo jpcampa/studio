@@ -1,3 +1,4 @@
+
 import type { Path } from '../pathsData';
 
 export const selfUnderstandingPath: Path = {
@@ -213,6 +214,7 @@ export const selfUnderstandingPath: Path = {
                 title: 'EJERCICIO 1: MEDITACIÓN GUIADA SIN JUICIO',
                 objective: 'Practica la aceptación de tus emociones, sin lucha ni exigencias, para entrenar una voz interior más compasiva.',
                 duration: '5-7 min',
+                audioUrl: 'https://workwellfut.com/audios/rm/R6_meditacion_guiada_sin_juicio.mp3'
             },
             {
                 type: 'diarioMeDiCuentaExercise',

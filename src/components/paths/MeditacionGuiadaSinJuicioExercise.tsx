@@ -31,13 +31,25 @@ export function MeditacionGuiadaSinJuicioExercise({ content, pathId }: Meditacio
 
   return (
     <Card className="bg-muted/30 my-6 shadow-md">
-      <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+      <CardHeader>
+        <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>
+        {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+      </CardHeader>
       <CardContent>
         <div className="flex justify-center gap-2 mb-4">
             <Button onClick={() => setMode('audio')} variant={mode === 'audio' ? 'default' : 'outline'}><PlayCircle className="mr-2 h-4 w-4"/>Audio</Button>
             <Button onClick={() => setMode('text')} variant={mode === 'text' ? 'default' : 'outline'}><BookOpen className="mr-2 h-4 w-4"/>Texto</Button>
         </div>
-        {mode === 'audio' && <div className="p-4 border rounded-lg bg-background text-center"><p>Audio no disponible en la demo. Cambia a la versión de texto.</p></div>}
+        {mode === 'audio' && (
+            content.audioUrl ? (
+                <audio controls controlsList="nodownload" className="w-full">
+                    <source src={content.audioUrl} type="audio/mp3" />
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            ) : (
+                <div className="p-4 border rounded-lg bg-background text-center"><p>Audio no disponible en la demo. Cambia a la versión de texto.</p></div>
+            )
+        )}
         {mode === 'text' && <div className="p-4 border rounded-lg bg-background"><p className="whitespace-pre-line">{meditationText}</p></div>}
         <div className="mt-4 space-y-2">
             <Label>¿Cómo fue esta experiencia para ti?</Label>

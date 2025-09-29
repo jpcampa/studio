@@ -268,6 +268,7 @@ export type MeditacionGuiadaSinJuicioExerciseContent = {
     title: 'EJERCICIO 1: MEDITACIÓN GUIADA SIN JUICIO';
     objective?: string;
     duration?: string;
+    audioUrl?: string;
 };
 
 export type DiarioMeDiCuentaExerciseContent = {
