@@ -14,12 +14,11 @@ import type { CalmVisualizationExerciseContent } from '@/data/paths/pathTypes';
 interface CalmVisualizationExerciseProps {
   content: CalmVisualizationExerciseContent;
   pathId: string;
-  audioUrl?: string; // Add audioUrl prop
 }
 
-export function CalmVisualizationExercise({ content, pathId, audioUrl }: CalmVisualizationExerciseProps) {
+export function CalmVisualizationExercise({ content, pathId }: CalmVisualizationExerciseProps) {
   const { toast } = useToast();
-  const [viewMode, setViewMode] = useState<'audio' | 'text'>(audioUrl ? 'audio' : 'text');
+  const [viewMode, setViewMode] = useState<'audio' | 'text'>(content.audioUrl ? 'audio' : 'text');
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleComplete = () => {
@@ -45,9 +44,9 @@ export function CalmVisualizationExercise({ content, pathId, audioUrl }: CalmVis
                 
                 {viewMode === 'audio' && (
                     <div className="p-4 border rounded-lg bg-background text-center">
-                        {audioUrl ? (
+                        {content.audioUrl ? (
                             <audio controls controlsList="nodownload" className="w-full">
-                                <source src={audioUrl} type="audio/mp3" />
+                                <source src={content.audioUrl} type="audio/mp3" />
                                 Tu navegador no soporta el elemento de audio.
                             </audio>
                         ) : (
@@ -82,7 +81,3 @@ export function CalmVisualizationExercise({ content, pathId, audioUrl }: CalmVis
     </Card>
   );
 }
-
-    
-
-    

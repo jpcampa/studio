@@ -684,6 +684,7 @@ export type CalmVisualizationExerciseContent = {
     title: 'EJERCICIO 2: “ME VEO HACIÉNDOLO CON CALMA”';
     objective: string;
     duration: string;
+    audioUrl?: string;
 };
 
 

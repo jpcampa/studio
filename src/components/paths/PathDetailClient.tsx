@@ -1035,9 +1035,10 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <QuestionYourIfsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'exposureLadderExercise':
         return <ExposureLadderExercise key={index} content={contentItem} pathId={pathId} />;
-    case 'calmVisualizationExercise':
+    case 'calmVisualizationExercise': {
         const calmVisContent = contentItem as Extract<ModuleContent, { type: 'calmVisualizationExercise' }>;
-        return <CalmVisualizationExercise key={index} content={calmVisContent} pathId={pathId} audioUrl={calmVisContent.audioUrl} />;
+        return <CalmVisualizationExercise key={index} content={calmVisContent} pathId={pathId} />;
+    }
     default:
       return null;
   }
