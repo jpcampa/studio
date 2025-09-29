@@ -707,7 +707,7 @@ import { UnfulfilledNeedsExercise } from './UnfulfilledNeedsExercise';
 import { BraveRoadmapExercise } from './BraveRoadmapExercise';
 import { EssentialReminderExercise } from './EssentialReminderExercise';
 import { ThoughtsThatBlockPurposeExercise } from './ThoughtsThatBlockPurposeExercise';
-// RUTA 8 imports
+// RUTA 8
 import { ResilienceTimelineExercise } from './ResilienceTimelineExercise';
 import { PersonalDefinitionExercise } from './PersonalDefinitionExercise';
 import { AnchorInStormExercise } from './AnchorInStormExercise';
@@ -813,16 +813,16 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
                 <CardHeader>
                     <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{contentItem.title}</CardTitle>
                     {contentItem.objective && <CardDescription className="pt-2">{contentItem.objective}</CardDescription>}
-                </CardHeader>
-                <CardContent>
                     {contentItem.audioUrl && (
-                        <div className="mb-4">
+                        <div className="mt-4">
                             <audio controls controlsList="nodownload" className="w-full">
                                 <source src={contentItem.audioUrl} type="audio/mp3" />
                                 Tu navegador no soporta el elemento de audio.
                             </audio>
                         </div>
                     )}
+                </CardHeader>
+                <CardContent>
                     {contentItem.content.map((item, i) => renderContent(item, i, pathId))}
                 </CardContent>
                 {contentItem.duration && <CardFooter className="text-xs text-muted-foreground"><Clock className="mr-2 h-3 w-3" />Duración sugerida: {contentItem.duration}</CardFooter>}
