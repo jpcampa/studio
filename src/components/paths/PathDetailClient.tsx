@@ -799,9 +799,6 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         if (contentItem.title === 'Ejercicio 2: Visualización del Yo Futuro') {
             return <FutureSelfVisualizationExercise key={index} content={contentItem} pathId={pathId} audioUrl={contentItem.audioUrl} />;
         }
-        if (contentItem.title === 'EJERCICIO 2: “ME VEO HACIÉNDOLO CON CALMA”') {
-            return <CalmVisualizationExercise key={index} content={contentItem} pathId={pathId} audioUrl={contentItem.audioUrl} />;
-        }
         
         // RUTA 3 Ejercicios
         if (contentItem.title === 'Ejercicio 1: Mi Mapa del Bloqueo Personal') {
@@ -1039,7 +1036,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'exposureLadderExercise':
         return <ExposureLadderExercise key={index} content={contentItem} pathId={pathId} />;
     case 'calmVisualizationExercise':
-         const calmVisContent = contentItem as Extract<ModuleContent, { type: 'calmVisualizationExercise' }>;
+        const calmVisContent = contentItem as Extract<ModuleContent, { type: 'calmVisualizationExercise' }>;
         return <CalmVisualizationExercise key={index} content={calmVisContent} pathId={pathId} audioUrl={calmVisContent.audioUrl} />;
     default:
       return null;
