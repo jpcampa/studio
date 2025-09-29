@@ -31,10 +31,6 @@ const navItems = [
   { href: "/resources", labelKey: "navResources", icon: Library },
 ];
 
-const oldNavItems = [
-  { href: "/resources-old", label: "Recursos (Antiguo)", icon: Archive },
-];
-
 const settingsNavItems = [
  { href: "/settings", labelKey: "navSettings", icon: Settings },
 ];
@@ -52,7 +48,7 @@ export function AppSidebar() {
         return pathname.startsWith("/my-assessments") || pathname.startsWith("/assessment/history-results");
     }
     if (href === "/resources") {
-        return pathname.startsWith("/resources") && !pathname.startsWith("/resources-old");
+        return pathname.startsWith("/resources");
     }
     return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
   }
@@ -74,21 +70,6 @@ export function AppSidebar() {
                 <Link href={item.href}>
                   <item.icon />
                   <span>{t[item.labelKey as keyof typeof t]}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-          <SidebarSeparator />
-          {oldNavItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive(item.href)}
-                tooltip={item.label}
-              >
-                <Link href={item.href}>
-                  <item.icon />
-                  <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
