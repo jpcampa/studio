@@ -199,12 +199,10 @@ export const stressManagementPath: Path = {
             { type: 'exercise', title: 'Respiración 4–2–6 con gesto de autocuidado', objective: 'Salir del modo estrés y activar el modo calma.', content: [
                 { type: 'paragraph', text: '1.\tInhala por la nariz durante 4 segundos.\n2.\tMantén el aire 2 segundos.\n3.\tExhala lentamente por la boca durante 6 segundos.\n4.\tMientras respiras, coloca una mano sobre el pecho o el abdomen, como gesto de cuidado hacia ti.\nPractica esta respiración durante 1 o 2 minutos, varias veces al día o en momentos de tensión.\n' }
             ], audioUrl: 'https://workwellfut.com/audios/rm/R1_respiracion_4-2-6.mp3'},
-            { type: 'exercise', title: 'Respiración diafragmática (versión guiada paso a paso)', objective: 'Calmar tu sistema nervioso y recuperar el equilibrio interno.', content: [
-                { type: 'paragraph', text: 'Guía: texto con apoyo visual' }
-            ], audioUrl: 'https://workwellfut.com/audios/rm/R1_respiracion_diafragmatica.mp3'},
+            { type: 'exercise', title: 'Respiración diafragmática (versión guiada paso a paso)', objective: 'Calmar tu sistema nervioso y recuperar el equilibrio interno.', content: [], audioUrl: 'https://workwellfut.com/audios/R1_respiracioon_diafragmatica.m4a'},
             { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
                 { type: 'paragraph', text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.' }
-            ], audioUrl: 'https://workwellfut.com/audios/rm/R1_anclaje_sensorial_inmediato.mp3'},
+            ], audioUrl: 'https://workwellfut.com/audios/R1_anclaje_sensorial_inmediato.m4a'},
             { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [
                 { type: 'paragraph', text: '🎧 Disponible en formato audio.' }
             ], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
