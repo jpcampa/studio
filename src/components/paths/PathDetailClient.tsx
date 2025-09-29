@@ -306,7 +306,7 @@ ${flexibleThought || 'No especificada.'}
 
      const renderStep = () => {
         switch (step) {
-            case 0: return <div className="p-4 text-center"><p>Ahora, vamos a mirar dentro de ti, con respeto y sin crítica. No buscamos explicaciones perfectas, solo entender qué te estaba pasando.</p><Button onClick={() => setStep(1)}>Empezar la reflexión</Button></div>;
+            case 0: return <div className="text-center p-4"><p>Ahora, vamos a mirar dentro de ti, con respeto y sin crítica. No buscamos explicaciones perfectas, solo entender qué te estaba pasando.</p><Button onClick={() => setStep(1)}>Empezar la reflexión</Button></div>;
             case 1: return <div className="p-4 space-y-2"><Label>Imagina que una persona a la que quieres mucho está en tu situación. ¿Qué le dirías?</Label><Textarea value={adviceToFriend} onChange={e => setAdviceToFriend(e.target.value)} placeholder="Le diría que..." /><Button onClick={() => setStep(2)} className="w-full mt-2">Continuar</Button></div>;
             case 2: return <div className="p-4 space-y-2"><Label>Cuando te bloqueaste, ¿qué pensaste sobre ti?</Label><Textarea value={selfJudgment} onChange={e => setSelfJudgment(e.target.value)} placeholder="Pensé que no valía para esto..." /><p className="text-sm text-center text-primary">Es solo un pensamiento. No eres ese pensamiento.</p><Button onClick={() => setStep(3)} className="w-full mt-2">Siguiente</Button></div>;
             case 3: return <div className="p-4 space-y-2"><Label>¿Qué emoción crees que intentabas evitar cuando procrastinaste?</Label>
@@ -437,7 +437,7 @@ Cuando ${moment}, voy a ${action}.
     );
 }
 
-function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+function FutureSelfVisualizationExercise({ content, pathId, audioUrl }: { content: ModuleContent; pathId: string, audioUrl?: string }) {
     const { toast } = useToast();
     const { user } = useUser();
     const [habit, setHabit] = useState('');
@@ -469,7 +469,18 @@ function FutureSelfVisualizationExercise({ content, pathId }: { content: ModuleC
 
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
-            <CardHeader><CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>{content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}</CardHeader>
+            <CardHeader>
+              <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2" />{content.title}</CardTitle>
+              {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+              {audioUrl && (
+                  <div className="mt-4">
+                      <audio controls controlsList="nodownload" className="w-full">
+                          <source src={audioUrl} type="audio/mp3" />
+                          Tu navegador no soporta el elemento de audio.
+                      </audio>
+                  </div>
+              )}
+            </CardHeader>
             <CardContent>
                 <form onSubmit={handleSave} className="space-y-4">
                     <p className="text-sm">Después de realizar la visualización (ya sea leyéndola o escuchando el audio), responde a las siguientes preguntas para anclar la experiencia.</p>
@@ -785,6 +796,11 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         </Accordion>
       );
     case 'exercise':
+        // Special handler for "Visualización del Yo Futuro"
+        if (contentItem.title === 'Ejercicio 2: Visualización del Yo Futuro') {
+            return <FutureSelfVisualizationExercise key={index} content={contentItem} pathId={pathId} audioUrl={contentItem.audioUrl} />;
+        }
+        
         // RUTA 3 Ejercicios
         if (contentItem.title === 'Ejercicio 1: Mi Mapa del Bloqueo Personal') {
             return <BlockageMapExercise key={index} content={contentItem} pathId={pathId} />;
@@ -797,9 +813,6 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         }
         if (contentItem.title === 'Ejercicio 2: Tu Primer Microplan de Acción') {
             return <MicroPlanExercise key={index} content={contentItem} pathId={pathId} />;
-        }
-        if (contentItem.title === 'Ejercicio 2: Visualización del Yo Futuro') {
-            return <FutureSelfVisualizationExercise key={index} content={contentItem} pathId={pathId} />;
         }
         if (contentItem.title === 'Ejercicio 1: Diseña tu Ritual Realista') {
             return <RealisticRitualExercise key={index} content={contentItem} pathId={pathId} />;
