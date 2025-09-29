@@ -196,6 +196,7 @@ export type EmpathicShieldVisualizationExerciseContent = {
     objective?: string;
     duration?: string;
     content?: { type: 'paragraph', text: string }[]; // Para la versión escrita
+    audioUrl?: string;
 };
 
 export type EmotionalInvolvementTrafficLightExerciseContent = {

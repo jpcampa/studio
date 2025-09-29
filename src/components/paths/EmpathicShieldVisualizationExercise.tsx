@@ -38,6 +38,14 @@ export function EmpathicShieldVisualizationExercise({ content, pathId }: Empathi
       <CardHeader>
         <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{content.title}</CardTitle>
         {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+        {content.audioUrl && (
+          <div className="mt-4">
+              <audio controls controlsList="nodownload" className="w-full">
+                  <source src={content.audioUrl} type="audio/mp3" />
+                  Tu navegador no soporta el elemento de audio.
+              </audio>
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         {!isCompleted ? (
@@ -47,7 +55,7 @@ export function EmpathicShieldVisualizationExercise({ content, pathId }: Empathi
                     <Button onClick={() => setViewMode('text')} variant={viewMode === 'text' ? 'default' : 'outline'}><BookOpen className="mr-2 h-4 w-4" /> Texto</Button>
                 </div>
                 
-                {viewMode === 'audio' && (
+                {viewMode === 'audio' && !content.audioUrl && (
                     <div className="p-4 border rounded-lg bg-background text-center">
                         <PlayCircle className="h-16 w-16 text-primary mx-auto mb-4" />
                         <p className="font-semibold">Visualización Guiada</p>

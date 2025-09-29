@@ -207,6 +207,7 @@ export const empathyPath: Path = {
           title: 'EJERCICIO 1: VISUALIZACIÓN GUIADA: EL ESCUDO EMPÁTICO',
           objective: 'Este ejercicio te ayudará a crear tu escudo emocional interno. No es una barrera, sino un filtro que te protege mientras sigues siendo tú, para que puedas escuchar sin absorber, acompañar sin fundirte y cuidar sin desaparecer.',
           duration: '6-8 min',
+          audioUrl: 'https://workwellfut.com/audios/rm/R5_visualizacion_guiada_el_escudo_empatico.mp3',
         },
         {
           type: 'emotionalInvolvementTrafficLightExercise',

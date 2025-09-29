@@ -439,7 +439,6 @@ Cuando ${moment}, voy a ${action}.
 
 function FutureSelfVisualizationExercise({ content, pathId, audioUrl }: { content: ModuleContent; pathId: string, audioUrl?: string }) {
     const { toast } = useToast();
-    const { user } = useUser();
     const [habit, setHabit] = useState('');
     const [futureSelf, setFutureSelf] = useState('');
     const [emotions, setEmotions] = useState('');
@@ -888,8 +887,10 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
       return <EmpathicMirrorExercise key={index} content={contentItem} pathId={pathId} />;
     case 'validationIn3StepsExercise':
       return <ValidationIn3StepsExercise key={index} content={contentItem} pathId={pathId} />;
-    case 'empathicShieldVisualizationExercise':
-      return <EmpathicShieldVisualizationExercise key={index} content={contentItem} pathId={pathId} />;
+    case 'empathicShieldVisualizationExercise': {
+        const exerciseContent = contentItem as Extract<ModuleContent, { type: 'empathicShieldVisualizationExercise' }>;
+        return <EmpathicShieldVisualizationExercise key={index} content={exerciseContent} pathId={pathId} />;
+    }
     case 'emotionalInvolvementTrafficLightExercise':
       return <EmotionalInvolvementTrafficLightExercise key={index} content={contentItem} pathId={pathId} />;
     case 'significantRelationshipsInventoryExercise':
