@@ -4,25 +4,54 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, getAllCategorySlugs, type ResourceCategory } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, getAllCategorySlugs } from '@/data/resourcesData';
+import type { ResourceCategory } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
 
 export async function generateStaticParams() {
-    return getAllCategorySlugs();
+    // This can still be used to pre-build popular category pages at build time
+    try {
+        return await getAllCategorySlugs();
+    } catch (error) {
+        console.error("Failed to generate static params for resource categories:", error);
+        return [];
+    }
 }
 
 export default async function CategoryPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = await params;
-  const category = getCategoryBySlug(slug);
+  let category: ResourceCategory | undefined;
+  let posts = [];
+  let error = null;
 
+  try {
+    category = await getCategoryBySlug(slug);
+
+    if (category) {
+      posts = await getPostsByCategory(slug);
+    } else {
+      // If the category is not found, it will trigger the notFound() function.
+      notFound();
+    }
+  } catch (e) {
+    console.error(`Error fetching data for category '${slug}':`, e);
+    error = "No se pudieron cargar los artículos de esta categoría en este momento.";
+    // We still try to get category info to display a title, even if posts fail
+    if (!category) {
+        try {
+            category = await getCategoryBySlug(slug);
+        } catch (catError) {
+            console.error("Could not even fetch category details for error page:", catError);
+        }
+    }
+  }
+
+  // If after all attempts category is still undefined, we must show a not found page.
   if (!category) {
     notFound();
   }
-  
-  const posts = getPostsByCategory(slug);
-  const error = null;
 
   return (
     <div className="container mx-auto py-8">
@@ -54,7 +83,7 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
       {!error && posts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
-            const imageUrl = post.featured_media_url || 'https://workwellfut.com/imgapp/600x400/default.png';
+            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/600x400/default.png';
             return (
               <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                   <CardHeader>
@@ -62,17 +91,17 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
                          <div className="relative h-48 w-full mb-4 rounded-t-lg overflow-hidden">
                             <Image 
                                 src={imageUrl}
-                                alt={post.title} 
+                                alt={post.title.rendered} 
                                 fill 
                                 className="object-cover"
                                 data-ai-hint="resource article"
                             />
                         </div>
                     )}
-                    <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title }}/>
+                    <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title.rendered }}/>
                   </CardHeader>
                   <CardContent className="flex-grow">
-                    <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt }}/>
+                    <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
                   </CardContent>
                   <CardFooter>
                     <Button asChild variant="outline" className="w-full">
