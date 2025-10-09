@@ -1,6 +1,7 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import { getResourceCategories, type ResourceCategory } from '@/data/resourcesData';
 import { ArrowRight, BookOpen, AlertTriangle } from 'lucide-react';
