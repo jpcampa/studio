@@ -15,7 +15,7 @@ export async function generateStaticParams() {
 
 export default async function PostPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   const error = null;
   
   if (error) {
@@ -40,7 +40,8 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
       notFound();
   }
 
-  const imageUrl = post.featured_media_url || 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+  const rawImageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  const imageUrl = rawImageUrl ? rawImageUrl.replace(/^http:/, 'https:') : 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
@@ -50,7 +51,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
                 <div className="relative h-64 w-full">
                     <Image 
                         src={imageUrl} 
-                        alt={post.title} 
+                        alt={post.title.rendered} 
                         fill 
                         className="object-cover"
                         data-ai-hint="resource article header"
@@ -58,7 +59,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
                 </div>
             )}
             <div className="p-6">
-                <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title }} />
+                <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                 <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
                     <span className="flex items-center">
                     <Clock className="h-4 w-4 mr-1.5" /> Publicado el {new Date(post.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -67,7 +68,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
             </div>
         </CardHeader>
         <CardContent className="py-6 px-6 md:px-8">
-            <div className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
         </CardContent>
       </Card>
 
