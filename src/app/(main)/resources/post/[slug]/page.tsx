@@ -15,7 +15,7 @@ export async function generateStaticParams() {
 }
 
 export default async function PostPage({ params }: RoutePageProps<{ slug: string }>) {
-  const { slug } = await params;
+  const { slug } = params;
   let post: ResourcePost | undefined;
   let error = null;
   

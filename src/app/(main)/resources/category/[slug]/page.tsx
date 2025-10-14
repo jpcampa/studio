@@ -28,7 +28,7 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
     getPostsByCategory(slug),
   ]).catch((e: unknown) => {
     console.error(`Error fetching data for category '${slug}':`, e);
-    error = e instanceof Error ? e : new Error("No se pudieron cargar los artículos de esta categoría en este momento.");
+    error = e instanceof Error ? e : new Error("No se pudieron cargar los artículos de esta categoría.");
     return [undefined, [] as ResourcePost[]];
   });
 
