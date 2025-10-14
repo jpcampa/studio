@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, getAllCategorySlugs, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
@@ -12,6 +12,7 @@ import type { RoutePageProps } from '@/types/page-props';
 export async function generateStaticParams() {
     // This can still be used to pre-build popular category pages at build time
     try {
+        const { getAllCategorySlugs } = await import('@/data/resourcesData');
         return await getAllCategorySlugs();
     } catch (error) {
         console.error("Failed to generate static params for resource categories:", error);
