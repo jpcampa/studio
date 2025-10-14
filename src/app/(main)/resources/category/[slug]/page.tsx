@@ -10,7 +10,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
 
 export async function generateStaticParams() {
-    // This can still be used to pre-build popular category pages at build time
     try {
         const { getAllCategorySlugs } = await import('@/data/resourcesData');
         return await getAllCategorySlugs();
@@ -21,32 +20,18 @@ export async function generateStaticParams() {
 }
 
 export default async function CategoryPage({ params }: RoutePageProps<{ slug: string }>) {
-  const { slug } = await params;
-  let category: ResourceCategory | undefined;
-  let posts: ResourcePost[] = [];
-  let error: string | null = null;
+  const { slug } = params;
+  let error: Error | null = null;
 
-  try {
-    category = await getCategoryBySlug(slug);
-
-    if (category) {
-      posts = await getPostsByCategory(slug);
-    } else {
-      // If the category is not found, it will trigger the notFound() function.
-      notFound();
-    }
-  } catch (e) {
+  const [category, posts] = await Promise.all([
+    getCategoryBySlug(slug),
+    getPostsByCategory(slug),
+  ]).catch((e: unknown) => {
     console.error(`Error fetching data for category '${slug}':`, e);
-    error = "No se pudieron cargar los artículos de esta categoría en este momento.";
-    // We still try to get category info to display a title, even if posts fail
-    if (!category) {
-        try {
-            category = await getCategoryBySlug(slug);
-        } catch (catError) {
-            console.error("Could not even fetch category details for error page:", catError);
-        }
-    }
-  }
+    error = e instanceof Error ? e : new Error("No se pudieron cargar los artículos de esta categoría en este momento.");
+    return [undefined, [] as ResourcePost[]];
+  });
+
 
   // If after all attempts category is still undefined, we must show a not found page.
   if (!category) {
@@ -70,7 +55,7 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
        {error && (
          <Alert variant="destructive" className="mb-8 max-w-2xl mx-auto">
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{error.message}</AlertDescription>
         </Alert>
       )}
 
