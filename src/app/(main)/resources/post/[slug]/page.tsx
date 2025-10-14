@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
+import type { ResourcePost } from '@/data/resourcesData';
 
 export async function generateStaticParams() {
     return getAllPostSlugs();
@@ -15,9 +16,16 @@ export async function generateStaticParams() {
 
 export default async function PostPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  const error = null;
+  let post: ResourcePost | undefined;
+  let error = null;
   
+  try {
+    post = await getPostBySlug(slug);
+  } catch (e) {
+    console.error(`Error fetching post ${slug}:`, e);
+    error = "No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.";
+  }
+
   if (error) {
     return (
         <div className="container mx-auto py-8 text-center">
@@ -40,8 +48,10 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
       notFound();
   }
 
-  const rawImageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-  const imageUrl = rawImageUrl ? rawImageUrl.replace(/^http:/, 'https:') : 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
+  ? `http://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
+  : 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
