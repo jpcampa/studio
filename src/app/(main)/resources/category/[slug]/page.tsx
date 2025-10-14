@@ -4,8 +4,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, getAllCategorySlugs } from '@/data/resourcesData';
-import type { ResourceCategory, ResourcePost } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, getAllCategorySlugs, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
@@ -84,7 +83,7 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
             const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
-            ? `http://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
+            ? `https://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
             : 'https://workwellfut.com/imgapp/600x400/default.png';
             
             return (
