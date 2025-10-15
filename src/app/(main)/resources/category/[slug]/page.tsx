@@ -9,15 +9,15 @@ import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
 
-export async function generateStaticParams() {
-    try {
-        const { getAllCategorySlugs } = await import('@/data/resourcesData');
-        return await getAllCategorySlugs();
-    } catch (error) {
-        console.error("Failed to generate static params for resource categories:", error);
-        return [];
-    }
-}
+// export async function generateStaticParams() {
+//     try {
+//         const { getAllCategorySlugs } = await import('@/data/resourcesData');
+//         return await getAllCategorySlugs();
+//     } catch (error) {
+//         console.error("Failed to generate static params for resource categories:", error);
+//         return [];
+//     }
+// }
 
 export default async function CategoryPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = params;

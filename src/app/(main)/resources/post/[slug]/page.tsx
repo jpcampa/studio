@@ -10,9 +10,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
 import type { ResourcePost } from '@/data/resourcesData';
 
-export async function generateStaticParams() {
-    return getAllPostSlugs();
-}
+// export async function generateStaticParams() {
+//     return getAllPostSlugs();
+// }
 
 export default async function PostPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = params;
