@@ -7,10 +7,8 @@ import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
 import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { RoutePageProps } from '@/types/page-props';
 
-
-export default async function CategoryPage({ params }: RoutePageProps<{ slug: string }>) {
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   let error: Error | null = null;
 
@@ -20,7 +18,7 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
   ]).catch((e: unknown) => {
     console.error(`Error fetching data for category '${slug}':`, e);
     error = e instanceof Error ? e : new Error("No se pudieron cargar los artículos de esta categoría.");
-    return [undefined, [] as ResourcePost[]];
+    return [undefined, [] as ResourcePost[]] as const;
   });
 
 
@@ -97,5 +95,3 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
     </div>
   );
 }
-
-    
