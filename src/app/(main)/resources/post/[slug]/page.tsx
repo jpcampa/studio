@@ -8,14 +8,13 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Correctly define the type for the page props, params is NOT a promise
+// ✅ Define el tipo de props correcto directamente en la firma
 type PostPageProps = {
   params: { slug: string };
 };
 
 export default async function PostPage({ params }: PostPageProps) {
-  // Destructure slug directly from params
-  const { slug } = params;
+  const { slug } = params; // ✅ Sin await
 
   let post: ResourcePost | undefined;
   let error: string | null = null;

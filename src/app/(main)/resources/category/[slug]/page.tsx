@@ -8,29 +8,27 @@ import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type Reso
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Correctly define the type for the page props, params is NOT a promise
+// ✅ Define el tipo de props correcto directamente en la firma
 type CategoryPageProps = {
   params: { slug: string };
 };
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  // Destructure slug directly from params
-  const { slug } = params;
+  const { slug } = params; // ✅ Sin await
 
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
   let error: string | null = null;
 
   try {
-    // Fetch concurrently and handle potential errors gracefully
     const [categoryResult, postsResult] = await Promise.all([
       getCategoryBySlug(slug).catch(e => {
         console.error(`Error fetching category '${slug}':`, e);
-        return undefined; // Return undefined on error
+        return undefined; 
       }),
       getPostsByCategory(slug).catch(e => {
         console.error(`Error fetching posts for category '${slug}':`, e);
-        return []; // Return empty array on error
+        return []; 
       })
     ]);
 
@@ -42,12 +40,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     }
 
   } catch (e: unknown) {
-    // This secondary catch is for unexpected errors in Promise.all itself
     console.error(`Unexpected error fetching data for category '${slug}':`, e);
     error = "Ocurrió un error inesperado al cargar la página.";
   }
 
-  // Final check in case getCategoryBySlug succeeded but getPostsByCategory failed
   if (!category) {
     notFound();
   }

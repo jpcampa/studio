@@ -3,14 +3,13 @@ import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
 
-// Define the correct type for the page props
+// ✅ Define el tipo de props correcto directamente en la firma
 type PathDetailPageProps = {
   params: { pathId: string };
 }
 
 export default async function PathDetailPage({ params }: PathDetailPageProps) {
-  // Destructure pathId directly from params
-  const { pathId } = params;
+  const { pathId } = params; // ✅ Sin await
   const path = pathsData.find(p => p.id === pathId);
 
   if (!path) {

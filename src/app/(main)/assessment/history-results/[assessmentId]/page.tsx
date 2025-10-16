@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -8,7 +9,7 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-// Define the correct type for the page props
+// ✅ Define el tipo de props correcto directamente en la firma
 type HistoricalResultsPageProps = {
   params: { assessmentId: string };
 };
@@ -16,8 +17,7 @@ type HistoricalResultsPageProps = {
 export default function HistoricalAssessmentResultsPage({ params }: HistoricalResultsPageProps) {
   const t = useTranslations();
   const router = useRouter();
-  // We get assessmentId directly from props.params now, which is more reliable
-  const { assessmentId } = params;
+  const { assessmentId } = params; // ✅ Sin await
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
