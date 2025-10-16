@@ -41,7 +41,7 @@ const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
  */
 export async function getResourceCategories(): Promise<ResourceCategory[]> {
     try {
-        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { cache: 'no-store' }); 
+        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { next: { revalidate: 3600 } }); 
         if (!res.ok) {
             throw new Error(`Failed to fetch categories: ${res.statusText}`);
         }
@@ -60,7 +60,7 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
  */
 export async function getResources(): Promise<ResourcePost[]> {
     try {
-        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
         if (!res.ok) {
             throw new Error(`Failed to fetch posts: ${res.statusText}`);
         }
@@ -89,7 +89,7 @@ export async function getPostsByCategory(categorySlug: string): Promise<Resource
  */
 export async function getPostBySlug(slug: string): Promise<ResourcePost | undefined> {
      try {
-        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
         if (!res.ok) {
              throw new Error(`Failed to fetch post by slug: ${res.statusText}`);
         }
