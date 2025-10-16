@@ -8,37 +8,37 @@ import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type Reso
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-type PageProps = {
+// Correctly define the type for the page props, params is NOT a promise
+type CategoryPageProps = {
   params: { slug: string };
 };
 
-export default async function CategoryPage({ params }: PageProps) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  // Destructure slug directly from params
   const { slug } = params;
 
-  let error: string | null = null;
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
+  let error: string | null = null;
 
   try {
-    // Fetch concurrently and handle potential errors
+    // Fetch concurrently and handle potential errors gracefully
     const [categoryResult, postsResult] = await Promise.all([
       getCategoryBySlug(slug).catch(e => {
         console.error(`Error fetching category '${slug}':`, e);
-        return null; // Return null on error
+        return undefined; // Return undefined on error
       }),
       getPostsByCategory(slug).catch(e => {
         console.error(`Error fetching posts for category '${slug}':`, e);
-        return null; // Return null on error
+        return []; // Return empty array on error
       })
     ]);
 
-    if (categoryResult === null || postsResult === null) {
-      error = "No se pudieron cargar los datos de esta categoría.";
-      category = categoryResult ?? undefined; // Keep category if it fetched
-      posts = postsResult ?? [];       // Keep posts if they fetched
-    } else {
-      category = categoryResult;
-      posts = postsResult;
+    category = categoryResult;
+    posts = postsResult;
+
+    if (!category) {
+      notFound();
     }
 
   } catch (e: unknown) {
@@ -47,6 +47,7 @@ export default async function CategoryPage({ params }: PageProps) {
     error = "Ocurrió un error inesperado al cargar la página.";
   }
 
+  // Final check in case getCategoryBySlug succeeded but getPostsByCategory failed
   if (!category) {
     notFound();
   }

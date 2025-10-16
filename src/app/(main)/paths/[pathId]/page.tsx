@@ -3,11 +3,13 @@ import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
 
-type PageProps = {
+// Define the correct type for the page props
+type PathDetailPageProps = {
   params: { pathId: string };
 }
 
-export default function PathDetailPage({ params }: PageProps) {
+export default async function PathDetailPage({ params }: PathDetailPageProps) {
+  // Destructure pathId directly from params (it's not a promise)
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 

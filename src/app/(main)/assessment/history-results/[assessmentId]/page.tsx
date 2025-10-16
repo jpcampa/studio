@@ -9,11 +9,15 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-export default function HistoricalAssessmentResultsPage() {
+type HistoricalResultsPageProps = {
+  params: { assessmentId: string };
+};
+
+export default function HistoricalAssessmentResultsPage({ params }: HistoricalResultsPageProps) {
   const t = useTranslations();
   const router = useRouter();
-  const params = useParams();
-  const assessmentId = typeof params.assessmentId === 'string' ? params.assessmentId : null;
+  // We get assessmentId directly from props.params now, which is more reliable in RSC/SSR
+  const { assessmentId } = params;
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
