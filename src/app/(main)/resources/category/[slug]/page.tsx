@@ -11,13 +11,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   
-  let error: Error | null = null;
+  let error: string | null = null;
   const [category, posts] = await Promise.all([
     getCategoryBySlug(slug),
     getPostsByCategory(slug),
   ]).catch((e: unknown) => {
     console.error(`Error fetching data for category '${slug}':`, e);
-    error = e instanceof Error ? e : new Error("No se pudieron cargar los artículos de esta categoría.");
+    error = "No se pudieron cargar los artículos de esta categoría.";
     return [undefined, [] as ResourcePost[]] as const;
   });
 
@@ -42,7 +42,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
        {error && (
          <Alert variant="destructive" className="mb-8 max-w-2xl mx-auto">
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error.message}</AlertDescription>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 

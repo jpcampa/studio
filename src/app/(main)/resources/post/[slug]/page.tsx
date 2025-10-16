@@ -12,13 +12,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const { slug } = params;
 
   let post: ResourcePost | undefined;
-  let error: Error | null = null;
+  let error: string | null = null;
   
   try {
     post = await getPostBySlug(slug);
   } catch (e: unknown) {
     console.error(`Error fetching post ${slug}:`, e);
-    error = e instanceof Error ? e : new Error("No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.");
+    error = "No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.";
   }
 
   if (error) {
@@ -26,7 +26,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <div className="container mx-auto py-8 text-center">
             <Alert variant="destructive" className="max-w-2xl mx-auto">
             <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>{error.message}</AlertDescription>
+            <AlertDescription>{error}</AlertDescription>
             </Alert>
              <div className="mt-8">
                 <Button variant="outline" asChild>

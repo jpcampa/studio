@@ -3,7 +3,7 @@ import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
 
-export default async function PathDetailPage({ params }: { params: { pathId: string } }) {
+export default function PathDetailPage({ params }: { params: { pathId: string } }) {
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 
@@ -14,7 +14,7 @@ export default async function PathDetailPage({ params }: { params: { pathId: str
   return <PathDetailClient path={path} />;
 }
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return pathsData.map((path) => ({
     pathId: path.id,
   }));
