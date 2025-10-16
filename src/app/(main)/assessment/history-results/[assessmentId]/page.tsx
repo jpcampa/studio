@@ -9,7 +9,6 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-// ✅ Define el tipo de props correcto directamente en la firma
 type HistoricalResultsPageProps = {
   params: { assessmentId: string };
 };
@@ -17,7 +16,7 @@ type HistoricalResultsPageProps = {
 export default function HistoricalAssessmentResultsPage({ params }: HistoricalResultsPageProps) {
   const t = useTranslations();
   const router = useRouter();
-  const { assessmentId } = params; // ✅ Sin await
+  const { assessmentId } = params; 
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);

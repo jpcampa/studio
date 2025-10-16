@@ -8,13 +8,12 @@ import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type Reso
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// ✅ Define el tipo de props correcto directamente en la firma
 type CategoryPageProps = {
   params: { slug: string };
 };
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { slug } = params; // ✅ Sin await
+  const { slug } = params;
 
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];

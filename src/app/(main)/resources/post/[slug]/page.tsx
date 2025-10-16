@@ -8,13 +8,12 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// ✅ Define el tipo de props correcto directamente en la firma
 type PostPageProps = {
   params: { slug: string };
 };
 
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = params; // ✅ Sin await
+  const { slug } = params;
 
   let post: ResourcePost | undefined;
   let error: string | null = null;
