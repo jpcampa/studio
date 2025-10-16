@@ -24,45 +24,17 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app: FirebaseApp | undefined = undefined;
-let auth: Auth | undefined = undefined;
-let db: Firestore | undefined = undefined;
+let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
 
-// Proceed with initialization only if essential config values appear to be present
-if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-    console.error("FIREBASE INITIALIZATION ERROR: API Key or Project ID is missing. Check your .env.local file and restart the server.");
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
 } else {
-  if (getApps().length === 0) {
-    try {
-      app = initializeApp(firebaseConfig);
-    } catch (e) {
-      console.error("Firebase Init: CRITICAL ERROR during initializeApp(firebaseConfig):", e);
-      app = undefined;
-    }
-  } else {
-    app = getApps()[0]!;
-  }
+  app = getApps()[0]!;
 }
 
-// Initialize Auth and Firestore only if app was successfully initialized
-if (app) {
-  try {
-    auth = getAuth(app);
-  } catch (e) {
-    console.error("Firebase Init: CRITICAL ERROR during getAuth(app):", e);
-    auth = undefined;
-  }
-
-  try {
-    db = getFirestore(app);
-  } catch (e) {
-    console.error("Firebase Init: CRITICAL ERROR during getFirestore(app):", e);
-    db = undefined;
-  }
-} else {
-  console.error("Firebase Init: Firebase app was NOT initialized. Auth and Firestore will not be available.");
-  auth = undefined;
-  db = undefined;
-}
+auth = getAuth(app);
+db = getFirestore(app);
 
 export { app, auth, db };

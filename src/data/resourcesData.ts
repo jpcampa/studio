@@ -1,4 +1,3 @@
-
 import { unstable_noStore as noStore } from 'next/cache';
 
 // Tipos de datos para los posts y categorías de recursos.
@@ -49,7 +48,7 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
         return categories.filter(cat => cat.slug !== 'sin-categoria' && cat.count > 0);
     } catch (error) {
         console.error("Error fetching resource categories:", error);
-        return []; // Devuelve un array vacío en caso de error
+        throw error; // Re-throw para que Promise.all lo capture
     }
 }
 
@@ -67,7 +66,7 @@ export async function getResources(): Promise<ResourcePost[]> {
         return posts;
     } catch (error) {
         console.error("Error fetching resource posts:", error);
-        return [];
+        throw error;
     }
 }
 
@@ -96,7 +95,7 @@ export async function getPostBySlug(slug: string): Promise<ResourcePost | undefi
         return posts[0];
     } catch (error) {
         console.error(`Error fetching post with slug ${slug}:`, error);
-        return undefined;
+        throw error;
     }
 }
 
