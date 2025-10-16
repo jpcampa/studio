@@ -9,15 +9,6 @@ import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RoutePageProps } from '@/types/page-props';
 
-// export async function generateStaticParams() {
-//     try {
-//         const { getAllCategorySlugs } = await import('@/data/resourcesData');
-//         return await getAllCategorySlugs();
-//     } catch (error) {
-//         console.error("Failed to generate static params for resource categories:", error);
-//         return [];
-//     }
-// }
 
 export default async function CategoryPage({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = params;
@@ -69,7 +60,7 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
             const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
-            ? `https://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
+            ? `http://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
             : 'https://workwellfut.com/imgapp/600x400/default.png';
             
             return (
@@ -106,3 +97,5 @@ export default async function CategoryPage({ params }: RoutePageProps<{ slug: st
     </div>
   );
 }
+
+    

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import type { RoutePageProps } from '@/types/page-props';
 
 export default async function PathDetailPage({ params }: RoutePageProps<{ pathId: string }>) {
-  const { pathId } = await params;
+  const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 
   if (!path) {
@@ -20,3 +20,5 @@ export async function generateStaticParams() {
     pathId: path.id,
   }));
 }
+
+    
