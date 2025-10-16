@@ -1,3 +1,4 @@
+
 import { unstable_noStore as noStore } from 'next/cache';
 
 // Tipos de datos para los posts y categorías de recursos.

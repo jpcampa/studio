@@ -12,14 +12,23 @@ export default async function CategoryPage({ params }: { params: { slug: string 
   const { slug } = params;
   
   let error: string | null = null;
-  const [category, posts] = await Promise.all([
-    getCategoryBySlug(slug),
-    getPostsByCategory(slug),
-  ]).catch((e: unknown) => {
+  // Initialize with correct types
+  let category: ResourceCategory | undefined;
+  let posts: ResourcePost[] = [];
+
+  try {
+    // Promise.all to fetch concurrently
+    [category, posts] = await Promise.all([
+      getCategoryBySlug(slug),
+      getPostsByCategory(slug),
+    ]);
+  } catch (e: unknown) {
     console.error(`Error fetching data for category '${slug}':`, e);
     error = "No se pudieron cargar los artículos de esta categoría.";
-    return [undefined, [] as ResourcePost[]] as const;
-  });
+    // Ensure category and posts are in a valid state on error
+    category = undefined;
+    posts = [];
+  }
 
   if (!category) {
     notFound();

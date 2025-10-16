@@ -28,8 +28,15 @@ let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
 
+// This check prevents re-initializing the app on every hot-reload
 if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
+  try {
+    app = initializeApp(firebaseConfig);
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+    // In a real app, you might want to handle this more gracefully
+    throw new Error("Could not initialize Firebase. Please check your configuration.");
+  }
 } else {
   app = getApps()[0]!;
 }
