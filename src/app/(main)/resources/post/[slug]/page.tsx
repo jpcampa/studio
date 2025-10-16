@@ -1,24 +1,23 @@
-
-import { getPostBySlug } from '@/data/resourcesData';
-import { notFound } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
+import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { ResourcePost } from '@/data/resourcesData';
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
+
   let post: ResourcePost | undefined;
-  let error = null;
+  let error: Error | null = null;
   
   try {
     post = await getPostBySlug(slug);
-  } catch (e) {
+  } catch (e: unknown) {
     console.error(`Error fetching post ${slug}:`, e);
-    error = "No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.";
+    error = e instanceof Error ? e : new Error("No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.");
   }
 
   if (error) {
@@ -26,7 +25,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <div className="container mx-auto py-8 text-center">
             <Alert variant="destructive" className="max-w-2xl mx-auto">
             <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription>{error.message}</AlertDescription>
             </Alert>
              <div className="mt-8">
                 <Button variant="outline" asChild>
@@ -44,7 +43,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   }
 
   const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
-  ? `http://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
+  ? `https://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
   : 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
 
 

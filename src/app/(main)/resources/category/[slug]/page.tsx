@@ -1,17 +1,16 @@
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Clock, AlertTriangle } from 'lucide-react';
+import { ArrowRight, AlertTriangle } from 'lucide-react';
 import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
+  
   let error: Error | null = null;
-
   const [category, posts] = await Promise.all([
     getCategoryBySlug(slug),
     getPostsByCategory(slug),
@@ -21,8 +20,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     return [undefined, [] as ResourcePost[]] as const;
   });
 
-
-  // If after all attempts category is still undefined, we must show a not found page.
   if (!category) {
     notFound();
   }
@@ -58,7 +55,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
             const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
-            ? `http://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
+            ? `https://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
             : 'https://workwellfut.com/imgapp/600x400/default.png';
             
             return (
