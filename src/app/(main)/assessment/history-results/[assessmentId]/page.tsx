@@ -9,15 +9,13 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-// NOTA: Esta es una página de cliente, por lo que useParams() funciona como se espera
-// y no necesita la corrección de PageProps del lado del servidor.
 export default function HistoricalAssessmentResultsPage() {
   const t = useTranslations();
   const router = useRouter();
   const params = useParams();
   const assessmentId = typeof params.assessmentId === 'string' ? params.assessmentId : null;
 
-  const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined); // undefined for loading, null for not found
+  const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
