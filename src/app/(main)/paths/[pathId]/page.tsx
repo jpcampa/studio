@@ -9,7 +9,7 @@ type PathDetailPageProps = {
 }
 
 export default async function PathDetailPage({ params }: PathDetailPageProps) {
-  // Destructure pathId directly from params (it's not a promise)
+  // Destructure pathId directly from params
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 

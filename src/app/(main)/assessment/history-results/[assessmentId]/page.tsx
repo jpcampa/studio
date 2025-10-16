@@ -1,14 +1,14 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { AssessmentResultsDisplay } from '@/components/assessment/AssessmentResultsDisplay';
 import { useTranslations } from '@/lib/translations';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
+// Define the correct type for the page props
 type HistoricalResultsPageProps = {
   params: { assessmentId: string };
 };
@@ -16,7 +16,7 @@ type HistoricalResultsPageProps = {
 export default function HistoricalAssessmentResultsPage({ params }: HistoricalResultsPageProps) {
   const t = useTranslations();
   const router = useRouter();
-  // We get assessmentId directly from props.params now, which is more reliable in RSC/SSR
+  // We get assessmentId directly from props.params now, which is more reliable
   const { assessmentId } = params;
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);

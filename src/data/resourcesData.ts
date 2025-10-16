@@ -39,9 +39,9 @@ const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
  * Cachea la respuesta para mejorar el rendimiento.
  */
 export async function getResourceCategories(): Promise<ResourceCategory[]> {
-    noStore(); // Ensures data is fetched dynamically on each request in development
+    noStore(); // Ensures data is fetched dynamically on each request
     try {
-        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { next: { revalidate: 3600 } }); 
+        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`); 
         if (!res.ok) {
             throw new Error(`Failed to fetch categories: ${res.statusText}`);
         }
@@ -61,7 +61,7 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
 export async function getResources(): Promise<ResourcePost[]> {
     noStore();
     try {
-        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`);
         if (!res.ok) {
             throw new Error(`Failed to fetch posts: ${res.statusText}`);
         }
@@ -92,7 +92,7 @@ export async function getPostsByCategory(categorySlug: string): Promise<Resource
 export async function getPostBySlug(slug: string): Promise<ResourcePost | undefined> {
      noStore();
      try {
-        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`);
         if (!res.ok) {
              throw new Error(`Failed to fetch post by slug: ${res.statusText}`);
         }
