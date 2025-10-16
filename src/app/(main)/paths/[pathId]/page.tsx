@@ -3,13 +3,11 @@ import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
 
-// Define la interfaz de props directamente aquí
-interface PathDetailPageProps {
+type PageProps = {
   params: { pathId: string };
 }
 
-// La función del componente ya no necesita ser doblemente async
-export default function PathDetailPage({ params }: PathDetailPageProps) {
+export default function PathDetailPage({ params }: PageProps) {
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 
@@ -20,7 +18,6 @@ export default function PathDetailPage({ params }: PathDetailPageProps) {
   return <PathDetailClient path={path} />;
 }
 
-// Esta función sigue siendo async porque puede realizar operaciones asíncronas
 export async function generateStaticParams() {
   return pathsData.map((path) => ({
     pathId: path.id,

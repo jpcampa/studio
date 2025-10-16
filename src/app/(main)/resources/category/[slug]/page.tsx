@@ -8,26 +8,43 @@ import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type Reso
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+type PageProps = {
+  params: { slug: string };
+};
+
+export default async function CategoryPage({ params }: PageProps) {
   const { slug } = params;
-  
+
   let error: string | null = null;
-  // Initialize with correct types
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
 
   try {
-    // Promise.all to fetch concurrently
-    [category, posts] = await Promise.all([
-      getCategoryBySlug(slug),
-      getPostsByCategory(slug),
+    // Fetch concurrently and handle potential errors
+    const [categoryResult, postsResult] = await Promise.all([
+      getCategoryBySlug(slug).catch(e => {
+        console.error(`Error fetching category '${slug}':`, e);
+        return null; // Return null on error
+      }),
+      getPostsByCategory(slug).catch(e => {
+        console.error(`Error fetching posts for category '${slug}':`, e);
+        return null; // Return null on error
+      })
     ]);
+
+    if (categoryResult === null || postsResult === null) {
+      error = "No se pudieron cargar los datos de esta categoría.";
+      category = categoryResult ?? undefined; // Keep category if it fetched
+      posts = postsResult ?? [];       // Keep posts if they fetched
+    } else {
+      category = categoryResult;
+      posts = postsResult;
+    }
+
   } catch (e: unknown) {
-    console.error(`Error fetching data for category '${slug}':`, e);
-    error = "No se pudieron cargar los artículos de esta categoría.";
-    // Ensure category and posts are in a valid state on error
-    category = undefined;
-    posts = [];
+    // This secondary catch is for unexpected errors in Promise.all itself
+    console.error(`Unexpected error fetching data for category '${slug}':`, e);
+    error = "Ocurrió un error inesperado al cargar la página.";
   }
 
   if (!category) {

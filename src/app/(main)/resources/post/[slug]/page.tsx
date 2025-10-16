@@ -8,7 +8,11 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
+type PageProps = {
+  params: { slug: string };
+};
+
+export default async function PostPage({ params }: PageProps) {
   const { slug } = params;
 
   let post: ResourcePost | undefined;
