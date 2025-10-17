@@ -8,12 +8,13 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Tipo local para los parámetros de esta ruta específica
+// ✅ Tipo local y correcto para los parámetros de la ruta.
 type PostPageProps = {
   params: { slug: string };
 };
 
 export default async function PostPage({ params }: PostPageProps) {
+  // ✅ Acceso directo a `slug`, sin await.
   const { slug } = params;
 
   let post: ResourcePost | undefined;

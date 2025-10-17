@@ -9,14 +9,15 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-// Tipo local para los parámetros de esta ruta específica
-type HistoricalResultsPageProps = {
+// ✅ Tipo local y correcto para los parámetros de la ruta.
+type RouteParams = {
   params: { assessmentId: string };
 };
 
-export default function HistoricalAssessmentResultsPage({ params }: HistoricalResultsPageProps) {
+export default function HistoricalAssessmentResultsPage({ params }: RouteParams) {
   const t = useTranslations();
   const router = useRouter();
+  // ✅ Acceso directo a `assessmentId`, sin await.
   const { assessmentId } = params; 
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
