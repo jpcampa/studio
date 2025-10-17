@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -9,15 +8,9 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-// ✅ Tipo local y correcto para los parámetros de la ruta.
-type RouteParams = {
-  params: { assessmentId: string };
-};
-
-export default function HistoricalAssessmentResultsPage({ params }: RouteParams) {
+export default function HistoricalAssessmentResultsPage({ params }: { params: { assessmentId: string } }) {
   const t = useTranslations();
   const router = useRouter();
-  // ✅ Acceso directo a `assessmentId`, sin await.
   const { assessmentId } = params; 
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
