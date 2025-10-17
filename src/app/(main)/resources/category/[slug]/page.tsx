@@ -8,6 +8,7 @@ import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type Reso
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
+// Tipo local para los parámetros de esta ruta específica
 type CategoryPageProps = {
   params: { slug: string };
 };
@@ -20,14 +21,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   let error: string | null = null;
 
   try {
+    // Usamos Promise.all para hacer las peticiones en paralelo
     const [categoryResult, postsResult] = await Promise.all([
       getCategoryBySlug(slug).catch(e => {
         console.error(`Error fetching category '${slug}':`, e);
-        return undefined; 
+        return undefined; // Devolvemos undefined en caso de error
       }),
       getPostsByCategory(slug).catch(e => {
         console.error(`Error fetching posts for category '${slug}':`, e);
-        return []; 
+        return []; // Devolvemos un array vacío en caso de error
       })
     ]);
 
@@ -39,11 +41,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     }
 
   } catch (e: unknown) {
+    // Este catch es para errores inesperados en el bloque Promise.all
     console.error(`Unexpected error fetching data for category '${slug}':`, e);
     error = "Ocurrió un error inesperado al cargar la página.";
   }
 
   if (!category) {
+    // Si la categoría no se encontró, notFound() ya se habrá llamado.
+    // Esto es un seguro extra.
     notFound();
   }
 

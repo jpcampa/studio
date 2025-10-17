@@ -9,6 +9,7 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
+// Tipo local para los parámetros de esta ruta específica
 type HistoricalResultsPageProps = {
   params: { assessmentId: string };
 };

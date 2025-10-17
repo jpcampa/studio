@@ -8,6 +8,7 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
+// Tipo local para los parámetros de esta ruta específica
 type PostPageProps = {
   params: { slug: string };
 };
