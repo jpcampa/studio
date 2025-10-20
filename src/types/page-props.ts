@@ -1,7 +1,7 @@
 // src/types/page-props.ts
 
-/** Params tipados para rutas del App Router (Next 15) */
+/** Tipado genérico para páginas del App Router con parámetros dinámicos */
 export type RoutePageProps<T extends Record<string, string> = Record<string, string>> = {
-  /** En Next 15 los params pueden ser async (Promise) durante el build */
+  /** En Next.js 15, durante el build, `params` puede ser un Promise */
   params: Promise<T>;
 };
