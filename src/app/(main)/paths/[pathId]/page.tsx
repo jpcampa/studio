@@ -3,13 +3,9 @@ import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
 
-// ✅ Tipo local y correcto para los parámetros de la ruta.
-type PathDetailPageProps = {
-  params: { pathId: string };
-}
+type RouteParams = { pathId: string };
 
-export default async function PathDetailPage({ params }: PathDetailPageProps) {
-  // ✅ Acceso directo a `pathId`, sin await.
+export default async function Page({ params }: { params: RouteParams }) {
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 
@@ -20,8 +16,16 @@ export default async function PathDetailPage({ params }: PathDetailPageProps) {
   return <PathDetailClient path={path} />;
 }
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<RouteParams[]> {
   return pathsData.map((path) => ({
     pathId: path.id,
   }));
+}
+
+export async function generateMetadata(
+  { params }: { params: RouteParams }
+) {
+  const { pathId } = params;
+  const path = pathsData.find(p => p.id === pathId);
+  return { title: path?.title || "Ruta de Desarrollo" };
 }

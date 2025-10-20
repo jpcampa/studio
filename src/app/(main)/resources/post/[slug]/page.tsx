@@ -4,17 +4,14 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
-import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
+import { getPostBySlug, type ResourcePost, getAllPostSlugs } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import type { Metadata } from 'next';
 
-// ✅ Tipo local y correcto para los parámetros de la ruta.
-type PostPageProps = {
-  params: { slug: string };
-};
+type RouteParams = { slug: string };
 
-export default async function PostPage({ params }: PostPageProps) {
-  // ✅ Acceso directo a `slug`, sin await.
+export default async function Page({ params }: { params: RouteParams }) {
   const { slug } = params;
 
   let post: ResourcePost | undefined;
@@ -92,4 +89,12 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
+  const { slug } = params;
+  const post = await getPostBySlug(slug);
+  return {
+    title: post?.title.rendered || 'Artículo',
+  };
 }

@@ -4,19 +4,16 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost, getAllCategorySlugs } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import type { Metadata } from 'next';
 
-// ✅ Tipo local y correcto para los parámetros de la ruta.
-type CategoryPageProps = {
-  params: { slug: string };
-};
+type RouteParams = { slug: string };
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
-  // ✅ Acceso directo a `slug`, sin await.
+export default async function Page({ params }: { params: RouteParams }) {
   const { slug } = params;
-
+  
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
   let error: string | null = null;
@@ -25,7 +22,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     const [categoryResult, postsResult] = await Promise.all([
       getCategoryBySlug(slug),
       getPostsByCategory(slug)
-    ]);
+    ]).catch(e => {
+      console.error(`Error fetching data for category '${slug}':`, e);
+      error = "Ocurrió un error inesperado al cargar la página.";
+      return [undefined, []];
+    });
 
     category = categoryResult;
     posts = postsResult;
@@ -33,11 +34,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     if (!category) {
       notFound();
     }
-  } catch (e: unknown) {
-    console.error(`Unexpected error fetching data for category '${slug}':`, e);
-    error = "Ocurrió un error inesperado al cargar la página.";
+  } catch (e) {
+    // This catch is for potential errors in the notFound() or other sync code.
+    if (!error) { // Avoid overwriting specific fetch error
+        console.error(`Unexpected error rendering page for category '${slug}':`, e);
+        error = "Ocurrió un error inesperado al renderizar la página.";
+    }
   }
-
+  
   if (!category) {
     notFound();
   }
@@ -109,4 +113,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
     </div>
   );
+}
+
+export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
+  const { slug } = params;
+  const category = await getCategoryBySlug(slug);
+  return {
+    title: `Recursos sobre ${category?.name || 'Categoría'}`,
+  };
 }

@@ -9,11 +9,9 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-type HistoricalResultsPageProps = {
-  params: { assessmentId: string };
-};
+type RouteParams = { assessmentId: string };
 
-export default function HistoricalAssessmentResultsPage({ params }: HistoricalResultsPageProps) {
+export default function Page({ params }: { params: RouteParams }) {
   const t = useTranslations();
   const router = useRouter();
   const { assessmentId } = params; 
@@ -94,5 +92,11 @@ export default function HistoricalAssessmentResultsPage({ params }: HistoricalRe
       </div>
     </div>
   );
+}
+
+export async function generateMetadata(
+  { params }: { params: RouteParams }
+) {
+  return { title: `Resultados de Evaluación` };
 }
 

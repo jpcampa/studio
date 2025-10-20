@@ -39,7 +39,7 @@ const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
  * Cachea la respuesta para mejorar el rendimiento.
  */
 export async function getResourceCategories(): Promise<ResourceCategory[]> {
-    noStore(); // Asegura que los datos se obtienen dinámicamente en cada petición en modo desarrollo
+    unstable_noStore(); // Asegura que los datos se obtienen dinámicamente en cada petición en modo desarrollo
     const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`);
     if (!res.ok) {
         // En caso de error, no lanzamos una excepción, devolvemos un array vacío
@@ -57,7 +57,7 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
  * El parámetro _embed añade información anidada como la imagen destacada y las categorías.
  */
 export async function getResources(): Promise<ResourcePost[]> {
-    noStore();
+    unstable_noStore();
     const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`);
     if (!res.ok) {
         console.error("Error fetching resource posts:", res.statusText);
