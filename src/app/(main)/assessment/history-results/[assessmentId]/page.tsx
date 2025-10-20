@@ -93,3 +93,9 @@ export default function Page({ params }: { params: RouteParams }) {
     </div>
   );
 }
+
+export async function generateMetadata(
+  { params }: { params: RouteParams }
+) {
+  return { title: `Resultados de Evaluación` };
+}

@@ -4,15 +4,15 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost, getAllCategorySlugs } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
 
 type RouteParams = { slug: string };
 
-export default async function Page({ params }: { params: RouteParams }) {
-  const { slug } = params;
+export default async function Page({ params }: { params: Promise<RouteParams> }) {
+  const { slug } = await params;
   
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
@@ -35,8 +35,7 @@ export default async function Page({ params }: { params: RouteParams }) {
       notFound();
     }
   } catch (e) {
-    // This catch is for potential errors in the notFound() or other sync code.
-    if (!error) { // Avoid overwriting specific fetch error
+    if (!error) { 
         console.error(`Unexpected error rendering page for category '${slug}':`, e);
         error = "Ocurrió un error inesperado al renderizar la página.";
     }
@@ -115,8 +114,8 @@ export default async function Page({ params }: { params: RouteParams }) {
   );
 }
 
-export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
-  const { slug } = params;
+export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {
+  const { slug } = await params;
   const category = await getCategoryBySlug(slug);
   return {
     title: `Recursos sobre ${category?.name || 'Categoría'}`,

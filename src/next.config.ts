@@ -25,9 +25,10 @@ const nextConfig: NextConfig = {
         hostname: 'workwellfut.hl1450.dinaserver.com',
       }
     ],
-    typescript: { ignoreBuildErrors: true }, // ⚠️ solo temporal
-    eslint: { ignoreDuringBuilds: true },    // ⚠️ solo temporal
   },
+  typescript: { ignoreBuildErrors: true }, // ⚠️ solo temporal
+  eslint: { ignoreDuringBuilds: true },    // ⚠️ solo temporal
+
 };
 
 export default nextConfig;

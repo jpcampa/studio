@@ -39,17 +39,19 @@ const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
  * Cachea la respuesta para mejorar el rendimiento.
  */
 export async function getResourceCategories(): Promise<ResourceCategory[]> {
-    unstable_noStore(); // Asegura que los datos se obtienen dinámicamente en cada petición en modo desarrollo
-    const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`);
-    if (!res.ok) {
-        // En caso de error, no lanzamos una excepción, devolvemos un array vacío
-        // para que la página pueda renderizar un estado de error manejado.
-        console.error("Error fetching resource categories:", res.statusText);
-        return [];
+    unstable_noStore(); 
+    try {
+        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`);
+        if (!res.ok) {
+            throw new Error(`Failed to fetch categories: ${res.statusText}`);
+        }
+        const categories: ResourceCategory[] = await res.json();
+        // Filtramos "Sin categoría"
+        return categories.filter(cat => cat.slug !== 'sin-categoria' && cat.count > 0);
+    } catch (error) {
+        console.error("Error fetching resource categories:", error);
+        return []; // Devuelve un array vacío en caso de error
     }
-    const categories: ResourceCategory[] = await res.json();
-    // Filtramos "Sin categoría"
-    return categories.filter(cat => cat.slug !== 'sin-categoria' && cat.count > 0);
 }
 
 /**
@@ -58,19 +60,24 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
  */
 export async function getResources(): Promise<ResourcePost[]> {
     unstable_noStore();
-    const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`);
-    if (!res.ok) {
-        console.error("Error fetching resource posts:", res.statusText);
+    try {
+        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`);
+        if (!res.ok) {
+            throw new Error(`Failed to fetch posts: ${res.statusText}`);
+        }
+        const posts: ResourcePost[] = await res.json();
+        return posts;
+    } catch (error) {
+        console.error("Error fetching resource posts:", error);
         return [];
     }
-    return res.json();
 }
 
 /**
  * Obtiene los posts de una categoría específica por su ID.
  */
 export async function getPostsByCategory(categorySlug: string): Promise<ResourcePost[]> {
-    noStore();
+    unstable_noStore();
     const categories = await getResourceCategories();
     const category = categories.find(cat => cat.slug === categorySlug);
     if (!category) return [];
@@ -83,14 +90,18 @@ export async function getPostsByCategory(categorySlug: string): Promise<Resource
  * Obtiene un post específico por su slug.
  */
 export async function getPostBySlug(slug: string): Promise<ResourcePost | undefined> {
-     noStore();
-     const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`);
-    if (!res.ok) {
-        console.error(`Error fetching post with slug ${slug}:`, res.statusText);
+     unstable_noStore();
+     try {
+        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`);
+        if (!res.ok) {
+             throw new Error(`Failed to fetch post by slug: ${res.statusText}`);
+        }
+        const posts: ResourcePost[] = await res.json();
+        return posts[0];
+    } catch (error) {
+        console.error(`Error fetching post with slug ${slug}:`, error);
         return undefined;
     }
-    const posts: ResourcePost[] = await res.json();
-    return posts[0];
 }
 
 
@@ -98,7 +109,7 @@ export async function getPostBySlug(slug: string): Promise<ResourcePost | undefi
  * Obtiene todos los slugs de los posts para la generación de páginas estáticas.
  */
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
-    noStore();
+    unstable_noStore();
     const posts = await getResources();
     return posts.map(post => ({ slug: post.slug }));
 }
@@ -107,7 +118,7 @@ export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
  * Obtiene todos los slugs de las categorías para la generación de páginas estáticas.
  */
 export async function getAllCategorySlugs(): Promise<{ slug: string }[]> {
-    noStore();
+    unstable_noStore();
     const categories = await getResourceCategories();
     return categories.map(cat => ({ slug: cat.slug }));
 }
@@ -116,7 +127,7 @@ export async function getAllCategorySlugs(): Promise<{ slug: string }[]> {
  * Obtiene una categoría específica por su slug.
  */
 export async function getCategoryBySlug(slug: string): Promise<ResourceCategory | undefined> {
-    noStore();
+    unstable_noStore();
     const categories = await getResourceCategories();
     return categories.find(cat => cat.slug === slug);
 }

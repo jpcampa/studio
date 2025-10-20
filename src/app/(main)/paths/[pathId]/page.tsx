@@ -5,8 +5,8 @@ import { notFound } from 'next/navigation';
 
 type RouteParams = { pathId: string };
 
-export default async function Page({ params }: { params: RouteParams }) {
-  const { pathId } = params;
+export default async function Page({ params }: { params: Promise<RouteParams> }) {
+  const { pathId } = await params;
   const path = pathsData.find(p => p.id === pathId);
 
   if (!path) {
@@ -23,9 +23,9 @@ export async function generateStaticParams(): Promise<RouteParams[]> {
 }
 
 export async function generateMetadata(
-  { params }: { params: RouteParams }
+  { params }: { params: Promise<RouteParams> }
 ) {
-  const { pathId } = params;
+  const { pathId } = await params;
   const path = pathsData.find(p => p.id === pathId);
   return { title: path?.title || "Ruta de Desarrollo" };
 }

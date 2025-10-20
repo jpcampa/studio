@@ -4,15 +4,15 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
-import { getPostBySlug, type ResourcePost, getAllPostSlugs } from '@/data/resourcesData';
+import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
 
 type RouteParams = { slug: string };
 
-export default async function Page({ params }: { params: RouteParams }) {
-  const { slug } = params;
+export default async function Page({ params }: { params: Promise<RouteParams> }) {
+  const { slug } = await params;
 
   let post: ResourcePost | undefined;
   let error: string | null = null;
@@ -91,8 +91,8 @@ export default async function Page({ params }: { params: RouteParams }) {
   );
 }
 
-export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
-  const { slug } = params;
+export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {
+  const { slug } = await params;
   const post = await getPostBySlug(slug);
   return {
     title: post?.title.rendered || 'Artículo',
