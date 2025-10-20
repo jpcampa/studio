@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,12 +7,11 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
+import type { RoutePageProps } from '@/types/page-props';
 
 type RouteParams = { slug: string };
-type PageProps = { params: Promise<RouteParams> };
 
-
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: RoutePageProps<RouteParams>) {
   const { slug } = await params;
 
   let post: ResourcePost | undefined;
@@ -93,7 +91,7 @@ export default async function Page({ params }: PageProps) {
   );
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: RoutePageProps<RouteParams>): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   return {
