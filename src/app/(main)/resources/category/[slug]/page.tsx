@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,8 +23,8 @@ export default async function Page({ params }: RoutePageProps<RouteParams>) {
       getPostsByCategory(slug)
     ]);
 
-    category = Array.isArray(categoryResult) ? undefined : categoryResult ?? undefined;
-    posts = Array.isArray(postsResult) ? postsResult : [];
+    category = categoryResult;
+    posts = postsResult;
 
     if (!category) {
       notFound();
