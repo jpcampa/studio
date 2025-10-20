@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -8,7 +9,11 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 
-export default function HistoricalAssessmentResultsPage({ params }: { params: { assessmentId: string } }) {
+type HistoricalResultsPageProps = {
+  params: { assessmentId: string };
+};
+
+export default function HistoricalAssessmentResultsPage({ params }: HistoricalResultsPageProps) {
   const t = useTranslations();
   const router = useRouter();
   const { assessmentId } = params; 
@@ -90,3 +95,4 @@ export default function HistoricalAssessmentResultsPage({ params }: { params: { 
     </div>
   );
 }
+
