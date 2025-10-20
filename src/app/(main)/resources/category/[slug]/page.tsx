@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +7,6 @@ import { ArrowRight, AlertTriangle } from 'lucide-react';
 import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { Metadata } from 'next';
 import type { RoutePageProps } from '@/types/page-props';
 
 type RouteParams = { slug: string };
@@ -24,8 +24,8 @@ export default async function Page({ params }: RoutePageProps<RouteParams>) {
       getPostsByCategory(slug)
     ]);
 
-    category = categoryResult;
-    posts = postsResult;
+    category = Array.isArray(categoryResult) ? undefined : categoryResult ?? undefined;
+    posts = Array.isArray(postsResult) ? postsResult : [];
 
     if (!category) {
       notFound();
@@ -108,7 +108,7 @@ export default async function Page({ params }: RoutePageProps<RouteParams>) {
   );
 }
 
-export async function generateMetadata({ params }: RoutePageProps<RouteParams>): Promise<Metadata> {
+export async function generateMetadata({ params }: RoutePageProps<RouteParams>) {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
   return {
