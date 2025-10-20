@@ -10,8 +10,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
 
 type RouteParams = { slug: string };
+type PageProps = { params: Promise<RouteParams> };
 
-export default async function Page({ params }: { params: Promise<RouteParams> }) {
+export default async function Page({ params }: PageProps) {
   const { slug } = await params;
   
   let category: ResourceCategory | undefined;
@@ -19,14 +20,11 @@ export default async function Page({ params }: { params: Promise<RouteParams> })
   let error: string | null = null;
 
   try {
+    // Usamos Promise.all para obtener los datos en paralelo
     const [categoryResult, postsResult] = await Promise.all([
       getCategoryBySlug(slug),
       getPostsByCategory(slug)
-    ]).catch(e => {
-      console.error(`Error fetching data for category '${slug}':`, e);
-      error = "Ocurrió un error inesperado al cargar la página.";
-      return [undefined, []];
-    });
+    ]);
 
     category = categoryResult;
     posts = postsResult;
@@ -35,10 +33,8 @@ export default async function Page({ params }: { params: Promise<RouteParams> })
       notFound();
     }
   } catch (e) {
-    if (!error) { 
-        console.error(`Unexpected error rendering page for category '${slug}':`, e);
-        error = "Ocurrió un error inesperado al renderizar la página.";
-    }
+      console.error(`Error fetching data for category '${slug}':`, e);
+      error = "Ocurrió un error inesperado al cargar la página.";
   }
   
   if (!category) {
@@ -114,7 +110,7 @@ export default async function Page({ params }: { params: Promise<RouteParams> })
   );
 }
 
-export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
   return {

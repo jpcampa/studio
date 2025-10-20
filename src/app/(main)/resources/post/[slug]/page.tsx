@@ -10,8 +10,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
 
 type RouteParams = { slug: string };
+type PageProps = { params: Promise<RouteParams> };
 
-export default async function Page({ params }: { params: Promise<RouteParams> }) {
+
+export default async function Page({ params }: PageProps) {
   const { slug } = await params;
 
   let post: ResourcePost | undefined;
@@ -91,7 +93,7 @@ export default async function Page({ params }: { params: Promise<RouteParams> })
   );
 }
 
-export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   return {
