@@ -79,7 +79,7 @@ export default function WelcomePage() {
               className="w-full sm:w-auto sm:max-w-xs text-lg py-4 shadow-lg bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-shadow"
             >
               <Link href="/assessment/intro">
-                ¿Comenzamos?
+                ¡Cuentame!
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
