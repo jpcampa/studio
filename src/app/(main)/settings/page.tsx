@@ -294,16 +294,6 @@ export default function SettingsPage() {
                 </Label>
                 <Switch id="motivationalQuotes" checked={motivationalQuotes} onCheckedChange={setMotivationalQuotes} />
               </div>
-              <div className="flex items-center justify-between rounded-lg border p-4">
-                <Label htmlFor="skipIntroScreens" className="flex flex-col space-y-1">
-                  {/* Texto hardcodeado para asegurar visibilidad */}
-                  <span>Omitir Pantallas Introductorias</span>
-                  <span className="font-normal leading-snug text-muted-foreground">
-                    Accede directamente al contenido principal de secciones como la evaluación o los resultados, omitiendo las pantallas informativas previas.
-                  </span>
-                </Label>
-                <Switch id="skipIntroScreens" checked={skipIntroScreens} onCheckedChange={handleSkipIntroChange} />
-              </div>
             </CardContent>
           </Card>
 
