@@ -3,29 +3,58 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, type ResourceCategory, type ResourcePost } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { RoutePageProps } from '@/types/page-props';
+
+// No usar '@/types/page-props'. Tipar inline.
+
+type ResourceCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  count: number;
+};
+
+type ResourcePost = {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
+  date: string;
+  categories: number[];
+  featured_media: number;
+  _embedded?: {
+    'wp:featuredmedia'?: {
+      source_url: string;
+    }[];
+    'wp:term'?: {
+        id: number;
+        name: string;
+        slug: string;
+    }[][];
+  };
+};
 
 type RouteParams = { slug: string };
 
-export default async function Page({ params }: RoutePageProps<RouteParams>) {
-  const { slug } = await params;
+export default async function Page({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
-  let error: string | null = null;
+  let error: any = null;
 
   try {
     // Fetch data in parallel
     const [categoryResult, postsResult] = await Promise.all([
-      getCategoryBySlug(slug),
-      getPostsByCategory(slug)
+      getPostsByCategory(slug) as Promise<ResourcePost[]>,
+      getCategoryBySlug(slug) as Promise<ResourceCategory | undefined>
     ]);
 
     category = categoryResult;
-    posts = postsResult;
+    posts = postsResult ?? [];
 
     if (!category) {
       // If category doesn't exist, trigger a 404
@@ -111,8 +140,8 @@ export default async function Page({ params }: RoutePageProps<RouteParams>) {
   );
 }
 
-export async function generateMetadata({ params }: RoutePageProps<RouteParams>) {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   const category = await getCategoryBySlug(slug);
   return {
     title: `Recursos sobre ${category?.name || 'Categoría'}`,
