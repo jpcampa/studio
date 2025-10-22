@@ -1,4 +1,3 @@
-
 import { HistoricalResultsPageClient } from '@/components/assessment/HistoricalResultsPageClient';
 import type { Metadata } from 'next';
 
