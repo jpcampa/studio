@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
 
-type WelcomeStep = 'hola' | 'pregunta';
+type WelcomeStep = 'hola' | 'pregunta' | 'opciones';
 
 export default function WelcomePage() {
   const t = useTranslations();
@@ -25,29 +25,36 @@ export default function WelcomePage() {
 
     const fadeInTimer = setTimeout(() => setVisible(true), 100);
 
-    const transitionTimer = setTimeout(() => {
-      setVisible(false);
-      setTimeout(() => setStep('pregunta'), 500); // Change step after fade out
-    }, 4100); // Shortened to 4 seconds for a quicker pace
+    if (step === 'hola') {
+        const transitionTimer = setTimeout(() => {
+            setVisible(false);
+            setTimeout(() => setStep('pregunta'), 500); // Change step after fade out
+        }, 4100); // Duration of 'hola' screen
 
-    return () => {
-      clearTimeout(fadeInTimer);
-      clearTimeout(transitionTimer);
-    };
+        return () => {
+            clearTimeout(fadeInTimer);
+            clearTimeout(transitionTimer);
+        };
+    }
   }, []);
 
   useEffect(() => {
-    if (step === 'pregunta') {
+    if (step === 'pregunta' || step === 'opciones') {
       const fadeInTimer = setTimeout(() => setVisible(true), 100);
       return () => clearTimeout(fadeInTimer);
     }
   }, [step]);
+  
+  const handleShowOptions = () => {
+      setVisible(false);
+      setTimeout(() => setStep('opciones'), 500);
+  }
 
   return (
     <div
       className={cn(
         "flex flex-col items-center justify-center text-center p-4 w-full min-h-screen transition-colors duration-500 ease-in-out",
-        step === 'pregunta' ? 'bg-primary text-primary-foreground' : 'bg-background text-primary'
+        (step === 'pregunta' || step === 'opciones') ? 'bg-primary text-primary-foreground' : 'bg-background text-primary'
       )}
     >
       <div className="relative flex-grow flex flex-col items-center justify-center w-full">
@@ -74,16 +81,36 @@ export default function WelcomePage() {
               ¿Cómo estás hoy?
             </h1>
             <Button
-              asChild
+              onClick={handleShowOptions}
               size="lg"
               className="w-full sm:w-auto sm:max-w-xs text-lg py-4 shadow-lg bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-shadow"
             >
-              <Link href="/assessment/intro">
-                ¡Cuentame!
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+              ¡Cuentame!
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
+        )}
+
+        {step === 'opciones' && (
+            <div
+                className={cn(
+                "flex flex-col items-center justify-center space-y-8 transition-opacity duration-500 ease-in-out",
+                visible ? "opacity-100" : "opacity-0"
+                )}
+            >
+                <Link href="/assessment/intro" className="text-4xl md:text-5xl font-bold hover:opacity-80 transition-opacity">
+                    Comenzar autoevaluación
+                </Link>
+                <Link href="/dashboard" className="text-4xl md:text-5xl font-bold hover:opacity-80 transition-opacity">
+                    Mi Panel
+                </Link>
+                <Link href="/paths" className="text-4xl md:text-5xl font-bold hover:opacity-80 transition-opacity">
+                    Rutas
+                </Link>
+                 <Link href="/resources" className="text-4xl md:text-5xl font-bold hover:opacity-80 transition-opacity">
+                    Recursos
+                </Link>
+            </div>
         )}
       </div>
     </div>
