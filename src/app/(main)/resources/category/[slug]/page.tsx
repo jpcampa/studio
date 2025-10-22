@@ -18,6 +18,7 @@ export default async function Page({ params }: RoutePageProps<RouteParams>) {
   let error: string | null = null;
 
   try {
+    // Fetch data in parallel
     const [categoryResult, postsResult] = await Promise.all([
       getCategoryBySlug(slug),
       getPostsByCategory(slug)
@@ -27,13 +28,16 @@ export default async function Page({ params }: RoutePageProps<RouteParams>) {
     posts = postsResult;
 
     if (!category) {
+      // If category doesn't exist, trigger a 404
       notFound();
     }
   } catch (e) {
       console.error(`Error fetching data for category '${slug}':`, e);
-      error = "Ocurrió un error inesperado al cargar la página.";
+      // Set an error message to display to the user
+      error = "Ocurrió un error inesperado al cargar la página de esta categoría.";
   }
   
+  // This check is redundant if notFound() is called, but good for safety
   if (!category) {
     notFound();
   }
