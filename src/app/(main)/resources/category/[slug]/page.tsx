@@ -4,24 +4,13 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, type ResourcePost } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, type ResourcePost, type ResourceCategory } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// No usar '@/types/page-props'. Tipar inline.
+type Params = { slug: string };
 
-type ResourceCategory = {
-  id: number;
-  name: string;
-  slug: string;
-  count: number;
-};
-
-// Se omite ResourcePost porque ya se importa de resourcesData
-
-type RouteParams = { slug: string };
-
-export default async function Page({ params }: { params: RouteParams }) {
+export default async function Page({ params }: { params: Params }) {
   const { slug } = params;
   
   let category: ResourceCategory | undefined;
@@ -122,7 +111,7 @@ export default async function Page({ params }: { params: RouteParams }) {
   );
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Params }) {
   const { slug } = params;
   const category = await getCategoryBySlug(slug);
   return {

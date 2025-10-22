@@ -9,9 +9,9 @@ import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
 
-type RouteParams = { slug: string };
+type Params = { slug: string };
 
-export default async function Page({ params }: { params: RouteParams }) {
+export default async function Page({ params }: { params: Params }) {
   const { slug } = params;
 
   let post: ResourcePost | undefined;
@@ -91,7 +91,7 @@ export default async function Page({ params }: { params: RouteParams }) {
   );
 }
 
-export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = params;
   const post = await getPostBySlug(slug);
   return {
