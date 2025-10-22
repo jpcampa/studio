@@ -30,7 +30,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   const t = useTranslations();
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
+    <Button type="submit" className="w-full" disabled={pending} variant="secondary">
       {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t.register}
     </Button>
   );
@@ -138,7 +138,7 @@ export function RegisterForm() {
 
 
   return (
-    <Card className="w-full shadow-xl">
+    <Card className="w-full shadow-xl bg-card text-card-foreground">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-bold">{t.register}</CardTitle>
         <CardDescription>{t.welcomeToWorkWell}</CardDescription>
@@ -220,7 +220,7 @@ export function RegisterForm() {
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
           {t.alreadyHaveAccount}{" "}
-          <Link href="/login" className="font-medium text-primary hover:underline">
+          <Link href="/login" className="font-medium text-secondary hover:underline">
             {t.login}
           </Link>
         </p>

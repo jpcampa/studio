@@ -13,7 +13,7 @@ import { useTranslations } from "@/lib/translations";
 import { loginUser, type LoginState } from "@/actions/auth";
 import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff } from "lucide-react"; 
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
@@ -33,7 +33,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   const t = useTranslations();
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
+    <Button type="submit" className="w-full" disabled={pending} variant="secondary">
       {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t.login}
     </Button>
   );
@@ -157,7 +157,7 @@ export function LoginForm() {
 
   console.log("LoginForm RENDER: Rendering login form.");
   return (
-     <Card className="w-full shadow-xl">
+     <Card className="w-full shadow-xl bg-card text-card-foreground">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-bold">{t.login}</CardTitle>
          <CardDescription>{t.welcomeToWorkWell}</CardDescription>
@@ -172,7 +172,7 @@ export function LoginForm() {
           <div>
             <div className="flex items-center justify-between">
               <Label htmlFor="password">{t.password}</Label>
-              <Link href="#" className="text-sm text-primary hover:underline">
+              <Link href="#" className="text-sm text-secondary hover:underline">
                 {t.forgotPassword}
               </Link>
             </div>
@@ -188,7 +188,7 @@ export function LoginForm() {
                 type="button"
                 variant="ghost"
                 size="sm" 
-                className="absolute inset-y-0 right-0 flex items-center justify-center h-full px-3 text-muted-foreground hover:text-primary"
+                className="absolute inset-y-0 right-0 flex items-center justify-center h-full px-3 text-muted-foreground hover:text-secondary"
                 onClick={toggleShowPassword}
                 aria-label={showPassword ? t.hidePassword : t.showPassword}
               >
@@ -212,7 +212,7 @@ export function LoginForm() {
       <CardFooter className="flex justify-center">
          <p className="text-sm text-muted-foreground">
           {t.noAccount}{" "}
-          <Link href="/register" className="font-medium text-primary hover:underline">
+          <Link href="/register" className="font-medium text-secondary hover:underline">
             {t.register}
           </Link>
         </p>
