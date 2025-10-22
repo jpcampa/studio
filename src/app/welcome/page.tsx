@@ -99,7 +99,7 @@ export default function WelcomePage() {
                 )}
             >
                 <Link href="/assessment/intro" className="text-4xl md:text-5xl font-bold hover:opacity-80 transition-opacity">
-                    Comenzar autoevaluación
+                    Descúbrete
                 </Link>
                 <Link href="/dashboard" className="text-4xl md:text-5xl font-bold hover:opacity-80 transition-opacity">
                     Mi Panel
