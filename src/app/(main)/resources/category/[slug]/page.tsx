@@ -1,9 +1,10 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -16,30 +17,11 @@ type ResourceCategory = {
   count: number;
 };
 
-type ResourcePost = {
-  id: number;
-  slug: string;
-  title: { rendered: string };
-  excerpt: { rendered: string };
-  content: { rendered: string };
-  date: string;
-  categories: number[];
-  featured_media: number;
-  _embedded?: {
-    'wp:featuredmedia'?: {
-      source_url: string;
-    }[];
-    'wp:term'?: {
-        id: number;
-        name: string;
-        slug: string;
-    }[][];
-  };
-};
+// Se omite ResourcePost porque ya se importa de resourcesData
 
 type RouteParams = { slug: string };
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: { params: RouteParams }) {
   const { slug } = params;
   
   let category: ResourceCategory | undefined;
@@ -49,8 +31,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
   try {
     // Fetch data in parallel
     const [categoryResult, postsResult] = await Promise.all([
-      getPostsByCategory(slug) as Promise<ResourcePost[]>,
-      getCategoryBySlug(slug) as Promise<ResourceCategory | undefined>
+      getCategoryBySlug(slug),
+      getPostsByCategory(slug),
     ]);
 
     category = categoryResult;
