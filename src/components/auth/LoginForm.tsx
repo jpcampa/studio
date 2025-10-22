@@ -13,7 +13,7 @@ import { useTranslations } from "@/lib/translations";
 import { loginUser, type LoginState } from "@/actions/auth";
 import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardFooter } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff } from "lucide-react"; 
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
@@ -33,7 +33,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   const t = useTranslations();
   return (
-    <Button type="submit" className="w-full" disabled={pending} variant="secondary">
+    <Button type="submit" className="w-full" disabled={pending}>
       {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t.login}
     </Button>
   );
@@ -157,7 +157,7 @@ export function LoginForm() {
 
   console.log("LoginForm RENDER: Rendering login form.");
   return (
-     <Card className="w-full shadow-xl bg-card/80 text-card-foreground">
+     <Card className="w-full shadow-xl bg-card/70 text-card-foreground">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-bold">{t.login}</CardTitle>
          <CardDescription>{t.welcomeToWorkWell}</CardDescription>
