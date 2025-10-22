@@ -13,7 +13,7 @@ import { useTranslations } from "@/lib/translations";
 import { loginUser, type LoginState } from "@/actions/auth";
 import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardFooter, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff } from "lucide-react"; 
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
@@ -210,12 +210,7 @@ export function LoginForm() {
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-         <p className="text-sm text-muted-foreground">
-          {t.noAccount}{" "}
-          <Link href="/register" className="font-medium text-secondary hover:underline">
-            {t.register}
-          </Link>
-        </p>
+        
       </CardFooter>
     </Card>
   );
