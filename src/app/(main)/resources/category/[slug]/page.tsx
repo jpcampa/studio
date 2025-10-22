@@ -6,37 +6,34 @@ import { ArrowRight, AlertTriangle } from 'lucide-react';
 import { getPostsByCategory, getCategoryBySlug, type ResourcePost, type ResourceCategory } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import type { Metadata } from 'next';
 
-type Params = { slug: string };
+type PageProps = { params: { slug: string } };
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page({ params }: PageProps) {
   const { slug } = params;
   
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
-  let error: any = null;
+  let error: string | null = null;
 
   try {
-    // Fetch data in parallel
     const [categoryResult, postsResult] = await Promise.all([
-      getCategoryBySlug(slug) as Promise<ResourceCategory | undefined>,
-      getPostsByCategory(slug) as Promise<ResourcePost[]>,
+      getCategoryBySlug(slug),
+      getPostsByCategory(slug),
     ]);
 
     category = categoryResult;
     posts = postsResult ?? [];
 
     if (!category) {
-      // If category doesn't exist, trigger a 404
       notFound();
     }
   } catch (e) {
       console.error(`Error fetching data for category '${slug}':`, e);
-      // Set an error message to display to the user
       error = "Ocurrió un error inesperado al cargar la página de esta categoría.";
   }
   
-  // This check is redundant if notFound() is called, but good for safety
   if (!category) {
     notFound();
   }
@@ -110,7 +107,7 @@ export default async function Page({ params }: { params: Params }) {
   );
 }
 
-export async function generateMetadata({ params }: { params: Params }) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = params;
   const category = await getCategoryBySlug(slug);
   return {
