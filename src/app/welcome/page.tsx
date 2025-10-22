@@ -80,14 +80,13 @@ export default function WelcomePage() {
             <h1 className="text-6xl md:text-8xl font-bold mb-12">
               ¿Cómo estás hoy?
             </h1>
-            <Button
+            <button
               onClick={handleShowOptions}
-              size="lg"
-              className="w-full sm:w-auto sm:max-w-xs text-lg py-4 shadow-lg bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-shadow"
+              className="mt-8 transition-transform duration-300 ease-in-out hover:scale-110 focus:outline-none focus:ring-4 focus:ring-primary-foreground/50 rounded-full"
+              aria-label="Continuar"
             >
-              ¡Cuentame!
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+              <ArrowRight className="h-24 w-24 text-primary-foreground" />
+            </button>
           </div>
         )}
 
