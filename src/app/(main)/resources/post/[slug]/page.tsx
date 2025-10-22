@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,12 +8,11 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
-import type { RoutePageProps } from '@/types/page-props';
 
 type RouteParams = { slug: string };
 
-export default async function Page({ params }: RoutePageProps<RouteParams>) {
-  const { slug } = await params;
+export default async function Page({ params }: { params: RouteParams }) {
+  const { slug } = params;
 
   let post: ResourcePost | undefined;
   let error: string | null = null;
@@ -91,8 +91,8 @@ export default async function Page({ params }: RoutePageProps<RouteParams>) {
   );
 }
 
-export async function generateMetadata({ params }: RoutePageProps<RouteParams>): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
+  const { slug } = params;
   const post = await getPostBySlug(slug);
   return {
     title: post?.title.rendered || 'Artículo',

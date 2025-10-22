@@ -1,7 +1,12 @@
+
 // src/types/page-props.ts
 
-/** Tipado genérico para páginas del App Router con parámetros dinámicos */
+/** 
+ * Tipado genérico para páginas del App Router con parámetros dinámicos.
+ * Este tipo ha sido actualizado para reflejar la forma correcta de acceder
+ * a los params en Server Components, que no es a través de una Promise.
+ */
 export type RoutePageProps<T extends Record<string, string> = Record<string, string>> = {
-  /** En Next.js 15, durante el build, `params` puede ser un Promise */
-  params: Promise<T>;
+  params: T;
+  searchParams: { [key: string]: string | string[] | undefined };
 };

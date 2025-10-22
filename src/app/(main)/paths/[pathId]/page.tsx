@@ -1,12 +1,12 @@
+
 import { pathsData } from '@/data/pathsData';
 import { PathDetailClient } from '@/components/paths/PathDetailClient';
 import { notFound } from 'next/navigation';
-import type { RoutePageProps } from '@/types/page-props';
 
 type RouteParams = { pathId: string };
 
-export default async function Page({ params }: RoutePageProps<RouteParams>) {
-  const { pathId } = await params;
+export default async function Page({ params }: { params: RouteParams }) {
+  const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
 
   if (!path) {
@@ -23,9 +23,9 @@ export async function generateStaticParams(): Promise<RouteParams[]> {
 }
 
 export async function generateMetadata(
-  { params }: RoutePageProps<RouteParams>
+  { params }: { params: RouteParams }
 ) {
-  const { pathId } = await params;
+  const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
   return { title: path?.title || "Ruta de Desarrollo" };
 }

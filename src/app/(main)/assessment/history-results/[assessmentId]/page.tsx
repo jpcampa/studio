@@ -1,17 +1,17 @@
+
 import { HistoricalResultsPageClient } from '@/components/assessment/HistoricalResultsPageClient';
 import type { Metadata } from 'next';
-import type { RoutePageProps } from '@/types/page-props';
 
 type RouteParams = { assessmentId: string };
 
-export default async function Page({ params }: RoutePageProps<RouteParams>) {
-  const { assessmentId } = await params;
+export default async function Page({ params }: { params: RouteParams }) {
+  const { assessmentId } = params;
   return <HistoricalResultsPageClient assessmentId={assessmentId} />;
 }
 
 export async function generateMetadata(
-  { params }: RoutePageProps<RouteParams>
+  { params }: { params: RouteParams }
 ): Promise<Metadata> {
-  const { assessmentId } = await params;
+  const { assessmentId } = params;
   return { title: `Resultados de Evaluación ${assessmentId}` };
 }
