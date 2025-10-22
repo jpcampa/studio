@@ -20,8 +20,8 @@ export default async function Page({ params }: { params: Params }) {
   try {
     // Fetch data in parallel
     const [categoryResult, postsResult] = await Promise.all([
-      getCategoryBySlug(slug),
-      getPostsByCategory(slug),
+      getCategoryBySlug(slug) as Promise<ResourceCategory | undefined>,
+      getPostsByCategory(slug) as Promise<ResourcePost[]>,
     ]);
 
     category = categoryResult;
