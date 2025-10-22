@@ -3,12 +3,16 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug, type ResourcePost, type ResourceCategory } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, type ResourcePost as ApiResourcePost, type ResourceCategory as ApiResourceCategory } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
 
 type PageProps = { params: { slug: string } };
+
+// Tipos definidos localmente para asegurar el control
+type ResourceCategory = ApiResourceCategory;
+type ResourcePost = ApiResourcePost;
 
 export default async function Page({ params }: PageProps) {
   const { slug } = params;

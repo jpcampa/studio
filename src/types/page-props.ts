@@ -2,7 +2,7 @@
 
 /** 
  * Tipado genérico para páginas del App Router con parámetros dinámicos.
- * params NO es una Promise.
+ * params es un objeto síncrono.
  */
 export type PageProps<TParams extends Record<string, string | undefined> = {}> = {
   params: TParams;
