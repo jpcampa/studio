@@ -13,7 +13,7 @@ import { useTranslations } from "@/lib/translations";
 import { loginUser, type LoginState } from "@/actions/auth";
 import { useUser, type User as ContextUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff } from "lucide-react"; 
 
 const WELCOME_SEEN_KEY = 'workwell-welcome-seen';
@@ -206,7 +206,9 @@ export function LoginForm() {
             <p className="text-sm font-medium text-destructive p-2 bg-destructive/10 rounded-md">{state.message}</p>
           )}
           
-          <SubmitButton />
+          <Button type="submit" className="w-full" disabled={useFormStatus().pending}>
+            {useFormStatus().pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t.login}
+          </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
