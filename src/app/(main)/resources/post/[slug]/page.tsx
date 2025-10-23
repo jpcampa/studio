@@ -45,7 +45,10 @@ export default async function Page({ params }: PageProps) {
       notFound();
   }
 
-  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  if (imageUrl) {
+    imageUrl = imageUrl.replace(/^http:\/\//i, 'https://');
+  }
 
 
   return (
