@@ -61,7 +61,7 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
 export async function getResources(): Promise<ResourcePost[]> {
     noStore();
     try {
-        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed=true&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed=true`, { next: { revalidate: 3600 } });
         if (!res.ok) {
             throw new Error(`Failed to fetch posts: ${res.statusText}`);
         }
@@ -82,7 +82,7 @@ export async function getPostsByCategory(categorySlug: string): Promise<Resource
     const category = categories.find(cat => cat.slug === categorySlug);
     if (!category) return [];
 
-    const res = await fetch(`${API_BASE_URL}/posts?categories=${category.id}&_embed=true&per_page=100&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE_URL}/posts?categories=${category.id}&_embed=true&per_page=100`, { next: { revalidate: 3600 } });
     if (!res.ok) {
         throw new Error(`Failed to fetch posts for category ${categorySlug}: ${res.statusText}`);
     }
@@ -96,7 +96,7 @@ export async function getPostsByCategory(categorySlug: string): Promise<Resource
 export async function getPostBySlug(slug: string): Promise<ResourcePost | undefined> {
     noStore();
      try {
-        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed=true&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed=true`, { next: { revalidate: 3600 } });
         if (!res.ok) {
              throw new Error(`Failed to fetch post by slug: ${res.statusText}`);
         }
