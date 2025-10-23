@@ -1,4 +1,3 @@
-
 // @/data/resourcesData.ts
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -11,7 +10,7 @@ export type ResourcePost = {
   content: { rendered: string };
   date: string;
   categories: number[];
-  featured_media: number;
+  featured_media: number; // Corrected type: It's a numeric ID
   _embedded?: {
     'wp:featuredmedia'?: {
       source_url: string;
@@ -78,12 +77,17 @@ export async function getResources(): Promise<ResourcePost[]> {
  * Obtiene los posts de una categoría específica por su ID.
  */
 export async function getPostsByCategory(categorySlug: string): Promise<ResourcePost[]> {
+    noStore();
     const categories = await getResourceCategories();
     const category = categories.find(cat => cat.slug === categorySlug);
     if (!category) return [];
 
-    const allPosts = await getResources();
-    return allPosts.filter(post => post.categories.includes(category.id));
+    const res = await fetch(`${API_BASE_URL}/posts?categories=${category.id}&_embed&per_page=100&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+    if (!res.ok) {
+        throw new Error(`Failed to fetch posts for category ${categorySlug}: ${res.statusText}`);
+    }
+    const posts: ResourcePost[] = await res.json();
+    return posts;
 }
 
 /**
