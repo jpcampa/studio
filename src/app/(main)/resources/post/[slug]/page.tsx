@@ -45,9 +45,7 @@ export default async function Page({ params }: PageProps) {
       notFound();
   }
 
-  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
-  ? `https://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
-  : 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
 
 
   return (

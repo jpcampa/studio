@@ -96,9 +96,7 @@ export default async function Page({ params }: PageProps) {
       {!error && posts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
-            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
-            ? `https://workwellfut.hl1450.dinaserver.com/wp-json/yootheme/image?src=${encodeURIComponent(new URL(post._embedded['wp:featuredmedia'][0].source_url).pathname.replace('/wp-content/',''))}&hash=0e98bbb8`
-            : 'https://workwellfut.com/imgapp/600x400/default.png';
+            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/600x400/default.png';
             
             return (
               <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
