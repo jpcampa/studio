@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,10 +46,7 @@ export default async function Page({ params }: PageProps) {
       notFound();
   }
 
-  let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-  if (imageUrl) {
-    imageUrl = imageUrl.replace(/^http:\/\//i, 'https://');
-  }
+  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
 
 
   return (

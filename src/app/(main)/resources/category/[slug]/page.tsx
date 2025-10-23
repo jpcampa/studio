@@ -97,10 +97,7 @@ export default async function Page({ params }: PageProps) {
       {!error && posts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
-            let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-            if (imageUrl) {
-              imageUrl = imageUrl.replace(/^http:\/\//i, 'https://');
-            }
+            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
             
             return (
               <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
