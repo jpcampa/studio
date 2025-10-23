@@ -21,8 +21,23 @@ export type ResourceCategory = {
     count: number;
 };
 
-// Use relative paths to our new local API
-const API_BASE_URL = "/api";
+// Helper function to get the base URL for API calls
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    // Client-side, so use relative path
+    return '/api';
+  }
+  // Server-side, construct absolute URL
+  if (process.env.VERCEL_URL) {
+    // Vercel deployment
+    return `https://${process.env.VERCEL_URL}/api`;
+  }
+  // Assume localhost for development
+  return 'http://localhost:9002/api';
+};
+
+const API_BASE_URL = getBaseUrl();
+
 
 // --- Obtención de datos dinámicos desde NUESTRA API local ---
 
