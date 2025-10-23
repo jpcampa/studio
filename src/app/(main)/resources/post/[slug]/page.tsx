@@ -65,8 +65,6 @@ export default async function Page({ params }: PageProps) {
             )}
             <div className="p-6">
                 <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-                {/* DEBUG: Show the constructed image URL */}
-                <p className="text-xs text-red-500 mt-2">DEBUG URL: {imageUrl}</p>
                 <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
                     <span className="flex items-center">
                     <Clock className="h-4 w-4 mr-1.5" /> Publicado el {new Date(post.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}

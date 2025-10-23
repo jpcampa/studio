@@ -97,7 +97,6 @@ export default async function Page({ params }: PageProps) {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
             const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/600x400/default.png';
-            const imageName = imageUrl.split('/').pop() || 'Nombre no encontrado';
             
             return (
               <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
@@ -117,7 +116,6 @@ export default async function Page({ params }: PageProps) {
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
-                    <p className="text-xs text-red-500 mt-2">DEBUG IMG: {imageName}</p>
                   </CardContent>
                   <CardFooter>
                     <Button asChild variant="outline" className="w-full">
