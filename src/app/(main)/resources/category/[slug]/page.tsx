@@ -113,6 +113,7 @@ export default async function Page({ params }: PageProps) {
                         </div>
                     )}
                     <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title.rendered }}/>
+                    <p className="text-xs text-muted-foreground break-all">Debug URL: {imageUrl}</p>
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
