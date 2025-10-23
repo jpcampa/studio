@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,7 +46,7 @@ export default async function Page({ params }: PageProps) {
       notFound();
   }
 
-  const imageUrl = post.featured_media || 'https://placehold.co/800x300/eeeeee/cccccc?text=Sin+Imagen';
+  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
 
 
   return (

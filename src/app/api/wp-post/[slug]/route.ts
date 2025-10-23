@@ -1,63 +1,129 @@
-// src/app/api/wp-post/[slug]/route.ts
-import { NextResponse } from "next/server";
+// @/data/resourcesData.ts
+import { unstable_noStore as noStore } from 'next/cache';
 
-type WPFeatured =
-  | {
-      id: number;
-      source_url?: string;
-      media_details?: {
-        sizes?: Record<string, { source_url?: string }>;
-      };
+// Tipos de datos para los posts y categorías de recursos.
+export type ResourcePost = {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
+  date: string;
+  categories: number[];
+  featured_media: number;
+  _embedded?: {
+    'wp:featuredmedia'?: {
+      source_url: string;
+    }[];
+    'wp:term'?: {
+        id: number;
+        name: string;
+        slug: string;
+    }[][];
+  };
+};
+
+export type ResourceCategory = {
+    id: number;
+    name: string;
+    slug: string;
+    count: number;
+};
+
+const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
+
+// --- Obtención de datos dinámicos desde la API de WordPress ---
+
+/**
+ * Obtiene todas las categorías de recursos desde la API de WordPress.
+ * Cachea la respuesta para mejorar el rendimiento.
+ */
+export async function getResourceCategories(): Promise<ResourceCategory[]> {
+    noStore(); // Asegura que los datos se obtienen dinámicamente en cada petición en modo desarrollo
+    try {
+        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { next: { revalidate: 3600 } }); // Cache por 1 hora
+        if (!res.ok) {
+            throw new Error(`Failed to fetch categories: ${res.statusText}`);
+        }
+        const categories: ResourceCategory[] = await res.json();
+        // Filtramos "Sin categoría"
+        return categories.filter(cat => cat.slug !== 'sin-categoria' && cat.count > 0);
+    } catch (error) {
+        console.error("Error fetching resource categories:", error);
+        return []; // Devuelve un array vacío en caso de error
     }
-  | undefined;
-
-function getFeaturedUrl(post: any): string | null {
-  const media = post?._embedded?.["wp:featuredmedia"]?.[0] as WPFeatured;
-  return (
-    media?.media_details?.sizes?.large?.source_url ||
-    media?.media_details?.sizes?.full?.source_url ||
-    media?.source_url ||
-    null
-  );
 }
 
-export async function GET(
-  _req: Request,
-  { params }: { params: { slug: string } }
-) {
-  const slug = decodeURIComponent(params.slug);
+/**
+ * Obtiene todos los posts de recursos desde la API de WordPress.
+ * El parámetro _embed añade información anidada como la imagen destacada y las categorías.
+ */
+export async function getResources(): Promise<ResourcePost[]> {
+    noStore();
+    try {
+        const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+        if (!res.ok) {
+            throw new Error(`Failed to fetch posts: ${res.statusText}`);
+        }
+        const posts: ResourcePost[] = await res.json();
+        return posts;
+    } catch (error) {
+        console.error("Error fetching resource posts:", error);
+        return [];
+    }
+}
 
-  const url = `https://workwellfut.com/wp-json/wp/v2/posts?slug=${encodeURIComponent(
-    slug
-  )}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`;
+/**
+ * Obtiene los posts de una categoría específica por su ID.
+ */
+export async function getPostsByCategory(categorySlug: string): Promise<ResourcePost[]> {
+    const categories = await getResourceCategories();
+    const category = categories.find(cat => cat.slug === categorySlug);
+    if (!category) return [];
 
-  const res = await fetch(url, { next: { revalidate: 3600 } }); // cache 1h
-  if (!res.ok) {
-    return NextResponse.json(
-      { error: "Error al consultar WordPress" },
-      { status: 502 }
-    );
-  }
+    const allPosts = await getResources();
+    return allPosts.filter(post => post.categories.includes(category.id));
+}
 
-  const data = (await res.json()) as any[];
-  const post = data?.[0];
-  if (!post) {
-    return NextResponse.json({ error: "Post no encontrado" }, { status: 404 });
-  }
+/**
+ * Obtiene un post específico por su slug.
+ */
+export async function getPostBySlug(slug: string): Promise<ResourcePost | undefined> {
+    noStore();
+     try {
+        const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
+        if (!res.ok) {
+             throw new Error(`Failed to fetch post by slug: ${res.statusText}`);
+        }
+        const posts: ResourcePost[] = await res.json();
+        return posts[0];
+    } catch (error) {
+        console.error(`Error fetching post with slug ${slug}:`, error);
+        return undefined;
+    }
+}
 
-  const featuredImage = getFeaturedUrl(post);
 
-  // Normaliza lo que expones a la app
-  return NextResponse.json({
-    id: post.id,
-    slug: post.slug,
-    title: post.title,
-    excerpt: post.excerpt,
-    content: post.content,
-    date: post.date,
-    categories: post.categories ?? [],
-    // We send the processed URL and the original _embedded for flexibility
-    featured_media: featuredImage, 
-    _embedded: post._embedded,
-  });
+/**
+ * Obtiene todos los slugs de los posts para la generación de páginas estáticas.
+ */
+export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
+    const posts = await getResources();
+    return posts.map(post => ({ slug: post.slug }));
+}
+
+/**
+ * Obtiene todos los slugs de las categorías para la generación de páginas estáticas.
+ */
+export async function getAllCategorySlugs(): Promise<{ slug: string }[]> {
+    const categories = await getResourceCategories();
+    return categories.map(cat => ({ slug: cat.slug }));
+}
+
+/**
+ * Obtiene una categoría específica por su slug.
+ */
+export async function getCategoryBySlug(slug: string): Promise<ResourceCategory | undefined> {
+    const categories = await getResourceCategories();
+    return categories.find(cat => cat.slug === slug);
 }
