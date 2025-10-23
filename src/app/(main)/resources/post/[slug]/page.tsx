@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +15,7 @@ export default async function Page({ params }: PageProps) {
 
   let post: ResourcePost | undefined;
   let error: string | null = null;
-  const apiUrl = `https://workwellfut.com/wp-json/wp/v2/posts?slug=${slug}&_embed=true&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`;
+  const apiUrl = `https://workwellfut.com/wp-json/wp/v2/posts?slug=${slug}&_embed=true`;
   
   try {
     post = await getPostBySlug(slug);
