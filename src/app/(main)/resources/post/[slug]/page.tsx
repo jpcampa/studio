@@ -46,7 +46,7 @@ export default async function Page({ params }: PageProps) {
       notFound();
   }
 
-  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
 
 
   return (
