@@ -41,7 +41,7 @@ const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
 export async function getResourceCategories(): Promise<ResourceCategory[]> {
     noStore(); // Asegura que los datos se obtienen dinámicamente en cada petición en modo desarrollo
     try {
-        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { next: { revalidate: 3600 } }); // Cache por 1 hora
+        const res = await fetch(`${API_BASE_URL}/categories?per_page=100`, { next: { revalidate: 3600 } }); // Cache por 1 hora
         if (!res.ok) {
             throw new Error(`Failed to fetch categories: ${res.statusText}`);
         }
