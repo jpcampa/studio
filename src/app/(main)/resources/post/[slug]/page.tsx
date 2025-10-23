@@ -15,7 +15,6 @@ export default async function Page({ params }: PageProps) {
 
   let post: ResourcePost | undefined;
   let error: string | null = null;
-  const apiUrl = `https://workwellfut.com/wp-json/wp/v2/posts?slug=${slug}&_embed=true`;
   
   try {
     post = await getPostBySlug(slug);
@@ -67,13 +66,6 @@ export default async function Page({ params }: PageProps) {
             <div className="p-6">
                 <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                 
-                {/* DEBUG: Show API URL */}
-                <div className="mt-4 p-2 border bg-muted rounded-md">
-                    <p className="text-xs font-mono text-muted-foreground break-all">
-                        <strong>API Call URL:</strong> {apiUrl}
-                    </p>
-                </div>
-
                 <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
                     <span className="flex items-center">
                     <Clock className="h-4 w-4 mr-1.5" /> Publicado el {new Date(post.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
