@@ -96,7 +96,7 @@ export default async function Page({ params }: PageProps) {
       {!error && posts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
-            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/600x400/default.png';
+            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://placehold.co/600x400/eeeeee/cccccc?text=Sin+Imagen';
             
             return (
               <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
@@ -116,9 +116,6 @@ export default async function Page({ params }: PageProps) {
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
-                    <p className="text-xs bg-muted p-2 rounded-md mt-4 break-all">
-                      <strong>URL Imagen:</strong> {imageUrl}
-                    </p>
                   </CardContent>
                   <CardFooter>
                     <Button asChild variant="outline" className="w-full">
