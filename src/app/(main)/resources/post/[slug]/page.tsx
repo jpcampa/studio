@@ -45,7 +45,7 @@ export default async function Page({ params }: PageProps) {
       notFound();
   }
 
-  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://placehold.co/800x300/eeeeee/cccccc?text=Sin+Imagen';
+  const imageUrl = post.featured_media || 'https://placehold.co/800x300/eeeeee/cccccc?text=Sin+Imagen';
 
 
   return (

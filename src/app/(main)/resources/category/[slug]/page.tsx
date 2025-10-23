@@ -25,7 +25,7 @@ type ResourcePost = {
   content: { rendered: string };
   date: string;
   categories: number[];
-  featured_media: number;
+  featured_media: string | null; // Changed to string | null
   _embedded?: {
     'wp:featuredmedia'?: {
       source_url: string;
@@ -96,7 +96,7 @@ export default async function Page({ params }: PageProps) {
       {!error && posts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
-            const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://placehold.co/600x400/eeeeee/cccccc?text=Sin+Imagen';
+            const imageUrl = post.featured_media || 'https://placehold.co/600x400/eeeeee/cccccc?text=Sin+Imagen';
             
             return (
               <Card key={post.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
@@ -113,7 +113,6 @@ export default async function Page({ params }: PageProps) {
                         </div>
                     )}
                     <CardTitle className="text-xl text-accent" dangerouslySetInnerHTML={{ __html: post.title.rendered }}/>
-                    <p className="text-xs text-muted-foreground break-all">Debug URL: {imageUrl}</p>
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
