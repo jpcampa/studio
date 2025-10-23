@@ -98,8 +98,8 @@ export default async function Page({ params }: PageProps) {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
             let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-            if (imageUrl && imageUrl.startsWith('https://workwellfut.com')) {
-              imageUrl = imageUrl.replace('https://', 'http://');
+            if (imageUrl) {
+              imageUrl = imageUrl.replace('workwellfut.hl1450.dinaserver.com', 'workwellfut.com');
             }
             
             return (
@@ -120,7 +120,6 @@ export default async function Page({ params }: PageProps) {
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
-                     <p className="text-xs text-muted-foreground mt-2 break-all">URL de imagen: {imageUrl || 'No disponible'}</p>
                   </CardContent>
                   <CardFooter>
                     <Button asChild variant="outline" className="w-full">

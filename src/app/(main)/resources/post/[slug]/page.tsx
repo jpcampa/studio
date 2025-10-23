@@ -47,8 +47,8 @@ export default async function Page({ params }: PageProps) {
   }
 
   let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-  if (imageUrl && imageUrl.startsWith('https://workwellfut.com')) {
-    imageUrl = imageUrl.replace('https://', 'http://');
+  if (imageUrl) {
+    imageUrl = imageUrl.replace('workwellfut.hl1450.dinaserver.com', 'workwellfut.com');
   }
 
 
