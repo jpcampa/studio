@@ -116,6 +116,9 @@ export default async function Page({ params }: PageProps) {
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <div className="text-sm text-foreground/80 [&>p]:mb-2" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}/>
+                     <p className="text-xs text-red-500 mt-2">
+                        URL de imagen: {imageUrl || 'No disponible'}
+                    </p>
                   </CardContent>
                   <CardFooter>
                     <Button asChild variant="outline" className="w-full">
