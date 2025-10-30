@@ -8,11 +8,10 @@ import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
+import type { RoutePageProps } from '@/types/page-props';
 
-type PageProps = { params: { slug: string } };
-
-export default async function Page({ params }: PageProps) {
-  const { slug } = params;
+export default async function Page({ params }: RoutePageProps<{ slug: string }>) {
+  const { slug } = await params;
 
   let post: ResourcePost | undefined;
   let error: string | null = null;
@@ -93,8 +92,8 @@ export default async function Page({ params }: PageProps) {
   );
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = params;
+export async function generateMetadata({ params }: RoutePageProps<{ slug: string }>): Promise<Metadata> {
+  const { slug } = await params;
   const post = await getPostBySlug(slug);
   return {
     title: post?.title.rendered || 'Artículo',
