@@ -36,27 +36,24 @@ const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
 
 /**
  * Obtiene todas las categorías de recursos desde la API de WordPress.
- * Cachea la respuesta para mejorar el rendimiento.
  */
 export async function getResourceCategories(): Promise<ResourceCategory[]> {
-    noStore(); // Asegura que los datos se obtienen dinámicamente en cada petición en modo desarrollo
+    noStore(); // Asegura que los datos se obtienen dinámicamente
     try {
-        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { cache: 'no-store' }); // NO CACHE
+        const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { cache: 'no-store' });
         if (!res.ok) {
             throw new Error(`Failed to fetch categories: ${res.statusText}`);
         }
         const categories: ResourceCategory[] = await res.json();
-        // Filtramos "Sin categoría" y "Recursos"
         return categories.filter(cat => cat.slug !== 'sin-categoria' && cat.name.toLowerCase() !== 'recursos' && cat.count > 0);
     } catch (error) {
         console.error("Error fetching resource categories:", error);
-        return []; // Devuelve un array vacío en caso de error
+        return [];
     }
 }
 
 /**
  * Obtiene todos los posts de recursos desde la API de WordPress.
- * El parámetro _embed añade información anidada como la imagen destacada y las categorías.
  */
 export async function getResources(): Promise<ResourcePost[]> {
     noStore();
@@ -74,7 +71,7 @@ export async function getResources(): Promise<ResourcePost[]> {
 }
 
 /**
- * Obtiene los posts de una categoría específica por su ID.
+ * Obtiene los posts de una categoría específica por su slug.
  */
 export async function getPostsByCategory(categorySlug: string): Promise<ResourcePost[]> {
     noStore();
@@ -106,23 +103,6 @@ export async function getPostBySlug(slug: string): Promise<ResourcePost | undefi
         console.error(`Error fetching post with slug ${slug}:`, error);
         return undefined;
     }
-}
-
-
-/**
- * Obtiene todos los slugs de los posts para la generación de páginas estáticas.
- */
-export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
-    const posts = await getResources();
-    return posts.map(post => ({ slug: post.slug }));
-}
-
-/**
- * Obtiene todos los slugs de las categorías para la generación de páginas estáticas.
- */
-export async function getAllCategorySlugs(): Promise<{ slug: string }[]> {
-    const categories = await getResourceCategories();
-    return categories.map(cat => ({ slug: cat.slug }));
 }
 
 /**
