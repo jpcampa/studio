@@ -1,3 +1,4 @@
+
 // @/data/resourcesData.ts
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -106,5 +107,5 @@ export async function getPostBySlug(slug: string): Promise<ResourcePost | undefi
  */
 export async function getCategoryBySlug(slug: string): Promise<ResourceCategory | undefined> {
     const categories = await getResourceCategories();
-    return categories.find(cat => cat.slug === slug);
+    return categories.find(cat => cat.slug === categorySlug);
 }
