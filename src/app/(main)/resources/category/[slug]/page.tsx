@@ -10,7 +10,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
 import type { RoutePageProps } from '@/types/page-props';
 
-// Tipos definidos localmente para asegurar el control
+// Fija la página a renderizado dinámico para asegurar que los datos se obtienen en cada petición
+export const dynamic = 'force-dynamic';
+
 type ResourceCategory = {
     id: number;
     name: string;

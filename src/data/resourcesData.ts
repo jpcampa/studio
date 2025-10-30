@@ -38,7 +38,6 @@ const API_BASE_URL = "https://workwellfut.com/wp-json/wp/v2";
  * Obtiene todas las categorías de recursos desde la API de WordPress.
  */
 export async function getResourceCategories(): Promise<ResourceCategory[]> {
-    noStore(); // Asegura que los datos se obtienen dinámicamente
     try {
         const res = await fetch(`${API_BASE_URL}/categories?per_page=100&_fields=id,name,slug,count`, { cache: 'no-store' });
         if (!res.ok) {
@@ -56,7 +55,6 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
  * Obtiene todos los posts de recursos desde la API de WordPress.
  */
 export async function getResources(): Promise<ResourcePost[]> {
-    noStore();
     try {
         const res = await fetch(`${API_BASE_URL}/posts?per_page=100&_embed=true`, { cache: 'no-store' });
         if (!res.ok) {
@@ -74,7 +72,6 @@ export async function getResources(): Promise<ResourcePost[]> {
  * Obtiene los posts de una categoría específica por su slug.
  */
 export async function getPostsByCategory(categorySlug: string): Promise<ResourcePost[]> {
-    noStore();
     const categories = await getResourceCategories();
     const category = categories.find(cat => cat.slug === categorySlug);
     if (!category) return [];
@@ -91,7 +88,6 @@ export async function getPostsByCategory(categorySlug: string): Promise<Resource
  * Obtiene un post específico por su slug.
  */
 export async function getPostBySlug(slug: string): Promise<ResourcePost | undefined> {
-    noStore();
      try {
         const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed=true`, { cache: 'no-store' });
         if (!res.ok) {
