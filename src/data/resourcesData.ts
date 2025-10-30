@@ -46,8 +46,8 @@ export async function getResourceCategories(): Promise<ResourceCategory[]> {
             throw new Error(`Failed to fetch categories: ${res.statusText}`);
         }
         const categories: ResourceCategory[] = await res.json();
-        // Filtramos "Sin categoría"
-        return categories.filter(cat => cat.slug !== 'sin-categoria' && cat.count > 0);
+        // Filtramos "Sin categoría" y "Recursos"
+        return categories.filter(cat => cat.slug !== 'sin-categoria' && cat.name.toLowerCase() !== 'recursos' && cat.count > 0);
     } catch (error) {
         console.error("Error fetching resource categories:", error);
         return []; // Devuelve un array vacío en caso de error
