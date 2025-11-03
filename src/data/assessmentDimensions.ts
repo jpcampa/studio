@@ -1,5 +1,4 @@
 
-
 export interface AssessmentItem {
   id: string;
   text: string;
@@ -15,6 +14,7 @@ export interface AssessmentDimension {
 }
 
 export const assessmentDimensions: AssessmentDimension[] = [
+  // --- Dimensiones de Personalidad ---
   {
     id: 'dim1',
     name: 'Regulación Emocional y Estrés',
@@ -67,6 +67,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim5',
     name: 'Empatía y Conexión Interpersonal',
     definition: 'Capacidad de ponerse en el lugar del otro, construir vínculos saludables y actuar desde la comprensión y el respeto mutuo.',
+    recommendedPathId: 'relaciones-autenticas',
     items: [
       { id: 'dim5_item1', text: 'Me interesa entender cómo se sienten las personas que me rodean.' },
       { id: 'dim5_item2', text: 'A veces actúo sin considerar el impacto emocional que puede tener en otros.', isInverse: true },
@@ -78,6 +79,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim6',
     name: 'Insight y Autoconciencia',
     definition: 'Capacidad de observarse a uno mismo, reconocer patrones emocionales y conductuales y comprender cómo afectan a la vida personal y profesional.',
+    recommendedPathId: 'comprender-mejor-cada-dia',
     items: [
       { id: 'dim6_item1', text: 'Reflexiono con frecuencia sobre lo que siento y por qué.' },
       { id: 'dim6_item2', text: 'Se con claridad quién soy porque conozco mis puntos fuertes y también mis áreas a mejorar.' },
@@ -89,6 +91,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim7',
     name: 'Propósito Vital y Dirección Personal',
     definition: 'Claridad sobre lo que uno quiere lograr en la vida, conexión con los propios valores y motivación para avanzar hacia metas significativas.',
+    recommendedPathId: 'volver-a-lo-importante',
     items: [
       { id: 'dim7_item1', text: 'Tengo claro qué es importante para mí en la vida.' },
       { id: 'dim7_item2', text: 'Tomo decisiones alineadas con mis prioridades y valores personales.' },
@@ -100,6 +103,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim8',
     name: 'Estilo de Afrontamiento',
     definition: 'Estilo de enfrentar los desafíos con determinación, capacidad de adaptación y actitud constructiva ante las dificultades.',
+    recommendedPathId: 'resiliencia-en-accion',
     items: [
       { id: 'dim8_item1', text: 'Cuando tengo un problema, rápidamente busco cómo solucionarlo sin quedarme estancado/a.' },
       { id: 'dim8_item2', text: 'Trato de sacar un aprendizaje personal incluso en los momentos más difíciles.' },
@@ -111,6 +115,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim9',
     name: 'Integridad y Coherencia Ética',
     definition: 'Capacidad de actuar de acuerdo con valores personales sólidos, ser coherente entre lo que se piensa, se siente y se hace, y tener sensibilidad ética en las decisiones.',
+    recommendedPathId: 'vivir-con-coherencia',
     items: [
       { id: 'dim9_item1', text: 'Intento actuar con integridad, incluso cuando no es lo mejor o más fácil.' },
       { id: 'dim9_item2', text: 'Me importa mucho el impacto de mis acciones en otras personas.' },
@@ -122,6 +127,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim10',
     name: 'Responsabilidad Personal y Aceptación Consciente',
     definition: 'Capacidad de reconocer el papel que uno tiene en las situaciones que atraviesa, asumir la parte de responsabilidad sin caer en la culpa, y actuar desde la aceptación y el compromiso con el cambio.',
+    recommendedPathId: 'ni-culpa-ni-queja',
     items: [
       { id: 'dim10_item1', text: 'Reflexiono y se reconocer cuándo he contribuido a que algo no salga como esperaba.' },
       { id: 'dim10_item2', text: 'Cuando afronto dificultades, pienso y me pregunto qué puedo hacer diferente.' },
@@ -133,6 +139,7 @@ export const assessmentDimensions: AssessmentDimension[] = [
     id: 'dim11',
     name: 'Apoyo Social Percibido',
     definition: 'Grado en que la persona percibe tener apoyo emocional, instrumental y profesional disponible tanto en su vida personal como laboral. Evalúa la sensación de sentirse acompañado/a, comprendido/a y respaldado/a por otros.',
+    recommendedPathId: 'confiar-en-mi-red',
     items: [
       { id: 'dim11_item1', text: 'Siento que tengo personas en mi vida con las que puedo contar cuando lo necesito.' },
       { id: 'dim11_item2', text: 'En mi entorno laboral, me siento respaldado/a por compañeros y superiores.' },
@@ -140,9 +147,44 @@ export const assessmentDimensions: AssessmentDimension[] = [
       { id: 'dim11_item4', text: 'Me siento parte de una red de apoyo y sostén emocional sólida y accesible.' },
     ],
   },
+
+  // --- Escalas de Estado ---
+  {
+    id: 'dim12',
+    name: 'Estado de Ánimo',
+    definition: 'Evaluación del estado de ánimo general y la presencia de síntomas relacionados con el desánimo o la anhedonia en las últimas semanas.',
+    recommendedPathId: 'volver-a-lo-importante',
+    items: [
+        { id: 'dim12_item1', text: "Me siento triste o desanimado/a." },
+        { id: 'dim12_item2', text: "Tengo dificultad para disfrutar de las actividades que solían gustarme." },
+        { id: 'dim12_item3', text: "Me siento inútil o inferior a los demás." },
+        { id: 'dim12_item4', text: "Me siento culpable por cosas que hago o no hago." },
+        { id: 'dim12_item5', text: "Me siento agotado/a física o mentalmente." },
+        { id: 'dim12_item6', text: "Tengo dificultad para mantener la concentración en tareas." },
+        { id: 'dim12_item7', text: "Me falta motivación para realizar actividades cotidianas." },
+        { id: 'dim12_item8', text: "Siento que mi vida carece de sentido o dirección." },
+        { id: 'dim12_item9', text: "Me aíslo o evito el contacto con otras personas." },
+        { id: 'dim12_item10', text: "Siento que nada va a cambiar, aunque me esfuerce." },
+        { id: 'dim12_item11', text: "Siento que he perdido interés por cuidar de mí mismo/a (higiene, salud, descanso...)." },
+        { id: 'dim12_item12', text: "Últimamente me cuesta identificar o expresar lo que siento." },
+    ],
+  },
+  {
+    id: 'dim13',
+    name: 'Ansiedad Estado',
+    definition: 'Evaluación del nivel de ansiedad y tensión experimentado en el momento presente o en los últimos días.',
+    recommendedPathId: 'regular-ansiedad-paso-a-paso',
+    items: [
+        { id: 'dim13_item1', text: "Me siento tenso/a o nervioso/a actualmente." },
+        { id: 'dim13_item2', text: "Me preocupo por cosas que normalmente no me afectan." },
+        { id: 'dim13_item3', text: "Siento una inquietud interna difícil de controlar." },
+        { id: 'dim13_item4', text: "Me cuesta relajarme incluso en situaciones tranquilas." },
+        { id: 'dim13_item5', text: "Reacciono con irritabilidad ante pequeñas molestias." },
+        { id: 'dim13_item6', text: "Siento que pierdo el control fácilmente sobre mis emociones." },
+    ]
+  }
 ];
 
-// Re-export likertOptions from here for consistency, if QuestionnaireForm needs it
 export const likertOptions = [
   { value: 1, label: 'Frown', description: 'Nada' },
   { value: 2, label: 'Annoyed', description: 'Poco' },
