@@ -145,15 +145,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     <>
       <Card className="w-full max-w-3xl mx-auto shadow-xl overflow-hidden">
         <CardHeader>
-          <Progress value={overallProgress} className="w-full mb-2" aria-label={`Progreso general: ${overallProgress}%`} />
-          <p className="text-xs text-center text-muted-foreground mb-2">
-             {t.dimensionProgress
-              .replace('{current}', (currentDimensionIndex + 1).toString())
-              .replace('{total}', assessmentDimensions.length.toString())}
-          </p>
-          <CardTitle className="text-xl sm:text-2xl font-semibold text-center">
-            {currentDimension.name}
-          </CardTitle>
+          <Progress value={overallProgress} className="w-full mb-4" aria-label={`Progreso general: ${overallProgress}%`} />
           <CardDescription className="text-sm text-muted-foreground mt-1 text-center px-2">{currentDimension.definition}</CardDescription>
         </CardHeader>
 
