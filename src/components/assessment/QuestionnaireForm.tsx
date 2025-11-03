@@ -146,7 +146,8 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       <Card className="w-full max-w-3xl mx-auto shadow-xl overflow-hidden">
         <CardHeader>
           <Progress value={overallProgress} className="w-full mb-4" aria-label={`Progreso general: ${overallProgress}%`} />
-          <CardDescription className="text-sm text-muted-foreground mt-1 text-center px-2">{currentDimension.definition}</CardDescription>
+          <CardTitle className="text-lg font-semibold text-center text-primary-foreground bg-primary p-2 rounded-md">CUESTIONARIO DE EVALUACIÓN APP: PERSONALIDAD, ESTADO DE ÁNIMO Y ANSIEDAD</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground mt-2 text-center px-2">{currentDimension.definition}</CardDescription>
         </CardHeader>
 
         {!showDimensionCompletedDialog && (
