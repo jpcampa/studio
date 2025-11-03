@@ -206,7 +206,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
                     <AlertDescription className="text-green-700 dark:text-green-300 font-medium text-center">
                          {t.dimensionCompletedMessage
                             .replace("{dimensionNumber}", (currentDimensionIndex + 1).toString())
-                            .replace("{dimensionName}", currentDimension.name)}
+                            .replace("{totalDimensions}", assessmentDimensions.length.toString())}
                     </AlertDescription>
                 </Alert>
             </CardContent>
@@ -236,9 +236,9 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
                 <CheckCircle className="h-7 w-7" /> {t.dimensionCompletedTitle}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base py-2 text-center">
-              {t.dimensionCompletedMessage
-                .replace("{dimensionNumber}", (currentDimensionIndex + 1).toString())
-                .replace("{dimensionName}", currentDimension.name)}
+               {t.dimensionCompletedMessage
+                  .replace("{dimensionNumber}", (currentDimensionIndex + 1).toString())
+                  .replace("{totalDimensions}", assessmentDimensions.length.toString())}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-4 flex-col sm:flex-row sm:justify-end sm:space-x-2 gap-2 sm:gap-0">
