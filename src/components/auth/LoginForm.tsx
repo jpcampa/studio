@@ -212,7 +212,12 @@ export function LoginForm() {
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        
+        <p className="text-sm text-muted-foreground">
+          {t.noAccount}{" "}
+          <Link href="/register" className="font-medium text-secondary hover:underline">
+            {t.register}
+          </Link>
+        </p>
       </CardFooter>
     </Card>
   );
