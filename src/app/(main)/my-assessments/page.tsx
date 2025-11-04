@@ -86,7 +86,15 @@ const ApiSingleAssessmentRecordSchema = z.object({
     }),
     priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias.").optional().nullable().transform(val => val ?? []),
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
-    respuestas: z.record(z.string(), z.number()).optional().nullable(),
+    respuestas: z.union([z.record(z.string(), z.number()), z.array(z.any())]).optional().nullable().transform(val => {
+      if (Array.isArray(val) && val.length === 0) {
+        return null; // Transform empty array to null
+      }
+      if (typeof val === 'object' && !Array.isArray(val)) {
+        return val; // It's already an object, pass through
+      }
+      return null; // In any other case (like a non-empty array we don't expect), treat as null
+    }),
   }),
 });
 
