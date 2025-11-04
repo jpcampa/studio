@@ -107,7 +107,7 @@ const ApiSingleAssessmentRecordSchema = z.object({
     }),
     priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."), // Allows 0-3 items
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
-    respuestas: z.record(z.string(), z.number()).optional(),
+    respuestas: z.record(z.string(), z.number()).optional().nullable(),
   }),
 });
 
@@ -431,4 +431,3 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
-
