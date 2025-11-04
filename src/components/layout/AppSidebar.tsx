@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarSeparator,
+  useSidebar, // Importar el hook
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { LogOut, LayoutDashboard, ClipboardList, Milestone, Bot, Library, Settings, History, NotebookText, FileQuestion, HeartPulse, Archive } from "lucide-react";
@@ -39,6 +40,7 @@ export function AppSidebar() {
   const t = useTranslations();
   const pathname = usePathname();
   const { logout } = useUser();
+  const { setOpenMobile, isMobile } = useSidebar(); // Usar el hook para acceder al estado y la función
 
   const isActive = (href: string) => {
     if (href === "/assessment/intro") {
@@ -53,6 +55,21 @@ export function AppSidebar() {
     return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
   }
 
+  // Función que se llamará al hacer clic en un enlace del menú
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
+  const handleLogoutClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+    logout();
+  };
+
+
   return (
     <Sidebar variant="sidebar" collapsible="icon" side="left">
       <SidebarHeader className="p-4">
@@ -66,6 +83,7 @@ export function AppSidebar() {
                 asChild
                 isActive={isActive(item.href)}
                 tooltip={t[item.labelKey as keyof typeof t]}
+                onClick={handleLinkClick} // Añadir onClick a cada botón
               >
                 <Link href={item.href}>
                   <item.icon />
@@ -84,6 +102,7 @@ export function AppSidebar() {
                 asChild
                 isActive={isActive(item.href)}
                 tooltip={t[item.labelKey as keyof typeof t]}
+                onClick={handleLinkClick} // Añadir onClick a cada botón
               >
                 <Link href={item.href}>
                   <item.icon />
@@ -94,7 +113,7 @@ export function AppSidebar() {
           ))}
           <SidebarSeparator />
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={logout} tooltip={t.logout}>
+            <SidebarMenuButton onClick={handleLogoutClick} tooltip={t.logout}>
               <LogOut />
               <span>{t.logout}</span>
             </SidebarMenuButton>
