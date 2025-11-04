@@ -23,7 +23,7 @@ const registerSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
   email: z.string().email("Correo electrónico inválido."),
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres."),
-  token: z.string().min(1, "El token de acceso es requerido."),
+  token: z.string().optional(),
   ageRange: z.string().optional(),
   gender: z.string().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).optional(),
@@ -131,7 +131,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     id: userId, 
     name,
     email,
-    token,
+    token: token || null,
     ageRange: ageRange || null,
     gender: gender || null,
     initialEmotionalState: initialEmotionalState || null,
@@ -1047,3 +1047,6 @@ export async function fetchNotebookEntries(
     
 
 
+
+
+    

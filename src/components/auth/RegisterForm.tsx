@@ -161,8 +161,8 @@ export function RegisterForm() {
             {state.errors?.password && <p className="text-sm text-destructive pt-1">{state.errors.password[0]}</p>}
           </div>
           <div>
-            <Label htmlFor="token">Token de Acceso</Label>
-            <Input id="token" name="token" required />
+            <Label htmlFor="token">Token de Acceso (Opcional)</Label>
+            <Input id="token" name="token" />
             {state.errors?.token && <p className="text-sm text-destructive pt-1">{state.errors.token[0]}</p>}
           </div>
           <div>
@@ -233,5 +233,8 @@ export function RegisterForm() {
     </Card>
   );
 }
+
+    
+
 
     
