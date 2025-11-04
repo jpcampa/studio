@@ -58,7 +58,7 @@ export default function AssessmentPage() {
 
     setIsProcessingModalVisible(false);
 
-    if (result.success) {
+    if (result.success && result.data) {
       try {
         const resultsToStore: StoredAssessmentResults = {
             aiInterpretation: result.data,
