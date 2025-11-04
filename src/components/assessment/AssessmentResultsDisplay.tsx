@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';
 import Link from 'next/link';
-import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays, TrendingUp, Star, Zap, Milestone, ExternalLink, Lightbulb, HeartHandshake } from 'lucide-react'; 
+import { CheckCircle, ListChecks, Activity, AlertTriangle, Info, RotateCcw, Sparkles, CalendarDays, TrendingUp, Star, Zap, Milestone, ExternalLink, Lightbulb, HeartHandshake, FileJson } from 'lucide-react'; 
 import {
   ChartContainer,
   ChartTooltip,
@@ -35,6 +35,8 @@ import { pathsData } from '@/data/pathsData';
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput | null;
+  rawAnswers?: Record<string, number> | null;
+  userId?: string | null;
   onRetake: () => void;
   assessmentTimestamp?: string;
 }
@@ -78,7 +80,7 @@ const getInterpretationLevel = (score: number, interpretations: InterpretationLe
   return t.scoreLevelLow || "Bajo";
 };
 
-export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestamp }: AssessmentResultsDisplayProps) {
+export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake, assessmentTimestamp }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
   const router = useRouter();
 
@@ -98,6 +100,14 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
       </div>
     );
   }
+  
+  const payloadForDebug = rawAnswers && userId && results ? {
+    assessmentId: "current-session-id", // Placeholder for current session
+    userId: userId,
+    rawAnswers: rawAnswers,
+    aiInterpretation: results,
+    assessmentTimestamp: assessmentTimestamp || new Date().toISOString(),
+  } : null;
 
   const radarData = assessmentDimensions.map(dim => {
     const scoreFromProfile = results.emotionalProfile[dim.name];
@@ -406,6 +416,19 @@ export function AssessmentResultsDisplay({ results, onRetake, assessmentTimestam
           <p className="whitespace-pre-line text-base leading-relaxed">{results.feedback}</p>
         </CardContent>
       </Card>
+      
+      {payloadForDebug && (
+        <Card className="shadow-lg mt-8">
+           <CardHeader>
+              <CardTitle className="flex items-center"><FileJson className="mr-2 h-5 w-5 text-muted-foreground" /> Payload de Guardado (Depuración)</CardTitle>
+           </CardHeader>
+           <CardContent>
+              <pre className="mt-2 w-full whitespace-pre-wrap break-all rounded-md bg-slate-950 p-4 text-xs text-white">
+                <code>{JSON.stringify(payloadForDebug, null, 2)}</code>
+              </pre>
+           </CardContent>
+        </Card>
+      )}
 
       <Card className="shadow-xl mt-8">
         <CardHeader>

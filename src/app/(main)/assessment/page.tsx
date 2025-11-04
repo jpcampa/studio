@@ -33,6 +33,11 @@ interface AssessmentSavePayload {
   assessmentTimestamp: string;
 }
 
+export interface StoredAssessmentResults {
+    aiInterpretation: InitialAssessmentOutput;
+    rawAnswers: Record<string, number>;
+}
+
 export default function AssessmentPage() {
   const t = useTranslations();
   const { toast } = useToast();
@@ -55,11 +60,15 @@ export default function AssessmentPage() {
 
     if (result.success) {
       try {
-        localStorage.setItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY, JSON.stringify(result.data));
-        console.log("AssessmentPage: Results saved to sessionStorage:", JSON.stringify(result.data).substring(0,200) + "...");
+        const resultsToStore: StoredAssessmentResults = {
+            aiInterpretation: result.data,
+            rawAnswers: answers
+        };
+        localStorage.setItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY, JSON.stringify(resultsToStore));
+        console.log("AssessmentPage: Results and raw answers saved to sessionStorage:", JSON.stringify(resultsToStore).substring(0,200) + "...");
         
         // Save to assessment history store (localStorage based)
-        saveAssessmentToHistory(result.data);
+        saveAssessmentToHistory(result.data, answers);
         console.log("AssessmentPage: Results also saved to local assessment history store.");
 
       } catch (error) {

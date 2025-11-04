@@ -8,7 +8,13 @@ import { es } from 'date-fns/locale';
 export interface AssessmentRecord {
   id: string;
   timestamp: string; // ISO string
-  data: InitialAssessmentOutput;
+  data: { // This nested data object matches the AI output and API expectations
+    emotionalProfile: Record<string, number>;
+    priorityAreas: string[];
+    feedback: string;
+    // The raw answers are now stored here as well, nullable
+    respuestas?: Record<string, number> | null; 
+  };
 }
 
 const ASSESSMENT_HISTORY_KEY = "workwell-assessment-history";
@@ -27,12 +33,15 @@ export function getAssessmentHistory(): AssessmentRecord[] {
   }
 }
 
-export function saveAssessmentToHistory(assessmentData: InitialAssessmentOutput): AssessmentRecord {
+export function saveAssessmentToHistory(assessmentData: InitialAssessmentOutput, rawAnswers: Record<string, number>): AssessmentRecord {
   if (typeof window === "undefined") {
     const placeholderRecord: AssessmentRecord = {
       id: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
-      data: assessmentData,
+      data: {
+        ...assessmentData,
+        respuestas: rawAnswers,
+      },
     };
     console.warn("Attempted to save assessment to history in non-browser environment. Returning placeholder:", placeholderRecord);
     return placeholderRecord;
@@ -41,7 +50,10 @@ export function saveAssessmentToHistory(assessmentData: InitialAssessmentOutput)
   const newRecord: AssessmentRecord = {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
-    data: assessmentData,
+    data: {
+      ...assessmentData,
+      respuestas: rawAnswers,
+    },
   };
 
   try {
@@ -116,4 +128,3 @@ export function overwriteAssessmentHistory(records: AssessmentRecord[]): void {
     console.error("Error overwriting assessment history in localStorage:", error);
   }
 }
-

@@ -8,6 +8,7 @@ import { useTranslations } from '@/lib/translations';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
+import { useUser } from '@/contexts/UserContext';
 
 interface HistoricalResultsPageClientProps {
   assessmentId: string;
@@ -16,6 +17,7 @@ interface HistoricalResultsPageClientProps {
 export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsPageClientProps) {
   const t = useTranslations();
   const router = useRouter();
+  const { user } = useUser();
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,10 +81,19 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
     );
   }
 
+  // We need to pass the nested 'data' object from the record to the component
+  const resultsForDisplay = {
+      emotionalProfile: assessmentRecord.data.emotionalProfile,
+      priorityAreas: assessmentRecord.data.priorityAreas,
+      feedback: assessmentRecord.data.feedback,
+  };
+
   return (
     <div className="container mx-auto py-8">
       <AssessmentResultsDisplay 
-        results={assessmentRecord.data} 
+        results={resultsForDisplay} 
+        rawAnswers={assessmentRecord.data.respuestas}
+        userId={user?.id}
         onRetake={handleRetakeAssessment}
         assessmentTimestamp={assessmentRecord.timestamp} 
       />

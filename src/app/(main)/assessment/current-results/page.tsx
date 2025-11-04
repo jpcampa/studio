@@ -4,27 +4,31 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AssessmentResultsDisplay } from '@/components/assessment/AssessmentResultsDisplay';
-import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { useTranslations } from '@/lib/translations';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { StoredAssessmentResults } from '../page';
+import { useUser } from '@/contexts/UserContext';
+
 
 const SESSION_STORAGE_ASSESSMENT_RESULTS_KEY = 'workwell-assessment-results';
 
 export default function CurrentResultsPage() {
   const t = useTranslations();
   const router = useRouter();
-  const [results, setResults] = useState<InitialAssessmentOutput | null>(null);
+  const { user } = useUser();
+  const [storedResults, setStoredResults] = useState<StoredAssessmentResults | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      const storedResults = localStorage.getItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
-      if (storedResults) {
-        const parsedResults = JSON.parse(storedResults) as InitialAssessmentOutput;
-        if (parsedResults && parsedResults.emotionalProfile && parsedResults.priorityAreas && parsedResults.feedback) {
-          setResults(parsedResults);
+      const item = localStorage.getItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
+      if (item) {
+        const parsedResults = JSON.parse(item) as StoredAssessmentResults;
+        // Basic validation
+        if (parsedResults && parsedResults.aiInterpretation && parsedResults.rawAnswers) {
+          setStoredResults(parsedResults);
         } else {
           setError("Los datos de la evaluación guardados son inválidos.");
           console.error("CurrentResultsPage: Invalid assessment data structure in sessionStorage", parsedResults);
@@ -42,8 +46,6 @@ export default function CurrentResultsPage() {
   }, []);
 
   const handleRetakeAssessment = () => {
-    // Optionally clear the results from sessionStorage when retaking
-    // localStorage.removeItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY);
     router.push('/assessment/intro');
   };
 
@@ -68,7 +70,7 @@ export default function CurrentResultsPage() {
     );
   }
 
-  if (!results) {
+  if (!storedResults) {
     return (
       <div className="container mx-auto py-8 text-center">
         <p className="text-muted-foreground">No hay resultados actuales para mostrar.</p>
@@ -81,7 +83,12 @@ export default function CurrentResultsPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <AssessmentResultsDisplay results={results} onRetake={handleRetakeAssessment} />
+      <AssessmentResultsDisplay 
+        results={storedResults.aiInterpretation}
+        rawAnswers={storedResults.rawAnswers}
+        userId={user?.id}
+        onRetake={handleRetakeAssessment} 
+      />
     </div>
   );
 }
