@@ -15,7 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { getCompletedModules, saveCompletedModules } from '@/lib/progressStore';
 import { useActivePath } from '@/contexts/ActivePathContext';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '../ui/separator';
 import { StressMapExercise } from '@/components/paths/StressMapExercise';
 import { TriggerExercise } from '@/components/paths/TriggerExercise';
 import { DetectiveExercise } from '@/components/paths/DetectiveExercise';
@@ -45,6 +45,10 @@ import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExe
 import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent, SelfAcceptanceAudioExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
+import { StopExercise } from './StopExercise';
+import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
+import { ExposureLadderExercise } from './ExposureLadderExercise';
+import { CalmVisualizationExercise } from './CalmVisualizationExercise';
 import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
 
 
@@ -678,17 +682,8 @@ ${progressText || 'No se registraron días.'}
 // ====================================================================
 
 // ====================================================================
-// START OF RUTA 13 DYNAMIC COMPONENTS
+// START OF RUTA 5 DYNAMIC COMPONENTS
 // ====================================================================
-import { StopExercise } from './StopExercise';
-import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
-import { ExposureLadderExercise } from './ExposureLadderExercise';
-import { CalmVisualizationExercise } from './CalmVisualizationExercise';
-// ====================================================================
-// END OF RUTA 13 DYNAMIC COMPONENTS
-// ====================================================================
-
-
 import { AuthenticityThermometerExercise } from './AuthenticityThermometerExercise';
 import { EmpatheticDialogueExercise } from './EmpatheticDialogueExercise';
 import { EmpathicMirrorExercise } from './EmpathicMirrorExercise';
@@ -697,6 +692,11 @@ import { EmpathicShieldVisualizationExercise } from './EmpathicShieldVisualizati
 import { EmotionalInvolvementTrafficLightExercise } from './EmotionalInvolvementTrafficLightExercise';
 import { SignificantRelationshipsInventoryExercise } from './SignificantRelationshipsInventoryExercise';
 import { RelationalCommitmentExercise } from './RelationalCommitmentExercise';
+// ====================================================================
+// END OF RUTA 5 DYNAMIC COMPONENTS
+// ====================================================================
+
+
 // RUTA 6 imports
 import { DetectiveDeEmocionesExercise } from './DetectiveDeEmocionesExercise';
 import { UnaPalabraCadaDiaExercise } from './UnaPalabraCadaDiaExercise';
@@ -1199,5 +1199,3 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
-
-    
