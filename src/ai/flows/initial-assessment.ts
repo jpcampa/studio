@@ -43,8 +43,9 @@ const PromptTemplateInputSchema = z.object({
   itemDetails: z.record(z.string(), z.object({
     text: z.string().describe('The text of the question item.'),
     dimensionName: z.string().describe('The name of the dimension this item belongs to.'),
+    weight: z.number().describe('The weight of the item for calculation purposes.'),
     isInverse: z.boolean().optional().describe('True if the item scoring should be considered inverted for interpretation.'),
-  })).describe('Details about each question item, including its text, dimension, and if it is inversely scored.'),
+  })).describe('Details about each question item, including its text, dimension, weight, and if it is inversely scored.'),
 });
 type PromptTemplateInput = z.infer<typeof PromptTemplateInputSchema>;
 
@@ -65,7 +66,7 @@ type PromptHandlebarsInput = z.infer<typeof PromptHandlebarsInputSchema>;
 
 
 export async function initialAssessment(input: InitialAssessmentInput): Promise<InitialAssessmentOutput> {
-  const itemDetails: Record<string, { text: string, dimensionName: string, isInverse?: boolean }> = {};
+  const itemDetails: Record<string, { text: string, dimensionName: string, weight: number, isInverse?: boolean }> = {};
   const dimensionNames: string[] = []; // This will be the list of actual dimension names
   assessmentDimensions.forEach(dim => {
     dimensionNames.push(dim.name);
@@ -73,6 +74,7 @@ export async function initialAssessment(input: InitialAssessmentInput): Promise<
       itemDetails[item.id] = {
         text: item.text,
         dimensionName: dim.name,
+        weight: item.weight,
         isInverse: item.isInverse
       };
     });
@@ -99,12 +101,13 @@ const prompt = ai.definePrompt({
 The user has answered a series of items rated on a 1-5 Likert scale (1=Nada, 5=Mucho).
 
 **SCORING RULES:**
-1.  **Personality Dimensions (11 total):** For these, you will calculate a MEAN score. Before calculating, you must INVERT the scores for items marked as "(Inversa)". To invert a score, use this formula: Inverted Score = 6 - Original Score. (e.g., 1 becomes 5, 2 becomes 4, etc.). After inverting, calculate the average of all items in the dimension. The final score for each of these 11 dimensions must be a number between 1.0 and 5.0.
-2.  **State Scales (Estado de Ánimo, Ansiedad Estado):** For these two specific scales, you will calculate a SUM of the raw scores (no inversion needed). Then, you will convert this sum to a 1-5 scale using the provided formulas, and finally, INVERT the result on the 1-5 scale.
-    *   **Estado de Ánimo (12 items):** Range 12-60. Formula: \`((SUM - 12) / 48) * 4 + 1\`. Then, \`Final Score = 6 - Converted Score\`.
-    *   **Ansiedad Estado (6 items):** Range 6-30. Formula: \`((SUM - 6) / 24) * 4 + 1\`. Then, \`Final Score = 6 - Converted Score\`.
+0.  **Weighted Score:** Before any calculation, each item's score must be multiplied by its specific 'weight'. The formula is: \`WeightedScore = OriginalScore * ItemWeight\`. All subsequent calculations use this WeightedScore.
+1.  **Personality Dimensions (11 total):** For these, you will calculate a WEIGHTED MEAN score. Before calculating, you must INVERT the scores for items marked as "(Inversa)". To invert a score, use this formula: \`InvertedScore = 6 - OriginalScore\`. After inverting (if applicable), calculate the weighted score. Then, calculate the average of all weighted scores in the dimension. The final score for each of these 11 dimensions must be a number between 1.0 and 5.0.
+2.  **State Scales (Estado de Ánimo, Ansiedad Estado):** For these two specific scales, you will calculate a WEIGHTED SUM of the scores (no inversion needed, but still apply the weight). First calculate the WeightedScore for each item. Then, SUM all WeightedScores in the dimension. After getting the total sum, you will convert this sum to a 1-5 scale using the provided formulas, and finally, INVERT the result on the 1-5 scale.
+    *   **Estado de Ánimo (12 items):** Total possible weighted sum range 12-60 (assuming all weights are 1). Formula: \`((SUM - 12) / 48) * 4 + 1\`. Then, \`Final Score = 6 - Converted Score\`.
+    *   **Ansiedad Estado (6 items):** Total possible weighted sum range 6-30 (assuming all weights are 1). Formula: \`((SUM - 6) / 24) * 4 + 1\`. Then, \`Final Score = 6 - Converted Score\`.
 
-**User's Answers (Dimension - Item Text (Inverse status if applicable): Score):**
+**User's Answers (Dimension - Item Text (Inverse status, Weight): Score):**
 {{#each itemsTextArray}}
   {{{this}}}
 {{/each}}
@@ -148,7 +151,7 @@ const initialAssessmentFlow = ai.defineFlow(
         const detail = currentItemDetails[itemId];
         if (detail) {
           itemsTextArray.push(
-            `${detail.dimensionName} - "${detail.text}" ${detail.isInverse ? '(Inversa)' : ''}: ${answer}`
+            `${detail.dimensionName} - "${detail.text}" ${detail.isInverse ? '(Inversa)' : ''} (Weight: ${detail.weight}): ${answer}`
           );
         } else {
            console.warn(`InitialAssessmentFlow: No details found for itemId: ${itemId}. Skipping this item for prompt.`);
