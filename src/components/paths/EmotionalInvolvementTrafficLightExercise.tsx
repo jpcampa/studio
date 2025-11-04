@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -58,7 +57,7 @@ export function EmotionalInvolvementTrafficLightExercise({ content, pathId }: Em
     toast({ title: "Ejercicio Guardado", description: "Tu reflexión se ha guardado en el Cuaderno Terapéutico." });
     setIsSaved(true);
   };
-
+  
   const renderStep = () => {
     switch (step) {
       case 0:
