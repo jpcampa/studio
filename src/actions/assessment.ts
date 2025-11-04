@@ -129,6 +129,8 @@ export async function saveAssessment(payloadToSave: AssessmentSavePayload): Prom
       errorMessage = t.assessmentSavedErrorTimeout;
     } else if (error instanceof SyntaxError) {
       errorMessage = "Error procesando la respuesta del servidor de guardado (JSON inválido).";
+    } else if (error instanceof TypeError && error.message.toLowerCase().includes('failed to fetch')) {
+        errorMessage = t.assessmentSavedErrorFetchFailed;
     }
     console.error("saveAssessment Action: Error saving assessment:", error, "URL attempted:", saveUrlForDebug);
     return { success: false, message: errorMessage, debugUrl: saveUrlForDebug };
