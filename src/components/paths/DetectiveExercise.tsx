@@ -46,6 +46,7 @@ export function DetectiveExercise({ content }: DetectiveExerciseProps) {
 
   const [reflection, setReflection] = useState('');
   const [isReflectionSaved, setIsReflectionSaved] = useState(false);
+  const audioUrl = "https://workwellfut.com/audios/r1_desc/Sesion-3-tecnica-1-detective-de-pensamientos.mp3";
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -87,6 +88,14 @@ export function DetectiveExercise({ content }: DetectiveExerciseProps) {
       <CardHeader>
         <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{content.title}</CardTitle>
         {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+        {audioUrl && (
+            <div className="mt-4">
+                <audio controls controlsList="nodownload" className="w-full">
+                    <source src={audioUrl} type="audio/mp3" />
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+        )}
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
