@@ -23,6 +23,7 @@ const registerSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
   email: z.string().email("Correo electrónico inválido."),
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres."),
+  token: z.string().min(1, "El token de acceso es requerido."),
   ageRange: z.string().optional(),
   gender: z.string().optional(),
   initialEmotionalState: z.coerce.number().min(1).max(5).optional(),
@@ -59,6 +60,7 @@ export type RegisterState = {
     name?: string[];
     email?: string[];
     password?: string[];
+    token?: string[];
     ageRange?: string[];
     gender?: string[];
     initialEmotionalState?: string[];
@@ -119,7 +121,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     };
   }
 
-  const { name, email, password, ageRange, gender, initialEmotionalState } = validatedFields.data;
+  const { name, email, password, token, ageRange, gender, initialEmotionalState } = validatedFields.data;
 
   console.log("RegisterUser action: Validation successful. Preparing for external API call.");
 
@@ -129,6 +131,7 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
     id: userId, 
     name,
     email,
+    token,
     ageRange: ageRange || null,
     gender: gender || null,
     initialEmotionalState: initialEmotionalState || null,
