@@ -40,72 +40,51 @@ const ApiSingleAssessmentRecordSchema = z.object({
   data: z.object({
     emotionalProfile: z.union([
       z.record(z.string(), z.number().min(1).max(5)),
-      z.array(
-        z.union([
-          z.object({
-            dimensionName: z.string(),
-            score: z.number().min(1).max(5)
-          }),
-          z.tuple([z.string(), z.number().min(1).max(5)]),
-          z.tuple([z.string(), z.string(), z.string()]) // For [id, name, score_string]
-        ])
-      )
+      z.array(z.any()) // Start with a generic array
     ]).transform((profile, ctx) => {
       if (Array.isArray(profile)) {
         const newRecord: Record<string, number> = {};
-        let conversionOk = true;
         for (const item of profile) {
-          if (Array.isArray(item)) {
-            if (item.length === 3 && typeof item[0] === 'string' && typeof item[1] === 'string' && typeof item[2] === 'string') {
-              const dimensionName = item[1];
-              const scoreValue = parseFloat(item[2]);
-              if (!isNaN(scoreValue) && scoreValue >= 1 && scoreValue <= 5) {
-                newRecord[dimensionName] = scoreValue;
-              } else {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  path: ['emotionalProfile', profile.indexOf(item)],
-                  message: `Invalid score string or out of range in [id, name, score_string] tuple: ${JSON.stringify(item)}. Score string: "${item[2]}". Parsed: ${scoreValue}`,
-                });
-                conversionOk = false; break;
-              }
-            } else if (item.length === 2 && typeof item[0] === 'string' && typeof item[1] === 'number' && item[1] >=1 && item[1] <=5) {
-              newRecord[item[0]] = item[1];
-            } else {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['emotionalProfile', profile.indexOf(item)],
-                message: `Invalid tuple structure in emotionalProfile array: ${JSON.stringify(item)}. Expected [string, number(1-5)] or [id_string, name_string, score_string(1-5)].`,
-              });
-              conversionOk = false; break;
+          if (Array.isArray(item) && item.length === 3 && typeof item[1] === 'string' && (typeof item[2] === 'string' || typeof item[2] === 'number')) {
+            // Handles ["id", "Dimension Name", "score_string"]
+            const dimensionName = item[1];
+            const scoreValue = typeof item[2] === 'string' ? parseFloat(item[2]) : item[2];
+            if (!isNaN(scoreValue) && scoreValue >= 1 && scoreValue <= 5) {
+              newRecord[dimensionName] = scoreValue;
+            }
+          } else if (Array.isArray(item) && item.length === 2 && typeof item[0] === 'string' && (typeof item[1] === 'string' || typeof item[1] === 'number')) {
+            // Handles ["Dimension Name", score_number] or ["Dimension Name", "score_string"]
+            const dimensionName = item[0];
+            const scoreValue = typeof item[1] === 'string' ? parseFloat(item[1]) : item[1];
+             if (!isNaN(scoreValue) && scoreValue >= 1 && scoreValue <= 5) {
+              newRecord[dimensionName] = scoreValue;
             }
           } else if (typeof item === 'object' && item !== null && 'dimensionName' in item && 'score' in item) {
-            const objItem = item as { dimensionName: string, score: number };
-            if (typeof objItem.dimensionName === 'string' && typeof objItem.score === 'number' && objItem.score >=1 && objItem.score <=5) {
-               newRecord[objItem.dimensionName] = objItem.score;
-            } else {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['emotionalProfile', profile.indexOf(item)],
-                message: `Invalid item object structure or score out of range in emotionalProfile array: ${JSON.stringify(item)}. Expected {dimensionName: string, score: number(1-5)}.`,
-              });
-              conversionOk = false; break;
+             // Handles { dimensionName: "...", score: ... }
+            const objItem = item as { dimensionName: string, score: string | number };
+             const scoreValue = typeof objItem.score === 'string' ? parseFloat(objItem.score) : objItem.score;
+             if (typeof objItem.dimensionName === 'string' && !isNaN(scoreValue) && scoreValue >= 1 && scoreValue <= 5) {
+               newRecord[objItem.dimensionName] = scoreValue;
             }
           } else {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['emotionalProfile', profile.indexOf(item)],
-              message: `Unexpected item type in emotionalProfile array: ${JSON.stringify(item)}. Expected object or tuple.`,
-            });
-            conversionOk = false; break;
+            // If none of the structures match, we can ignore or add an issue
+            // For now, we'll just ignore malformed items within the array
+            continue;
           }
         }
-        if (!conversionOk) return z.NEVER;
+        if (Object.keys(newRecord).length === 0 && profile.length > 0) {
+           ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `The emotionalProfile array did not contain any items that could be parsed into a valid record. Original array: ${JSON.stringify(profile)}`,
+           });
+           return z.NEVER;
+        }
         return newRecord;
       }
+      // If it's already an object, just pass it through
       return profile;
     }),
-    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."), // Allows 0-3 items
+    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias.").optional().nullable().transform(val => val ?? []),
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
     respuestas: z.record(z.string(), z.number()).optional().nullable(),
   }),
@@ -431,3 +410,5 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
+
+    
