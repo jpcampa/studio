@@ -370,9 +370,13 @@ export const stressManagementPath: Path = {
                 title: 'Ejercicio 1: Diseña tu Plan de Bienestar Emocional',
                 objective: 'Esta técnica te ayuda a crear un plan práctico y realista para prevenir recaídas. Vas a identificar tus señales personales de sobrecarga, elegir las estrategias que mejor te funcionan y definir rutinas mínimas de cuidado diario. El objetivo es que salgas de esta ruta sabiendo cómo cuidarte mejor en los momentos difíciles, aumentando así tu sensación de control, seguridad y confianza personal.',
             },
-            { type: 'exercise', title: 'Ejercicio 2: Ensayo de Crisis Imaginaria', objective: 'Este ejercicio te permite imaginar una situación de alto estrés desde el yo que eres hoy, con más herramientas, conciencia y autocompasión. Visualizar cómo te cuidarías ante una crisis fortalece tu confianza y refuerza la sensación de que tienes un plan posible cuando todo se vuelve difícil.', audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3", content: [
-                { type: 'paragraph', text: 'Cómo hacerlo:\n1.\tVisualiza un momento en que el estrés te haya superado en el pasado.\n2.\tImagina esa misma situación con los recursos que tienes hoy.\n3.\tReflexiona y escribe:\no\t¿Qué harías diferente? [Campo abierto]\no\t¿Qué te dirías? [Campo abierto]\no\t¿Qué herramienta usarías primero? [Campo abierto]'}
-            ]},
+            {
+                type: 'imaginedCrisisRehearsalExercise',
+                title: 'Ejercicio 2: Ensayo de Crisis Imaginaria',
+                objective: 'Este ejercicio te permite imaginar una situación de alto estrés desde el yo que eres hoy, con más herramientas, conciencia y autocompasión. Visualizar cómo te cuidarías ante una crisis fortalece tu confianza y refuerza la sensación de que tienes un plan posible cuando todo se vuelve difícil.',
+                duration: '10-15 min',
+                audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3",
+            },
             { type: 'title', text: 'Resumen Clave de la Semana'},
             { type: 'list', items: ['El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.', 'Tener un plan personal te permite actuar antes de desbordarte.', 'Reconocer tus señales tempranas es una forma de autocuidado.', 'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.']},
             { type: 'quote', text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.'}

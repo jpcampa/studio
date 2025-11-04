@@ -687,6 +687,14 @@ export type CalmVisualizationExerciseContent = {
     audioUrl?: string;
 };
 
+// Nuevo tipo de ejercicio para el Ensayo de Crisis Imaginaria
+export type ImaginedCrisisRehearsalExerciseContent = {
+    type: 'imaginedCrisisRehearsalExercise';
+    title: 'Ejercicio 2: Ensayo de Crisis Imaginaria';
+    objective: string;
+    duration?: string;
+    audioUrl?: string;
+};
 
 // A union type for all possible content block types within a module
 export type ModuleContent =
@@ -795,7 +803,9 @@ export type ModuleContent =
   | StopExerciseContent
   | QuestionYourIfsExerciseContent
   | ExposureLadderExerciseContent
-  | CalmVisualizationExerciseContent;
+  | CalmVisualizationExerciseContent
+  // NUEVO
+  | ImaginedCrisisRehearsalExerciseContent;
 
 // Defines a single module within a guided path
 export type PathModule = {
@@ -806,3 +816,5 @@ export type PathModule = {
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
 };
+
+    

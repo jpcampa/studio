@@ -45,6 +45,7 @@ import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExe
 import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent, SelfAcceptanceAudioExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
+import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
 
 
 // Componente para manejar las reflexiones del cuaderno terapéutico
@@ -1039,6 +1040,10 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         const calmVisContent = contentItem as Extract<ModuleContent, { type: 'calmVisualizationExercise' }>;
         return <CalmVisualizationExercise key={index} content={calmVisContent} pathId={pathId} />;
     }
+    case 'imaginedCrisisRehearsalExercise': {
+      const crisisRehearsalContent = contentItem as Extract<ModuleContent, { type: 'imaginedCrisisRehearsalExercise' }>;
+      return <ImaginedCrisisRehearsalExercise key={index} content={crisisRehearsalContent} pathId={pathId} />;
+    }
     default:
       return null;
   }
@@ -1194,6 +1199,5 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
-
 
     
