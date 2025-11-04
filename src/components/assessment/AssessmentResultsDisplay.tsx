@@ -35,7 +35,7 @@ import { pathsData } from '@/data/pathsData';
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput | null;
-  rawAnswers?: Record<string, number> | null;
+  rawAnswers?: Record<string, { score: number, weight: number }> | null;
   userId?: string | null;
   onRetake: () => void;
   assessmentTimestamp?: string;

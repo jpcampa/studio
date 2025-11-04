@@ -4,14 +4,20 @@
 import { initialAssessment, type InitialAssessmentInput, type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { z } from 'zod';
 
-const assessmentAnswersSchema = z.record(z.string(), z.coerce.number().min(1).max(5));
+const assessmentAnswersSchema = z.record(
+  z.string(),
+  z.object({
+    score: z.coerce.number().min(1).max(5),
+    weight: z.coerce.number(),
+  })
+);
 
 export type ServerAssessmentResult = 
   | { success: true; data: InitialAssessmentOutput }
   | { success: false; error: string };
 
 export async function submitAssessment(
-  answers: Record<string, number>
+  answers: Record<string, { score: number; weight: number }>
 ): Promise<ServerAssessmentResult> {
   try {
     console.log("SubmitAssessment Action START: Received raw answers:", JSON.stringify(answers));
@@ -23,18 +29,23 @@ export async function submitAssessment(
     }
     console.log("SubmitAssessment Action: Validated answers:", JSON.stringify(validatedAnswers.data));
 
+    // Extraer solo las puntuaciones para el flujo de IA, ya que el flujo ya conoce los pesos.
+    const scoresOnly: Record<string, number> = Object.entries(
+      validatedAnswers.data
+    ).reduce((acc, [key, value]) => {
+      acc[key] = value.score;
+      return acc;
+    }, {} as Record<string, number>);
+
+
     const input: InitialAssessmentInput = {
-      answers: validatedAnswers.data,
+      answers: scoresOnly,
     };
 
-    console.log("SubmitAssessment Action: Calling initialAssessment flow with input:", JSON.stringify(input));
+    console.log("SubmitAssessment Action: Calling initialAssessment flow with input (scores only):", JSON.stringify(input));
     const result = await initialAssessment(input);
     console.log("SubmitAssessment Action: Received result object from initialAssessment flow:", JSON.stringify(result, null, 2));
     
-    // Validate the structure of the result, especially emotionalProfile's values
-    // and ensure priorityAreas and feedback are present and correctly typed.
-    // The InitialAssessmentOutputSchema from the flow already does a good job,
-    // but an extra check here can catch issues if the flow's schema validation was bypassed or incomplete.
     if (!result || 
         !result.emotionalProfile || 
         Object.keys(result.emotionalProfile).length === 0 ||

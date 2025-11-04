@@ -28,14 +28,14 @@ const API_SAVE_TIMEOUT_MS = 15000; // 15 segundos para el guardado
 interface AssessmentSavePayload {
   assessmentId: string;
   userId: string;
-  rawAnswers: Record<string, number>;
+  rawAnswers: Record<string, { score: number; weight: number }>;
   aiInterpretation: InitialAssessmentOutput;
   assessmentTimestamp: string;
 }
 
 export interface StoredAssessmentResults {
     aiInterpretation: InitialAssessmentOutput;
-    rawAnswers: Record<string, number>;
+    rawAnswers: Record<string, { score: number; weight: number }>;
 }
 
 export default function AssessmentPage() {
@@ -47,7 +47,7 @@ export default function AssessmentPage() {
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
   const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
 
-  const handleSubmit = async (answers: Record<string, number>) => {
+  const handleSubmit = async (answers: Record<string, { score: number; weight: number }>) => {
     setIsSubmitting(true);
     setIsProcessingModalVisible(true);
     setGeneratedSaveUrl(null); 
@@ -67,8 +67,14 @@ export default function AssessmentPage() {
         localStorage.setItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY, JSON.stringify(resultsToStore));
         console.log("AssessmentPage: Results and raw answers saved to sessionStorage:", JSON.stringify(resultsToStore).substring(0,200) + "...");
         
-        // Save to assessment history store (localStorage based)
-        saveAssessmentToHistory(result.data, answers);
+        // Extraer solo las puntuaciones para el guardado en el historial local,
+        // que espera un Record<string, number>
+        const scoresOnlyForHistory: Record<string, number> = Object.entries(answers).reduce((acc, [key, value]) => {
+          acc[key] = value.score;
+          return acc;
+        }, {} as Record<string, number>);
+
+        saveAssessmentToHistory(result.data, scoresOnlyForHistory);
         console.log("AssessmentPage: Results also saved to local assessment history store.");
 
       } catch (error) {
@@ -95,7 +101,7 @@ export default function AssessmentPage() {
         const payloadToSave: AssessmentSavePayload = {
           assessmentId: assessmentId,
           userId: user.id,
-          rawAnswers: answers,
+          rawAnswers: answers, // Ahora answers ya incluye el peso
           aiInterpretation: result.data,
           assessmentTimestamp: assessmentTimestamp,
         };
@@ -176,10 +182,13 @@ export default function AssessmentPage() {
   };
 
   const handleDevSubmit = async () => {
-    const randomAnswers: Record<string, number> = {};
+    const randomAnswers: Record<string, { score: number, weight: number }> = {};
     assessmentDimensions.forEach(dimension => {
       dimension.items.forEach(item => {
-        randomAnswers[item.id] = Math.floor(Math.random() * 5) + 1; 
+        randomAnswers[item.id] = {
+          score: Math.floor(Math.random() * 5) + 1,
+          weight: item.weight, // Incluimos el peso real del item
+        };
       });
     });
     await handleSubmit(randomAnswers);

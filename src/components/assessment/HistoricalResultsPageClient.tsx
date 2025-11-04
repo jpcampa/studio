@@ -9,6 +9,7 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 import { useUser } from '@/contexts/UserContext';
+import { assessmentDimensions } from '@/data/assessmentDimensions';
 
 interface HistoricalResultsPageClientProps {
   assessmentId: string;
@@ -87,12 +88,30 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       priorityAreas: assessmentRecord.data.priorityAreas,
       feedback: assessmentRecord.data.feedback,
   };
+  
+  // Reconstruct rawAnswers with weights for display if they are missing
+  const rawAnswersWithWeight = assessmentRecord.data.respuestas ?
+    Object.entries(assessmentRecord.data.respuestas).reduce((acc, [key, value]) => {
+      // Find the corresponding item in assessmentDimensions to get the weight
+      let weight = 1; // Default weight
+      for (const dim of assessmentDimensions) {
+        const item = dim.items.find(i => i.id === key);
+        if (item) {
+          weight = item.weight;
+          break;
+        }
+      }
+      acc[key] = { score: value, weight: weight };
+      return acc;
+    }, {} as Record<string, { score: number, weight: number }>)
+    : null;
+
 
   return (
     <div className="container mx-auto py-8">
       <AssessmentResultsDisplay 
         results={resultsForDisplay} 
-        rawAnswers={assessmentRecord.data.respuestas}
+        rawAnswers={rawAnswersWithWeight}
         userId={user?.id}
         onRetake={handleRetakeAssessment}
         assessmentTimestamp={assessmentRecord.timestamp} 

@@ -40,7 +40,7 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 interface QuestionnaireFormProps {
-  onSubmit: (answers: Record<string, number>) => Promise<void>;
+  onSubmit: (answers: Record<string, { score: number; weight: number }>) => Promise<void>;
   isSubmitting: boolean;
 }
 
@@ -49,7 +49,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const router = useRouter();
   const [currentDimensionIndex, setCurrentDimensionIndex] = useState(0);
   const [currentItemIndexInDimension, setCurrentItemIndexInDimension] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answers, setAnswers] = useState<Record<string, { score: number; weight: number }>>({});
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
   
   const currentDimension = assessmentDimensions[currentDimensionIndex];
@@ -71,8 +71,11 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     }
   };
 
-  const handleAnswerChange = (itemId: string, value: string) => {
-    setAnswers(prev => ({ ...prev, [itemId]: parseInt(value) }));
+  const handleAnswerChange = (item: AssessmentItem, value: string) => {
+    setAnswers(prev => ({
+      ...prev,
+      [item.id]: { score: parseInt(value), weight: item.weight }
+    }));
     
     // Trigger auto-advance only on new interaction
     setTimeout(() => {
@@ -116,7 +119,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     if (e) e.preventDefault();
     
     const allAnswered = assessmentDimensions.every(dim =>
-      dim.items.every(item => answers.hasOwnProperty(item.id) && answers[item.id] >= 1 && answers[item.id] <=5)
+      dim.items.every(item => answers.hasOwnProperty(item.id) && answers[item.id].score >= 1 && answers[item.id].score <=5)
     );
 
     if (!allAnswered) {
@@ -167,8 +170,8 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
               <Progress value={itemsInCurrentDimensionProgress} className="w-3/4 mx-auto mb-4 h-2" aria-label={`Progreso en dimensión actual: ${itemsInCurrentDimensionProgress}%`} />
               <p className="text-md sm:text-lg font-semibold text-primary mb-4 min-h-[3em] text-center px-2">{currentItem.text}</p>
               <RadioGroup
-                value={answers[currentItem.id]?.toString() || ""}
-                onValueChange={(value) => handleAnswerChange(currentItem.id, value)}
+                value={answers[currentItem.id]?.score.toString() || ""}
+                onValueChange={(value) => handleAnswerChange(currentItem, value)}
                 className="flex flex-wrap justify-center items-center gap-1 sm:gap-2 pt-2"
                 aria-label={currentItem.text}
               >
@@ -182,7 +185,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
                         "flex flex-col items-center justify-center p-1 border-2 rounded-lg cursor-pointer transition-all duration-150 ease-in-out",
                         "hover:border-primary hover:shadow-md",
                         "w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16", 
-                        answers[currentItem.id] === option.value
+                        answers[currentItem.id]?.score === option.value
                           ? "bg-primary/10 border-primary ring-2 ring-primary shadow-lg scale-105"
                           : "bg-background border-input"
                       )}
