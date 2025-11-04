@@ -169,5 +169,3 @@ ${weeklyMicroAction || 'No especificada.'}
     </Card>
   );
 }
-
-    
