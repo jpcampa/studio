@@ -7,13 +7,14 @@ import { useTranslations } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatAssessmentTimestamp, type AssessmentRecord, overwriteAssessmentHistory } from '@/data/assessmentHistoryStore'; // Import overwriteAssessmentHistory
-import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
+import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw, FileJson } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/contexts/UserContext';
 import { forceEncryptStringAES, decryptDataAES } from '@/lib/encryption';
 import { z } from 'zod';
 import type { InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 // API constants
 const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
@@ -106,9 +107,10 @@ const ApiSingleAssessmentRecordSchema = z.object({
     }),
     priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias."), // Allows 0-3 items
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
-    respuestas: z.array(z.tuple([z.string(), z.string(), z.string()])).optional(),
+    respuestas: z.record(z.string(), z.number()).optional(),
   }),
 });
+
 
 const ApiFetchedAssessmentsSchema = z.array(ApiSingleAssessmentRecordSchema);
 
@@ -355,50 +357,78 @@ export default function MyAssessmentsPage() {
 
       {assessments.length > 0 && (
         <div className="space-y-8">
-          {assessments.map((assessment) => (
-            <Card key={assessment.id} className="shadow-lg hover:shadow-xl transition-shadow flex flex-col max-w-2xl mx-auto">
-              <CardHeader>
-                <div className="flex justify-between items-start mb-2">
-                    <Badge variant="outline" className="text-xs">
-                        {formatAssessmentTimestamp(assessment.timestamp)}
-                    </Badge>
-                    <History className="h-5 w-5 text-primary" />
-                </div>
-                <CardTitle className="text-xl text-accent">{t.assessmentDateLabel.replace("{date}", formatAssessmentTimestamp(assessment.timestamp).split(',')[0])}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                {assessment.data.priorityAreas && assessment.data.priorityAreas.length > 0 && (
-                  <>
-                    <p className="text-sm font-medium text-muted-foreground mb-1 flex items-center">
-                        <ListChecks className="h-4 w-4 mr-2 text-primary/80" />
-                        Áreas Prioritarias Identificadas:
-                    </p>
-                    <ul className="list-disc list-inside pl-1 space-y-0.5 text-sm">
-                      {assessment.data.priorityAreas.slice(0, 2).map((area, index) => (
-                        <li key={index} className="truncate" title={area}>{area.split('(')[0].trim()}</li>
-                      ))}
-                      {assessment.data.priorityAreas.length > 2 && (
-                        <li className="text-xs text-muted-foreground italic">...y {assessment.data.priorityAreas.length - 2} más.</li>
-                      )}
-                    </ul>
-                  </>
-                )}
-                {(!assessment.data.priorityAreas || assessment.data.priorityAreas.length === 0) && (
-                    <p className="text-sm text-muted-foreground italic">No se identificaron áreas prioritarias específicas en esta evaluación.</p>
-                )}
-              </CardContent>
-              <CardFooter>
-                <Button asChild variant="default" className="w-full">
-                  <Link href={`/assessment/history-results/${assessment.id}`}>
-                    <Eye className="mr-2 h-4 w-4" />
-                    {t.viewAssessmentResultsButton}
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+          {assessments.map((assessment) => {
+            const payloadForDisplay = {
+                assessmentId: assessment.id,
+                userId: user?.id, // Use the currently logged-in user's ID
+                assessmentTimestamp: assessment.timestamp,
+                rawAnswers: assessment.data.respuestas, // The raw answers are in the 'respuestas' field
+                aiInterpretation: {
+                    emotionalProfile: assessment.data.emotionalProfile,
+                    priorityAreas: assessment.data.priorityAreas,
+                    feedback: assessment.data.feedback,
+                },
+            };
+
+            return (
+              <Card key={assessment.id} className="shadow-lg hover:shadow-xl transition-shadow flex flex-col max-w-2xl mx-auto">
+                <CardHeader>
+                  <div className="flex justify-between items-start mb-2">
+                      <Badge variant="outline" className="text-xs">
+                          {formatAssessmentTimestamp(assessment.timestamp)}
+                      </Badge>
+                      <History className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl text-accent">{t.assessmentDateLabel.replace("{date}", formatAssessmentTimestamp(assessment.timestamp).split(',')[0])}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  {assessment.data.priorityAreas && assessment.data.priorityAreas.length > 0 && (
+                    <>
+                      <p className="text-sm font-medium text-muted-foreground mb-1 flex items-center">
+                          <ListChecks className="h-4 w-4 mr-2 text-primary/80" />
+                          Áreas Prioritarias Identificadas:
+                      </p>
+                      <ul className="list-disc list-inside pl-1 space-y-0.5 text-sm">
+                        {assessment.data.priorityAreas.slice(0, 2).map((area, index) => (
+                          <li key={index} className="truncate" title={area}>{area.split('(')[0].trim()}</li>
+                        ))}
+                        {assessment.data.priorityAreas.length > 2 && (
+                          <li className="text-xs text-muted-foreground italic">...y {assessment.data.priorityAreas.length - 2} más.</li>
+                        )}
+                      </ul>
+                    </>
+                  )}
+                  {(!assessment.data.priorityAreas || assessment.data.priorityAreas.length === 0) && (
+                      <p className="text-sm text-muted-foreground italic">No se identificaron áreas prioritarias específicas en esta evaluación.</p>
+                  )}
+                </CardContent>
+                <CardFooter className="flex-col items-stretch space-y-4">
+                  <Button asChild variant="default" className="w-full">
+                    <Link href={`/assessment/history-results/${assessment.id}`}>
+                      <Eye className="mr-2 h-4 w-4" />
+                      {t.viewAssessmentResultsButton}
+                    </Link>
+                  </Button>
+                  <Accordion type="single" collapsible>
+                      <AccordionItem value="item-1" className="border-b-0">
+                          <AccordionTrigger className="text-sm text-muted-foreground hover:no-underline justify-center">
+                              <FileJson className="mr-2 h-4 w-4" />
+                              Mostrar datos de la evaluación (Payload)
+                          </AccordionTrigger>
+                          <AccordionContent>
+                              <pre className="mt-2 w-full whitespace-pre-wrap break-all rounded-md bg-slate-950 p-4 text-xs text-white">
+                                  <code>{JSON.stringify(payloadForDisplay, null, 2)}</code>
+                              </pre>
+                          </AccordionContent>
+                      </AccordionItem>
+                  </Accordion>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
       )}
     </div>
   );
 }
+
