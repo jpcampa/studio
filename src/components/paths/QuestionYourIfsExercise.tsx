@@ -72,5 +72,3 @@ export function QuestionYourIfsExercise({ content, pathId }: QuestionYourIfsExer
     </Card>
   );
 }
-
-    

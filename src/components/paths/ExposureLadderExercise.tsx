@@ -111,5 +111,3 @@ ${filledSteps.map((s, i) => `${i + 1}. ${s}`).join('\n')}
     </Card>
   );
 }
-
-    

@@ -101,5 +101,3 @@ ${nextAction}
     </Card>
   );
 }
-
-    

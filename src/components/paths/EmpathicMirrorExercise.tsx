@@ -14,6 +14,7 @@ import { Edit3, CheckCircle, ArrowRight } from 'lucide-react';
 import type { EmpathicMirrorExerciseContent } from '@/data/paths/pathTypes';
 import { emotions } from '@/components/dashboard/EmotionalEntryForm';
 import { useTranslations } from '@/lib/translations';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 
 interface EmpathicMirrorExerciseProps {
@@ -60,6 +61,29 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
     switch(step) {
         case 0:
             return (
+                <div className="p-4 space-y-4 text-center">
+                    <p className="italic text-muted-foreground">Te mostramos un ejemplo para guiarte. Lo importante es que uses tus propias palabras y seas honesto/a contigo.</p>
+                    <Accordion type="single" collapsible className="w-full text-left">
+                    <AccordionItem value="example">
+                        <AccordionTrigger>Ver ejemplo completo</AccordionTrigger>
+                        <AccordionContent>
+                        <div className="space-y-3 text-sm p-2 border bg-background rounded-md">
+                            <p><strong>Situación:</strong> “Mi jefe me pidió quedarme para una tarea urgente cuando ya salía.”</p>
+                            <p><strong>Cuerpo:</strong> Tensión en la mandíbula, presión en el pecho.</p>
+                            <p><strong>Emoción:</strong> Frustración (80%).</p>
+                            <p><strong>Pensamiento:</strong> "Si digo que no, pensará que no soy profesional". (Creído al 85%).</p>
+                            <p><strong>Impulso:</strong> Aceptar sin discutir.</p>
+                            <p><strong>Límite necesario:</strong> Sí, estaba sobrepasado/a.</p>
+                            <p><strong>Respuesta alternativa:</strong> "Me encantaría, pero hoy no puedo. Mañana lo vemos." (Confianza: 65%).</p>
+                        </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                    </Accordion>
+                    <Button onClick={next}><ArrowRight className="mr-2 h-4 w-4" />Empezar mi registro</Button>
+                </div>
+            );
+        case 1:
+            return (
                 <div className="p-4 space-y-4 animate-in fade-in-0 duration-500">
                     <h4 className="font-semibold text-lg text-primary">Paso 1: Recuerda una conversación reciente</h4>
                     <p className="text-sm text-muted-foreground">Piensa en una conversación reciente o habitual en la que alguien te compartió algo con carga emocional.</p>
@@ -74,7 +98,7 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
                     <Button onClick={next} className="w-full">Siguiente <ArrowRight className="ml-2 h-4 w-4" /></Button>
                 </div>
             );
-        case 1:
+        case 2:
             return (
                 <div className="p-4 space-y-4 animate-in fade-in-0 duration-500">
                     <h4 className="font-semibold text-lg text-primary">Paso 2: ¿Qué emoción estaba detrás?</h4>
@@ -84,7 +108,7 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
                         <Select value={perceivedEmotion} onValueChange={setPerceivedEmotion}>
                             <SelectTrigger id="perceived-emotion"><SelectValue placeholder="Elige una emoción..." /></SelectTrigger>
                             <SelectContent>
-                                {emotions.map(e => <SelectItem key={e.value} value={e.value}>{t[e.labelKey as keyof typeof t]}</SelectItem>)}
+                                {emotions.map(e => <SelectItem key={e.value} value={e.labelKey}>{t[e.labelKey as keyof typeof t]}</SelectItem>)}
                                 <SelectItem value="otra">Otra...</SelectItem>
                             </SelectContent>
                         </Select>
@@ -95,7 +119,7 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
                     <Button onClick={next} className="w-full">Siguiente <ArrowRight className="ml-2 h-4 w-4" /></Button>
                 </div>
             );
-        case 2:
+        case 3:
             return (
                  <div className="p-4 space-y-4 animate-in fade-in-0 duration-500">
                     <h4 className="font-semibold text-lg text-primary">Paso 3: Practica tu frase-espejo</h4>
@@ -110,7 +134,7 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
                     <Button onClick={next} className="w-full">Siguiente <ArrowRight className="ml-2 h-4 w-4" /></Button>
                 </div>
             );
-        case 3:
+        case 4:
             return (
                  <div className="p-4 space-y-4 animate-in fade-in-0 duration-500">
                     <h4 className="font-semibold text-lg text-primary">Paso 4: Detecta frases que invalidan (para evitarlas)</h4>
@@ -132,7 +156,7 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
                     <Button onClick={next} className="w-full">Siguiente <ArrowRight className="ml-2 h-4 w-4" /></Button>
                 </div>
             );
-        case 4:
+        case 5:
             return (
                  <div className="p-4 space-y-4 animate-in fade-in-0 duration-500">
                     <h4 className="font-semibold text-lg text-primary">Paso 5: Define tu próxima microacción empática</h4>
@@ -169,6 +193,3 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
     </Card>
   );
 }
-
-
-    

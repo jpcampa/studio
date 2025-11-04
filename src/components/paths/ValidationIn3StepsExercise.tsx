@@ -34,7 +34,7 @@ export function ValidationIn3StepsExercise({ content, pathId }: ValidationIn3Ste
   const next = () => setStep(prev => prev + 1);
 
   const handleComplete = () => {
-    if (step === 4 && (!blockageReflection.trim() || !nextStepReflection.trim())) {
+    if (step === 3 && (!blockageReflection.trim() || !nextStepReflection.trim())) {
       toast({ title: "Reflexión Incompleta", description: "Por favor, completa ambos campos de reflexión.", variant: "destructive" });
       return;
     }
@@ -71,7 +71,7 @@ export function ValidationIn3StepsExercise({ content, pathId }: ValidationIn3Ste
             return (
                  <div className="p-4 space-y-4 animate-in fade-in-0 duration-500">
                     <h4 className="font-semibold text-lg text-primary">Paso 2: Nómbralo y dale sentido</h4>
-                    <p className="text-sm text-muted-foreground">Conecta esa emoción con la situación que la generó. Usa esta fórmula: “Entiendo que estés [emoción] porque [situación].”</p>
+                    <p className="text-sm text-muted-foreground">Conecta esa emoción con la situación que la generó. Usa esta fórmula como guía: “Entiendo que estés [emoción] porque [situación].”</p>
                     <div className="p-2 border-l-2 border-accent bg-accent/10 italic text-sm">
                         <p>Ejemplo: “Entiendo que estés frustrada porque sentías que habías dado mucho y nadie lo valoró.”</p>
                     </div>
