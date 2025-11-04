@@ -284,7 +284,7 @@ export default function DashboardPage() {
     <div className="container mx-auto py-8 space-y-10">
       <div className="text-center md:text-left">
         <h1 className="text-3xl md:text-4xl font-bold text-primary">
-          {t.welcome}, {user?.name || "Usuarie"}! 👋
+          {t.welcome}, {user?.name || "Usuarie"}!
         </h1>
         <p className="text-lg text-muted-foreground mt-1">{t.dashboardGreeting}</p>
       </div>
