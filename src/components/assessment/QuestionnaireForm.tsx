@@ -173,7 +173,20 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   };
 
   const handleSaveForLater = () => {
-    saveProgress(currentDimensionIndex, currentItemIndexInDimension, answers);
+    const isLastDimension = currentDimensionIndex === assessmentDimensions.length - 1;
+    let dimToSave = currentDimensionIndex;
+    let itemToSave = currentItemIndexInDimension;
+    
+    // Check if we are at the end of a dimension (but not the very last one of the assessment)
+    const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
+
+    if (isLastItemInDimension && !isLastDimension) {
+      // If we are at the last item of a dimension, save the position for the START of the next one.
+      dimToSave = currentDimensionIndex + 1;
+      itemToSave = 0;
+    }
+
+    saveProgress(dimToSave, itemToSave, answers);
     toast({
         title: "Progreso Guardado",
         description: "Puedes continuar tu evaluación más tarde desde 'Mis Evaluaciones'.",
