@@ -1,32 +1,17 @@
 
 import { NextResponse } from 'next/server';
-
-const EXTERNAL_QUESTIONS_URL = 'https://workwellfut.com/preguntaseval/assessment-questions.json';
+import assessmentQuestions from '@/data/assessment-questions.json';
 
 export async function GET() {
   try {
-    const response = await fetch(EXTERNAL_QUESTIONS_URL, {
-      cache: 'no-store', // Asegura que siempre se obtengan los datos más recientes
-    });
-
-    if (!response.ok) {
-      // Si la respuesta de la API externa no es exitosa, devolvemos un error
-      return NextResponse.json(
-        { error: `Failed to fetch questions from external source: ${response.statusText}` },
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
-    
-    // Devolvemos los datos obtenidos con una respuesta exitosa
-    return NextResponse.json(data);
+    // Ahora los datos se leen directamente del archivo JSON importado
+    return NextResponse.json(assessmentQuestions);
 
   } catch (error) {
     console.error('Error in /api/assessment-questions:', error);
-    // Si hay un error en la petición fetch (ej. de red), devolvemos un error de servidor
+    // Este error solo ocurriría si el archivo JSON está corrupto o no se encuentra
     return NextResponse.json(
-      { error: 'Internal Server Error while fetching assessment questions.' },
+      { error: 'Internal Server Error while serving assessment questions.' },
       { status: 500 }
     );
   }

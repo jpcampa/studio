@@ -1,6 +1,5 @@
 
-"use client";
-
+import assessmentQuestions from './assessment-questions.json';
 import type { Path } from './pathsData';
 
 export interface AssessmentItem {
@@ -18,22 +17,13 @@ export interface AssessmentDimension {
   recommendedPathId?: string;
 }
 
-// Función para cargar las preguntas desde la ruta de API interna
+// Esta función ahora puede ser usada tanto en cliente como en servidor
+// ya que lee directamente del archivo JSON local.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  try {
-    // Apuntamos a nuestra propia API route que actúa como proxy
-    const response = await fetch('/api/assessment-questions', {
-      cache: 'no-store'
-    });
-    if (!response.ok) {
-      throw new Error(`Error al cargar las preguntas desde la API interna: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data as AssessmentDimension[];
-  } catch (error) {
-    console.error("Error fetching assessment dimensions from internal API:", error);
-    throw new Error("No se pudieron cargar las preguntas de la evaluación. Por favor, revisa la conexión y la API interna.");
-  }
+  // Simplemente devuelve los datos importados.
+  // La envoltura en Promise.resolve mantiene la interfaz asíncrona
+  // por si en el futuro se vuelve a una fuente de datos externa.
+  return Promise.resolve(assessmentQuestions as AssessmentDimension[]);
 }
 
 
