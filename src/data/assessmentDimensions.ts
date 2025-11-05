@@ -1,10 +1,11 @@
 
+import type { Path } from './pathsData';
 
 export interface AssessmentItem {
   id: string;
   text: string;
-  weight: number; // The weight of the question in the calculation
-  isInverse?: boolean; // Optional: true if a lower score is better for the user
+  weight: number;
+  isInverse?: boolean;
 }
 
 export interface AssessmentDimension {
@@ -12,24 +13,18 @@ export interface AssessmentDimension {
   name: string;
   definition: string;
   items: AssessmentItem[];
-  recommendedPathId?: string; // NEW: Explicitly link dimension to a path ID
+  recommendedPathId?: string;
 }
 
-// Fetch assessment questions from the external URL
+// Fetch assessment questions from the local JSON file
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
   try {
-    const response = await fetch('https://workwellfut.com/preguntaseval/assessment-questions.json', {
-      cache: 'no-store' // Asegura que siempre se obtengan los datos más recientes
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch assessment questions: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data as AssessmentDimension[];
+    // Since this file is in the server, we use dynamic import for the local JSON
+    const data = await import('./assessment-questions.json');
+    // The default export of a JSON module is the JSON content itself.
+    return data.default as AssessmentDimension[];
   } catch (error) {
-    console.error("Error fetching assessment dimensions from URL:", error);
-    // En caso de error, podríamos devolver un array vacío o lanzar el error
-    // para que el componente que lo llama muestre un mensaje de error al usuario.
+    console.error("Error fetching assessment dimensions from local JSON:", error);
     throw new Error("No se pudieron cargar las preguntas de la evaluación desde el servidor.");
   }
 }
