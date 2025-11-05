@@ -20,7 +20,7 @@ import {
   AlertDialogTitle 
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 
 const FrownIcon = require('lucide-react').Frown;
