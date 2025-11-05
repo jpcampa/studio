@@ -1,4 +1,6 @@
 
+"use client"; // Importante: Marcar como componente de cliente para que fetch se ejecute en el navegador
+
 import type { Path } from './pathsData';
 
 export interface AssessmentItem {
@@ -16,18 +18,25 @@ export interface AssessmentDimension {
   recommendedPathId?: string;
 }
 
-// Fetch assessment questions from the local JSON file
+// Función para cargar las preguntas desde la URL externa
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
   try {
-    // Since this file is in the server, we use dynamic import for the local JSON
-    const data = await import('./assessment-questions.json');
-    // The default export of a JSON module is the JSON content itself.
-    return data.default as AssessmentDimension[];
+    const response = await fetch('https://workwellfut.com/preguntaseval/assessment-questions.json', {
+      cache: 'no-store' // Asegura que siempre se obtengan los datos más recientes
+    });
+    if (!response.ok) {
+      throw new Error(`Error al cargar las preguntas: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data as AssessmentDimension[];
   } catch (error) {
-    console.error("Error fetching assessment dimensions from local JSON:", error);
-    throw new Error("No se pudieron cargar las preguntas de la evaluación desde el servidor.");
+    console.error("Error fetching assessment dimensions from external URL:", error);
+    // En caso de error, podríamos devolver un array vacío o lanzar un error para que el componente que llama lo maneje.
+    // Lanzar el error es más explícito.
+    throw new Error("No se pudieron cargar las preguntas de la evaluación. Por favor, revisa la conexión y la URL.");
   }
 }
+
 
 export const likertOptions = [
   { value: 1, label: 'Frown', description: 'Nada' },

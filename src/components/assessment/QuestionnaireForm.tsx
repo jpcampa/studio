@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
-import { Loader2, ArrowRight, CheckCircle, Save, Info, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle, Save, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
   AlertDialog, 
@@ -20,7 +20,7 @@ import {
   AlertDialogTitle 
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 
 const FrownIcon = require('lucide-react').Frown;
