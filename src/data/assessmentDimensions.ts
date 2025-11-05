@@ -1,5 +1,4 @@
 
-import assessmentQuestions from './assessment-questions.json';
 
 export interface AssessmentItem {
   id: string;
@@ -16,15 +15,23 @@ export interface AssessmentDimension {
   recommendedPathId?: string; // NEW: Explicitly link dimension to a path ID
 }
 
-// Simulate fetching data from an API
+// Fetch assessment questions from the external URL
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  // In a real app, this would be a fetch call to an external API:
-  // const response = await fetch('https://api.example.com/assessment-questions');
-  // const data = await response.json();
-  // For now, we'll just return the imported JSON data.
-  // We add a small delay to simulate network latency.
-  await new Promise(resolve => setTimeout(resolve, 50));
-  return assessmentQuestions as AssessmentDimension[];
+  try {
+    const response = await fetch('https://workwellfut.com/preguntaseval/assessment-questions.json', {
+      cache: 'no-store' // Asegura que siempre se obtengan los datos más recientes
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch assessment questions: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data as AssessmentDimension[];
+  } catch (error) {
+    console.error("Error fetching assessment dimensions from URL:", error);
+    // En caso de error, podríamos devolver un array vacío o lanzar el error
+    // para que el componente que lo llama muestre un mensaje de error al usuario.
+    throw new Error("No se pudieron cargar las preguntas de la evaluación desde el servidor.");
+  }
 }
 
 export const likertOptions = [
