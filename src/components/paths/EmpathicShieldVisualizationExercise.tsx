@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -89,3 +90,5 @@ export function EmpathicShieldVisualizationExercise({ content, pathId }: Empathi
     </Card>
   );
 }
+
+    

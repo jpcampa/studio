@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -139,3 +140,5 @@ export function ValidationIn3StepsExercise({ content, pathId }: ValidationIn3Ste
     </Card>
   );
 }
+
+    

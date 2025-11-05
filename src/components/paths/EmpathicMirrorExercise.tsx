@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -192,3 +193,5 @@ export function EmpathicMirrorExercise({ content, pathId }: EmpathicMirrorExerci
     </Card>
   );
 }
+
+    

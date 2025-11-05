@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -153,3 +154,5 @@ export function EmotionalInvolvementTrafficLightExercise({ content, pathId }: Em
     </Card>
   );
 }
+
+    
