@@ -136,6 +136,10 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const handleAnswerChange = (item: AssessmentItem, value: string) => {
     const newAnswers = { ...answers, [item.id]: { score: parseInt(value), weight: item.weight } };
     setAnswers(newAnswers);
+    // Avance automático
+    setTimeout(() => {
+        handleNextStep();
+    }, 250); // Pequeño delay para que el usuario vea su selección
   };
 
   const handleDialogContinue = () => {
@@ -211,6 +215,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const isLastItemOfLastDimension = currentDimensionIndex === assessmentDimensions.length - 1 && currentItemIndexInDimension === currentDimension.items.length - 1;
   const allItemsAnswered = assessmentDimensions.every(dim => dim.items.every(item => answers.hasOwnProperty(item.id)));
   const isFirstQuestion = currentDimensionIndex === 0 && currentItemIndexInDimension === 0;
+  const isNextButtonActive = answers[currentItem.id] !== undefined;
 
   const itemProgressText = t.itemProgress
     .replace('{currentItem}', (currentItemIndexInDimension + 1).toString())
@@ -263,7 +268,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             <ArrowLeft className="mr-2 h-4 w-4" /> Anterior
           </Button>
           {!isLastItemOfLastDimension && (
-            <Button onClick={handleNextStep} disabled={!answers[currentItem.id]} className="w-full sm:w-auto mt-2 sm:mt-0">
+            <Button onClick={handleNextStep} disabled={!isNextButtonActive} className="w-full sm:w-auto mt-2 sm:mt-0" variant={isNextButtonActive ? "default" : "secondary"}>
               Siguiente <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           )}
