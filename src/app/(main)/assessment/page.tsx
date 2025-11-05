@@ -3,16 +3,16 @@
 
 import { useState } from 'react';
 import { QuestionnaireForm } from '@/components/assessment/QuestionnaireForm';
-import { submitAssessment, saveAssessment, type ServerAssessmentResult, type SaveResult } from '@/actions/assessment';
+import { submitAssessment, type ServerAssessmentResult } from '@/actions/assessment';
+import { saveAssessment, type SaveResult } from '@/actions/client-assessment';
 import { useTranslations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, TestTube2, ShieldQuestion, Loader2 } from 'lucide-react';
+import { TestTube2, ShieldQuestion, Loader2 } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { getAssessmentDimensions } from '@/data/assessmentDimensions';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle as DialogModalTitle, DialogDescription as DialogModalDescription } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
 import { saveAssessmentToHistory } from '@/data/assessmentHistoryStore';
@@ -176,7 +176,7 @@ export default function AssessmentPage() {
         </CardHeader>
         <CardContent>
             <p className="text-xs text-muted-foreground mb-2">
-            Esta URL se genera en el servidor para el intento de guardado y se muestra aquí para depuración.
+            Esta URL se genera para el intento de guardado y se muestra aquí para depuración.
             </p>
             <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
             <code>{generatedSaveUrl}</code>
