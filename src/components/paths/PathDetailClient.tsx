@@ -136,7 +136,10 @@ function TherapeuticNotebookReflectionExercise({ content, pathId }: { content: M
     const [reflection, setReflection] = useState('');
     const [isSaved, setIsSaved] = useState(false);
 
-    if (content.type !== 'therapeuticNotebookReflection') return null;
+    if (content.type !== 'therapeuticNotebookReflection' || !content.prompts || content.prompts.length === 0) {
+      // Agregada verificación para asegurarse de que prompts exista y no esté vacío
+      return null;
+    }
 
     const handleSaveReflection = (e: FormEvent) => {
         e.preventDefault();
@@ -757,6 +760,15 @@ ${progressText || 'No se registraron días.'}
 // ====================================================================
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
+
+// ====================================================================
+// START OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+
+// ====================================================================
+// END OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
