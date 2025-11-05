@@ -1,40 +1,32 @@
 
 "use client";
 
-import type { Path } from './pathsData';
+import type { AssessmentDimension } from './paths/pathTypes';
+import { getAssessmentQuestionsFromApi } from '@/app/api/assessment-questions/route';
 
-export interface AssessmentItem {
-  id: string;
-  text: string;
-  weight: number;
-  isInverse?: boolean;
-}
-
-export interface AssessmentDimension {
-  id: string;
-  name: string;
-  definition: string;
-  items: AssessmentItem[];
-  recommendedPathId?: string;
-}
-
+// Esta función ahora es segura para ser llamada desde el cliente y el servidor.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  try {
-    // Llamamos a nuestra propia API route que actúa como proxy
-    const response = await fetch('/api/assessment-questions', {
-      cache: 'no-store' // Asegura que siempre se obtengan los datos más recientes
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch assessment questions from internal API: ${response.statusText}`);
+  // En el entorno del navegador (cliente), siempre llamaremos a la ruta de la API.
+  if (typeof window !== 'undefined') {
+    try {
+      // Usamos una ruta relativa para que funcione en cualquier entorno (desarrollo, producción).
+      const response = await fetch('/api/assessment-questions', {
+        cache: 'no-store'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch from /api/assessment-questions: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data as AssessmentDimension[];
+    } catch (error) {
+      console.error("Error fetching assessment dimensions from client-side:", error);
+      throw error;
     }
-    const data = await response.json();
-    return data as AssessmentDimension[];
-  } catch (error) {
-    console.error("Error fetching assessment dimensions:", error);
-    // En caso de error, podríamos devolver un array vacío o lanzar el error
-    // para que el componente que llama pueda manejarlo.
-    throw error;
   }
+
+  // Si estamos en el servidor, llamamos directamente a la función lógica de la API.
+  // Esto evita una llamada de red innecesaria del servidor a sí mismo.
+  return getAssessmentQuestionsFromApi();
 }
 
 

@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { getAssessmentDimensions } from '@/data/assessmentDimensions'; // Importar la función
-import type { AssessmentDimension } from '@/data/assessmentDimensions';
+import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
 const InitialAssessmentInputSchema = z.object({
   answers: z
