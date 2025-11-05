@@ -62,7 +62,7 @@
       { "id": "d5_2", "text": "A veces me cuesta entender por qué la gente se siente como se siente.", "weight": 1, "isInverse": true },
       { "id": "d5_3", "text": "Me considero un buen/a oyente.", "weight": 1 },
       { "id": "d5_4", "text": "Siento que mis relaciones cercanas son una fuente de apoyo y energía.", "weight": 1 },
-      { "id": "d5_5",text": "Cuando alguien comparte un problema, mi primer impulso es dar una solución.", "weight": 1, "isInverse": true }
+      { "id": "d5_5", "text": "Cuando alguien comparte un problema, mi primer impulso es dar una solución.", "weight": 1, "isInverse": true }
     ]
   },
   {
