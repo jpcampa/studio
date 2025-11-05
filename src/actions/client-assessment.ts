@@ -2,13 +2,11 @@
 "use client";
 
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
-import { encryptDataAES } from '@/lib/encryption';
 import { useTranslations } from '@/lib/translations';
 
-// NEW: Server Action to save assessment data to the external API
-const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
-const API_KEY = "4463";
-const API_SAVE_TIMEOUT_MS = 15000;
+// La URL de la API ahora apunta a nuestra ruta interna
+const API_PROXY_URL = "/api/save-assessment"; 
+const API_SAVE_TIMEOUT_MS = 20000; // Aumentamos un poco el timeout
 
 interface AssessmentSavePayload {
   assessmentId: string;
@@ -21,45 +19,43 @@ interface AssessmentSavePayload {
 export type SaveResult = {
   success: boolean;
   message: string;
-  debugUrl?: string;
+  debugUrl?: string; // Todavía podemos recibir la URL de depuración del proxy
 };
 
 export async function saveAssessment(payloadToSave: AssessmentSavePayload): Promise<SaveResult> {
   const t = useTranslations();
-  let saveUrlForDebug = "";
+  
   try {
-    const encryptedPayload = encryptDataAES(payloadToSave);
-    saveUrlForDebug = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardarevaluacion&datosEvaluacion=${encodeURIComponent(encryptedPayload)}`;
+    console.log("saveAssessment (Client): Sending payload to internal API proxy:", API_PROXY_URL);
+
+    const response = await fetch(API_PROXY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payloadToSave),
+      signal: AbortSignal.timeout(API_SAVE_TIMEOUT_MS),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.warn("saveAssessment (Client): Internal API proxy returned an error. Status:", response.status, "Response:", result);
+      // Usamos el mensaje que nos devuelve el proxy
+      return { success: false, message: result.message || `Error en el proxy (HTTP ${response.status})`, debugUrl: result.debugUrl };
+    }
     
-    console.log("saveAssessment (Client): Attempting to save assessment. URL (payload encrypted):", saveUrlForDebug.substring(0, 150) + "...");
-
-    const saveResponse = await fetch(saveUrlForDebug, { signal: AbortSignal.timeout(API_SAVE_TIMEOUT_MS) });
-    const saveResponseText = await saveResponse.text();
-
-    if (!saveResponse.ok) {
-      console.warn("saveAssessment (Client): Failed to save assessment to API. Status:", saveResponse.status, "Response Text:", saveResponseText);
-      return { success: false, message: t.assessmentSavedErrorNetworkMessage.replace("{status}", saveResponse.status.toString()).replace("{details}", saveResponseText.substring(0, 100)), debugUrl: saveUrlForDebug };
-    }
-
-    const saveApiResult = JSON.parse(saveResponseText);
-    if (saveApiResult.status === "OK") {
-      console.log("saveAssessment (Client): Assessment successfully saved to API. Response:", saveApiResult);
-      return { success: true, message: t.assessmentSavedSuccessMessage, debugUrl: saveUrlForDebug };
-    } else {
-      console.warn("saveAssessment (Client): API reported 'NOOK'. Message:", saveApiResult.message, "Full Response:", saveApiResult);
-      return { success: false, message: t.assessmentSavedErrorMessageApi.replace("{message}", saveApiResult.message || t.errorOccurred), debugUrl: saveUrlForDebug };
-    }
+    console.log("saveAssessment (Client): Success response from internal API proxy:", result);
+    return { success: result.success, message: result.message, debugUrl: result.debugUrl };
 
   } catch (error: any) {
     let errorMessage = t.assessmentSavedErrorGeneric;
-    if (error.name === 'AbortError' || (error.cause && error.cause.code === 'UND_ERR_CONNECT_TIMEOUT')) {
+    if (error.name === 'AbortError') {
       errorMessage = t.assessmentSavedErrorTimeout;
-    } else if (error instanceof SyntaxError) {
-      errorMessage = "Error procesando la respuesta del servidor de guardado (JSON inválido).";
     } else if (error instanceof TypeError && error.message.toLowerCase().includes('failed to fetch')) {
         errorMessage = t.assessmentSavedErrorFetchFailed;
     }
-    console.error("saveAssessment (Client): Error saving assessment:", error, "URL attempted:", saveUrlForDebug);
-    return { success: false, message: errorMessage, debugUrl: saveUrlForDebug };
+    console.error("saveAssessment (Client): Error calling internal API proxy:", error);
+    return { success: false, message: errorMessage };
   }
 }
