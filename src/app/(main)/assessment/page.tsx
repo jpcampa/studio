@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -18,6 +19,8 @@ import { saveAssessmentToHistory } from '@/data/assessmentHistoryStore';
 
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
 const SESSION_STORAGE_ASSESSMENT_RESULTS_KEY = 'workwell-assessment-results';
+const IN_PROGRESS_ANSWERS_KEY = 'workwell-assessment-in-progress';
+
 
 interface AssessmentSavePayload {
   assessmentId: string;
@@ -45,6 +48,9 @@ export default function AssessmentPage() {
     setIsSubmitting(true);
     setIsProcessingModalVisible(true);
     setGeneratedSaveUrl(null); 
+
+    // Remove in-progress data before submitting
+    localStorage.removeItem(IN_PROGRESS_ANSWERS_KEY);
 
     const result: ServerAssessmentResult = await submitAssessment(answers);
 

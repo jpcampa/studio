@@ -7,7 +7,7 @@ import { useTranslations } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatAssessmentTimestamp, type AssessmentRecord, overwriteAssessmentHistory } from '@/data/assessmentHistoryStore'; // Import overwriteAssessmentHistory
-import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw, FileJson } from 'lucide-react';
+import { History, Eye, ListChecks, ArrowRight, Loader2, AlertTriangle, RefreshCw, FileJson, PlaySquare } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/contexts/UserContext';
 import { forceEncryptStringAES, decryptDataAES } from '@/lib/encryption';
@@ -20,6 +20,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 const API_BASE_URL = "https://workwellfut.com/wp-content/programacion/wscontenido.php";
 const API_KEY = "4463";
 const API_TIMEOUT_MS = 20000;
+const IN_PROGRESS_ANSWERS_KEY = 'workwell-assessment-in-progress';
 
 // Zod schema for validating the structure of a single assessment record from the API
 const ApiSingleAssessmentRecordSchema = z.object({
@@ -113,6 +114,15 @@ export default function MyAssessmentsPage() {
   const [assessments, setAssessments] = useState<AssessmentRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasInProgress, setHasInProgress] = useState(false);
+
+  useEffect(() => {
+    // Check for in-progress assessment on mount and whenever user changes
+    if (typeof window !== 'undefined') {
+        const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
+        setHasInProgress(!!savedProgress && Object.keys(JSON.parse(savedProgress)).length > 0);
+    }
+  }, [user]);
 
   const fetchAssessments = async () => {
     if (!user || !user.id) {
@@ -322,7 +332,26 @@ export default function MyAssessmentsPage() {
         </Alert>
       )}
 
-      {assessments.length === 0 && !isLoading && !error && (
+      {hasInProgress && (
+        <Card className="mb-8 shadow-lg border-primary bg-primary/10">
+          <CardHeader>
+            <CardTitle className="text-primary flex items-center">
+              <PlaySquare className="mr-2 h-5 w-5" />
+              Evaluación en Progreso
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">Detectamos que tienes una evaluación guardada sin finalizar. Puedes continuar donde la dejaste.</p>
+          </CardContent>
+          <CardFooter>
+            <Button asChild>
+              <Link href="/assessment">Continuar Evaluación</Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
+
+      {assessments.length === 0 && !isLoading && !error && !hasInProgress && (
         <Card className="max-w-lg mx-auto text-center shadow-lg">
           <CardHeader>
             <CardTitle>{t.noAssessmentsFound}</CardTitle>
@@ -418,5 +447,3 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
-
-    

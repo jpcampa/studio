@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
-import { Loader2, ArrowRight, CheckCircle, Save, Info, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle, Save, Info, ArrowLeft, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
   AlertDialog, 
@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
 
 // Helper para asegurar que los iconos se cargan correctamente
 const FrownIcon = require('lucide-react').Frown;
@@ -39,6 +40,8 @@ const iconMap: Record<string, React.ElementType> = {
   Laugh: LaughIcon,
 };
 
+const IN_PROGRESS_ANSWERS_KEY = 'workwell-assessment-in-progress';
+
 interface QuestionnaireFormProps {
   onSubmit: (answers: Record<string, { score: number; weight: number }>) => Promise<void>;
   isSubmitting: boolean;
@@ -47,10 +50,28 @@ interface QuestionnaireFormProps {
 export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormProps) {
   const t = useTranslations();
   const router = useRouter();
+  const { toast } = useToast();
   const [currentDimensionIndex, setCurrentDimensionIndex] = useState(0);
   const [currentItemIndexInDimension, setCurrentItemIndexInDimension] = useState(0);
   const [answers, setAnswers] = useState<Record<string, { score: number; weight: number }>>({});
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
+
+  // Load saved answers on component mount
+  useEffect(() => {
+    try {
+      const savedAnswers = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
+      if (savedAnswers) {
+        const parsedAnswers = JSON.parse(savedAnswers) as Record<string, { score: number; weight: number }>;
+        setAnswers(parsedAnswers);
+        toast({
+          title: "Evaluación Reanudada",
+          description: "Hemos cargado tu progreso anterior.",
+        });
+      }
+    } catch (error) {
+      console.error("Error loading in-progress assessment:", error);
+    }
+  }, [toast]);
   
   const currentDimension = assessmentDimensions[currentDimensionIndex];
   const currentItem = currentDimension?.items[currentItemIndexInDimension];
@@ -72,10 +93,18 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   };
 
   const handleAnswerChange = (item: AssessmentItem, value: string) => {
-    setAnswers(prev => ({
-      ...prev,
+    const newAnswers = {
+      ...answers,
       [item.id]: { score: parseInt(value), weight: item.weight }
-    }));
+    };
+    setAnswers(newAnswers);
+    
+    // Save partial progress automatically on each answer
+    try {
+      localStorage.setItem(IN_PROGRESS_ANSWERS_KEY, JSON.stringify(newAnswers));
+    } catch (error) {
+      console.error("Error saving partial progress:", error);
+    }
     
     // Trigger auto-advance only on new interaction
     setTimeout(() => {
@@ -110,10 +139,35 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   };
 
   const handleSaveForLater = () => {
-    console.log("Guardar para luego - Respuestas actuales:", answers);
-    setShowDimensionCompletedDialog(false);
-    router.push('/dashboard');
+    try {
+      localStorage.setItem(IN_PROGRESS_ANSWERS_KEY, JSON.stringify(answers));
+      toast({
+        title: "Progreso Guardado",
+        description: "Puedes continuar tu evaluación más tarde desde 'Mis Evaluaciones'.",
+      });
+      setShowDimensionCompletedDialog(false);
+      router.push('/my-assessments');
+    } catch (error) {
+      toast({
+        title: "Error al Guardar",
+        description: "No se pudo guardar tu progreso. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+      console.error("Error saving assessment progress for later:", error);
+    }
   };
+  
+  const handleClearProgress = () => {
+    localStorage.removeItem(IN_PROGRESS_ANSWERS_KEY);
+    setAnswers({});
+    setCurrentDimensionIndex(0);
+    setCurrentItemIndexInDimension(0);
+    toast({
+      title: "Progreso Eliminado",
+      description: "Puedes comenzar la evaluación desde el principio.",
+    });
+  };
+
 
   const submitFullAssessment = async (e?: FormEvent) => {
     if (e) e.preventDefault();
@@ -124,8 +178,16 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
     if (!allAnswered) {
        console.warn("Intento de envío final, pero no todas las preguntas están respondidas.");
+       // Optional: show a toast to the user
+       toast({
+         title: "Cuestionario Incompleto",
+         description: "Por favor, responde a todas las preguntas antes de finalizar.",
+         variant: "destructive"
+       });
        return;
     }
+    // Clear in-progress data before submitting
+    localStorage.removeItem(IN_PROGRESS_ANSWERS_KEY);
     await onSubmit(answers);
   };
 
@@ -222,6 +284,12 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             <ArrowLeft className="mr-2 h-4 w-4" />
             Anterior
           </Button>
+
+           <Button variant="destructive" size="sm" onClick={handleClearProgress} disabled={Object.keys(answers).length === 0}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Reiniciar
+            </Button>
+
           {isLastItemOfLastDimension && answers[currentItem.id] !== undefined && !showDimensionCompletedDialog && (
             <Button 
               onClick={submitFullAssessment} 
