@@ -10,7 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { assessmentDimensions } from '@/data/assessmentDimensions'; // Import dimensions data
+import { getAssessmentDimensions } from '@/data/assessmentDimensions'; // Import dimensions data
 
 const InitialAssessmentInputSchema = z.object({
   answers: z
@@ -66,6 +66,7 @@ type PromptHandlebarsInput = z.infer<typeof PromptHandlebarsInputSchema>;
 
 
 export async function initialAssessment(input: InitialAssessmentInput): Promise<InitialAssessmentOutput> {
+  const assessmentDimensions = await getAssessmentDimensions(); // <-- CORRECCIÓN AQUÍ
   const itemDetails: Record<string, { text: string, dimensionName: string, weight: number, isInverse?: boolean }> = {};
   const dimensionNames: string[] = []; // This will be the list of actual dimension names
   assessmentDimensions.forEach(dim => {
