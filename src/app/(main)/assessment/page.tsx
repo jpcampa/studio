@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { RotateCcw, TestTube2, ShieldQuestion, Loader2 } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
-import { assessmentDimensions } from '@/data/assessmentDimensions';
+import { getAssessmentDimensions } from '@/data/assessmentDimensions';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle as DialogModalTitle, DialogDescription as DialogModalDescription } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
@@ -139,6 +139,7 @@ export default function AssessmentPage() {
   };
 
   const handleDevSubmit = async () => {
+    const assessmentDimensions = await getAssessmentDimensions();
     const randomAnswers: Record<string, { score: number, weight: number }> = {};
     assessmentDimensions.forEach(dimension => {
       dimension.items.forEach(item => {

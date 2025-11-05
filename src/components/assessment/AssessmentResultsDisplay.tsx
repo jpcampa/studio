@@ -26,12 +26,13 @@ import {
   Cell,
   type DotProps,
 } from "recharts"
-import { assessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions';
+import { getAssessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions';
 import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useRouter } from 'next/navigation';
 import { formatAssessmentTimestamp } from '@/data/assessmentHistoryStore';
 import { pathsData } from '@/data/pathsData';
+import { useEffect, useState } from 'react';
 
 interface AssessmentResultsDisplayProps {
   results: InitialAssessmentOutput | null;
@@ -83,8 +84,11 @@ const getInterpretationLevel = (score: number, interpretations: InterpretationLe
 export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake, assessmentTimestamp }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
   const router = useRouter();
+  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
 
-  console.log("AssessmentResultsDisplay: Received results.emotionalProfile:", results?.emotionalProfile);
+  useEffect(() => {
+    getAssessmentDimensions().then(setAssessmentDimensions);
+  }, []);
 
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 ||
       Object.values(results.emotionalProfile).some(score => typeof score !== 'number') ||
@@ -113,7 +117,6 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
     const scoreFromProfile = results.emotionalProfile[dim.name];
     const scoreValue = scoreFromProfile !== undefined && typeof scoreFromProfile === 'number' ? scoreFromProfile : 0;
     const finalScore = Math.max(0, Math.min(5, scoreValue));
-    // console.log(`AssessmentResultsDisplay - Mapping dimension: '${dim.name}', Score found in profile: ${scoreFromProfile}, Final score for radar: ${finalScore}`);
     return {
       dimensionId: dim.id,
       dimension: dim.name,
@@ -121,8 +124,6 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
       fullMark: 5,
     };
   });
-  // console.log("AssessmentResultsDisplay: Generated radarData for chart:", radarData);
-
 
   const emotionalProfileRadarConfig: ChartConfig = {
     score: {
@@ -150,8 +151,6 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
   
   const CustomRadarDot = (props: DotProps & { payload?: any, value?: number }) => {
     const { cx, cy, payload, value: valueFromProps } = props;
-
-    // Use value from payload as the primary source of truth for the score.
     const value = payload?.score;
 
     if (typeof cx !== 'number' || typeof cy !== 'number' || isNaN(cx) || isNaN(cy)) {
@@ -161,8 +160,6 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
 
     const scoreValue = typeof value === 'number' && !isNaN(value) ? Math.max(0, Math.min(5, value)) : 0;
     if (typeof value !== 'number' || isNaN(value)) {
-        // This might still be useful to log if the payload itself is missing the score
-        // console.warn(`CustomRadarDot: Invalid 'value' (${value}) for dimension ${payload?.dimension || 'Unknown'}. Defaulting to 0 for color logic.`);
     }
 
     let dotColor = "hsl(var(--chart-2))"; // Default Blue (for 0 or < 1.0 or not evaluated)
