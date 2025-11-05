@@ -1,5 +1,5 @@
 
-"use client"; // Importante: Marcar como componente de cliente para que fetch se ejecute en el navegador
+"use client";
 
 import type { Path } from './pathsData';
 
@@ -18,22 +18,21 @@ export interface AssessmentDimension {
   recommendedPathId?: string;
 }
 
-// Función para cargar las preguntas desde la URL externa
+// Función para cargar las preguntas desde la ruta de API interna
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
   try {
-    const response = await fetch('https://workwellfut.com/preguntaseval/assessment-questions.json', {
-      cache: 'no-store' // Asegura que siempre se obtengan los datos más recientes
+    // Apuntamos a nuestra propia API route que actúa como proxy
+    const response = await fetch('/api/assessment-questions', {
+      cache: 'no-store'
     });
     if (!response.ok) {
-      throw new Error(`Error al cargar las preguntas: ${response.statusText}`);
+      throw new Error(`Error al cargar las preguntas desde la API interna: ${response.statusText}`);
     }
     const data = await response.json();
     return data as AssessmentDimension[];
   } catch (error) {
-    console.error("Error fetching assessment dimensions from external URL:", error);
-    // En caso de error, podríamos devolver un array vacío o lanzar un error para que el componente que llama lo maneje.
-    // Lanzar el error es más explícito.
-    throw new Error("No se pudieron cargar las preguntas de la evaluación. Por favor, revisa la conexión y la URL.");
+    console.error("Error fetching assessment dimensions from internal API:", error);
+    throw new Error("No se pudieron cargar las preguntas de la evaluación. Por favor, revisa la conexión y la API interna.");
   }
 }
 
