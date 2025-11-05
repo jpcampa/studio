@@ -16,7 +16,7 @@ interface SelfAcceptanceAudioExerciseProps {
 
 export function SelfAcceptanceAudioExercise({ content, pathId, audioUrl }: SelfAcceptanceAudioExerciseProps) {
   const { toast } = useToast();
-  const [viewMode, setViewMode] = useState<'audio' | 'text'>('audio');
+  const [viewMode, setViewMode] = useState<'audio' | 'text'>(audioUrl ? 'audio' : 'text');
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleComplete = () => {
@@ -36,7 +36,7 @@ export function SelfAcceptanceAudioExercise({ content, pathId, audioUrl }: SelfA
         {!isCompleted ? (
             <>
                 <div className="flex justify-center gap-2 mb-4">
-                    <Button onClick={() => setViewMode('audio')} variant={viewMode === 'audio' ? 'default' : 'outline'}><PlayCircle className="mr-2 h-4 w-4" /> Audio</Button>
+                    <Button onClick={() => setViewMode('audio')} variant={viewMode === 'audio' ? 'default' : 'outline'} disabled={!audioUrl}><PlayCircle className="mr-2 h-4 w-4" /> Audio</Button>
                     <Button onClick={() => setViewMode('text')} variant={viewMode === 'text' ? 'default' : 'outline'}><BookOpen className="mr-2 h-4 w-4" /> Texto</Button>
                 </div>
                 
