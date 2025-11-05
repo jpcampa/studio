@@ -1,15 +1,18 @@
 
-"use client";
-
 import type { AssessmentDimension } from './paths/pathTypes';
 import { getAssessmentQuestionsFromApi } from '@/app/api/assessment-questions/route';
 
 // Esta función ahora es segura para ser llamada desde el cliente y el servidor.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  // En el entorno del navegador (cliente), siempre llamaremos a la ruta de la API.
-  if (typeof window !== 'undefined') {
+  // Cuando se ejecuta en el lado del servidor (ej. en un Server Component o un AI Flow),
+  // Next.js puede resolver esto directamente. En el cliente, hará una petición a la API.
+  // La clave es que este archivo ya NO tiene 'use client'.
+  if (typeof window === 'undefined') {
+    // Entorno de servidor: llama directamente a la lógica de la API para evitar una llamada de red innecesaria.
+    return getAssessmentQuestionsFromApi();
+  } else {
+    // Entorno de cliente: hace una petición a la ruta API interna.
     try {
-      // Usamos una ruta relativa para que funcione en cualquier entorno (desarrollo, producción).
       const response = await fetch('/api/assessment-questions', {
         cache: 'no-store'
       });
@@ -20,15 +23,12 @@ export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> 
       return data as AssessmentDimension[];
     } catch (error) {
       console.error("Error fetching assessment dimensions from client-side:", error);
+      // En caso de error, podríamos devolver un array vacío o lanzar el error
+      // para que el componente que llama lo maneje.
       throw error;
     }
   }
-
-  // Si estamos en el servidor, llamamos directamente a la función lógica de la API.
-  // Esto evita una llamada de red innecesaria del servidor a sí mismo.
-  return getAssessmentQuestionsFromApi();
 }
-
 
 export const likertOptions = [
   { value: 1, label: 'Frown', description: 'Nada' },
