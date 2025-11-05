@@ -79,6 +79,10 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
             if (!isLastItem) {
               setCurrentDimensionIndex(parsedData.position.dimension);
               setCurrentItemIndexInDimension(parsedData.position.item);
+            } else {
+              // Si está al final, lo dejamos en el último ítem para que pueda finalizar.
+              setCurrentDimensionIndex(assessmentDimensions.length - 1);
+              setCurrentItemIndexInDimension(assessmentDimensions[assessmentDimensions.length - 1].items.length - 1);
             }
             toast({
               title: "Evaluación Reanudada",
@@ -132,11 +136,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     };
     setAnswers(newAnswers);
     
-    // Guarda el progreso automáticamente en cada respuesta
-    const isLastItem = currentItemIndexInDimension === currentDimension.items.length - 1;
-    const nextItemIndex = isLastItem ? 0 : currentItemIndexInDimension + 1;
-    const nextDimIndex = isLastItem ? currentDimensionIndex + 1 : currentDimensionIndex;
-    saveProgress(nextDimIndex, nextItemIndex, newAnswers);
+    // El progreso se guarda al cambiar de ítem o al guardar explícitamente
   };
 
   const handleDialogContinue = () => {
@@ -307,7 +307,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
           </Button>
 
           {!isLastItemOfLastDimension && (
-            <Button 
+            <Button
                 onClick={handleNextStep}
                 disabled={!answers[currentItem.id]}
                 className="w-full sm:w-auto mt-2 sm:mt-0"
