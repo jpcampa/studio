@@ -85,7 +85,22 @@ const ApiSingleAssessmentRecordSchema = z.object({
       // If it's already an object, just pass it through
       return profile;
     }),
-    priorityAreas: z.array(z.string()).max(3, "Debe haber como máximo 3 áreas prioritarias.").optional().nullable().transform(val => val ?? []),
+    priorityAreas: z.array(z.any()).optional().nullable().transform((val, ctx) => {
+        if (!val) return [];
+        // Aplanar el array si viene anidado (ej. [['Area1'], ['Area2']])
+        const flattened = val.flat();
+        const stringArraySchema = z.array(z.string());
+        const result = stringArraySchema.safeParse(flattened);
+        if (result.success) {
+            return result.data.slice(0, 3);
+        } else {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Priority areas could not be transformed into an array of strings. Original value: ${JSON.stringify(val)}`,
+            });
+            return z.NEVER;
+        }
+    }),
     feedback: z.string().min(1, "El feedback no puede estar vacío."),
     respuestas: z.union([z.record(z.string(), z.number()), z.array(z.any())]).optional().nullable().transform(val => {
       if (Array.isArray(val) && val.length === 0) {
