@@ -51,11 +51,11 @@ import { ExposureLadderExercise } from './ExposureLadderExercise';
 import { CalmVisualizationExercise } from './CalmVisualizationExercise';
 import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
 import { AuthenticityThermometerExercise } from './AuthenticityThermometerExercise';
-import { EmpatheticDialogueExercise } from './EmpatheticDialogueExercise';
-import { EmpathicMirrorExercise } from './EmpathicMirrorExercise';
-import { ValidationIn3StepsExercise } from './ValidationIn3StepsExercise';
-import { EmpathicShieldVisualizationExercise } from './EmpathicShieldVisualizationExercise';
-import { EmotionalInvolvementTrafficLightExercise } from './EmotionalInvolvementTrafficLightExercise';
+import { EmpatheticDialogueExercise } from '@/components/paths/EmpatheticDialogueExercise';
+import { EmpathicMirrorExercise } from '@/components/paths/EmpathicMirrorExercise';
+import { ValidationIn3StepsExercise } from '@/components/paths/ValidationIn3StepsExercise';
+import { EmpathicShieldVisualizationExercise } from '@/components/paths/EmpathicShieldVisualizationExercise';
+import { EmotionalInvolvementTrafficLightExercise } from '@/components/paths/EmotionalInvolvementTrafficLightExercise';
 import { SignificantRelationshipsInventoryExercise } from './SignificantRelationshipsInventoryExercise';
 import { RelationalCommitmentExercise } from './RelationalCommitmentExercise';
 // RUTA 6 imports
