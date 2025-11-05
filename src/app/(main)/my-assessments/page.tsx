@@ -119,8 +119,18 @@ export default function MyAssessmentsPage() {
   useEffect(() => {
     // Check for in-progress assessment on mount and whenever user changes
     if (typeof window !== 'undefined') {
-        const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
-        setHasInProgress(!!savedProgress && Object.keys(JSON.parse(savedProgress)).length > 0);
+        try {
+            const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
+            if(savedProgress) {
+                const parsedData = JSON.parse(savedProgress);
+                setHasInProgress(!!parsedData && !!parsedData.answers && Object.keys(parsedData.answers).length > 0);
+            } else {
+                setHasInProgress(false);
+            }
+        } catch(e) {
+            console.error("Error checking in-progress assessment:", e);
+            setHasInProgress(false);
+        }
     }
   }, [user]);
 

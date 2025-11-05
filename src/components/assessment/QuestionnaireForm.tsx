@@ -42,6 +42,14 @@ const iconMap: Record<string, React.ElementType> = {
 
 const IN_PROGRESS_ANSWERS_KEY = 'workwell-assessment-in-progress';
 
+interface InProgressData {
+  answers: Record<string, { score: number; weight: number }>;
+  position: {
+    dimension: number;
+    item: number;
+  };
+}
+
 interface QuestionnaireFormProps {
   onSubmit: (answers: Record<string, { score: number; weight: number }>) => Promise<void>;
   isSubmitting: boolean;
@@ -56,23 +64,48 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const [answers, setAnswers] = useState<Record<string, { score: number; weight: number }>>({});
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
 
-  // Load saved answers on component mount
+  // Carga el progreso guardado (respuestas y posición) al montar el componente
   useEffect(() => {
     try {
-      const savedAnswers = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
-      if (savedAnswers) {
-        const parsedAnswers = JSON.parse(savedAnswers) as Record<string, { score: number; weight: number }>;
-        setAnswers(parsedAnswers);
-        toast({
-          title: "Evaluación Reanudada",
-          description: "Hemos cargado tu progreso anterior.",
-        });
+      const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
+      if (savedProgress) {
+        const parsedData = JSON.parse(savedProgress) as InProgressData;
+        if (parsedData.answers && parsedData.position) {
+            setAnswers(parsedData.answers);
+            // Solo actualiza la posición si no está al final de la evaluación
+            const isLastDimension = parsedData.position.dimension >= assessmentDimensions.length - 1;
+            const isLastItem = isLastDimension && parsedData.position.item >= assessmentDimensions[assessmentDimensions.length - 1].items.length - 1;
+
+            if (!isLastItem) {
+              setCurrentDimensionIndex(parsedData.position.dimension);
+              setCurrentItemIndexInDimension(parsedData.position.item);
+            }
+            toast({
+              title: "Evaluación Reanudada",
+              description: "Hemos cargado tu progreso anterior.",
+            });
+        }
       }
     } catch (error) {
       console.error("Error loading in-progress assessment:", error);
     }
   }, [toast]);
   
+  const saveProgress = (dimIndex: number, itemIndex: number, currentAnswers: Record<string, { score: number; weight: number }>) => {
+    try {
+      const dataToSave: InProgressData = {
+        answers: currentAnswers,
+        position: {
+          dimension: dimIndex,
+          item: itemIndex,
+        },
+      };
+      localStorage.setItem(IN_PROGRESS_ANSWERS_KEY, JSON.stringify(dataToSave));
+    } catch (error) {
+      console.error("Error saving partial progress:", error);
+    }
+  };
+
   const currentDimension = assessmentDimensions[currentDimensionIndex];
   const currentItem = currentDimension?.items[currentItemIndexInDimension];
 
@@ -99,14 +132,13 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     };
     setAnswers(newAnswers);
     
-    // Save partial progress automatically on each answer
-    try {
-      localStorage.setItem(IN_PROGRESS_ANSWERS_KEY, JSON.stringify(newAnswers));
-    } catch (error) {
-      console.error("Error saving partial progress:", error);
-    }
+    // Guarda el progreso automáticamente en cada respuesta
+    const isLastItem = currentItemIndexInDimension === currentDimension.items.length - 1;
+    const nextItemIndex = isLastItem ? 0 : currentItemIndexInDimension + 1;
+    const nextDimIndex = isLastItem ? currentDimensionIndex + 1 : currentDimensionIndex;
+    saveProgress(nextDimIndex, nextItemIndex, newAnswers);
     
-    // Trigger auto-advance only on new interaction
+    // Auto-avance
     setTimeout(() => {
         handleNextStep();
     }, 500); 
@@ -115,8 +147,10 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const handleDialogContinue = () => {
     setShowDimensionCompletedDialog(false);
     if (currentDimensionIndex < assessmentDimensions.length - 1) {
-      setCurrentDimensionIndex(prev => prev + 1);
+      const nextDimIndex = currentDimensionIndex + 1;
+      setCurrentDimensionIndex(nextDimIndex);
       setCurrentItemIndexInDimension(0);
+      saveProgress(nextDimIndex, 0, answers);
     } else {
       submitFullAssessment();
     }
@@ -139,22 +173,13 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   };
 
   const handleSaveForLater = () => {
-    try {
-      localStorage.setItem(IN_PROGRESS_ANSWERS_KEY, JSON.stringify(answers));
-      toast({
+    saveProgress(currentDimensionIndex, currentItemIndexInDimension, answers);
+    toast({
         title: "Progreso Guardado",
         description: "Puedes continuar tu evaluación más tarde desde 'Mis Evaluaciones'.",
-      });
-      setShowDimensionCompletedDialog(false);
-      router.push('/my-assessments');
-    } catch (error) {
-      toast({
-        title: "Error al Guardar",
-        description: "No se pudo guardar tu progreso. Inténtalo de nuevo.",
-        variant: "destructive",
-      });
-      console.error("Error saving assessment progress for later:", error);
-    }
+    });
+    setShowDimensionCompletedDialog(false);
+    router.push('/my-assessments');
   };
   
   const handleClearProgress = () => {
@@ -178,7 +203,6 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
 
     if (!allAnswered) {
        console.warn("Intento de envío final, pero no todas las preguntas están respondidas.");
-       // Optional: show a toast to the user
        toast({
          title: "Cuestionario Incompleto",
          description: "Por favor, responde a todas las preguntas antes de finalizar.",

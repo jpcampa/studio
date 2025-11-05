@@ -1,4 +1,4 @@
-"use server";
+-"use server";
 
 import { initialAssessment, type InitialAssessmentInput, type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { z } from 'zod';
