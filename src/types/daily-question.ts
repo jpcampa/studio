@@ -1,5 +1,5 @@
 
 export interface DailyQuestion {
-  id: string;
-  text: string;
+  id: string; // This will map from 'codigo'
+  text: string; // This will map from 'pregunta'
 }

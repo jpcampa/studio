@@ -56,7 +56,8 @@ export default function DailyCheckInPage() {
 
         if (Array.isArray(rawData.questions) && rawData.questions.length > 0) {
             setQuestions(rawData.questions as DailyQuestion[]);
-        } else if (rawData.questions) {
+        } else if (rawData.questions && typeof rawData.questions === 'object' && !Array.isArray(rawData.questions)) {
+             // Handle case where API returns a single object instead of an array
             setQuestions([rawData.questions as DailyQuestion]);
         } else {
             setQuestions([]);

@@ -1,9 +1,12 @@
 
 import { NextResponse } from 'next/server';
 
+// Updated interface to match the new API response structure
 interface DailyQuestionFromApi {
-  id: string;
-  texto: string; // The external API uses 'texto'
+  numero: number;
+  area: string;
+  codigo: string;
+  pregunta: string;
 }
 
 // This is the only function that talks to the external API.
@@ -23,11 +26,15 @@ async function fetchExternalDailyQuestion(): Promise<{ questions: DailyQuestionF
   if (!response.ok) {
     const errorText = await response.text();
     console.error(`API Route (daily-question): Failed to fetch. Status: ${response.status}. Body: ${errorText}`);
+    // Throwing an error will be caught by the GET handler's try...catch block
     throw new Error(`Failed to fetch external daily question. Status: ${response.statusText}`);
   }
   
-  const questions = await response.json();
-  return { questions: questions as DailyQuestionFromApi[], url: externalUrl };
+  const data = await response.json();
+  // The API might return a single object or an array of objects. We'll normalize it to always be an array.
+  const questionsArray = Array.isArray(data) ? data : [data];
+  
+  return { questions: questionsArray as DailyQuestionFromApi[], url: externalUrl };
 }
 
 export async function GET() {
@@ -35,9 +42,10 @@ export async function GET() {
     const { questions: externalQuestions, url: calledUrl } = await fetchExternalDailyQuestion();
     
     // Adapt the response from the external API to our internal DailyQuestion format
+    // Map 'codigo' to 'id' and 'pregunta' to 'text'
     const questions = externalQuestions.map(q => ({
-      id: q.id,
-      text: q.texto,
+      id: q.codigo,
+      text: q.pregunta,
     }));
 
     // Return both the questions and the debug URL
