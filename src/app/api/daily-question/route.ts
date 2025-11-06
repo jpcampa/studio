@@ -1,6 +1,5 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
-import { forceEncryptStringAES } from '@/lib/encryption';
 
 // Updated interface to match the new API response structure
 interface DailyQuestionFromApi {
@@ -20,8 +19,9 @@ async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ que
   let externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=clima&token=${encodeURIComponent(token)}`;
 
   if (userId) {
-    const encryptedUserId = Buffer.from(userId).toString('base64');
-    externalUrl += `&idusuario=${encodeURIComponent(encryptedUserId)}`;
+    // Corrected to use btoa for wider compatibility in edge environments
+    const base64UserId = btoa(userId);
+    externalUrl += `&idusuario=${encodeURIComponent(base64UserId)}`;
   }
 
   console.log("API Route (daily-question): Fetching from external URL:", externalUrl);
