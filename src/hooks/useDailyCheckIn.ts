@@ -12,36 +12,48 @@ export function useDailyCheckIn() {
   const [question, setQuestion] = useState<DailyQuestion | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const checkAndFetch = useCallback(async (forceShow = false) => {
+  // This function fetches the question. It's now separate from the popup logic.
+  const fetchQuestion = useCallback(async () => {
     setIsLoading(true);
+    setQuestion(null); // Reset question on new fetch
     try {
-      const lastCheckIn = localStorage.getItem(LAST_CHECK_IN_KEY);
-      const today = new Date().toDateString();
-
-      if (forceShow || lastCheckIn !== today) {
-        const fetchedQuestion = await getDailyQuestion();
-        if (fetchedQuestion) {
-          setQuestion(fetchedQuestion);
-          setShowPopup(true); // <-- CORRECCIÓN: Solo se muestra si la pregunta existe
-        } else {
-          console.warn("useDailyCheckIn: No daily question fetched, popup will not be shown.");
-          setShowPopup(false); // Asegurarse de que no se muestre si falla la carga
-        }
+      const fetchedQuestion = await getDailyQuestion();
+      if (fetchedQuestion) {
+        setQuestion(fetchedQuestion);
       } else {
-        console.log("useDailyCheckIn: Daily check-in already completed today.");
+        console.warn("useDailyCheckIn: No daily question fetched.");
       }
     } catch (error) {
-      console.error("useDailyCheckIn: Error during check and fetch:", error);
-      setShowPopup(false);
+      console.error("useDailyCheckIn: Error fetching daily question:", error);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    // We only run the automatic check on mount. Forcing is handled by `forceOpen`.
-    checkAndFetch();
-  }, [checkAndFetch]);
+    // This effect triggers the fetch ONLY when the popup is opened.
+    if (showPopup) {
+      fetchQuestion();
+    }
+  }, [showPopup, fetchQuestion]);
+
+
+  useEffect(() => {
+    // This effect handles the initial, automatic check on mount.
+    const autoCheck = async () => {
+      const lastCheckIn = localStorage.getItem(LAST_CHECK_IN_KEY);
+      const today = new Date().toDateString();
+      if (lastCheckIn !== today) {
+        // If it's time for the daily check-in, we just open the popup.
+        // The effect above will handle fetching the data.
+        setShowPopup(true);
+      }
+    };
+    
+    autoCheck();
+    // We run this only once on mount for the automatic check
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const markAsDone = useCallback(() => {
     try {
@@ -53,10 +65,11 @@ export function useDailyCheckIn() {
     }
   }, []);
   
-  // This function is called by the button. It calls checkAndFetch with `forceShow = true`.
+  // This function, called by the button, now just opens the popup.
   const forceOpen = useCallback(() => {
-    checkAndFetch(true);
-  }, [checkAndFetch]);
+    console.log("forceOpen called: Forcing popup to show for debugging.");
+    setShowPopup(true);
+  }, []);
 
 
   return { showPopup, question, isLoading, markAsDone, forceOpen };
