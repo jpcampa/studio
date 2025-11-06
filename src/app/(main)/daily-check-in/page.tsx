@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
 import type { DailyQuestion } from '@/types/daily-question';
-import { Loader2, AlertTriangle, FileJson, Link as LinkIcon } from 'lucide-react';
+import { Loader2, AlertTriangle, FileJson, Link as LinkIcon, Save } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -27,6 +26,7 @@ const iconMap: Record<string, React.ElementType> = {
 export default function DailyCheckInPage() {
   const [questions, setQuestions] = useState<DailyQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [debugData, setDebugData] = useState<any>(null);
@@ -82,12 +82,58 @@ export default function DailyCheckInPage() {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
-  const handleSubmit = () => {
-    console.log('Respuestas guardadas:', answers);
-    toast({
-      title: "Respuesta Guardada",
-      description: "Gracias por tu registro diario.",
-    });
+  const handleSubmit = async () => {
+    if (!user || !user.id) {
+      toast({ title: "Error", description: "No se puede guardar la respuesta sin un usuario identificado.", variant: "destructive" });
+      return;
+    }
+    if (Object.keys(answers).length === 0) {
+      toast({ title: "Sin respuesta", description: "Por favor, selecciona una respuesta antes de guardar.", variant: "destructive" });
+      return;
+    }
+    setIsSubmitting(true);
+    
+    // Assuming we only send the first answered question if there are multiple
+    const questionId = Object.keys(answers)[0];
+    const answerValue = answers[questionId];
+
+    if (!questionId || !answerValue) {
+        setIsSubmitting(false);
+        return;
+    }
+
+    try {
+      const response = await fetch('/api/save-daily-check-in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          questionCode: questionId,
+          answer: answerValue,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast({
+          title: "Respuesta Guardada",
+          description: "Gracias por tu registro diario.",
+        });
+      } else {
+        throw new Error(result.message || "Error al guardar la respuesta.");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error al Guardar",
+        description: error.message || "No se pudo comunicar con el servidor.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isLoading) {
@@ -155,7 +201,8 @@ export default function DailyCheckInPage() {
           )}
 
           {questions.length > 0 && (
-            <Button onClick={handleSubmit} disabled={Object.keys(answers).length === 0} className="w-full">
+            <Button onClick={handleSubmit} disabled={Object.keys(answers).length === 0 || isSubmitting} className="w-full">
+              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               Guardar Respuesta
             </Button>
           )}

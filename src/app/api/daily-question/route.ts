@@ -20,7 +20,7 @@ async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ que
   let externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=clima&token=${encodeURIComponent(token)}`;
 
   if (userId) {
-    const encryptedUserId = forceEncryptStringAES(userId);
+    const encryptedUserId = Buffer.from(userId).toString('base64');
     externalUrl += `&idusuario=${encodeURIComponent(encryptedUserId)}`;
   }
 
