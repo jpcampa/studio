@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getDailyQuestion } from '@/data/dailyQuestion';
 import type { DailyQuestion } from '@/types/daily-question';
 import { Loader2, AlertTriangle, FileJson, Link as LinkIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -12,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { likertOptions } from '@/data/assessmentDimensions';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useUser } from '@/contexts/UserContext';
 
 const FrownIcon = require('lucide-react').Frown;
 const AnnoyedIcon = require('lucide-react').Annoyed;
@@ -32,15 +32,21 @@ export default function DailyCheckInPage() {
   const [debugData, setDebugData] = useState<any>(null);
   const [debugUrl, setDebugUrl] = useState<string | null>(null);
   const { toast } = useToast();
+  const { user } = useUser();
 
   useEffect(() => {
     async function loadQuestion() {
+      if (!user || !user.id) {
+          setError('Usuario no identificado. No se puede cargar la pregunta.');
+          setIsLoading(false);
+          return;
+      }
       setIsLoading(true);
       setError(null);
       setDebugData(null);
       setDebugUrl(null);
       try {
-        const response = await fetch('/api/daily-question');
+        const response = await fetch(`/api/daily-question?userId=${user.id}`);
         const rawData = await response.json();
         
         if (!response.ok) {
@@ -70,7 +76,7 @@ export default function DailyCheckInPage() {
       }
     }
     loadQuestion();
-  }, []);
+  }, [user]);
 
   const handleAnswerChange = (questionId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));

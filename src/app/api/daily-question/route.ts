@@ -1,5 +1,6 @@
 
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { forceEncryptStringAES } from '@/lib/encryption';
 
 // Updated interface to match the new API response structure
 interface DailyQuestionFromApi {
@@ -9,13 +10,19 @@ interface DailyQuestionFromApi {
   pregunta: string;
 }
 
+const clave = "SJDFgfds788sdfs8888KLLLL";
+
 // This is the only function that talks to the external API.
-async function fetchExternalDailyQuestion(): Promise<{ questions: DailyQuestionFromApi[], url: string }> {
-  const clave = "SJDFgfds788sdfs8888KLLLL";
+async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ questions: DailyQuestionFromApi[], url: string }> {
   const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
   const raw = `${clave}|${fecha}`;
   const token = Buffer.from(raw).toString('base64');
-  const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=clima&token=${encodeURIComponent(token)}`;
+  let externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=clima&token=${encodeURIComponent(token)}`;
+
+  if (userId) {
+    const encryptedUserId = forceEncryptStringAES(userId);
+    externalUrl += `&idusuario=${encodeURIComponent(encryptedUserId)}`;
+  }
 
   console.log("API Route (daily-question): Fetching from external URL:", externalUrl);
 
@@ -37,9 +44,12 @@ async function fetchExternalDailyQuestion(): Promise<{ questions: DailyQuestionF
   return { questions: questionsArray as DailyQuestionFromApi[], url: externalUrl };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get('userId');
+
   try {
-    const { questions: externalQuestions, url: calledUrl } = await fetchExternalDailyQuestion();
+    const { questions: externalQuestions, url: calledUrl } = await fetchExternalDailyQuestion(userId);
     
     // Adapt the response from the external API to our internal DailyQuestion format
     // Map 'codigo' to 'id' and 'pregunta' to 'text'
