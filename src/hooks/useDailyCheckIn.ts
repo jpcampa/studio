@@ -18,20 +18,21 @@ export function useDailyCheckIn() {
       const lastCheckIn = localStorage.getItem(LAST_CHECK_IN_KEY);
       const today = new Date().toDateString();
 
-      // The condition is now `forceShow` OR `lastCheckIn !== today`
       if (forceShow || lastCheckIn !== today) {
         const fetchedQuestion = await getDailyQuestion();
         if (fetchedQuestion) {
           setQuestion(fetchedQuestion);
-          setShowPopup(true);
+          setShowPopup(true); // <-- CORRECCIÓN: Solo se muestra si la pregunta existe
         } else {
-          console.warn("useDailyCheckIn: No daily question fetched.");
+          console.warn("useDailyCheckIn: No daily question fetched, popup will not be shown.");
+          setShowPopup(false); // Asegurarse de que no se muestre si falla la carga
         }
       } else {
         console.log("useDailyCheckIn: Daily check-in already completed today.");
       }
     } catch (error) {
       console.error("useDailyCheckIn: Error during check and fetch:", error);
+      setShowPopup(false);
     } finally {
       setIsLoading(false);
     }
