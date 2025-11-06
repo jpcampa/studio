@@ -25,11 +25,9 @@ export function DailyCheckInProvider({ children }: { children: ReactNode }) {
       const todayKey = getTodayKey();
       const lastCompleted = localStorage.getItem(DAILY_CHECKIN_KEY);
       if (lastCompleted !== todayKey) {
-        // Automatically open if not completed today.
-        // Use a timeout to avoid showing it immediately on app load, which can be jarring.
         const timer = setTimeout(() => {
             setShowPopup(true);
-        }, 2000); // 2-second delay
+        }, 2000); 
         return () => clearTimeout(timer);
       }
     } catch (error) {
@@ -44,7 +42,6 @@ export function DailyCheckInProvider({ children }: { children: ReactNode }) {
   const closePopup = useCallback(() => {
     setShowPopup(false);
     try {
-        // Mark as completed for today when closed after submission
         localStorage.setItem(DAILY_CHECKIN_KEY, getTodayKey());
     } catch (error) {
         console.error("Error setting daily check-in as completed:", error);
