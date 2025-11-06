@@ -14,14 +14,10 @@ import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
 const clave = "SJDFgfds788sdfs8888KLLLL";
 
-// This function now fetches assessment dimensions from our internal API route
+// Esta función ahora contiene la lógica de fetch directo a la API externa
+// porque se ejecuta en el servidor y no tiene problemas de CORS.
 async function getAssessmentDimensionsForFlow(): Promise<AssessmentDimension[]> {
-  // Esta función ahora contiene la lógica de fetch directo a la API externa
-  // porque se ejecuta en el servidor y no tiene problemas de CORS.
-  const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
-  const raw = `${clave}|${fecha}`;
-  const token = Buffer.from(raw).toString('base64');
-  const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
+  const externalUrl = `https://workwellfut.com/preguntaseval/assessment-questions.json`;
   
   try {
     console.log(`AI Flow: Fetching dimensions directly from external URL: ${externalUrl}`);
