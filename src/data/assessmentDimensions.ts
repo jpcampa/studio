@@ -3,34 +3,9 @@
 
 import type { AssessmentDimension } from './paths/pathTypes';
 
-const clave = "SJDFgfds788sdfs8888KLLLL";
-
-// This function now exclusively fetches from the external URL.
-// It's the single source of truth from the external API.
-export async function getAssessmentDimensionsFromApi(): Promise<AssessmentDimension[]> {
-    const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
-    const raw = `${clave}|${fecha}`;
-    const token = Buffer.from(raw).toString('base64');
-    const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
-
-    const response = await fetch(externalUrl, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch external assessment questions. Status: ${response.status}`);
-    }
-    
-    const questions = await response.json();
-    return questions as AssessmentDimension[];
-}
-
-/**
- * API route that acts as a proxy.
- * It's called by client components AND server components that need the data.
- */
+// Esta función ahora solo es utilizada por componentes de CLIENTE.
+// Su única responsabilidad es llamar a nuestra propia ruta API interna, que actúa como proxy.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  // Client environment: fetch from the internal API route.
   try {
     const response = await fetch('/api/assessment-questions', {
       cache: 'no-store'
@@ -41,8 +16,10 @@ export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> 
     const data = await response.json();
     return data as AssessmentDimension[];
   } catch (error) {
-    console.error("Error fetching assessment dimensions from client-side:", error);
-    throw error;
+    console.error("Error fetching assessment dimensions from client-side proxy:", error);
+    // En caso de error, devolvemos un array vacío para no romper la UI.
+    // El error ya se muestra en la consola.
+    return [];
   }
 }
 
