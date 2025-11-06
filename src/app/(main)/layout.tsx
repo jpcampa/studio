@@ -9,6 +9,18 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { useUser } from '@/contexts/UserContext';
 import { Loader2 } from 'lucide-react';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { DailyCheckInProvider, useDailyCheckIn } from '@/hooks/use-daily-check-in';
+import { DailyCheckInPopup } from '@/components/daily-check-in/DailyCheckInPopup';
+
+function DailyCheckInManager({ children }: { children: ReactNode }) {
+  const { showPopup, closePopup } = useDailyCheckIn();
+  return (
+    <>
+      {children}
+      <DailyCheckInPopup isOpen={showPopup} onClose={closePopup} />
+    </>
+  );
+}
 
 export default function MainAppLayout({ children }: { children: ReactNode }) {
   const { user, loading } = useUser();
@@ -31,15 +43,17 @@ export default function MainAppLayout({ children }: { children: ReactNode }) {
 
   return (
     <TooltipProvider>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full flex-col">
-          <AppSidebar />
-          <AppHeader />
-          <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-              {children}
-          </main>
-        </div>
-      </SidebarProvider>
+      <DailyCheckInProvider>
+        <SidebarProvider>
+          <div className="flex min-h-screen w-full flex-col">
+            <AppSidebar />
+            <AppHeader />
+            <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+              <DailyCheckInManager>{children}</DailyCheckInManager>
+            </main>
+          </div>
+        </SidebarProvider>
+      </DailyCheckInProvider>
     </TooltipProvider>
   );
 }

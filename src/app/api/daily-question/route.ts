@@ -10,14 +10,14 @@ interface DailyQuestionFromApi {
 
 const clave = "SJDFgfds788sdfs8888KLLLL";
 
-async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ questions: DailyQuestionFromApi[] }> {
+async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ questions: DailyQuestionFromApi[], debugUrl: string }> {
   const fecha = new Date().toISOString().slice(0, 19).replace("T", " ");
   const raw = `${clave}|${fecha}`;
   const token = Buffer.from(raw).toString('base64');
   let externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=clima&token=${encodeURIComponent(token)}`;
 
   if (userId) {
-    const base64UserId = Buffer.from(userId).toString('base64');
+    const base64UserId = btoa(userId);
     externalUrl += `&idusuario=${encodeURIComponent(base64UserId)}`;
   }
 
@@ -36,7 +36,7 @@ async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ que
   const data = await response.json();
   const questionsArray = Array.isArray(data) ? data : [data];
   
-  return { questions: questionsArray as DailyQuestionFromApi[] };
+  return { questions: questionsArray, debugUrl: externalUrl };
 }
 
 export async function GET(request: NextRequest) {
@@ -44,14 +44,14 @@ export async function GET(request: NextRequest) {
   const userId = searchParams.get('userId');
 
   try {
-    const { questions: externalQuestions } = await fetchExternalDailyQuestion(userId);
+    const { questions: externalQuestions, debugUrl } = await fetchExternalDailyQuestion(userId);
     
     const questions = externalQuestions.map(q => ({
       id: q.codigo,
       text: q.pregunta,
     }));
 
-    return NextResponse.json({ questions });
+    return NextResponse.json({ questions, debugUrl });
   } catch (error) {
     console.error('Error in /api/daily-question proxy route:', error);
     const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';

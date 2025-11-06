@@ -1,6 +1,6 @@
 
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import './globals.css';
 import { UserProvider } from '@/contexts/UserContext';
 import { Toaster } from "@/components/ui/toaster";
@@ -13,30 +13,22 @@ const geistSans = Geist({
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
 export const metadata: Metadata = {
   title: 'WorkWell',
   description: 'Tu app de acompañamiento emocional',
-  manifest: '/manifest.json', // Enlace al manifest
+  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'WorkWell',
-    // startupImage: [], // Opcional: imágenes de inicio para iOS
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#64B5F6', // Coincide con theme_color en manifest.json
+  themeColor: '#64B5F6',
   initialScale: 1,
   width: 'device-width',
-  // userScalable: false, // Considera si quieres permitir zoom
 };
-
 
 export default function RootLayout({
   children,
@@ -45,10 +37,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <head>
-        {/* Se pueden añadir más meta tags específicos de PWA aquí si es necesario */}
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <head />
+      <body className={`${geistSans.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

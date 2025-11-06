@@ -44,7 +44,8 @@ export function AppSidebar() {
 
   const isActive = (href: string) => {
     if (href === "/assessment/intro") {
-      return pathname.startsWith("/assessment"); 
+      // Highlights for any page under /assessment except history
+      return pathname.startsWith("/assessment") && !pathname.startsWith('/assessment/history-results'); 
     }
     if (href === "/my-assessments") {
         return pathname.startsWith("/my-assessments") || pathname.startsWith("/assessment/history-results");
@@ -52,7 +53,10 @@ export function AppSidebar() {
     if (href === "/resources") {
         return pathname.startsWith("/resources");
     }
-    return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+    if (href === "/paths") {
+        return pathname.startsWith("/paths");
+    }
+    return pathname === href;
   }
 
   // Función que se llamará al hacer clic en un enlace del menú

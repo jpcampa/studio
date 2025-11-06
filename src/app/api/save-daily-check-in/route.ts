@@ -21,17 +21,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Faltan datos en la petición." }, { status: 400 });
     }
 
+    // Encrypt only the question code and answer
     const payloadToEncrypt = {
         codigo: questionCode,
         respuesta: answer,
     };
-    
     const encryptedPayload = encryptDataAES(payloadToEncrypt);
-    const encryptedUserId = Buffer.from(userId).toString('base64');
     
-    const saveUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardaclima&idusuario=${encodeURIComponent(encryptedUserId)}&datos=${encodeURIComponent(encryptedPayload)}`;
+    // Base64 encode the user ID separately
+    const base64UserId = btoa(userId);
+    
+    const saveUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardaclima&idusuario=${encodeURIComponent(base64UserId)}&datos=${encodeURIComponent(encryptedPayload)}`;
 
-    console.log("API Route (save-daily-check-in): Attempting to save. URL (payload encrypted, userId separate):", saveUrl.substring(0, 150) + "...");
+    console.log("API Route (save-daily-check-in): Attempting to save. URL constructed.");
 
     const saveResponse = await fetch(saveUrl, { 
       method: 'GET',

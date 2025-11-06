@@ -26,6 +26,7 @@ import { useActivePath } from "@/contexts/ActivePathContext";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
+import { useDailyCheckIn } from '@/hooks/use-daily-check-in'; // Importar el hook
 
 export function AppHeader() {
   const { user, logout } = useUser();
@@ -34,6 +35,7 @@ export function AppHeader() {
   const { theme, setTheme } = useTheme();
   const { activePath } = useActivePath();
   const pathname = usePathname();
+  const { forceOpen } = useDailyCheckIn(); // Usar el hook del check-in
 
   const modulesRemaining = activePath ? activePath.totalModules - activePath.completedModuleIds.length : 0;
 
@@ -59,11 +61,9 @@ export function AppHeader() {
       <div className="flex items-center gap-2">
         <Tooltip>
             <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" asChild>
-                    <Link href="/daily-check-in">
-                      <MessageSquareQuote className="h-5 w-5 text-primary" />
-                      <span className="sr-only">Pregunta Diaria</span>
-                    </Link>
+                <Button variant="ghost" size="icon" onClick={forceOpen}>
+                  <MessageSquareQuote className="h-5 w-5 text-primary" />
+                  <span className="sr-only">Pregunta Diaria</span>
                 </Button>
             </TooltipTrigger>
             <TooltipContent>
