@@ -17,7 +17,17 @@ const clave = "SJDFgfds788sdfs8888KLLLL";
 // Esta función ahora contiene la lógica de fetch directo a la API externa
 // porque se ejecuta en el servidor y no tiene problemas de CORS.
 async function getAssessmentDimensionsForFlow(): Promise<AssessmentDimension[]> {
-  const externalUrl = `https://workwellfut.com/preguntaseval/assessment-questions.json`;
+  //const externalUrl = `https://workwellfut.com/preguntaseval/assessment-questions.json`;
+
+const clave = "SJDFgfds788sdfs8888KLLLL";
+const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
+const raw = `${clave}|${fecha}`;
+const token = Buffer.from(raw).toString('base64');
+ 
+const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
+
+
+
   
   try {
     console.log(`AI Flow: Fetching dimensions directly from external URL: ${externalUrl}`);

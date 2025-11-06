@@ -1,17 +1,40 @@
 
 import { NextResponse } from 'next/server';
-import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
-const externalUrl = `https://workwellfut.com/preguntaseval/assessment-questions.json`;
+// Los tipos se definen directamente aquí para evitar dependencias conflictivas.
+interface AssessmentItem {
+  id: string;
+  text: string;
+  weight: number;
+  isInverse?: boolean;
+}
 
+interface AssessmentDimension {
+  id: string;
+  name: string;
+  definition: string;
+  items: AssessmentItem[];
+  recommendedPathId?: string;
+}
+
+// Esta es la única función que hablará con la API externa.
+// No se exporta porque solo se usa dentro de esta ruta.
 async function fetchExternalAssessmentDimensions(): Promise<AssessmentDimension[]> {
+    const clave = "SJDFgfds788sdfs8888KLLLL";
+    const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
+    const raw = `${clave}|${fecha}`;
+    const token = Buffer.from(raw).toString('base64');
+    const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
+
   console.log("API Route: Fetching from external URL:", externalUrl);
+
   const response = await fetch(externalUrl, {
-    cache: 'no-store',
+    cache: 'no-store', // Asegura que siempre se obtienen los datos más recientes
   });
 
   if (!response.ok) {
-    console.error(`API Route: Failed to fetch from external URL. Status: ${response.statusText}`);
+    const errorText = await response.text();
+    console.error(`API Route: Failed to fetch from external URL. Status: ${response.status} ${response.statusText}. Body: ${errorText}`);
     throw new Error(`Failed to fetch external assessment questions. Status: ${response.statusText}`);
   }
   
