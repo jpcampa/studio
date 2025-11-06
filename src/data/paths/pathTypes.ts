@@ -1,4 +1,19 @@
 
+export interface AssessmentItem {
+  id: string;
+  text: string;
+  weight: number;
+  isInverse?: boolean;
+}
+
+export interface AssessmentDimension {
+  id: string;
+  name: string;
+  definition: string;
+  items: AssessmentItem[];
+  recommendedPathId?: string;
+}
+
 export type ParagraphContent = {
   type: 'paragraph';
   text: string;
@@ -816,5 +831,3 @@ export type PathModule = {
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
 };
-
-    
