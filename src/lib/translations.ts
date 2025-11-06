@@ -1,4 +1,5 @@
 
+
 // For V1, directly use Spanish. This structure allows easy replacement with a full i18n solution.
 // All text literals should be sourced from here.
 
@@ -159,7 +160,7 @@ export const t = {
   startPath: "Comenzar Ruta",
   pathNotStarted: "Aún no has comenzado esta ruta.",
   // Chatbot
-  chatbotTitle: "Mentor Emocional AI",
+  chatbotTitle: "Mentor Emocional IA",
   chatbotWelcome: "Hola, estoy aquí para escucharte y acompañarte. ¿En qué quieres trabajar hoy?",
   chatbotInputPlaceholder: "Escribe tu mensaje aquí...",
   // Resources
@@ -314,6 +315,10 @@ export const t = {
   welcomePageMotivationalQuote: "Estás a un clic de comenzar a escucharte de verdad.\\nY eso, aunque no lo parezca, ya es un acto de valentía.",
   welcomePageStartAssessmentButton: "Iniciar mi evaluación personalizada",
   welcomePageSkipToDashboardButton: "Ir al Panel Principal",
+
+  // Daily Check-in Page
+  dailyCheckInPageTitle: "Pregunta del Día",
+  dailyCheckInPageDescription: "Una pequeña pausa para conectar contigo.",
 };
 
 export type Translations = typeof t;
@@ -322,3 +327,5 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
+
+    

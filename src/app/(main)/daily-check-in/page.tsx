@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import type { DailyQuestion } from '@/types/daily-question';
-import { Loader2, AlertTriangle, FileJson, Link as LinkIcon, Save } from 'lucide-react';
+import { Loader2, AlertTriangle, FileJson, Link as LinkIcon, Save, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -11,6 +12,7 @@ import { likertOptions } from '@/data/assessmentDimensions';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/contexts/UserContext';
+import { useTranslations } from '@/lib/translations';
 
 const FrownIcon = require('lucide-react').Frown;
 const AnnoyedIcon = require('lucide-react').Annoyed;
@@ -24,58 +26,61 @@ const iconMap: Record<string, React.ElementType> = {
 
 
 export default function DailyCheckInPage() {
+  const t = useTranslations();
   const [questions, setQuestions] = useState<DailyQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [debugData, setDebugData] = useState<any>(null);
-  const [debugUrl, setDebugUrl] = useState<string | null>(null);
+  const [debugFetchUrl, setDebugFetchUrl] = useState<string | null>(null);
+  const [debugSaveUrl, setDebugSaveUrl] = useState<string | null>(null); // State for save URL
   const { toast } = useToast();
   const { user } = useUser();
 
-  useEffect(() => {
-    async function loadQuestion() {
-      if (!user || !user.id) {
-          setError('Usuario no identificado. No se puede cargar la pregunta.');
-          setIsLoading(false);
-          return;
-      }
-      setIsLoading(true);
-      setError(null);
-      setDebugData(null);
-      setDebugUrl(null);
-      try {
-        const response = await fetch(`/api/daily-question?userId=${user.id}`);
-        const rawData = await response.json();
-        
-        if (!response.ok) {
-           setDebugData(rawData); // Store error response for debugging
-           throw new Error(`Error del servidor (HTTP ${response.status})`);
-        }
-
-        // Store full response for debugging
-        setDebugData(rawData.questions);
-        if (rawData.debugUrl) {
-            setDebugUrl(rawData.debugUrl);
-        }
-
-        if (Array.isArray(rawData.questions) && rawData.questions.length > 0) {
-            setQuestions(rawData.questions as DailyQuestion[]);
-        } else if (rawData.questions && typeof rawData.questions === 'object' && !Array.isArray(rawData.questions)) {
-             // Handle case where API returns a single object instead of an array
-            setQuestions([rawData.questions as DailyQuestion]);
-        } else {
-            setQuestions([]);
-        }
-      } catch (e: any) {
-        setError('No se pudo cargar la pregunta diaria. ' + e.message);
-        console.error(e);
-      } finally {
+  const loadQuestion = async () => {
+    if (!user || !user.id) {
+        setError('Usuario no identificado. No se puede cargar la pregunta.');
         setIsLoading(false);
-      }
+        return;
     }
+    setIsLoading(true);
+    setError(null);
+    setDebugData(null);
+    setDebugFetchUrl(null);
+    setDebugSaveUrl(null);
+    try {
+      const response = await fetch(`/api/daily-question?userId=${user.id}`);
+      const rawData = await response.json();
+      
+      if (!response.ok) {
+         setDebugData(rawData); 
+         throw new Error(`Error del servidor (HTTP ${response.status})`);
+      }
+
+      setDebugData(rawData.questions);
+      if (rawData.debugUrl) {
+          setDebugFetchUrl(rawData.debugUrl);
+      }
+
+      if (Array.isArray(rawData.questions) && rawData.questions.length > 0) {
+          setQuestions(rawData.questions as DailyQuestion[]);
+      } else if (rawData.questions && typeof rawData.questions === 'object' && !Array.isArray(rawData.questions)) {
+          setQuestions([rawData.questions as DailyQuestion]);
+      } else {
+          setQuestions([]);
+      }
+    } catch (e: any) {
+      setError('No se pudo cargar la pregunta diaria. ' + e.message);
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
     loadQuestion();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleAnswerChange = (questionId: string, value: string) => {
@@ -92,8 +97,8 @@ export default function DailyCheckInPage() {
       return;
     }
     setIsSubmitting(true);
+    setDebugSaveUrl(null); // Reset save URL on new submission
     
-    // Assuming we only send the first answered question if there are multiple
     const questionId = Object.keys(answers)[0];
     const answerValue = answers[questionId];
 
@@ -117,11 +122,16 @@ export default function DailyCheckInPage() {
 
       const result = await response.json();
 
+      if (result.debugUrl) {
+        setDebugSaveUrl(result.debugUrl);
+      }
+
       if (response.ok && result.success) {
         toast({
           title: "Respuesta Guardada",
           description: "Gracias por tu registro diario.",
         });
+        setAnswers({}); // Clear answer to allow a new one
       } else {
         throw new Error(result.message || "Error al guardar la respuesta.");
       }
@@ -147,9 +157,15 @@ export default function DailyCheckInPage() {
 
   return (
     <div className="container mx-auto py-8 max-w-2xl space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Pregunta del Día</CardTitle>
+       <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>{t.dailyCheckInPageTitle || "Pregunta del Día"}</CardTitle>
+            <CardDescription>{t.dailyCheckInPageDescription || "Una pequeña pausa para conectar contigo."}</CardDescription>
+          </div>
+          <Button onClick={loadQuestion} variant="outline" size="icon" aria-label="Refrescar pregunta">
+            <RefreshCw className="h-4 w-4"/>
+          </Button>
         </CardHeader>
         <CardContent className="space-y-8">
          {error && (
@@ -209,20 +225,39 @@ export default function DailyCheckInPage() {
         </CardContent>
       </Card>
       
-       {debugUrl && (
+       {debugFetchUrl && (
         <Card className="border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30">
           <CardHeader>
             <CardTitle className="text-lg text-cyan-700 dark:text-cyan-300 flex items-center">
               <LinkIcon className="mr-2 h-5 w-5" />
-              URL de la API Externa (Depuración)
+              URL de Obtención (Depuración)
             </CardTitle>
             <CardDescription>
-              Esta es la URL completa que se está llamando en el servidor para obtener las preguntas.
+              Esta es la URL completa que se llama en el servidor para obtener las preguntas.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <pre className="text-xs bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-              <code>{debugUrl}</code>
+              <code>{debugFetchUrl}</code>
+            </pre>
+          </CardContent>
+        </Card>
+      )}
+
+      {debugSaveUrl && (
+        <Card className="border-orange-500 bg-orange-50 dark:bg-orange-900/30">
+          <CardHeader>
+            <CardTitle className="text-lg text-orange-700 dark:text-orange-300 flex items-center">
+              <LinkIcon className="mr-2 h-5 w-5" />
+              URL de Guardado (Depuración)
+            </CardTitle>
+            <CardDescription>
+              Esta es la URL completa que se llama en el servidor para guardar la respuesta.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <pre className="text-xs bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+              <code>{debugSaveUrl}</code>
             </pre>
           </CardContent>
         </Card>
@@ -249,3 +284,5 @@ export default function DailyCheckInPage() {
     </div>
   );
 }
+
+    
