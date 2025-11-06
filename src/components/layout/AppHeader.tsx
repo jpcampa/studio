@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, User as UserIcon, Settings as SettingsIcon, Sun, Moon, Laptop, ListChecks, MessageSquareQuestion } from "lucide-react";
+import { LogOut, User as UserIcon, Settings as SettingsIcon, Sun, Moon, Laptop, ListChecks, MessageSquareQuote } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import Link from "next/link";
@@ -26,7 +26,7 @@ import { useActivePath } from "@/contexts/ActivePathContext";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
-import { useDailyCheckIn } from "@/hooks/useDailyCheckIn"; // Import the new hook
+import { useDailyCheckIn } from '@/hooks/useDailyCheckIn'; // Import the new hook
 
 export function AppHeader() {
   const { user, logout } = useUser();
@@ -63,7 +63,7 @@ export function AppHeader() {
         <Tooltip>
             <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" onClick={forceDailyCheckInOpen}>
-                    <MessageSquareQuestion className="h-5 w-5 text-destructive" />
+                    <MessageSquareQuote className="h-5 w-5 text-destructive" />
                     <span className="sr-only">Lanzar pregunta diaria</span>
                 </Button>
             </TooltipTrigger>
