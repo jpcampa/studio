@@ -10,8 +10,27 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getAssessmentDimensions } from '@/data/assessmentDimensions'; // Importar la función
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
+
+// This function now fetches assessment dimensions from our internal API route
+async function getAssessmentDimensionsForFlow(): Promise<AssessmentDimension[]> {
+  // Since this is a server-side flow, we need to provide the full URL
+  // for the fetch call, because it doesn't know its own domain.
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+  const url = `${baseUrl}/api/assessment-questions`;
+  
+  try {
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`AI Flow - Failed to fetch from /api/assessment-questions: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data as AssessmentDimension[];
+  } catch (error) {
+    console.error("Error fetching assessment dimensions for AI Flow:", error);
+    throw error;
+  }
+}
 
 const InitialAssessmentInputSchema = z.object({
   answers: z
@@ -67,7 +86,7 @@ type PromptHandlebarsInput = z.infer<typeof PromptHandlebarsInputSchema>;
 
 
 export async function initialAssessment(input: InitialAssessmentInput): Promise<InitialAssessmentOutput> {
-  const assessmentDimensions = await getAssessmentDimensions(); // Usa la función asíncrona
+  const assessmentDimensions = await getAssessmentDimensionsForFlow(); // Usa la nueva función de fetch para el flow
   const itemDetails: Record<string, { text: string, dimensionName: string, weight: number, isInverse?: boolean }> = {};
   const dimensionNames: string[] = []; // This will be the list of actual dimension names
   assessmentDimensions.forEach(dim => {

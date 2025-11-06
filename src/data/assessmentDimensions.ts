@@ -1,32 +1,30 @@
 
 import type { AssessmentDimension } from './paths/pathTypes';
-import { getAssessmentQuestionsFromApi } from '@/app/api/assessment-questions/route';
 
-// Esta función ahora es segura para ser llamada desde el cliente y el servidor.
+// Esta función ahora solo se ejecuta en el lado del cliente.
+// El flujo de IA y otros componentes de servidor usarán directamente la ruta de la API.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  // Cuando se ejecuta en el lado del servidor (ej. en un Server Component o un AI Flow),
-  // Next.js puede resolver esto directamente. En el cliente, hará una petición a la API.
-  // La clave es que este archivo ya NO tiene 'use client'.
   if (typeof window === 'undefined') {
-    // Entorno de servidor: llama directamente a la lógica de la API para evitar una llamada de red innecesaria.
-    return getAssessmentQuestionsFromApi();
-  } else {
-    // Entorno de cliente: hace una petición a la ruta API interna.
-    try {
-      const response = await fetch('/api/assessment-questions', {
-        cache: 'no-store'
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch from /api/assessment-questions: ${response.statusText}`);
-      }
-      const data = await response.json();
-      return data as AssessmentDimension[];
-    } catch (error) {
-      console.error("Error fetching assessment dimensions from client-side:", error);
-      // En caso de error, podríamos devolver un array vacío o lanzar el error
-      // para que el componente que llama lo maneje.
-      throw error;
+    // This case should ideally not be hit by client components.
+    // If a server component needs this data, it should fetch from the API route.
+    console.warn("getAssessmentDimensions called from server environment. This is not the intended use. Fetch from '/api/assessment-questions' instead.");
+    // Returning an empty array to prevent crashes, but logging a warning.
+    return [];
+  }
+
+  // Client environment: fetch from the internal API route.
+  try {
+    const response = await fetch('/api/assessment-questions', {
+      cache: 'no-store'
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch from /api/assessment-questions: ${response.statusText}`);
     }
+    const data = await response.json();
+    return data as AssessmentDimension[];
+  } catch (error) {
+    console.error("Error fetching assessment dimensions from client-side:", error);
+    throw error;
   }
 }
 
