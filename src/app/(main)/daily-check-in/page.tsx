@@ -32,9 +32,6 @@ export default function DailyCheckInPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [debugData, setDebugData] = useState<any>(null);
-  const [debugFetchUrl, setDebugFetchUrl] = useState<string | null>(null);
-  const [debugSaveUrl, setDebugSaveUrl] = useState<string | null>(null); // State for save URL
   const { toast } = useToast();
   const { user } = useUser();
 
@@ -46,23 +43,14 @@ export default function DailyCheckInPage() {
     }
     setIsLoading(true);
     setError(null);
-    setDebugData(null);
-    setDebugFetchUrl(null);
-    setDebugSaveUrl(null);
     try {
       const response = await fetch(`/api/daily-question?userId=${user.id}`);
       const rawData = await response.json();
       
       if (!response.ok) {
-         setDebugData(rawData); 
-         throw new Error(`Error del servidor (HTTP ${response.status})`);
+         throw new Error(rawData.details || `Error del servidor (HTTP ${response.status})`);
       }
-
-      setDebugData(rawData.questions);
-      if (rawData.debugUrl) {
-          setDebugFetchUrl(rawData.debugUrl);
-      }
-
+      
       if (Array.isArray(rawData.questions) && rawData.questions.length > 0) {
           setQuestions(rawData.questions as DailyQuestion[]);
       } else if (rawData.questions && typeof rawData.questions === 'object' && !Array.isArray(rawData.questions)) {
@@ -79,7 +67,9 @@ export default function DailyCheckInPage() {
   }
 
   useEffect(() => {
-    loadQuestion();
+    if (user) {
+        loadQuestion();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -97,7 +87,6 @@ export default function DailyCheckInPage() {
       return;
     }
     setIsSubmitting(true);
-    setDebugSaveUrl(null); // Reset save URL on new submission
     
     const questionId = Object.keys(answers)[0];
     const answerValue = answers[questionId];
@@ -121,10 +110,6 @@ export default function DailyCheckInPage() {
       });
 
       const result = await response.json();
-
-      if (result.debugUrl) {
-        setDebugSaveUrl(result.debugUrl);
-      }
 
       if (response.ok && result.success) {
         toast({
@@ -224,63 +209,6 @@ export default function DailyCheckInPage() {
           )}
         </CardContent>
       </Card>
-      
-       {debugFetchUrl && (
-        <Card className="border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30">
-          <CardHeader>
-            <CardTitle className="text-lg text-cyan-700 dark:text-cyan-300 flex items-center">
-              <LinkIcon className="mr-2 h-5 w-5" />
-              URL de Obtención (Depuración)
-            </CardTitle>
-            <CardDescription>
-              Esta es la URL completa que se llama en el servidor para obtener las preguntas.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-xs bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-              <code>{debugFetchUrl}</code>
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-
-      {debugSaveUrl && (
-        <Card className="border-orange-500 bg-orange-50 dark:bg-orange-900/30">
-          <CardHeader>
-            <CardTitle className="text-lg text-orange-700 dark:text-orange-300 flex items-center">
-              <LinkIcon className="mr-2 h-5 w-5" />
-              URL de Guardado (Depuración)
-            </CardTitle>
-            <CardDescription>
-              Esta es la URL completa que se llama en el servidor para guardar la respuesta.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-xs bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-              <code>{debugSaveUrl}</code>
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-
-      {debugData && (
-        <Card className="border-amber-500 bg-amber-50 dark:bg-amber-900/30">
-          <CardHeader>
-            <CardTitle className="text-lg text-amber-700 dark:text-amber-300 flex items-center">
-              <FileJson className="mr-2 h-5 w-5" />
-              Datos Recibidos (Depuración)
-            </CardTitle>
-            <CardDescription>
-              Este es el contenido JSON crudo que la API `/api/daily-question` está devolviendo.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-xs bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-              <code>{JSON.stringify(debugData, null, 2)}</code>
-            </pre>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

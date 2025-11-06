@@ -1,7 +1,6 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
 
-// Updated interface to match the new API response structure
 interface DailyQuestionFromApi {
   numero: number;
   area: string;
@@ -11,15 +10,13 @@ interface DailyQuestionFromApi {
 
 const clave = "SJDFgfds788sdfs8888KLLLL";
 
-// This is the only function that talks to the external API.
-async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ questions: DailyQuestionFromApi[], url: string }> {
-  const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
+async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ questions: DailyQuestionFromApi[] }> {
+  const fecha = new Date().toISOString().slice(0, 19).replace("T", " ");
   const raw = `${clave}|${fecha}`;
   const token = Buffer.from(raw).toString('base64');
   let externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=clima&token=${encodeURIComponent(token)}`;
 
   if (userId) {
-    // Corrected to use btoa for wider compatibility in edge environments
     const base64UserId = Buffer.from(userId).toString('base64');
     externalUrl += `&idusuario=${encodeURIComponent(base64UserId)}`;
   }
@@ -33,15 +30,13 @@ async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ que
   if (!response.ok) {
     const errorText = await response.text();
     console.error(`API Route (daily-question): Failed to fetch. Status: ${response.status}. Body: ${errorText}`);
-    // Throwing an error will be caught by the GET handler's try...catch block
     throw new Error(`Failed to fetch external daily question. Status: ${response.statusText}`);
   }
   
   const data = await response.json();
-  // The API might return a single object or an array of objects. We'll normalize it to always be an array.
   const questionsArray = Array.isArray(data) ? data : [data];
   
-  return { questions: questionsArray as DailyQuestionFromApi[], url: externalUrl };
+  return { questions: questionsArray as DailyQuestionFromApi[] };
 }
 
 export async function GET(request: NextRequest) {
@@ -49,17 +44,14 @@ export async function GET(request: NextRequest) {
   const userId = searchParams.get('userId');
 
   try {
-    const { questions: externalQuestions, url: calledUrl } = await fetchExternalDailyQuestion(userId);
+    const { questions: externalQuestions } = await fetchExternalDailyQuestion(userId);
     
-    // Adapt the response from the external API to our internal DailyQuestion format
-    // Map 'codigo' to 'id' and 'pregunta' to 'text'
     const questions = externalQuestions.map(q => ({
       id: q.codigo,
       text: q.pregunta,
     }));
 
-    // Return both the questions and the debug URL
-    return NextResponse.json({ questions, debugUrl: calledUrl });
+    return NextResponse.json({ questions });
   } catch (error) {
     console.error('Error in /api/daily-question proxy route:', error);
     const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';

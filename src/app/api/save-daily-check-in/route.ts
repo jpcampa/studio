@@ -13,7 +13,6 @@ interface CheckInData {
 }
 
 export async function POST(request: Request) {
-  let saveUrl = "";
   try {
     const body: CheckInData = await request.json();
     const { userId, questionCode, answer } = body;
@@ -22,18 +21,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Faltan datos en la petición." }, { status: 400 });
     }
 
-    // El payload a encriptar ahora solo contiene la pregunta y la respuesta
     const payloadToEncrypt = {
         codigo: questionCode,
         respuesta: answer,
     };
     
     const encryptedPayload = encryptDataAES(payloadToEncrypt);
-    
-    // El ID de usuario se codifica en base64 y se añade como un parámetro separado
     const encryptedUserId = Buffer.from(userId).toString('base64');
     
-    saveUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardaclima&idusuario=${encodeURIComponent(encryptedUserId)}&datos=${encodeURIComponent(encryptedPayload)}`;
+    const saveUrl = `${API_BASE_URL}?apikey=${API_KEY}&tipo=guardaclima&idusuario=${encodeURIComponent(encryptedUserId)}&datos=${encodeURIComponent(encryptedPayload)}`;
 
     console.log("API Route (save-daily-check-in): Attempting to save. URL (payload encrypted, userId separate):", saveUrl.substring(0, 150) + "...");
 
@@ -47,7 +43,7 @@ export async function POST(request: Request) {
     if (!saveResponse.ok) {
       console.warn("API Route (save-daily-check-in): API call failed. Status:", saveResponse.status, "Text:", saveResponseText);
       return NextResponse.json(
-        { success: false, message: `Error en el servidor externo (HTTP ${saveResponse.status}): ${saveResponseText.substring(0, 100)}`, debugUrl: saveUrl },
+        { success: false, message: `Error en el servidor externo (HTTP ${saveResponse.status}): ${saveResponseText.substring(0, 100)}` },
         { status: 502 }
       );
     }
@@ -55,13 +51,13 @@ export async function POST(request: Request) {
     try {
         const finalApiResult = JSON.parse(saveResponseText);
         if (finalApiResult.status === 'OK') {
-           return NextResponse.json({ success: true, message: finalApiResult.message || "Respuesta guardada.", debugUrl: saveUrl });
+           return NextResponse.json({ success: true, message: finalApiResult.message || "Respuesta guardada." });
         } else {
-           return NextResponse.json({ success: false, message: finalApiResult.message || "El servidor externo indicó un error.", debugUrl: saveUrl }, { status: 400 });
+           return NextResponse.json({ success: false, message: finalApiResult.message || "El servidor externo indicó un error." }, { status: 400 });
         }
     } catch (e) {
         console.warn("API Route (save-daily-check-in): API response was not valid JSON, but status was OK. Raw text:", saveResponseText);
-        return NextResponse.json({ success: true, message: "Guardado, pero la respuesta del servidor no fue JSON.", debugUrl: saveUrl });
+        return NextResponse.json({ success: true, message: "Guardado, pero la respuesta del servidor no fue JSON." });
     }
 
   } catch (error: any) {
@@ -71,7 +67,7 @@ export async function POST(request: Request) {
         errorMessage = "Tiempo de espera agotado al conectar con el servidor externo.";
     }
     return NextResponse.json(
-      { success: false, message: errorMessage, debugUrl: saveUrl },
+      { success: false, message: errorMessage },
       { status: 500 }
     );
   }
