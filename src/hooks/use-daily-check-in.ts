@@ -13,7 +13,7 @@ interface DailyCheckInContextType {
 
 const DailyCheckInContext = createContext<DailyCheckInContextType | undefined>(undefined);
 
-export function DailyCheckInProvider({ children }: { children: ReactNode }) {
+export function DailyCheckInProvider({ children }: { children: ReactNode }): JSX.Element {
   const [showPopup, setShowPopup] = useState(false);
 
   const getTodayKey = () => {
@@ -57,7 +57,7 @@ export function DailyCheckInProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useDailyCheckIn() {
+export function useDailyCheckIn(): DailyCheckInContextType {
   const context = useContext(DailyCheckInContext);
   if (context === undefined) {
     throw new Error('useDailyCheckIn must be used within a DailyCheckInProvider');
