@@ -20,7 +20,7 @@ async function fetchExternalDailyQuestion(userId?: string | null): Promise<{ que
 
   if (userId) {
     // Corrected to use btoa for wider compatibility in edge environments
-    const base64UserId = btoa(userId);
+    const base64UserId = Buffer.from(userId).toString('base64');
     externalUrl += `&idusuario=${encodeURIComponent(base64UserId)}`;
   }
 

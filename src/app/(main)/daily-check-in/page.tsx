@@ -187,7 +187,6 @@ export default function DailyCheckInPage() {
                   const IconComponent = iconMap[option.label];
                   return (
                     <Label
-                      key={`${q.id}-${option.value}`}
                       htmlFor={`${q.id}-${option.value}`}
                       className={cn(
                         "flex flex-col items-center justify-center p-1 border-2 rounded-lg cursor-pointer transition-all duration-150 ease-in-out",
