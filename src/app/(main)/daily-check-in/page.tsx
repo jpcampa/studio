@@ -4,8 +4,8 @@
 import { useState, useEffect } from 'react';
 import { getDailyQuestion } from '@/data/dailyQuestion';
 import type { DailyQuestion } from '@/types/daily-question';
-import { Loader2, AlertTriangle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, AlertTriangle, FileJson } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -29,18 +29,34 @@ export default function DailyCheckInPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [debugData, setDebugData] = useState<any>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     async function loadQuestion() {
       setIsLoading(true);
       setError(null);
+      setDebugData(null);
       try {
-        const fetchedQuestion = await getDailyQuestion();
-        // The API returns an array, so we handle it as such
-        setQuestions(fetchedQuestion ? [fetchedQuestion] : []);
-      } catch (e) {
-        setError('No se pudo cargar la pregunta diaria. Por favor, inténtalo de nuevo más tarde.');
+        // We'll fetch and see the raw response for debugging
+        const response = await fetch('/api/daily-question');
+        const rawData = await response.json();
+        setDebugData(rawData);
+
+        if (!response.ok) {
+           throw new Error(`Error del servidor (HTTP ${response.status})`);
+        }
+
+        // Now process the data as before
+        if (Array.isArray(rawData) && rawData.length > 0) {
+            setQuestions(rawData as DailyQuestion[]);
+        } else if (rawData) { // It might be a single object
+            setQuestions([rawData as DailyQuestion]);
+        } else {
+            setQuestions([]);
+        }
+      } catch (e: any) {
+        setError('No se pudo cargar la pregunta diaria. ' + e.message);
         console.error(e);
       } finally {
         setIsLoading(false);
@@ -70,32 +86,21 @@ export default function DailyCheckInPage() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="container mx-auto py-8 text-center">
-        <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
-        <p className="mt-4 text-lg font-semibold text-destructive">Error</p>
-        <p className="text-muted-foreground">{error}</p>
-      </div>
-    );
-  }
-
-  if (questions.length === 0) {
-    return (
-      <div className="container mx-auto py-8 text-center">
-        <p className="text-muted-foreground">No hay pregunta diaria disponible hoy.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto py-8 max-w-2xl">
+    <div className="container mx-auto py-8 max-w-2xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Pregunta del Día</CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
-          {questions.map((q) => (
+         {error && (
+             <div className="text-center text-destructive">
+                <AlertTriangle className="mx-auto h-8 w-8 mb-2" />
+                <p className="font-semibold">Error al cargar la pregunta</p>
+                <p className="text-sm">{error}</p>
+            </div>
+         )}
+          {questions.length > 0 ? questions.map((q) => (
             <div key={q.id}>
               <p className="text-lg font-semibold mb-4">{q.text}</p>
               <RadioGroup
@@ -107,7 +112,7 @@ export default function DailyCheckInPage() {
                   const IconComponent = iconMap[option.label];
                   return (
                     <Label
-                      key={option.value}
+                      key={`${q.id}-${option.value}`}
                       htmlFor={`${q.id}-${option.value}`}
                       className={cn(
                         "flex flex-col items-center justify-center p-1 border-2 rounded-lg cursor-pointer transition-all duration-150 ease-in-out",
@@ -130,12 +135,38 @@ export default function DailyCheckInPage() {
                 })}
               </RadioGroup>
             </div>
-          ))}
-          <Button onClick={handleSubmit} disabled={Object.keys(answers).length === 0} className="w-full">
-            Guardar Respuesta
-          </Button>
+          )) : !error && (
+            <div className="text-center text-muted-foreground">
+                <p>No hay pregunta diaria disponible hoy.</p>
+            </div>
+          )}
+
+          {questions.length > 0 && (
+            <Button onClick={handleSubmit} disabled={Object.keys(answers).length === 0} className="w-full">
+              Guardar Respuesta
+            </Button>
+          )}
         </CardContent>
       </Card>
+      
+      {debugData && (
+        <Card className="border-amber-500 bg-amber-50 dark:bg-amber-900/30">
+          <CardHeader>
+            <CardTitle className="text-lg text-amber-700 dark:text-amber-300 flex items-center">
+              <FileJson className="mr-2 h-5 w-5" />
+              Datos de Depuración (Respuesta de la API)
+            </CardTitle>
+            <CardDescription>
+              Este es el contenido JSON crudo recibido desde la ruta `/api/daily-question`.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <pre className="text-xs bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+              <code>{JSON.stringify(debugData, null, 2)}</code>
+            </pre>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
