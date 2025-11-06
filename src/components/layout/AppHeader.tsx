@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, User as UserIcon, Settings as SettingsIcon, Sun, Moon, Laptop, ListChecks } from "lucide-react";
+import { LogOut, User as UserIcon, Settings as SettingsIcon, Sun, Moon, Laptop, ListChecks, MessageSquareQuestion } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import Link from "next/link";
@@ -26,6 +26,7 @@ import { useActivePath } from "@/contexts/ActivePathContext";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
+import { useDailyCheckIn } from "@/hooks/useDailyCheckIn"; // Import the new hook
 
 export function AppHeader() {
   const { user, logout } = useUser();
@@ -34,6 +35,7 @@ export function AppHeader() {
   const { theme, setTheme } = useTheme();
   const { activePath } = useActivePath();
   const pathname = usePathname();
+  const { forceOpen: forceDailyCheckInOpen } = useDailyCheckIn(); // Use the hook to get the forceOpen function
 
   const modulesRemaining = activePath ? activePath.totalModules - activePath.completedModuleIds.length : 0;
 
@@ -56,7 +58,20 @@ export function AppHeader() {
         <Logo />
       </div>
       
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        {/* Development Button to trigger popup */}
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={forceDailyCheckInOpen}>
+                    <MessageSquareQuestion className="h-5 w-5 text-destructive" />
+                    <span className="sr-only">Lanzar pregunta diaria</span>
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+                <p>Forzar Pregunta Diaria (Dev)</p>
+            </TooltipContent>
+        </Tooltip>
+
         {showProgressBadge && activePath && (
           <Tooltip>
             <TooltipTrigger asChild>

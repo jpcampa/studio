@@ -9,6 +9,7 @@ import type { EmotionalEntry } from '@/data/emotionalEntriesStore';
 import { overwriteEmotionalEntries, clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
 import type { NotebookEntry } from '@/data/therapeuticNotebookStore'; // Import NotebookEntry
 import { overwriteNotebookEntries, clearAllNotebookEntries } from '@/data/therapeuticNotebookStore'; // Import notebook store functions
+import { clearAssessmentHistory } from '@/data/assessmentHistoryStore'; // Import assessment history clear
 
 
 export interface User {
@@ -139,8 +140,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.removeItem(SIMULATED_USER_KEY);
       clearAllEmotionalEntries();
-      clearAllNotebookEntries(); // Also clear notebook entries on logout
-      console.log("UserContext LOGOUT_FUNC: User, emotional, and notebook entries removed from localStorage.");
+      clearAllNotebookEntries();
+      clearAssessmentHistory();
+      // Clear any other session/user related data here
+      localStorage.removeItem('workwell-active-path-details');
+      // Find all keys related to path progress and remove them
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('workwell-progress-')) {
+          localStorage.removeItem(key);
+        }
+      }
+      console.log("UserContext LOGOUT_FUNC: All user-related data cleared from localStorage.");
     } catch (error) {
       console.error("UserContext LOGOUT_FUNC: Error removing data from localStorage:", error);
     }
