@@ -30,3 +30,5 @@ export const likertOptions = [
   { value: 4, label: 'Smile', description: 'Bastante' },
   { value: 5, label: 'Laugh', description: 'Mucho' },
 ];
+
+    

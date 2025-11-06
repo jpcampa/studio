@@ -12,29 +12,30 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
+const clave = "SJDFgfds788sdfs8888KLLLL";
+
 // This function now fetches assessment dimensions from our internal API route
 async function getAssessmentDimensionsForFlow(): Promise<AssessmentDimension[]> {
-  // Since this is a server-side flow, we need to provide the full URL
-  // for the fetch call, because it doesn't know its own domain.
-  // Aseguramos que se usa la variable de entorno correcta.
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
-  const url = `${baseUrl}/api/assessment-questions`;
+  // Esta función ahora contiene la lógica de fetch directo a la API externa
+  // porque se ejecuta en el servidor y no tiene problemas de CORS.
+  const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
+  const raw = `${clave}|${fecha}`;
+  const token = Buffer.from(raw).toString('base64');
+  const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
   
   try {
-    console.log(`AI Flow: Fetching dimensions from internal proxy: ${url}`);
-    const response = await fetch(url, { cache: 'no-store' });
+    console.log(`AI Flow: Fetching dimensions directly from external URL: ${externalUrl}`);
+    const response = await fetch(externalUrl, { cache: 'no-store' });
     if (!response.ok) {
-      throw new Error(`AI Flow - Failed to fetch from /api/assessment-questions: ${response.statusText}`);
+      throw new Error(`AI Flow - Failed to fetch from external URL: ${response.statusText}`);
     }
     const data = await response.json();
-    // Validamos que la respuesta sea un array antes de retornarla
     if (!Array.isArray(data)) {
-      throw new Error('AI Flow - Data from /api/assessment-questions is not an array.');
+      throw new Error('AI Flow - Data from external URL is not an array.');
     }
     return data as AssessmentDimension[];
   } catch (error) {
     console.error("Error fetching assessment dimensions for AI Flow:", error);
-    // En caso de error, lanzamos la excepción para que el llamador la maneje
     throw error;
   }
 }
@@ -260,3 +261,5 @@ const initialAssessmentFlow = ai.defineFlow(
     return finalOutput;
   }
 );
+
+    
