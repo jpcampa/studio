@@ -7,7 +7,7 @@ interface DailyQuestionFromApi {
 }
 
 // This is the only function that talks to the external API.
-async function fetchExternalDailyQuestion(): Promise<DailyQuestionFromApi[]> {
+async function fetchExternalDailyQuestion(): Promise<{ questions: DailyQuestionFromApi[], url: string }> {
   const clave = "SJDFgfds788sdfs8888KLLLL";
   const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
   const raw = `${clave}|${fecha}`;
@@ -27,12 +27,12 @@ async function fetchExternalDailyQuestion(): Promise<DailyQuestionFromApi[]> {
   }
   
   const questions = await response.json();
-  return questions as DailyQuestionFromApi[];
+  return { questions: questions as DailyQuestionFromApi[], url: externalUrl };
 }
 
 export async function GET() {
   try {
-    const externalQuestions = await fetchExternalDailyQuestion();
+    const { questions: externalQuestions, url: calledUrl } = await fetchExternalDailyQuestion();
     
     // Adapt the response from the external API to our internal DailyQuestion format
     const questions = externalQuestions.map(q => ({
@@ -40,7 +40,8 @@ export async function GET() {
       text: q.texto,
     }));
 
-    return NextResponse.json(questions);
+    // Return both the questions and the debug URL
+    return NextResponse.json({ questions, debugUrl: calledUrl });
   } catch (error) {
     console.error('Error in /api/daily-question proxy route:', error);
     const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';

@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { getDailyQuestion } from '@/data/dailyQuestion';
 import type { DailyQuestion } from '@/types/daily-question';
-import { Loader2, AlertTriangle, FileJson } from 'lucide-react';
+import { Loader2, AlertTriangle, FileJson, Link as LinkIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -30,6 +30,7 @@ export default function DailyCheckInPage() {
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [debugData, setDebugData] = useState<any>(null);
+  const [debugUrl, setDebugUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,21 +38,26 @@ export default function DailyCheckInPage() {
       setIsLoading(true);
       setError(null);
       setDebugData(null);
+      setDebugUrl(null);
       try {
-        // We'll fetch and see the raw response for debugging
         const response = await fetch('/api/daily-question');
         const rawData = await response.json();
-        setDebugData(rawData);
-
+        
         if (!response.ok) {
+           setDebugData(rawData); // Store error response for debugging
            throw new Error(`Error del servidor (HTTP ${response.status})`);
         }
 
-        // Now process the data as before
-        if (Array.isArray(rawData) && rawData.length > 0) {
-            setQuestions(rawData as DailyQuestion[]);
-        } else if (rawData) { // It might be a single object
-            setQuestions([rawData as DailyQuestion]);
+        // Store full response for debugging
+        setDebugData(rawData.questions);
+        if (rawData.debugUrl) {
+            setDebugUrl(rawData.debugUrl);
+        }
+
+        if (Array.isArray(rawData.questions) && rawData.questions.length > 0) {
+            setQuestions(rawData.questions as DailyQuestion[]);
+        } else if (rawData.questions) {
+            setQuestions([rawData.questions as DailyQuestion]);
         } else {
             setQuestions([]);
         }
@@ -149,15 +155,34 @@ export default function DailyCheckInPage() {
         </CardContent>
       </Card>
       
+       {debugUrl && (
+        <Card className="border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30">
+          <CardHeader>
+            <CardTitle className="text-lg text-cyan-700 dark:text-cyan-300 flex items-center">
+              <LinkIcon className="mr-2 h-5 w-5" />
+              URL de la API Externa (Depuración)
+            </CardTitle>
+            <CardDescription>
+              Esta es la URL completa que se está llamando en el servidor para obtener las preguntas.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <pre className="text-xs bg-background p-4 rounded-md overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+              <code>{debugUrl}</code>
+            </pre>
+          </CardContent>
+        </Card>
+      )}
+
       {debugData && (
         <Card className="border-amber-500 bg-amber-50 dark:bg-amber-900/30">
           <CardHeader>
             <CardTitle className="text-lg text-amber-700 dark:text-amber-300 flex items-center">
               <FileJson className="mr-2 h-5 w-5" />
-              Datos de Depuración (Respuesta de la API)
+              Datos Recibidos (Depuración)
             </CardTitle>
             <CardDescription>
-              Este es el contenido JSON crudo recibido desde la ruta `/api/daily-question`.
+              Este es el contenido JSON crudo que la API `/api/daily-question` está devolviendo.
             </CardDescription>
           </CardHeader>
           <CardContent>
