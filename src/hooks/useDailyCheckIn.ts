@@ -18,13 +18,14 @@ export function useDailyCheckIn() {
       const lastCheckIn = localStorage.getItem(LAST_CHECK_IN_KEY);
       const today = new Date().toDateString();
 
+      // The condition is now `forceShow` OR `lastCheckIn !== today`
       if (forceShow || lastCheckIn !== today) {
         const fetchedQuestion = await getDailyQuestion();
         if (fetchedQuestion) {
           setQuestion(fetchedQuestion);
           setShowPopup(true);
         } else {
-            console.warn("useDailyCheckIn: No daily question fetched.");
+          console.warn("useDailyCheckIn: No daily question fetched.");
         }
       } else {
         console.log("useDailyCheckIn: Daily check-in already completed today.");
@@ -37,6 +38,7 @@ export function useDailyCheckIn() {
   }, []);
 
   useEffect(() => {
+    // We only run the automatic check on mount. Forcing is handled by `forceOpen`.
     checkAndFetch();
   }, [checkAndFetch]);
 
@@ -49,7 +51,8 @@ export function useDailyCheckIn() {
       console.error("useDailyCheckIn: Error marking check-in as done:", error);
     }
   }, []);
-
+  
+  // This function is called by the button. It calls checkAndFetch with `forceShow = true`.
   const forceOpen = useCallback(() => {
     checkAndFetch(true);
   }, [checkAndFetch]);
