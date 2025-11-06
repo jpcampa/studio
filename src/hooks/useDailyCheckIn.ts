@@ -74,3 +74,4 @@ export function useDailyCheckIn() {
 
   return { showPopup, question, isLoading, markAsDone, forceOpen };
 }
+
