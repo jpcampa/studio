@@ -1,4 +1,3 @@
-
 "use client";
 
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
@@ -26,7 +25,7 @@ import { useActivePath } from "@/contexts/ActivePathContext";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
-import { useDailyCheckIn } from '@/hooks/use-daily-check-in'; // Importar el hook
+import { useDailyCheckIn } from '@/hooks/use-daily-check-in.tsx'; // Importar el hook
 
 export function AppHeader() {
   const { user, logout } = useUser();

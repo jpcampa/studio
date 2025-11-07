@@ -1,4 +1,3 @@
-
 "use client";
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
@@ -9,7 +8,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { useUser } from '@/contexts/UserContext';
 import { Loader2 } from 'lucide-react';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { DailyCheckInProvider, useDailyCheckIn } from '@/hooks/use-daily-check-in';
+import { DailyCheckInProvider, useDailyCheckIn } from '@/hooks/use-daily-check-in.tsx';
 import { DailyCheckInPopup } from '@/components/daily-check-in/DailyCheckInPopup';
 
 function DailyCheckInManager({ children }: { children: ReactNode }) {
