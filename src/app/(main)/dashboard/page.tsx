@@ -30,6 +30,8 @@ import { pathsData, type Path as AppPathData } from "@/data/pathsData";
 import { fetchUserActivities } from "@/actions/auth";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { getAssessmentHistory, type AssessmentRecord } from "@/data/assessmentHistoryStore";
+import { EmotionalProfileChart } from "@/components/dashboard/EmotionalProfileChart";
 
 
 interface ProcessedChartDataPoint {
@@ -72,6 +74,8 @@ export default function DashboardPage() {
   const [lastEmotion, setLastEmotion] = useState<string | null>(null);
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   const [isRefreshingEmotions, setIsRefreshingEmotions] = useState(false);
+  const [latestAssessment, setLatestAssessment] = useState<AssessmentRecord | null>(null);
+
 
   const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
     const activityPayload: SingleEmotionalEntryActivity = { entry: newEntryData };
@@ -93,6 +97,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
     const loadedAllEntries = getEmotionalEntries(); 
+    const assessmentHistory = getAssessmentHistory();
+    if (assessmentHistory.length > 0) {
+        setLatestAssessment(assessmentHistory[0]);
+    }
 
     setRecentEntries(loadedRecentEntries);
     setAllEntriesForChart(loadedAllEntries);
@@ -427,12 +435,19 @@ export default function DashboardPage() {
       <section aria-labelledby="visualizations-heading">
         <h2 id="visualizations-heading" className="sr-only">Visualizaciones de Progreso</h2>
         <div className="grid gap-8 lg:grid-cols-2">
-          <ChartPlaceholder
-            title={t.myEmotionalProfile}
-            description={t.myEmotionalProfileDescription}
-            icon={Radar}
-            className="lg:h-[450px]"
-          />
+            {latestAssessment ? (
+                <EmotionalProfileChart 
+                    results={latestAssessment.data}
+                    className="lg:h-[450px]"
+                />
+            ) : (
+                <ChartPlaceholder
+                    title={t.myEmotionalProfile}
+                    description={t.myEmotionalProfileDescription}
+                    icon={Radar}
+                    className="lg:h-[450px]"
+                />
+            )}
           <MoodEvolutionChart
             data={chartData}
             title={t.myEvolution}
@@ -444,5 +459,7 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
 
     
