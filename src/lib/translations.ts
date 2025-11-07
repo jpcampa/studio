@@ -254,7 +254,7 @@ export const t = {
   nextStepPlaceholder: "Ruta de Autoestima",
   nextStepDescription: "Recomendado para ti.",
   emotionalRegistry: "Registro Emocional",
-  registerEmotion: "✨ Registrar Emoción",
+  registerEmotion: "Registrar Emoción",
   myEmotionalProfile: "Mi Perfil Emocional",
   myEmotionalProfileDescription: "Una vista multidimensional de tu estado.",
   myEvolution: "Mi Evolución del Ánimo",
