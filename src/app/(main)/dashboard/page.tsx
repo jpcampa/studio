@@ -344,12 +344,12 @@ export default function DashboardPage() {
       </section>
 
       <>
-          <section aria-labelledby="emotional-registry-heading" className="text-center py-6">
+          <section aria-labelledby="emotional-registry-heading" className="py-6">
             <h2 id="emotional-registry-heading" className="sr-only">{t.emotionalRegistry}</h2>
             <Dialog open={isEntryDialogOpen} onOpenChange={setIsEntryDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="shadow-md hover:shadow-lg transition-shadow">
-                  <Edit className="mr-2 h-5 w-5" />
+                <Button size="lg" className="w-full text-lg py-6 shadow-lg hover:shadow-xl transition-shadow">
+                  <Edit className="mr-3 h-6 w-6" />
                   {t.registerEmotion}
                 </Button>
               </DialogTrigger>
