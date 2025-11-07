@@ -23,7 +23,7 @@ export function ChartPlaceholder({ title, description, icon: Icon, className }: 
       <CardContent className="flex-grow flex items-center justify-center p-6">
         <div className="text-center text-muted-foreground p-6 sm:p-8 border-2 border-dashed border-border rounded-lg w-full min-h-[200px] sm:min-h-[250px] flex flex-col items-center justify-center bg-muted/20">
           <Icon className="h-12 w-12 sm:h-16 sm:w-16 mb-4 text-muted-foreground/40" />
-          <p className="text-sm sm:text-base">Visualización de {title.toLowerCase()} próximamente.</p>
+          <p className="text-sm sm:text-base">como es que esto no funciona?</p>
         </div>
       </CardContent>
     </Card>
