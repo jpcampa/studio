@@ -1,7 +1,7 @@
 
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode, type FC } from 'react';
 
 const DAILY_CHECKIN_KEY = 'workwell-daily-checkin-completed';
 
@@ -13,12 +13,12 @@ interface DailyCheckInContextType {
 
 const DailyCheckInContext = createContext<DailyCheckInContextType | undefined>(undefined);
 
-export function DailyCheckInProvider({ children }: { children: ReactNode }): JSX.Element {
+export const DailyCheckInProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [showPopup, setShowPopup] = useState(false);
 
-  const getTodayKey = () => {
+  const getTodayKey = useCallback(() => {
     return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  };
+  }, []);
 
   useEffect(() => {
     try {
@@ -33,7 +33,7 @@ export function DailyCheckInProvider({ children }: { children: ReactNode }): JSX
     } catch (error) {
       console.error("Error checking daily check-in status:", error);
     }
-  }, []);
+  }, [getTodayKey]);
 
   const forceOpen = useCallback(() => {
     setShowPopup(true);
@@ -46,7 +46,7 @@ export function DailyCheckInProvider({ children }: { children: ReactNode }): JSX
     } catch (error) {
         console.error("Error setting daily check-in as completed:", error);
     }
-  }, []);
+  }, [getTodayKey]);
 
   const value = { showPopup, forceOpen, closePopup };
 
@@ -55,7 +55,7 @@ export function DailyCheckInProvider({ children }: { children: ReactNode }): JSX
       {children}
     </DailyCheckInContext.Provider>
   );
-}
+};
 
 export function useDailyCheckIn(): DailyCheckInContextType {
   const context = useContext(DailyCheckInContext);
