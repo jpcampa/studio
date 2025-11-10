@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, type FormEvent } from 'react';
@@ -119,9 +120,9 @@ import { MotivationIn3LayersExercise } from '@/components/paths/MotivationIn3Lay
 import { VisualizeDayExercise } from '@/components/paths/VisualizeDayExercise';
 import { IlluminatingMemoriesAlbumExercise } from '@/components/paths/IlluminatingMemoriesAlbumExercise';
 import { PositiveEmotionalFirstAidKitExercise } from '@/components/paths/PositiveEmotionalFirstAidKitExercise';
-// RUTA 13 (NUEVA)
-import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
-import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
+// RUTA 13
+import { AnsiedadTieneSentidoExercise } from '@/components/paths/AnsiedadTieneSentidoExercise';
+import { VisualizacionGuiadaCuerpoAnsiedadExercise } from '@/components/paths/VisualizacionGuiadaCuerpoAnsiedadExercise';
 import { StopExercise } from './StopExercise';
 import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
 import { ExposureLadderExercise } from './ExposureLadderExercise';
@@ -760,8 +761,11 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
   switch (contentItem.type) {
     case 'title':
       return (
-        <div key={index} className="flex items-center gap-4 mt-6 mb-3">
+        <div key={index} className="flex items-center justify-between gap-4 mt-6 mb-3">
           <h3 className="text-xl font-bold text-primary">{contentItem.text}</h3>
+          {contentItem.audioUrl && (
+            <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-xs" />
+          )}
         </div>
       );
     case 'paragraph':
@@ -777,11 +781,11 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         <Accordion key={index} type="single" collapsible className="w-full mb-4">
           <AccordionItem value={`item-${index}`} className="border rounded-lg shadow-sm">
             <AccordionTrigger className="p-4 text-base font-semibold hover:no-underline text-left">
-               <div className="flex items-center gap-3">
+               <div className="flex items-center justify-between w-full gap-3">
+                 <span>{contentItem.title}</span>
                  {contentItem.audioUrl && (
-                    <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-xs" onClick={(e) => e.stopPropagation()} />
+                    <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] sm:max-w-xs" onClick={(e) => e.stopPropagation()} />
                   )}
-                  <span>{contentItem.title}</span>
                </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 pb-4">
@@ -1212,9 +1216,3 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
-
-    
-
-    
-
-    
