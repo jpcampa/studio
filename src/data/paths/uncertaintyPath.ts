@@ -6,13 +6,13 @@ export const uncertaintyPath: Path = {
   title: 'Tolerar la Incertidumbre con Confianza',
   description: 'Aprende a convivir con lo incierto sin perder el equilibrio, transformando el control en confianza y la ansiedad en calma consciente.',
   dataAiHint: 'uncertainty trust mindfulness',
-  audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Introruta2.mp3',
   modules: [
     {
       id: 'incertidumbre_sem1',
       title: 'Semana 1: Entender la Incertidumbre y cómo la vivo',
       type: 'introduction',
       estimatedTime: '20-25 min',
+      audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3',
       content: [
         { type: 'paragraph', text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.' },
         { 
@@ -30,7 +30,6 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: '¿Por qué nos cuesta tanto la incertidumbre?',
-          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'Porque nuestro sistema emocional busca seguridad. Preferimos incluso una mala noticia conocida antes que quedarnos en el “no sé”.\nEstudios en neurociencia han demostrado que la incertidumbre activa el sistema de amenaza cerebral (en especial, la amígdala) de forma parecida a como lo haría un peligro real.\nCuando esto ocurre, muchas personas sienten:\n•\tNecesidad de controlarlo todo.\n•\tPensamientos de anticipación (“¿Y si…?”).\n•\tEvitación de decisiones o situaciones inciertas.' }
           ]
@@ -46,6 +45,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: '¿Cómo reacciona tu cuerpo?',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio5Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'Cuando enfrentas una situación incierta, tu cuerpo reacciona: el corazón se acelerada, se tensan los músculos, la mente se agita.\nEsto es adaptativo: tu cerebro intenta protegerte anticipando lo peor. Pero si esa respuesta se vuelve constante, vives en modo alerta, con un “radar” emocional encendido todo el tiempo.' }
           ]
@@ -307,3 +307,5 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+  
