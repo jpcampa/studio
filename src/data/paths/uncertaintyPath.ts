@@ -1,3 +1,4 @@
+
 import type { Path } from '../pathsData';
 
 export const uncertaintyPath: Path = {
@@ -11,6 +12,7 @@ export const uncertaintyPath: Path = {
         title: 'Semana 1: Entender la Incertidumbre y cómo la vivo',
         type: 'introduction',
         estimatedTime: '20-25 min',
+        audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Introruta2.mp3',
         content: [
           { type: 'paragraph', text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.' },
           { type: 'title', text: 'Psicoeducación' },
@@ -26,8 +28,9 @@ export const uncertaintyPath: Path = {
               { type: 'list', items: [
                 'La incertidumbre es parte de la vida, pero muchas veces la vivimos como amenaza.',
                 'Nuestro cuerpo y mente tienden a sobreprotegernos cuando sentimos que no tenemos el control.',
-                'La intolerancia a la incertidumbre genera ansiedad, bloqueo y evitación.',
-                'Con entrenamiento, puedes vivir lo incierto desde un lugar más flexible y seguro.'
+                'La intolerancia a la incertidumbre se manifiesta en necesidad de control, rigidez y evitación.',
+                'No puedes controlar todo, pero puedes aprender a moverte con flexibilidad.',
+                'Diferenciar entre lo que depende de ti y lo que no, alivia la ansiedad y te devuelve poder.'
               ]}
             ]
           },
@@ -123,7 +126,7 @@ export const uncertaintyPath: Path = {
         type: 'skill_practice',
         estimatedTime: '20-25 min',
         content: [
-          { type: 'paragraph', text: 'A veces, cuando algo te preocupa o no sabes qué va a pasar, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.\nEsta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.\nAdaptarte no es rendirte. Es crecer desde dentro.'},
+          { type: 'paragraph', text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.\nEsta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.\nAdaptarte no es rendirte. Es crecer desde dentro.'},
           { type: 'title', text: 'Psicoeducación' },
           { type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.\nEso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.'},
           {

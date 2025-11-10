@@ -1,4 +1,5 @@
 
+
 export interface AssessmentItem {
   id: string;
   text: string;
@@ -830,4 +831,5 @@ export type PathModule = {
   content: ModuleContent[]; // An array of different content blocks that make up the module
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
+  audioUrl?: string; // For module-level audio
 };

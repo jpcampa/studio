@@ -763,6 +763,8 @@ ${progressText || 'No se registraron días.'}
 // ====================================================================
 // START OF RUTA 13 DYNAMIC COMPONENTS
 // ====================================================================
+import { AnsiedadTieneSentidoExercise } from '@/components/paths/AnsiedadTieneSentidoExercise';
+import { VisualizacionGuiadaCuerpoAnsiedadExercise } from '@/components/paths/VisualizacionGuiadaCuerpoAnsiedadExercise';
 // ====================================================================
 // END OF RUTA 13 DYNAMIC COMPONENTS
 // ====================================================================
@@ -1162,6 +1164,14 @@ export function PathDetailClient({ path }: { path: Path }) {
                   </Badge>
                 )}
               </div>
+              {module.audioUrl && (
+                  <div className="mt-4">
+                      <audio controls controlsList="nodownload" className="w-full">
+                          <source src={module.audioUrl} type="audio/mp3" />
+                          Tu navegador no soporta el elemento de audio.
+                      </audio>
+                  </div>
+              )}
             </CardHeader>
             <CardContent>
                 {module.content.map((contentItem, i) => renderContent(contentItem, i, path.id))}
