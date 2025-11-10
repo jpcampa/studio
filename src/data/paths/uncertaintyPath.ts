@@ -6,10 +6,11 @@ export const uncertaintyPath: Path = {
   title: 'Tolerar la Incertidumbre con Confianza',
   description: 'Aprende a convivir con lo incierto sin perder el equilibrio, transformando el control en confianza y la ansiedad en calma consciente.',
   dataAiHint: 'uncertainty trust mindfulness',
+  audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2.mp3',
   modules: [
     {
       id: 'incertidumbre_sem1',
-      title: 'Semana 1: Entender la Incertidumbre y cómo la vivo',
+      title: 'Semana 1: Entiende qué es la Incertidumbre y cómo la vivo',
       type: 'introduction',
       estimatedTime: '20-25 min',
       audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3',
@@ -30,6 +31,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: '¿Por qué nos cuesta tanto la incertidumbre?',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'Porque nuestro sistema emocional busca seguridad. Preferimos incluso una mala noticia conocida antes que quedarnos en el “no sé”.\nEstudios en neurociencia han demostrado que la incertidumbre activa el sistema de amenaza cerebral (en especial, la amígdala) de forma parecida a como lo haría un peligro real.\nCuando esto ocurre, muchas personas sienten:\n•\tNecesidad de controlarlo todo.\n•\tPensamientos de anticipación (“¿Y si…?”).\n•\tEvitación de decisiones o situaciones inciertas.' }
           ]
@@ -53,6 +55,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: 'La alternativa: flexibilidad mental',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio6Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'No puedes eliminar la incertidumbre. Pero sí puedes fortalecer tu capacidad para adaptarte a ella sin quedarte paralizado/a.\nA esto lo llamamos flexibilidad cognitiva: pensar de forma más abierta, matizada y adaptativa.\nLa flexibilidad:\n•\tSe puede entrenar (no es un rasgo fijo).\n•\tImplica reinterpretar lo que pasa, sin necesidad de tenerlo todo claro.\n•\tEs la base de una regulación emocional más sólida.'}
           ]
@@ -307,5 +310,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-  
