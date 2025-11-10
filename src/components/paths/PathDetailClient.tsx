@@ -45,11 +45,6 @@ import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExe
 import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent, SelfAcceptanceAudioExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
-import { StopExercise } from './StopExercise';
-import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
-import { ExposureLadderExercise } from './ExposureLadderExercise';
-import { CalmVisualizationExercise } from './CalmVisualizationExercise';
-import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
 import { AuthenticityThermometerExercise } from './AuthenticityThermometerExercise';
 import { EmpatheticDialogueExercise } from '@/components/paths/EmpatheticDialogueExercise';
 import { EmpathicMirrorExercise } from '@/components/paths/EmpathicMirrorExercise';
@@ -59,44 +54,44 @@ import { EmotionalInvolvementTrafficLightExercise } from '@/components/paths/Emo
 import { SignificantRelationshipsInventoryExercise } from './SignificantRelationshipsInventoryExercise';
 import { RelationalCommitmentExercise } from './RelationalCommitmentExercise';
 // RUTA 6 imports
-import { DetectiveDeEmocionesExercise } from './DetectiveDeEmocionesExercise';
-import { UnaPalabraCadaDiaExercise } from './UnaPalabraCadaDiaExercise';
-import { MapaEmocionNecesidadCuidadoExercise } from './MapaEmocionNecesidadCuidadoExercise';
-import { CartaDesdeLaEmocionExercise } from './CartaDesdeLaEmocionExercise';
-import { MapaEmocionalRepetidoExercise } from './MapaEmocionalRepetidoExercise';
-import { SemaforoEmocionalExercise } from './SemaforoEmocionalExercise';
-import { MeditacionGuiadaSinJuicioExercise } from './MeditacionGuiadaSinJuicioExercise';
-import { DiarioMeDiCuentaExercise } from './DiarioMeDiCuentaExercise';
+import { DetectiveDeEmocionesExercise } from '@/components/paths/DetectiveDeEmocionesExercise';
+import { UnaPalabraCadaDiaExercise } from '@/components/paths/UnaPalabraCadaDiaExercise';
+import { MapaEmocionNecesidadCuidadoExercise } from '@/components/paths/MapaEmocionNecesidadCuidadoExercise';
+import { CartaDesdeLaEmocionExercise } from '@/components/paths/CartaDesdeLaEmocionExercise';
+import { MapaEmocionalRepetidoExercise } from '@/components/paths/MapaEmocionalRepetidoExercise';
+import { SemaforoEmocionalExercise } from '@/components/paths/SemaforoEmocionalExercise';
+import { MeditacionGuiadaSinJuicioExercise } from '@/components/paths/MeditacionGuiadaSinJuicioExercise';
+import { DiarioMeDiCuentaExercise } from '@/components/paths/DiarioMeDiCuentaExercise';
 // RUTA 7 imports
-import { ValuesCompassExercise } from './ValuesCompassExercise';
-import { EnergySenseMapExercise } from './EnergySenseMapExercise';
-import { DetoursInventoryExercise } from './DetoursInventoryExercise';
-import { PresentVsEssentialSelfExercise } from './PresentVsEssentialSelfExercise';
-import { MentalNoiseTrafficLightExercise } from './MentalNoiseTrafficLightExercise';
-import { DirectedDecisionsExercise } from './DirectedDecisionsExercise';
-import { SenseChecklistExercise } from './SenseChecklistExercise';
-import { UnfulfilledNeedsExercise } from './UnfulfilledNeedsExercise';
-import { BraveRoadmapExercise } from './BraveRoadmapExercise';
-import { EssentialReminderExercise } from './EssentialReminderExercise';
-import { ThoughtsThatBlockPurposeExercise } from './ThoughtsThatBlockPurposeExercise';
+import { ValuesCompassExercise } from '@/components/paths/ValuesCompassExercise';
+import { EnergySenseMapExercise } from '@/components/paths/EnergySenseMapExercise';
+import { DetoursInventoryExercise } from '@/components/paths/DetoursInventoryExercise';
+import { PresentVsEssentialSelfExercise } from '@/components/paths/PresentVsEssentialSelfExercise';
+import { MentalNoiseTrafficLightExercise } from '@/components/paths/MentalNoiseTrafficLightExercise';
+import { DirectedDecisionsExercise } from '@/components/paths/DirectedDecisionsExercise';
+import { SenseChecklistExercise } from '@/components/paths/SenseChecklistExercise';
+import { UnfulfilledNeedsExercise } from '@/components/paths/UnfulfilledNeedsExercise';
+import { BraveRoadmapExercise } from '@/components/paths/BraveRoadmapExercise';
+import { EssentialReminderExercise } from '@/components/paths/EssentialReminderExercise';
+import { ThoughtsThatBlockPurposeExercise } from '@/components/paths/ThoughtsThatBlockPurposeExercise';
 // RUTA 8
-import { ResilienceTimelineExercise } from './ResilienceTimelineExercise';
-import { PersonalDefinitionExercise } from './PersonalDefinitionExercise';
-import { AnchorInStormExercise } from './AnchorInStormExercise';
-import { IntensityScaleExercise } from './IntensityScaleExercise';
-import { BraveDecisionsWheelExercise } from './BraveDecisionsWheelExercise';
-import { PlanABExercise } from './PlanABExercise';
-import { ChangeTimelineExercise } from './ChangeTimelineExercise';
-import { MyPactExercise } from './MyPactExercise';
+import { ResilienceTimelineExercise } from '@/components/paths/ResilienceTimelineExercise';
+import { PersonalDefinitionExercise } from '@/components/paths/PersonalDefinitionExercise';
+import { AnchorInStormExercise } from '@/components/paths/AnchorInStormExercise';
+import { IntensityScaleExercise } from '@/components/paths/IntensityScaleExercise';
+import { BraveDecisionsWheelExercise } from '@/components/paths/BraveDecisionsWheelExercise';
+import { PlanABExercise } from '@/components/paths/PlanABExercise';
+import { ChangeTimelineExercise } from '@/components/paths/ChangeTimelineExercise';
+import { MyPactExercise } from '@/components/paths/MyPactExercise';
 // RUTA 9
-import { CoherenceCompassExercise } from './CoherenceCompassExercise';
-import { SmallDecisionsLogExercise } from './SmallDecisionsLogExercise';
-import { InternalTensionsMapExercise } from './InternalTensionsMapExercise';
-import { EthicalMirrorExercise } from './EthicalMirrorExercise';
-import { IntegrityDecisionsExercise } from './IntegrityDecisionsExercise';
-import { NonNegotiablesExercise } from './NonNegotiablesExercise';
-import { EnvironmentEvaluationExercise } from './EnvironmentEvaluationExercise';
-import { PersonalManifestoExercise } from './PersonalManifestoExercise';
+import { CoherenceCompassExercise } from '@/components/paths/CoherenceCompassExercise';
+import { SmallDecisionsLogExercise } from '@/components/paths/SmallDecisionsLogExercise';
+import { InternalTensionsMapExercise } from '@/components/paths/InternalTensionsMapExercise';
+import { EthicalMirrorExercise } from '@/components/paths/EthicalMirrorExercise';
+import { IntegrityDecisionsExercise } from '@/components/paths/IntegrityDecisionsExercise';
+import { NonNegotiablesExercise } from '@/components/paths/NonNegotiablesExercise';
+import { EnvironmentEvaluationExercise } from '@/components/paths/EnvironmentEvaluationExercise';
+import { PersonalManifestoExercise } from '@/components/paths/PersonalManifestoExercise';
 // RUTA 10
 import { ComplaintTransformationExercise } from '@/components/paths/ComplaintTransformationExercise';
 import { GuiltRadarExercise } from '@/components/paths/GuiltRadarExercise';
@@ -127,6 +122,11 @@ import { PositiveEmotionalFirstAidKitExercise } from '@/components/paths/Positiv
 // RUTA 13 (NUEVA)
 import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
 import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
+import { StopExercise } from './StopExercise';
+import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
+import { ExposureLadderExercise } from './ExposureLadderExercise';
+import { CalmVisualizationExercise } from './CalmVisualizationExercise';
+import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
 
 
 // Componente para manejar las reflexiones del cuaderno terapéutico
@@ -399,7 +399,7 @@ ${flexibleThought || 'No especificada.'}
                     <div className="flex items-center gap-2"><Checkbox id="shame" onCheckedChange={c => setAvoidedEmotions(p => ({...p, shame:!!c}))} /><Label htmlFor="shame" className="font-normal">Vergüenza</Label></div>
                     <div className="flex items-center gap-2"><Checkbox id="guilt" onCheckedChange={c => setAvoidedEmotions(p => ({...p, guilt:!!c}))} /><Label htmlFor="guilt" className="font-normal">Culpa</Label></div>
                 </div>
-                <Label htmlFor="aftermath">¿Y qué sentí después de evitarlo?</Label>
+                <Label htmlFor="aftermath">¿Qué sentí después de evitarlo?</Label>
                 <Textarea id="aftermath" value={aftermathEmotion} onChange={e => setAftermathEmotion(e.target.value)} placeholder="Alivio momentáneo... y luego frustración." />
                 <Button onClick={() => setStep(4)} className="w-full mt-2">Siguiente</Button></div>;
             case 4: return <div className="p-4 space-y-2"><Label>¿Te exigiste demasiado en ese momento?</Label>
@@ -760,14 +760,6 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
-// ====================================================================
-// START OF RUTA 13 DYNAMIC COMPONENTS
-// ====================================================================
-import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
-import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
-// ====================================================================
-// END OF RUTA 13 DYNAMIC COMPONENTS
-// ====================================================================
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
