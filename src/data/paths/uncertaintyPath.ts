@@ -71,6 +71,7 @@ export const uncertaintyPath: Path = {
         title: 'Semana 2: Regular la Ansiedad ante lo Incierto',
         type: 'skill_practice',
         estimatedTime: '15-20 min',
+        audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion2.mp3',
         content: [
             { type: 'paragraph', text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos? Esta semana quiero ayudarte a entender por qué ocurre eso y cómo puedes dejar de anticipar lo peor. No se trata de controlar todo, sino de descubrir que puedes vivir con más calma incluso cuando hay cosas que no puedes prever.' },
             { type: 'title', text: 'Psicoeducación' },
