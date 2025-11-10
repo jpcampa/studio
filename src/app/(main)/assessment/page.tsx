@@ -58,7 +58,7 @@ export default function AssessmentPage() {
 
     setIsProcessingModalVisible(false);
 
-    if (result.success && result.data) {
+    if (result.success) {
       try {
         const resultsToStore: StoredAssessmentResults = {
             aiInterpretation: result.data,
@@ -131,7 +131,7 @@ export default function AssessmentPage() {
     } else {
       toast({
         title: t.errorOccurred,
-        description: result.error,
+        description: result.error, // TypeScript error fix
         variant: "destructive",
       });
     }
