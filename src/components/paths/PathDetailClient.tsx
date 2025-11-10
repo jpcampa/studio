@@ -399,7 +399,7 @@ ${flexibleThought || 'No especificada.'}
                     <div className="flex items-center gap-2"><Checkbox id="shame" onCheckedChange={c => setAvoidedEmotions(p => ({...p, shame:!!c}))} /><Label htmlFor="shame" className="font-normal">Vergüenza</Label></div>
                     <div className="flex items-center gap-2"><Checkbox id="guilt" onCheckedChange={c => setAvoidedEmotions(p => ({...p, guilt:!!c}))} /><Label htmlFor="guilt" className="font-normal">Culpa</Label></div>
                 </div>
-                <Label htmlFor="aftermath">¿Qué sentí después de evitarlo?</Label>
+                <Label htmlFor="aftermath">¿Y qué sentí después de evitarlo?</Label>
                 <Textarea id="aftermath" value={aftermathEmotion} onChange={e => setAftermathEmotion(e.target.value)} placeholder="Alivio momentáneo... y luego frustración." />
                 <Button onClick={() => setStep(4)} className="w-full mt-2">Siguiente</Button></div>;
             case 4: return <div className="p-4 space-y-2"><Label>¿Te exigiste demasiado en ese momento?</Label>
@@ -515,7 +515,7 @@ Cuando ${moment}, voy a ${action}.
                 {step === 0 && <div className="text-center p-4"><p className="mb-4">Planear con realismo es lo que necesitamos para avanzar. Crea tu microplan: una frase corta que una lo cotidiano con lo que quieres empezar.</p><Button onClick={() => setStep(1)}>Crear mi frase de acción</Button></div>}
                 {step === 1 && <div className="p-4 space-y-4"><Label>¿En qué momento cotidiano podrías activar tu gesto?</Label><Textarea value={moment} onChange={e => setMoment(e.target.value)} placeholder="Ej: Llegue a casa..." /><Button onClick={() => setStep(2)} className="w-full mt-2">Siguiente paso</Button></div>}
                 {step === 2 && <div className="p-4 space-y-4"><Label>¿Qué pequeña acción puedes vincular a ese momento?</Label><Textarea value={action} onChange={e => setAction(e.target.value)} placeholder="Ej: Salir a caminar 10 minutos..." /><Button onClick={handleSave} className="w-full mt-2">Ver mi frase</Button></div>}
-                {step === 3 && <div className="p-4 text-center space-y-4"><p className="font-bold">Tu frase final:</p><p className="italic">"Cuando ${moment}, voy a ${action}."</p><p className="text-sm text-muted-foreground">Esta frase no es una obligación: es una señal de autocuidado.</p><Button onClick={() => setStep(0)} variant="outline">Crear otro plan</Button></div>}
+                {step === 3 && <div className="p-4 text-center space-y-4"><p className="font-bold">Tu frase final:</p><p className="italic">"Cuando {moment}, voy a {action}."</p><p className="text-sm text-muted-foreground">Esta frase no es una obligación: es una señal de autocuidado.</p><Button onClick={() => setStep(0)} variant="outline">Crear otro plan</Button></div>}
             </CardContent>
         </Card>
     );
@@ -735,7 +735,7 @@ ${progressText || 'No se registraron días.'}
                         />
                          {selectedDate && (
                             <div className="w-full sm:w-auto flex-grow space-y-3">
-                                <p className="font-semibold text-center">Progreso para ${format(selectedDate, "PPP", { locale: es })}</p>
+                                <p className="font-semibold text-center">Progreso para {format(selectedDate, "PPP", { locale: es })}</p>
                                 <div className="flex justify-around gap-2">
                                      <Button type="button" variant="outline" size="icon" onClick={() => handleDayStatusChange('done')} title="Lo hice"><CheckIcon className="h-5 w-5 text-green-500" /></Button>
                                      <Button type="button" variant="outline" size="icon" onClick={() => handleDayStatusChange('partial')} title="Lo hice parcialmente"><MinusIcon className="h-5 w-5 text-yellow-500" /></Button>
@@ -760,6 +760,14 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
+// ====================================================================
+// START OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
+import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
+// ====================================================================
+// END OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
 
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
@@ -1165,6 +1173,14 @@ export function PathDetailClient({ path }: { path: Path }) {
                   </Badge>
                 )}
               </div>
+              {module.audioUrl && (
+                <div className="mt-4">
+                  <audio controls controlsList="nodownload" className="w-full">
+                      <source src={module.audioUrl} type="audio/mp3" />
+                      Tu navegador no soporta el elemento de audio.
+                  </audio>
+                </div>
+              )}
             </CardHeader>
             <CardContent>
                 {module.content.map((contentItem, i) => renderContent(contentItem, i, path.id))}
@@ -1201,5 +1217,3 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
-
-    
