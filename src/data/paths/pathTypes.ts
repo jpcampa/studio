@@ -1,20 +1,5 @@
 
 
-export interface AssessmentItem {
-  id: string;
-  text: string;
-  weight: number;
-  isInverse?: boolean;
-}
-
-export interface AssessmentDimension {
-  id: string;
-  name: string;
-  definition: string;
-  items: AssessmentItem[];
-  recommendedPathId?: string;
-}
-
 export type ParagraphContent = {
   type: 'paragraph';
   text: string;
@@ -39,6 +24,7 @@ export type CollapsibleContent = {
   type: 'collapsible';
   title: string;
   content: ModuleContent[];
+  audioUrl?: string; // Add audioUrl to collapsible
 };
 
 export type ExerciseContent = {
@@ -831,5 +817,7 @@ export type PathModule = {
   content: ModuleContent[]; // An array of different content blocks that make up the module
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
-  audioUrl?: string; // For module-level audio
+  audioUrl?: string;
 };
+
+    

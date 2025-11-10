@@ -515,7 +515,7 @@ Cuando ${moment}, voy a ${action}.
                 {step === 0 && <div className="text-center p-4"><p className="mb-4">Planear con realismo es lo que necesitamos para avanzar. Crea tu microplan: una frase corta que una lo cotidiano con lo que quieres empezar.</p><Button onClick={() => setStep(1)}>Crear mi frase de acción</Button></div>}
                 {step === 1 && <div className="p-4 space-y-4"><Label>¿En qué momento cotidiano podrías activar tu gesto?</Label><Textarea value={moment} onChange={e => setMoment(e.target.value)} placeholder="Ej: Llegue a casa..." /><Button onClick={() => setStep(2)} className="w-full mt-2">Siguiente paso</Button></div>}
                 {step === 2 && <div className="p-4 space-y-4"><Label>¿Qué pequeña acción puedes vincular a ese momento?</Label><Textarea value={action} onChange={e => setAction(e.target.value)} placeholder="Ej: Salir a caminar 10 minutos..." /><Button onClick={handleSave} className="w-full mt-2">Ver mi frase</Button></div>}
-                {step === 3 && <div className="p-4 text-center space-y-4"><p className="font-bold">Tu frase final:</p><p className="italic">"Cuando ${moment}, voy a ${action}."</p><p className="text-sm text-muted-foreground">Esta frase no es una obligación: es una señal de autocuidado.</p><Button onClick={() => setStep(0)} variant="outline">Crear otro plan</Button></div>}
+                {step === 3 && <div className="p-4 text-center space-y-4"><p className="font-bold">Tu frase final:</p><p className="italic">"Cuando {moment}, voy a {action}."</p><p className="text-sm text-muted-foreground">Esta frase no es una obligación: es una señal de autocuidado.</p><Button onClick={() => setStep(0)} variant="outline">Crear otro plan</Button></div>}
             </CardContent>
         </Card>
     );
@@ -760,6 +760,7 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
+
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
@@ -777,7 +778,12 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         <Accordion key={index} type="single" collapsible className="w-full mb-4">
           <AccordionItem value={`item-${index}`} className="border rounded-lg shadow-sm">
             <AccordionTrigger className="p-4 text-base font-semibold hover:no-underline text-left">
-              {contentItem.title}
+               <div className="flex items-center gap-3">
+                 {contentItem.audioUrl && (
+                    <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-xs" onClick={(e) => e.stopPropagation()} />
+                  )}
+                  <span>{contentItem.title}</span>
+               </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 pb-4">
               <div className="border-t pt-4">
@@ -1207,3 +1213,5 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
+
+    
