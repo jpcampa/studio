@@ -307,8 +307,6 @@ export default function DashboardPage() {
             icon={lastEmotion ? CheckCircle : Smile}
             cardColorClass={lastEmotion ? "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700" : "bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700" }
             iconColorClass={lastEmotion ? "text-green-600 dark:text-green-400" : "text-slate-600 dark:text-slate-400"}
-            ctaLink="/assessment"
-            ctaLabel={t.viewDetails}
           />
           <DashboardSummaryCard
             title={t.progressSinceLast}
@@ -317,8 +315,6 @@ export default function DashboardPage() {
             icon={TrendingUp}
             cardColorClass="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700"
             iconColorClass="text-blue-600 dark:text-blue-400"
-            ctaLink="/assessment"
-            ctaLabel={t.viewDetails}
           />
           <DashboardSummaryCard
             title={t.inFocus}
@@ -327,8 +323,6 @@ export default function DashboardPage() {
             icon={Target}
             cardColorClass="bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700"
             iconColorClass="text-purple-600 dark:text-purple-400"
-            ctaLink="/paths"
-            ctaLabel={t.viewDetails}
           />
           <DashboardSummaryCard
             title={t.nextStep}
@@ -337,8 +331,6 @@ export default function DashboardPage() {
             icon={Lightbulb}
             cardColorClass="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700"
             iconColorClass="text-yellow-600 dark:text-yellow-500"
-            ctaLink="/paths"
-            ctaLabel={t.viewDetails}
           />
         </div>
       </section>
@@ -463,3 +455,4 @@ export default function DashboardPage() {
     
 
     
+
