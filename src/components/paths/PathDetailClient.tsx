@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, type FormEvent } from 'react';
@@ -760,11 +761,31 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
+// ====================================================================
+// START OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
+import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
+// ====================================================================
+// END OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+
+
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
-      return <h3 key={index} className="text-xl font-bold text-primary mt-6 mb-3">{contentItem.text}</h3>;
+      return (
+        <div key={index} className="flex items-center gap-4 mt-6 mb-3">
+          <h3 className="text-xl font-bold text-primary">{contentItem.text}</h3>
+          {contentItem.audioUrl && (
+            <audio controls controlsList="nodownload" className="h-8 max-w-xs">
+              <source src={contentItem.audioUrl} type="audio/mp3" />
+              Tu navegador no soporta el audio.
+            </audio>
+          )}
+        </div>
+      );
     case 'paragraph':
       return <p key={index} className="text-base leading-relaxed whitespace-pre-line mb-4" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />;
     case 'list':

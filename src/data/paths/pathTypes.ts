@@ -8,6 +8,7 @@ export type ParagraphContent = {
 export type TitleContent = {
   type: 'title';
   text: string;
+  audioUrl?: string; // Add audioUrl to TitleContent
 };
 
 export type ListContent = {
@@ -817,7 +818,7 @@ export type PathModule = {
   content: ModuleContent[]; // An array of different content blocks that make up the module
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
-  audioUrl?: string;
+  audioUrl?: string; // Optional audio URL for the entire module
 };
 
     

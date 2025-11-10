@@ -17,15 +17,43 @@ export const uncertaintyPath: Path = {
       content: [
         { type: 'paragraph', text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.' },
         { 
+          type: 'title', 
+          text: 'Psicoeducación',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion1.mp3'
+        },
+        { 
+            type: 'collapsible',
+            title: '¿Qué es la incertidumbre?',
+            content: [
+                { type: 'paragraph', text: 'La incertidumbre es la ausencia de certezas. Es no saber qué va a pasar. Y aunque todos la experimentamos, no siempre sabemos sostenerla sin malestar. A veces hay un riesgo real, pero muchas otras veces lo que sentimos es ambigüedad, imprevisibilidad o simplemente falta de información clara.\nNuestro cerebro —diseñado para anticiparse y protegernos— interpreta esa falta de claridad como una posible amenaza. Y ahí empieza el malestar.' },
+            ]
+        },
+        {
           type: 'collapsible',
-          title: 'Psicoeducación',
-          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion1.mp3',
+          title: '¿Por qué nos cuesta tanto la incertidumbre?',
           content: [
-            { type: 'paragraph', text: 'La incertidumbre es la ausencia de certezas. Es no saber qué va a pasar. Y aunque todos la experimentamos, no siempre sabemos sostenerla sin malestar. A veces hay un riesgo real, pero muchas otras veces lo que sentimos es ambigüedad, imprevisibilidad o simplemente falta de información clara.\nNuestro cerebro —diseñado para anticiparse y protegernos— interpreta esa falta de claridad como una posible amenaza. Y ahí empieza el malestar.' },
-            { type: 'paragraph', text: 'Porque nuestro sistema emocional busca seguridad. Preferimos incluso una mala noticia conocida antes que quedarnos en el “no sé”.\nEstudios en neurociencia han demostrado que la incertidumbre activa el sistema de amenaza cerebral (en especial, la amígdala) de forma parecida a como lo haría un peligro real.\nCuando esto ocurre, muchas personas sienten:\n•\tNecesidad de controlarlo todo.\n•\tPensamientos de anticipación (“¿Y si…?”).\n•\tEvitación de decisiones o situaciones inciertas.' },
-            { type: 'paragraph', text: 'No es solo incomodidad. Es la creencia de que lo incierto es peligroso, insoportable o inmanejable.\nEsto suele dar lugar a un estilo de pensamiento rígido, perfeccionista y catastrofista, donde todo debe estar planificado y bajo control.\nEjemplos comunes:\n•\t“Necesito saber exactamente cómo va a salir esto.”\n•\t“Si no tengo respuestas claras, no puedo avanzar.”\n•\t“Prefiero no intentarlo antes que equivocarme.”\nEste patrón puede estar vinculado a experiencias pasadas de inseguridad, exigencia o trauma. Y aunque parezca protector, suele generar más ansiedad.' },
-            { type: 'paragraph', text: 'Cuando enfrentas una situación incierta, tu cuerpo reacciona: el corazón se acelerada, se tensan los músculos, la mente se agita.\nEsto es adaptativo: tu cerebro intenta protegerte anticipando lo peor. Pero si esa respuesta se vuelve constante, vives en modo alerta, con un “radar” emocional encendido todo el tiempo.' },
-            { type: 'paragraph', text: 'No puedes eliminar la incertidumbre. Pero sí puedes fortalecer tu capacidad para adaptarte a ella sin quedarte paralizado/a.\nA esto lo llamamos flexibilidad cognitiva: pensar de forma más abierta, matizada y adaptativa.\nLa flexibilidad:\n•\tSe puede entrenar (no es un rasgo fijo).\n•\tImplica reinterpretar lo que pasa, sin necesidad de tenerlo todo claro.\n•\tEs la base de una regulación emocional más sólida.'},
+            { type: 'paragraph', text: 'Porque nuestro sistema emocional busca seguridad. Preferimos incluso una mala noticia conocida antes que quedarnos en el “no sé”.\nEstudios en neurociencia han demostrado que la incertidumbre activa el sistema de amenaza cerebral (en especial, la amígdala) de forma parecida a como lo haría un peligro real.\nCuando esto ocurre, muchas personas sienten:\n•\tNecesidad de controlarlo todo.\n•\tPensamientos de anticipación (“¿Y si…?”).\n•\tEvitación de decisiones o situaciones inciertas.' }
+          ]
+        },
+        {
+          type: 'collapsible',
+          title: 'La intolerancia a la incertidumbre',
+          content: [
+            { type: 'paragraph', text: 'No es solo incomodidad. Es la creencia de que lo incierto es peligroso, insoportable o inmanejable.\nEsto suele dar lugar a un estilo de pensamiento rígido, perfeccionista y catastrofista, donde todo debe estar planificado y bajo control.\nEjemplos comunes:\n•\t“Necesito saber exactamente cómo va a salir esto.”\n•\t“Si no tengo respuestas claras, no puedo avanzar.”\n•\t“Prefiero no intentarlo antes que equivocarme.”\nEste patrón puede estar vinculado a experiencias pasadas de inseguridad, exigencia o trauma. Y aunque parezca protector, suele generar más ansiedad.' }
+          ]
+        },
+        {
+          type: 'collapsible',
+          title: '¿Cómo reacciona tu cuerpo?',
+          content: [
+            { type: 'paragraph', text: 'Cuando enfrentas una situación incierta, tu cuerpo reacciona: el corazón se acelerada, se tensan los músculos, la mente se agita.\nEsto es adaptativo: tu cerebro intenta protegerte anticipando lo peor. Pero si esa respuesta se vuelve constante, vives en modo alerta, con un “radar” emocional encendido todo el tiempo.' }
+          ]
+        },
+        {
+          type: 'collapsible',
+          title: 'La alternativa: flexibilidad mental',
+          content: [
+            { type: 'paragraph', text: 'No puedes eliminar la incertidumbre. Pero sí puedes fortalecer tu capacidad para adaptarte a ella sin quedarte paralizado/a.\nA esto lo llamamos flexibilidad cognitiva: pensar de forma más abierta, matizada y adaptativa.\nLa flexibilidad:\n•\tSe puede entrenar (no es un rasgo fijo).\n•\tImplica reinterpretar lo que pasa, sin necesidad de tenerlo todo claro.\n•\tEs la base de una regulación emocional más sólida.'}
           ]
         },
         {
@@ -278,5 +306,7 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+    
 
     
