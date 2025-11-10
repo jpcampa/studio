@@ -131,7 +131,7 @@ export default function AssessmentPage() {
     } else {
       toast({
         title: t.errorOccurred,
-        description: result.error, // TypeScript error fix
+        description: result.error, // This is now safe
         variant: "destructive",
       });
     }
@@ -142,7 +142,7 @@ export default function AssessmentPage() {
     const assessmentDimensions = await getAssessmentDimensions();
     const randomAnswers: Record<string, { score: number, weight: number }> = {};
     assessmentDimensions.forEach(dimension => {
-      dimension.items.forEach(item => {
+      dimension.items.forEach((item: any) => { // Type added here
         randomAnswers[item.id] = {
           score: Math.floor(Math.random() * 5) + 1,
           weight: item.weight,
