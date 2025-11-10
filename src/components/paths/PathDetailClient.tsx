@@ -760,6 +760,16 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
+// ====================================================================
+// START OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
+import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
+// ====================================================================
+// END OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+
+
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
@@ -1129,6 +1139,14 @@ export function PathDetailClient({ path }: { path: Path }) {
         </div>
         <CardContent className="p-8">
           <p className="text-lg text-muted-foreground mt-2 text-center">{path.description}</p>
+          {path.audioUrl && (
+            <div className="mt-6 flex justify-center">
+                <audio controls controlsList="nodownload" className="w-full max-w-md">
+                    <source src={path.audioUrl} type="audio/mp3" />
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -1155,14 +1173,6 @@ export function PathDetailClient({ path }: { path: Path }) {
                   </Badge>
                 )}
               </div>
-              {module.audioUrl && (
-                  <div className="mt-4">
-                      <audio controls controlsList="nodownload" className="w-full">
-                          <source src={module.audioUrl} type="audio/mp3" />
-                          Tu navegador no soporta el elemento de audio.
-                      </audio>
-                  </div>
-              )}
             </CardHeader>
             <CardContent>
                 {module.content.map((contentItem, i) => renderContent(contentItem, i, path.id))}

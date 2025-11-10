@@ -23,6 +23,7 @@ export type Path = {
   description: string; // Spanish
   modules: PathModule[];
   dataAiHint?: string;
+  audioUrl?: string; // Optional audio URL for the entire path
 };
 
 // Now, the pathsData array will be built from imported path definitions.
