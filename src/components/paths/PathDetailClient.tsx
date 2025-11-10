@@ -757,21 +757,6 @@ ${progressText || 'No se registraron días.'}
     );
 }
 
-// ====================================================================
-// END OF RUTA 3 DYNAMIC COMPONENTS
-// ====================================================================
-
-// ====================================================================
-// START OF RUTA 13 DYNAMIC COMPONENTS
-// ====================================================================
-import { AnsiedadTieneSentidoExercise } from './AnsiedadTieneSentidoExercise';
-import { VisualizacionGuiadaCuerpoAnsiedadExercise } from './VisualizacionGuiadaCuerpoAnsiedadExercise';
-// ====================================================================
-// END OF RUTA 13 DYNAMIC COMPONENTS
-// ====================================================================
-
-
-
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
@@ -1234,5 +1219,7 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
+
+    
 
     
