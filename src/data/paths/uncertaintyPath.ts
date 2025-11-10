@@ -10,7 +10,7 @@ export const uncertaintyPath: Path = {
   modules: [
     {
       id: 'incertidumbre_sem1',
-      title: 'Semana 1: Entiende qué es la Incertidumbre y cómo la vivo',
+      title: 'Semana 1: Entender la Incertidumbre y cómo la vivo',
       type: 'introduction',
       estimatedTime: '20-25 min',
       audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3',
@@ -112,7 +112,7 @@ export const uncertaintyPath: Path = {
       audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion2.mp3',
       content: [
           { type: 'paragraph', text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos? Esta semana quiero ayudarte a entender por qué ocurre eso y cómo puedes dejar de anticipar lo peor. No se trata de controlar todo, sino de descubrir que puedes vivir con más calma incluso cuando hay cosas que no puedes prever.' },
-          { type: 'title', text: 'Psicoeducación' },
+          { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3' },
           { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta.\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real.' },
           {
             type: 'collapsible',
