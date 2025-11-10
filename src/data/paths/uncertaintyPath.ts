@@ -17,7 +17,8 @@ export const uncertaintyPath: Path = {
         { type: 'paragraph', text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.' },
         { 
           type: 'title', 
-          text: 'Psicoeducación'
+          text: 'Psicoeducación',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion1.mp3'
         },
         { 
             type: 'collapsible',
@@ -37,6 +38,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: 'La intolerancia a la incertidumbre',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio4Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'No es solo incomodidad. Es la creencia de que lo incierto es peligroso, insoportable o inmanejable.\nEsto suele dar lugar a un estilo de pensamiento rígido, perfeccionista y catastrofista, donde todo debe estar planificado y bajo control.\nEjemplos comunes:\n•\t“Necesito saber exactamente cómo va a salir esto.”\n•\t“Si no tengo respuestas claras, no puedo avanzar.”\n•\t“Prefiero no intentarlo antes que equivocarme.”\nEste patrón puede estar vinculado a experiencias pasadas de inseguridad, exigencia o trauma. Y aunque parezca protector, suele generar más ansiedad.' }
           ]
@@ -305,9 +307,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-    
-
-    
-
-    
