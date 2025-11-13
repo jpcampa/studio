@@ -112,7 +112,7 @@ export const uncertaintyPath: Path = {
             text: '¿Por qué imaginamos lo peor?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3',
           },
-          { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. '},
+          { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real.'},
           {
             type: 'collapsible',
             title: '¿Cómo funciona la anticipación?',
@@ -193,14 +193,17 @@ export const uncertaintyPath: Path = {
         type: 'skill_practice',
         estimatedTime: '20-25 min',
         content: [
-          { type: 'paragraph', text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.\nEsta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.\nAdaptarte no es rendirte. Es crecer desde dentro.'},
+          { 
+            type: 'collapsible',
+            title: 'Semana 3: Entrena tu Flexibilidad Mental',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3',
+            content: [{ type: 'paragraph', text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.\nEsta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.\nAdaptarte no es rendirte. Es crecer desde dentro.'}]
+          },
           { type: 'title', text: 'Psicoeducación' },
-          {
+          { 
             type: 'collapsible',
             title: '¿Qué es la rigidez cognitiva?',
-            content: [
-                { type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.' }
-            ]
+            content: [{ type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.' }]
           },
           {
             type: 'collapsible',
