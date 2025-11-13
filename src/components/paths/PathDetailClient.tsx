@@ -761,6 +761,97 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
+// ====================================================================
+// START OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+import { StopExercise } from './StopExercise';
+import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
+import { ExposureLadderExercise } from './ExposureLadderExercise';
+import { CalmVisualizationExercise } from './CalmVisualizationExercise';
+import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
+// ====================================================================
+// END OF RUTA 13 DYNAMIC COMPONENTS
+// ====================================================================
+
+
+import { AuthenticityThermometerExercise } from './AuthenticityThermometerExercise';
+import { EmpatheticDialogueExercise } from '@/components/paths/EmpatheticDialogueExercise';
+import { EmpathicMirrorExercise } from '@/components/paths/EmpathicMirrorExercise';
+import { ValidationIn3StepsExercise } from '@/components/paths/ValidationIn3StepsExercise';
+import { EmpathicShieldVisualizationExercise } from '@/components/paths/EmpathicShieldVisualizationExercise';
+import { EmotionalInvolvementTrafficLightExercise } from '@/components/paths/EmotionalInvolvementTrafficLightExercise';
+import { SignificantRelationshipsInventoryExercise } from '@/components/paths/SignificantRelationshipsInventoryExercise';
+import { RelationalCommitmentExercise } from '@/components/paths/RelationalCommitmentExercise';
+// RUTA 6 imports
+import { DetectiveDeEmocionesExercise } from '@/components/paths/DetectiveDeEmocionesExercise';
+import { UnaPalabraCadaDiaExercise } from '@/components/paths/UnaPalabraCadaDiaExercise';
+import { MapaEmocionNecesidadCuidadoExercise } from '@/components/paths/MapaEmocionNecesidadCuidadoExercise';
+import { CartaDesdeLaEmocionExercise } from '@/components/paths/CartaDesdeLaEmocionExercise';
+import { MapaEmocionalRepetidoExercise } from '@/components/paths/MapaEmocionalRepetidoExercise';
+import { SemaforoEmocionalExercise } from '@/components/paths/SemaforoEmocionalExercise';
+import { MeditacionGuiadaSinJuicioExercise } from '@/components/paths/MeditacionGuiadaSinJuicioExercise';
+import { DiarioMeDiCuentaExercise } from '@/components/paths/DiarioMeDiCuentaExercise';
+// RUTA 7 imports
+import { ValuesCompassExercise } from '@/components/paths/ValuesCompassExercise';
+import { EnergySenseMapExercise } from '@/components/paths/EnergySenseMapExercise';
+import { DetoursInventoryExercise } from '@/components/paths/DetoursInventoryExercise';
+import { PresentVsEssentialSelfExercise } from '@/components/paths/PresentVsEssentialSelfExercise';
+import { MentalNoiseTrafficLightExercise } from '@/components/paths/MentalNoiseTrafficLightExercise';
+import { DirectedDecisionsExercise } from '@/components/paths/DirectedDecisionsExercise';
+import { SenseChecklistExercise } from '@/components/paths/SenseChecklistExercise';
+import { UnfulfilledNeedsExercise } from '@/components/paths/UnfulfilledNeedsExercise';
+import { BraveRoadmapExercise } from '@/components/paths/BraveRoadmapExercise';
+import { EssentialReminderExercise } from '@/components/paths/EssentialReminderExercise';
+import { ThoughtsThatBlockPurposeExercise } from '@/components/paths/ThoughtsThatBlockPurposeExercise';
+// RUTA 8
+import { ResilienceTimelineExercise } from '@/components/paths/ResilienceTimelineExercise';
+import { PersonalDefinitionExercise } from '@/components/paths/PersonalDefinitionExercise';
+import { AnchorInStormExercise } from '@/components/paths/AnchorInStormExercise';
+import { IntensityScaleExercise } from '@/components/paths/IntensityScaleExercise';
+import { BraveDecisionsWheelExercise } from '@/components/paths/BraveDecisionsWheelExercise';
+import { PlanABExercise } from '@/components/paths/PlanABExercise';
+import { ChangeTimelineExercise } from '@/components/paths/ChangeTimelineExercise';
+import { MyPactExercise } from '@/components/paths/MyPactExercise';
+// RUTA 9
+import { CoherenceCompassExercise } from '@/components/paths/CoherenceCompassExercise';
+import { SmallDecisionsLogExercise } from '@/components/paths/SmallDecisionsLogExercise';
+import { InternalTensionsMapExercise } from '@/components/paths/InternalTensionsMapExercise';
+import { EthicalMirrorExercise } from '@/components/paths/EthicalMirrorExercise';
+import { IntegrityDecisionsExercise } from '@/components/paths/IntegrityDecisionsExercise';
+import { NonNegotiablesExercise } from '@/components/paths/NonNegotiablesExercise';
+import { EnvironmentEvaluationExercise } from '@/components/paths/EnvironmentEvaluationExercise';
+import { PersonalManifestoExercise } from '@/components/paths/PersonalManifestoExercise';
+// RUTA 10
+import { ComplaintTransformationExercise } from '@/components/paths/ComplaintTransformationExercise';
+import { GuiltRadarExercise } from '@/components/paths/GuiltRadarExercise';
+import { AcceptanceWritingExercise } from '@/components/paths/AcceptanceWritingExercise';
+import { SelfAcceptanceAudioExercise } from '@/components/paths/SelfAcceptanceAudioExercise';
+import { CompassionateResponsibilityContractExercise } from '@/components/paths/CompassionateResponsibilityContractExercise';
+import { CriticismToGuideExercise } from '@/components/paths/CriticismToGuideExercise';
+import { InfluenceWheelExercise } from '@/components/paths/InfluenceWheelExercise';
+import { PersonalCommitmentDeclarationExercise } from '@/components/paths/PersonalCommitmentDeclarationExercise';
+// RUTA 11
+import { SupportMapExercise } from '@/components/paths/SupportMapExercise';
+import { BlockingThoughtsExercise } from '@/components/paths/BlockingThoughtsExercise';
+import { NutritiveDrainingSupportMapExercise } from '@/components/paths/NutritiveDrainingSupportMapExercise';
+import { NourishingConversationExercise } from '@/components/paths/NourishingConversationExercise';
+import { ClearRequestMapExercise } from '@/components/paths/ClearRequestMapExercise';
+import { SupportBankExercise } from '@/components/paths/SupportBankExercise';
+import { MutualCareCommitmentExercise } from '@/components/paths/MutualCareCommitmentExercise';
+import { SymbolicSupportCircleExercise } from '@/components/paths/SymbolicSupportCircleExercise';
+// RUTA 12
+import { EmotionalGratificationMapExercise } from '@/components/paths/EmotionalGratificationMapExercise';
+import { DailyEnergyCheckExercise } from '@/components/paths/DailyEnergyCheckExercise';
+import { DailyWellbeingPlanExercise } from '@/components/paths/DailyWellbeingPlanExercise';
+import { MorningRitualExercise } from '@/components/paths/MorningRitualExercise';
+import { MotivationIn3LayersExercise } from '@/components/paths/MotivationIn3LayersExercise';
+import { VisualizeDayExercise } from '@/components/paths/VisualizeDayExercise';
+import { IlluminatingMemoriesAlbumExercise } from '@/components/paths/IlluminatingMemoriesAlbumExercise';
+import { PositiveEmotionalFirstAidKitExercise } from '@/components/paths/PositiveEmotionalFirstAidKitExercise';
+// RUTA 13 (NUEVA)
+import { AnsiedadTieneSentidoExercise } from '@/components/paths/AnsiedadTieneSentidoExercise';
+import { VisualizacionGuiadaCuerpoAnsiedadExercise } from '@/components/paths/VisualizacionGuiadaCuerpoAnsiedadExercise';
+
 
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
@@ -775,7 +866,14 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         </div>
       );
     case 'paragraph':
-      return <p key={index} className="text-base leading-relaxed whitespace-pre-line mb-4" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />;
+      return (
+        <div key={index} className="flex items-center justify-between gap-4 mb-4">
+          <p className="text-base leading-relaxed whitespace-pre-line" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />
+          {'audioUrl' in contentItem && contentItem.audioUrl && (
+            <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] shrink-0" />
+          )}
+        </div>
+      );
     case 'list':
       return (
         <ul key={index} className="list-disc list-inside space-y-2 mb-4 pl-4">

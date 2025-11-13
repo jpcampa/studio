@@ -106,6 +106,7 @@ export const uncertaintyPath: Path = {
       type: 'skill_practice',
       estimatedTime: '15-20 min',
       content: [
+          { type: 'paragraph', text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos? Esta semana quiero ayudarte a entender por qué ocurre eso y cómo puedes dejar de anticipar lo peor. No se trata de controlar todo, sino de descubrir que puedes vivir con más calma incluso cuando hay cosas que no puedes prever. Vas a comprender cómo funciona la anticipación ansiosa y por qué tu cuerpo reacciona con alarma ante lo incierto, incluso cuando no hay un peligro real. Aprenderás cómo entrenar tu mente para frenar los pensamientos catastrofistas y cómo reconectar con el presente a través de técnicas de exposición, regulación y atención plena. Además, comenzarás a distinguir entre lo que tu mente imagina y lo que realmente está ocurriendo. Esta semana no se trata de eliminar la ansiedad, sino de reducir su poder sobre ti y aprender a vivir con más confianza, incluso cuando no tienes todas las respuestas.'},
           { type: 'title', text: 'Psicoeducación' },
           { 
             type: 'title', 
@@ -193,12 +194,7 @@ export const uncertaintyPath: Path = {
         type: 'skill_practice',
         estimatedTime: '20-25 min',
         content: [
-          { 
-            type: 'collapsible',
-            title: 'Semana 3: Entrena tu Flexibilidad Mental',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3',
-            content: [{ type: 'paragraph', text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.\nEsta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.\nAdaptarte no es rendirte. Es crecer desde dentro.'}]
-          },
+          { type: 'paragraph', text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.Esta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.Adaptarte no es rendirte. Es crecer desde dentro.', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3' },
           { type: 'title', text: 'Psicoeducación' },
           { 
             type: 'collapsible',
