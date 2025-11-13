@@ -196,13 +196,13 @@ export const uncertaintyPath: Path = {
         type: 'skill_practice',
         estimatedTime: '15-20 min',
         content: [
-          {
-            type: 'paragraphWithAudio',
+          { 
+            type: 'paragraphWithAudio', 
             text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.Esta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.Adaptarte no es rendirte. Es crecer desde dentro.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3'
           },
           { type: 'title', text: 'Psicoeducación' },
-          {
+          { 
             type: 'collapsible',
             title: '¿Qué es la rigidez cognitiva?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion3.mp3',
@@ -318,6 +318,19 @@ export const uncertaintyPath: Path = {
             title: 'Caminar paso a paso: la alternativa a planearlo todo',
             content: [
                 { type: 'paragraph', text: 'Cuando intentas prever cada detalle y tener todo controlado desde el inicio, te vuelves rígido/a. Y eso, en un mundo cambiante, es agotador.\nLa alternativa es desarrollar flexibilidad estratégica:\n✔️ Avanzar con intención, aunque no esté todo resuelto\n✔️ Dar un paso desde donde estás, con lo que tienes\nLa confianza se construye caminando, no planificando eternamente. Y cuando algo no sale como esperabas, no es un fallo: es parte del proceso.'}
+            ]
+          },
+          {
+            type: 'collapsible',
+            title: 'Aceptar, confiar y avanzar',
+            content: [
+                { type: 'paragraph', text: 'Esta semana vas a entrenar una nueva forma de relacionarte con la incertidumbre:' },
+                { type: 'list', items: [
+                    '🔸 Dejar de intentar controlar lo incontrolable',
+                    '🔸 Aceptar lo que sientes, sin juzgarte',
+                    '🔸 Confiar en que puedes sostenerte, incluso sin certezas',
+                    '🔸 Avanzar paso a paso, sin perder de vista lo que te importa'
+                ]}
             ]
           },
           { type: 'title', text: 'Técnicas Específicas'},
