@@ -4,9 +4,16 @@ export type ParagraphContent = {
   text: string;
 };
 
+export type ParagraphWithAudioContent = {
+  type: 'paragraphWithAudio';
+  text: string;
+  audioUrl?: string;
+};
+
 export type TitleContent = {
   type: 'title';
   text: string;
+  audioUrl?: string; // Add audioUrl to TitleContent
 };
 
 export type ListContent = {
@@ -23,6 +30,7 @@ export type CollapsibleContent = {
   type: 'collapsible';
   title: string;
   content: ModuleContent[];
+  audioUrl?: string; // Add audioUrl to collapsible
 };
 
 export type ExerciseContent = {
@@ -54,6 +62,7 @@ export type TherapeuticNotebookReflection = {
     type: 'therapeuticNotebookReflection';
     title: string;
     prompts: string[];
+    audioUrl?: string;
 }
 
 export type DetectiveExerciseContent = {
@@ -699,6 +708,7 @@ export type ImaginedCrisisRehearsalExerciseContent = {
 // A union type for all possible content block types within a module
 export type ModuleContent =
   | ParagraphContent
+  | ParagraphWithAudioContent
   | TitleContent
   | ListContent
   | QuoteContent
@@ -815,6 +825,5 @@ export type PathModule = {
   content: ModuleContent[]; // An array of different content blocks that make up the module
   estimatedTime?: string; // e.g., "20-30 min"
   dataAiHint?: string; // For images if any
+  audioUrl?: string; // Optional audio URL for the entire module
 };
-
-    
