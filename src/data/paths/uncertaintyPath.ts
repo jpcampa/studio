@@ -10,7 +10,7 @@ export const uncertaintyPath: Path = {
   modules: [
     {
       id: 'incertidumbre_sem1',
-      title: 'Semana 1: Entender la Incertidumbre y cómo la vivo',
+      title: 'Semana 1: Entiende qué es la Incertidumbre y cómo la vivo',
       type: 'introduction',
       estimatedTime: '20-25 min',
       audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3',
@@ -18,8 +18,7 @@ export const uncertaintyPath: Path = {
         { type: 'paragraph', text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.' },
         { 
           type: 'title', 
-          text: 'Psicoeducación',
-          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion1.mp3'
+          text: 'Psicoeducación'
         },
         { 
             type: 'collapsible',
@@ -310,3 +309,5 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+    
