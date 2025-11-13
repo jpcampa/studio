@@ -171,7 +171,9 @@ export const uncertaintyPath: Path = {
             content: [
               { type: 'paragraph', text: 'Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.'}
           ]},
-          { type: 'exercise', title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.', content: [
+          { type: 'exercise', title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.', 
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
+            content: [
               { type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. No anticipes el resultado. Haz la acción con conciencia.'}
           ]},
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
