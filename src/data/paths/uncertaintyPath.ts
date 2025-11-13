@@ -271,7 +271,8 @@ export const uncertaintyPath: Path = {
             type: 'mantraExercise',
             title: 'Ejercicio 2: ¿Y si…? pero también…',
             objective: 'Esta técnica no busca eliminar los pensamientos de duda, sino equilibrarlos con otra posibilidad más amable y realista que reconozca tu capacidad.',
-            duration: '5–7 minutos'
+            duration: '5–7 minutos',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion3audio6tecnica2.mp3'
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
               '¿Qué historia rígida me he contado esta semana que no se cumplió tal como la imaginaba?',
@@ -388,3 +389,5 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+    
