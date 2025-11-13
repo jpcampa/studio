@@ -112,9 +112,8 @@ export const uncertaintyPath: Path = {
             type: 'title', 
             text: 'Psicoeducación'
           },
-          { type: 'paragraph', text: '<b>¿Por qué imaginamos lo peor?</b>' },
-          { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta.\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real.', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3' },
-          { type: 'collapsible', title: '¿Cómo funciona la anticipación?', content: [{type: 'paragraph', text: 'Desde la TCC y la neurociencia afectiva, sabemos que: La preocupación es una cadena de pensamientos negativos sobre algo que normalmente no ha ocurrido, difíciles de controlar y que buscan prepararte para lo peor. Además, la preocupación te proporciona una falsa sensacion de control. Pero en realidad, lo que consiguen estos pensamientos es activar el sistema de amenaza del cuerpo. Esto puede generar síntomas como palpitaciones, tensión, insomnio o dificultad para concentrarse, incluso sin que la situación temida haya ocurrido.'}]},
+          { type: 'title', text: '¿Por qué imaginamos lo peor?', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3' },
+          { type: 'collapsible', title: '¿Cómo funciona la anticipación?', content: [{type: 'paragraph', text: 'Desde la TCC y la neurociencia afectiva, sabemos que: La preocupación es una cadena de pensamientos negativos sobre algo que normalmente no ha ocurrido, difíciles de controlar y que buscan prepararte para lo peor. Además, la preocupación te proporciona una falsa sensacion de control.   Pero en realidad, lo que consiguen estos pensamientos es activar el sistema de amenaza del cuerpo.   Esto puede generar síntomas como palpitaciones, tensión, insomnio o dificultad para concentrarse, incluso sin que la situación temida haya ocurrido.'}]},
           { type: 'collapsible', title: '¿Te suenan estas ideas?', content: [{type: 'paragraph', text: '“¿Y si digo algo ridículo en la reunión?” “¿Y si enfermo justo antes del viaje?” “¿Y si se decepcionan conmigo?”   Estas frases no son inofensivas: cuando se repiten con frecuencia, entrenan a tu cuerpo para vivir en modo defensa constante.'}]},
           { type: 'collapsible', title: 'Tu sistema de amenaza: entre el miedo y la percepción', content: [{type: 'paragraph', text: 'Nuestro sistema nervioso tiene una función adaptativa: protegernos ante lo que percibimos como peligroso. Pero el problema es que no distingue bien entre peligro real —algo que está sucediendo— y mental —algo que podría pasar—.   Cuando anticipas algo negativo, tu cuerpo entra en modo defensa:   Se activa una zona del cerebro llamada amígdala, que funciona como una alarma interna.   Esta activación acelera el corazón, tensa los músculos y prepara al cuerpo para reaccionar rápido.   Al mismo tiempo, se apaga o bloquea parcialmente la zona del cerebro que te ayuda a pensar con claridad (la corteza prefrontal), porque el cuerpo prioriza la supervivencia, no la reflexión.   Es decir: tu cuerpo reacciona al “¿y si…?” como si ya estuviera ocurriendo. Te sientes inquieto/a, alerta, con dificultad para concentrarte o calmarte. Todo esto nace de un pensamiento como, por ejemplo: “¿Y si no puedo con esto?”'}]},
           {
@@ -313,8 +312,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-    
-
-    
-

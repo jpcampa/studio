@@ -120,7 +120,7 @@ import { MotivationIn3LayersExercise } from '@/components/paths/MotivationIn3Lay
 import { VisualizeDayExercise } from '@/components/paths/VisualizeDayExercise';
 import { IlluminatingMemoriesAlbumExercise } from '@/components/paths/IlluminatingMemoriesAlbumExercise';
 import { PositiveEmotionalFirstAidKitExercise } from '@/components/paths/PositiveEmotionalFirstAidKitExercise';
-// RUTA 13
+// RUTA 13 (NUEVA)
 import { AnsiedadTieneSentidoExercise } from '@/components/paths/AnsiedadTieneSentidoExercise';
 import { VisualizacionGuiadaCuerpoAnsiedadExercise } from '@/components/paths/VisualizacionGuiadaCuerpoAnsiedadExercise';
 import { StopExercise } from './StopExercise';
@@ -757,12 +757,18 @@ ${progressText || 'No se registraron días.'}
     );
 }
 
+// ====================================================================
+// END OF RUTA 3 DYNAMIC COMPONENTS
+// ====================================================================
+
+
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
+      const isSubtitle = contentItem.text.includes("¿Por qué imaginamos lo peor?");
       return (
         <div key={index} className="flex items-center justify-between gap-4 mt-6 mb-3">
-          <h3 className="text-xl font-bold text-primary">{contentItem.text}</h3>
+          <h3 className={`font-bold text-primary ${isSubtitle ? 'text-lg' : 'text-xl'}`}>{contentItem.text}</h3>
           {contentItem.audioUrl && (
             <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-xs" />
           )}
@@ -1138,14 +1144,6 @@ export function PathDetailClient({ path }: { path: Path }) {
         </div>
         <CardContent className="p-8">
           <p className="text-lg text-muted-foreground mt-2 text-center">{path.description}</p>
-           {path.audioUrl && (
-            <div className="mt-6 flex justify-center">
-                <audio controls controlsList="nodownload" className="w-full max-w-md">
-                    <source src={path.audioUrl} type="audio/mp3" />
-                    Tu navegador no soporta el elemento de audio.
-                </audio>
-            </div>
-          )}
         </CardContent>
       </Card>
 
@@ -1172,14 +1170,6 @@ export function PathDetailClient({ path }: { path: Path }) {
                   </Badge>
                 )}
               </div>
-              {module.audioUrl && (
-                <div className="mt-4">
-                  <audio controls controlsList="nodownload" className="w-full">
-                      <source src={module.audioUrl} type="audio/mp3" />
-                      Tu navegador no soporta el elemento de audio.
-                  </audio>
-                </div>
-              )}
             </CardHeader>
             <CardContent>
                 {module.content.map((contentItem, i) => renderContent(contentItem, i, path.id))}
