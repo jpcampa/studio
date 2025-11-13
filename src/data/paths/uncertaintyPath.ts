@@ -197,9 +197,9 @@ export const uncertaintyPath: Path = {
         estimatedTime: '15-20 min',
         content: [
           { 
-            type: 'paragraphWithAudio', 
+            type: 'paragraph', 
             text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.Esta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.Adaptarte no es rendirte. Es crecer desde dentro.',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3'
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3',
           },
           { type: 'title', text: 'Psicoeducación' },
           { 
@@ -291,7 +291,11 @@ export const uncertaintyPath: Path = {
         type: 'summary',
         estimatedTime: '15-20 min',
         content: [
-          { type: 'paragraphWithAudio', text: 'A veces, cuanto más intentas tenerlo todo bajo control, más te desgastas. Tu mente planea, prevé, se anticipa… creyendo que así estarás a salvo. Pero el exceso de control no siempre protege: muchas veces te encierra, te tensa y te aleja del presente.Esta semana vas a entrenar una forma distinta de sostenerte en lo incierto: desde la confianza, no desde el control. Aprenderás a aceptar lo que no puedes prever, a soltar el esfuerzo inútil por dominarlo todo y a conectar con tu capacidad de responder paso a paso, aunque no tengas todas las respuestas.Confiar no es rendirte. Es estar contigo, incluso cuando no sabes lo que va a pasar.', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion4.mp3'},
+          { 
+            type: 'paragraphWithAudio', 
+            text: 'A veces, cuanto más intentas tenerlo todo bajo control, más te desgastas. Tu mente planea, prevé, se anticipa… creyendo que así estarás a salvo. Pero el exceso de control no siempre protege: muchas veces te encierra, te tensa y te aleja del presente.Esta semana vas a entrenar una forma distinta de sostenerte en lo incierto: desde la confianza, no desde el control. Aprenderás a aceptar lo que no puedes prever, a soltar el esfuerzo inútil por dominarlo todo y a conectar con tu capacidad de responder paso a paso, aunque no tengas todas las respuestas.Confiar no es rendirte. Es estar contigo, incluso cuando no sabes lo que va a pasar.', 
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion4.mp3'
+          },
           { type: 'title', text: 'Psicoeducación' },
           {
             type: 'collapsible',
@@ -316,6 +320,7 @@ export const uncertaintyPath: Path = {
           {
             type: 'collapsible',
             title: 'Caminar paso a paso: la alternativa a planearlo todo',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion4.mp3',
             content: [
                 { type: 'paragraph', text: 'Cuando intentas prever cada detalle y tener todo controlado desde el inicio, te vuelves rígido/a. Y eso, en un mundo cambiante, es agotador.\nLa alternativa es desarrollar flexibilidad estratégica:\n✔️ Avanzar con intención, aunque no esté todo resuelto\n✔️ Dar un paso desde donde estás, con lo que tienes\nLa confianza se construye caminando, no planificando eternamente. Y cuando algo no sale como esperabas, no es un fallo: es parte del proceso.'}
             ]
@@ -369,3 +374,5 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+    
