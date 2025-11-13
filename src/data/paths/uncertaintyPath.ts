@@ -75,7 +75,8 @@ export const uncertaintyPath: Path = {
           type: 'uncertaintyMapExercise',
           title: 'Ejercicio 1: Mi Mapa de la Incertidumbre',
           objective: 'Reconoce en qué áreas te afecta más la incertidumbre y cómo reaccionas. Al observarlo, podrás tomar decisiones más conscientes y recuperar calma.',
-          duration: '5 a 8 minutos'
+          duration: '5 a 8 minutos',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion1tecnica1.mp3'
         },
         {
           type: 'controlTrafficLightExercise',
