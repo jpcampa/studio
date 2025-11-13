@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { getCompletedModules, saveCompletedModules } from '@/lib/progressStore';
 import { useActivePath } from '@/contexts/ActivePathContext';
-import { Accordion, AccordContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Separator } from '../ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -26,7 +26,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import type { ParagraphWithAudioContent, SelfAcceptanceAudioExerciseContent } from '@/data/paths/pathTypes';
+import type { ParagraphWithAudioContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
 // RUTA 1
@@ -643,7 +643,7 @@ ${reminder}
     );
 }
 
-function GentleTrackingExercise({ content, pathId }: { content: ModuleContent; pathId: string }) {
+function GentleTrackingExercise({ content, pathId }: { content: ExerciseContent; pathId: string }) {
     const { toast } = useToast();
     const { user } = useUser();
     const [weekWord, setWeekWord] = useState('');
@@ -840,7 +840,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
             return <RealisticRitualExercise key={index} content={contentItem} pathId={pathId} />;
         }
         if (contentItem.title === 'Ejercicio 2: Seguimiento Amable + Refuerzo Visual') {
-            return <GentleTrackingExercise key={index} content={contentItem} pathId={pathId} />;
+            return <GentleTrackingExercise key={index} content={contentItem as ExerciseContent} pathId={pathId} />;
         }
         // Fallback for other exercises, including audio player logic
         return (
@@ -1002,7 +1002,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'acceptanceWritingExercise':
       return <AcceptanceWritingExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'selfAcceptanceAudioExercise': {
-        const exerciseContent = contentItem as SelfAcceptanceAudioExerciseContent;
+        const exerciseContent = contentItem as any;
         return <SelfAcceptanceAudioExercise key={index} content={exerciseContent} pathId={pathId} audioUrl={exerciseContent.audioUrl} />;
     }
     case 'compassionateResponsibilityContractExercise':
@@ -1225,3 +1225,4 @@ export function PathDetailClient({ path }: { path: Path }) {
     
 
     
+
