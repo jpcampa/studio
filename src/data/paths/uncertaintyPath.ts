@@ -197,8 +197,8 @@ export const uncertaintyPath: Path = {
         estimatedTime: '15-20 min',
         content: [
           { 
-            type: 'paragraph', 
-            text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.Esta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.Adaptarte no es rendirte. Es crecer desde dentro.',
+            type: 'paragraphWithAudio', 
+            text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.Esta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.Adaptarte no es rendirte. Es crecer desde dentro.', 
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3',
           },
           { type: 'title', text: 'Psicoeducación' },
@@ -330,13 +330,13 @@ export const uncertaintyPath: Path = {
             title: 'Aceptar, confiar y avanzar',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio4Ruta2Sesion4.mp3',
             content: [
-                { type: 'paragraph', text: 'Esta semana vas a entrenar una nueva forma de relacionarte con la incertidumbre:' },
-                { type: 'list', items: [
-                    '🔸 Dejar de intentar controlar lo incontrolable',
-                    '🔸 Aceptar lo que sientes, sin juzgarte',
-                    '🔸 Confiar en que puedes sostenerte, incluso sin certezas',
-                    '🔸 Avanzar paso a paso, sin perder de vista lo que te importa'
-                ]}
+              { type: 'paragraph', text: 'Esta semana vas a entrenar una nueva forma de relacionarte con la incertidumbre:' },
+              { type: 'list', items: [
+                  '🔸 Dejar de intentar controlar lo incontrolable',
+                  '🔸 Aceptar lo que sientes, sin juzgarte',
+                  '🔸 Confiar en que puedes sostenerte, incluso sin certezas',
+                  '🔸 Avanzar paso a paso, sin perder de vista lo que te importa'
+              ]}
             ]
           },
           { type: 'title', text: 'Técnicas Específicas'},
@@ -355,13 +355,15 @@ export const uncertaintyPath: Path = {
                 { type: 'paragraph', text: 'Cuando intentas controlarlo todo, tu mente se agota. Este ejercicio te propone soltar por un momento. Elige la forma que hoy más te ayude: Escribir y soltar, Respirar con intención o Cerrar el día con gratitud.'}
             ]
           },
-          { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+          { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion4.mp3',
+            prompts: [
              '¿Qué parte de ti se suaviza cuando dejas de intentar controlarlo todo?',
              '¿Qué notas en tu cuerpo cuando sueltas la tensión de tener todas las respuestas?',
              '¿Qué cambia en tu mente cuando aceptas que no necesitas prever cada paso?',
              '¿Qué te gustaría recordarte la próxima vez que intentes tenerlo todo bajo control?'
           ]},
-          { type: 'title', text: 'Resumen Clave de la Semana'},
+          { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3' },
           { type: 'list', items: [
             'Controlarlo todo puede parecer seguro… pero suele alimentar tu ansiedad.',
             'Aceptar lo que no puedes cambiar es un acto de fuerza, no de rendición.',
@@ -375,4 +377,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
