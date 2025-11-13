@@ -112,14 +112,14 @@ export const uncertaintyPath: Path = {
             text: '¿Por qué imaginamos lo peor?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3',
           },
-          { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. '},
+          { type: 'paragraph', text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos? Esta semana quiero ayudarte a entender por qué ocurre eso y cómo puedes dejar de anticipar lo peor. No se trata de controlar todo, sino de descubrir que puedes vivir con más calma incluso cuando hay cosas que no puedes prever. \n\nVas a comprender cómo funciona la anticipación ansiosa y por qué tu cuerpo reacciona con alarma ante lo incierto, incluso cuando no hay un peligro real. Aprenderás cómo entrenar tu mente para frenar los pensamientos catastrofistas y cómo reconectar con el presente a través de técnicas de exposición, regulación y atención plena. \n\nAdemás, comenzarás a distinguir entre lo que tu mente imagina y lo que realmente está ocurriendo. Esta semana no se trata de eliminar la ansiedad, sino de reducir su poder sobre ti y aprender a vivir con más confianza, incluso cuando no tienes todas las respuestas.'},
           {
             type: 'collapsible',
             title: '¿Cómo funciona la anticipación?',
             content: [
               {
                 type: 'paragraph',
-                text: 'Desde la TCC y la neurociencia afectiva, sabemos que: La preocupación es una cadena de pensamientos negativos sobre algo que normalmente no ha ocurrido, difíciles de controlar y que buscan prepararte para lo peor. Además, la preocupación te proporciona una falsa sensacion de control. Pero en realidad, lo que consiguen estos pensamientos es activar el sistema de amenaza del cuerpo. Esto puede generar síntomas como palpitaciones, tensión, insomnio o dificultad para concentrarse, incluso sin que la situación temida haya ocurrido.',
+                text: 'Desde la TCC y la neurociencia afectiva, sabemos que: La preocupación es una cadena de pensamientos negativos sobre algo que normalmente no ha ocurrido, difíciles de controlar y que buscan prepararte para lo peor. Además, la preocupación te proporciona una falsa sensacion de control.   Pero en realidad, lo que consiguen estos pensamientos es activar el sistema de amenaza del cuerpo.   Esto puede generar síntomas como palpitaciones, tensión, insomnio o dificultad para concentrarse, incluso sin que la situación temida haya ocurrido.',
               },
             ],
           },
@@ -195,7 +195,7 @@ export const uncertaintyPath: Path = {
         content: [
           { type: 'paragraph', text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.\nEsta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.\nAdaptarte no es rendirte. Es crecer desde dentro.'},
           { type: 'title', text: 'Psicoeducación' },
-          { type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.\nEso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.'},
+          { type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.'},
           {
             type: 'collapsible',
             title: '¿Cómo lo explica la neurociencia?',
@@ -262,11 +262,11 @@ export const uncertaintyPath: Path = {
             ]},
           { type: 'title', text: 'Resumen Clave de la Semana'},
           { type: 'list', items: [
-            'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guion.',
-            'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
-            'Imaginar más de un desenlace te ayuda a salir del modo “todo o nada” y a recuperar perspectiva.',
-            'Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista.',
-            'Adaptarte no significa rendirte, sino moverte con inteligencia emocional ante lo incierto.'
+              'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guion.',
+              'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
+              'Imaginar más de un desenlace te ayuda a salir del modo “todo o nada” y a recuperar perspectiva.',
+              'Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista.',
+              'Adaptarte no significa rendirte, sino moverte con inteligencia emocional ante lo incierto.'
           ]},
           { type: 'quote', text: 'No necesitas certezas para avanzar. Necesito confianza en mi capacidad de adaptarme.'}
         ]
@@ -337,5 +337,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-    
