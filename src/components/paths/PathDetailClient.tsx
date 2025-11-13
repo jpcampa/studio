@@ -142,7 +142,7 @@ function TherapeuticNotebookReflectionExercise({ content, pathId }: { content: M
     const [reflection, setReflection] = useState('');
     const [isSaved, setIsSaved] = useState(false);
 
-    if (content.type !== 'therapeuticNotebookReflection' || !content.prompts || content.prompts.length === 0) {
+    if (content.type !== 'therapeuticNotebookReflection') {
       return null;
     }
 
@@ -175,7 +175,11 @@ ${reflection}
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
             <CardHeader>
-                <CardTitle className="text-lg text-primary flex items-center"><NotebookText className="mr-2"/>{content.title}</CardTitle>
+                <CardTitle className="text-lg text-primary flex items-center gap-4">
+                  <NotebookText className="h-6 w-6"/>
+                  <span>{content.title}</span>
+                  {content.audioUrl && <audio src={content.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] sm:max-w-xs"/>}
+                </CardTitle>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSaveReflection} className="space-y-4">
@@ -762,13 +766,17 @@ ${progressText || 'No se registraron días.'}
     );
 }
 
+// ====================================================================
+// END OF RUTA 3 DYNAMIC COMPONENTS
+// ====================================================================
+
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
       return (
         <div key={index} className="flex items-center gap-4 mt-6 mb-3">
-            {contentItem.audioUrl && <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] sm:max-w-xs"/>}
             <h3 className="text-xl font-bold text-primary">{contentItem.text}</h3>
+            {contentItem.audioUrl && <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] sm:max-w-xs"/>}
         </div>
       );
     case 'paragraphWithAudio':
@@ -894,7 +902,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         return <SelfCareContractExercise key={index} content={contentItem} pathId={pathId} />;
     // RUTA 5
     case 'authenticityThermometerExercise':
-      return <AuthenticityThermometerExercise key={index} content={contentItem as AuthenticityThermometerExerciseContent} pathId={pathId} />;
+      return <AuthenticityThermometerExercise key={index} content={contentItem } pathId={pathId} />;
     case 'empatheticDialogueExercise':
       return <EmpatheticDialogueExercise key={index} content={contentItem} pathId={pathId} />;
     case 'empathicMirrorExercise':
@@ -902,15 +910,15 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'validationIn3StepsExercise':
       return <ValidationIn3StepsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'empathicShieldVisualizationExercise': {
-        const exerciseContent = contentItem as Extract<ModuleContent, { type: 'empathicShieldVisualizationExercise' }>;
+        const exerciseContent = contentItem ;
         return <EmpathicShieldVisualizationExercise key={index} content={exerciseContent} pathId={pathId} />;
     }
     case 'emotionalInvolvementTrafficLightExercise':
       return <EmotionalInvolvementTrafficLightExercise key={index} content={contentItem} pathId={pathId} />;
     case 'significantRelationshipsInventoryExercise':
-      return <SignificantRelationshipsInventoryExercise key={index} content={contentItem as SignificantRelationshipsInventoryExerciseContent} pathId={pathId} />;
+      return <SignificantRelationshipsInventoryExercise key={index} content={contentItem } pathId={pathId} />;
     case 'relationalCommitmentExercise':
-      return <RelationalCommitmentExercise key={index} content={contentItem as RelationalCommitmentExerciseContent} pathId={pathId} />;
+      return <RelationalCommitmentExercise key={index} content={contentItem } pathId={pathId} />;
     // RUTA 6
     case 'detectiveDeEmocionesExercise':
         return <DetectiveDeEmocionesExercise key={index} content={contentItem} pathId={pathId} />;
@@ -1050,11 +1058,11 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'exposureLadderExercise':
         return <ExposureLadderExercise key={index} content={contentItem} pathId={pathId} />;
     case 'calmVisualizationExercise': {
-        const calmVisContent = contentItem as Extract<ModuleContent, { type: 'calmVisualizationExercise' }>;
+        const calmVisContent = contentItem ;
         return <CalmVisualizationExercise key={index} content={calmVisContent} pathId={pathId} />;
     }
     case 'imaginedCrisisRehearsalExercise': {
-      const crisisRehearsalContent = contentItem as Extract<ModuleContent, { type: 'imaginedCrisisRehearsalExercise' }>;
+      const crisisRehearsalContent = contentItem ;
       return <ImaginedCrisisRehearsalExercise key={index} content={crisisRehearsalContent} pathId={pathId} />;
     }
     default:
@@ -1212,5 +1220,7 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
+
+    
 
     
