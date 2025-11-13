@@ -106,9 +106,8 @@ export const uncertaintyPath: Path = {
       title: 'Semana 2: Regular la Ansiedad ante lo Incierto',
       type: 'skill_practice',
       estimatedTime: '15-20 min',
-      audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion2.mp3',
       content: [
-          { type: 'paragraph', text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos? Esta semana quiero ayudarte a entender por qué ocurre eso y cómo puedes dejar de anticipar lo peor. No se trata de controlar todo, sino de descubrir que puedes vivir con más calma incluso cuando hay cosas que no puedes prever.' },
+          { type: 'paragraph', text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos? Esta semana quiero ayudarte a entender por qué ocurre eso y cómo puedes dejar de anticipar lo peor. No se trata de controlar todo, sino de descubrir que puedes vivir con más calma incluso cuando hay cosas que no puedes prever.   Vas a comprender cómo funciona la anticipación ansiosa y por qué tu cuerpo reacciona con alarma ante lo incierto, incluso cuando no hay un peligro real. Aprenderás cómo entrenar tu mente para frenar los pensamientos catastrofistas y cómo reconectar con el presente a través de técnicas de exposición, regulación y atención plena.   Además, comenzarás a distinguir entre lo que tu mente imagina y lo que realmente está ocurriendo. Esta semana no se trata de eliminar la ansiedad, sino de reducir su poder sobre ti y aprender a vivir con más confianza, incluso cuando no tienes todas las respuestas.'},
           { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3' },
           { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta.\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real.' },
           {
@@ -311,3 +310,4 @@ export const uncertaintyPath: Path = {
     
 
     
+
