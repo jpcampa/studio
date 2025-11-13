@@ -107,14 +107,14 @@ export const uncertaintyPath: Path = {
       estimatedTime: '20-25 min',
       content: [
           { type: 'title', text: 'Psicoeducación' },
-          { 
-            type: 'title', 
+          {
+            type: 'title',
             text: '¿Por qué imaginamos lo peor?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3',
           },
           {
             type: 'paragraph',
-            text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real.',
+            text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. ',
           },
           {
             type: 'collapsible',
@@ -202,11 +202,16 @@ export const uncertaintyPath: Path = {
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3' 
           },
           { type: 'title', text: 'Psicoeducación' },
-          { 
+          {
             type: 'collapsible',
             title: '¿Qué es la rigidez cognitiva?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion3.mp3',
-            content: [{ type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.' }]
+            content: [
+              {
+                type: 'paragraph',
+                text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.',
+              },
+            ],
           },
           {
             type: 'collapsible',
@@ -230,6 +235,7 @@ export const uncertaintyPath: Path = {
           {
             type: 'collapsible',
             title: '¿Qué es la flexibilidad cognitiva?',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion3.mp3',
             content: [
               { type: 'paragraph', text: 'La flexibilidad mental es la capacidad de ver las cosas desde más de un ángulo, sin quedarte atrapado/a en una única forma de pensar o actuar.\nEs poder cambiar de opinión o de estrategia cuando el contexto lo necesita, sin sentir que por eso fallas o pierdes el control.\nLa flexibilidad no es debilidad ni indecisión. Es una fuerza interna que te permite ajustarte a lo inesperado sin perder tu esencia. Y como cualquier habilidad mental y emocional, se puede entrenar.'}
             ]
