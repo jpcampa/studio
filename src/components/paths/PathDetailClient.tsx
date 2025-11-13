@@ -43,7 +43,7 @@ import { NoGuiltTechniquesExercise } from '@/components/paths/NoGuiltTechniquesE
 import { PostBoundaryEmotionsExercise } from '@/components/paths/PostBoundaryEmotionsExercise';
 import { CompassionateFirmnessExercise } from '@/components/paths/CompassionateFirmnessExercise';
 import { SelfCareContractExercise } from '@/components/paths/SelfCareContractExercise';
-import type { AuthenticityThermometerExerciseContent, ExerciseContent, RelationalCommitmentExerciseContent, SelfAcceptanceAudioExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
+import type { AuthenticityThermometerExerciseContent, ExerciseContent, ParagraphWithAudioContent, RelationalCommitmentExerciseContent, SelfAcceptanceAudioExerciseContent, SignificantRelationshipsInventoryExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
 import { AuthenticityThermometerExercise } from './AuthenticityThermometerExercise';
@@ -824,7 +824,6 @@ import { PersonalManifestoExercise } from '@/components/paths/PersonalManifestoE
 // RUTA 10
 import { ComplaintTransformationExercise } from '@/components/paths/ComplaintTransformationExercise';
 import { GuiltRadarExercise } from '@/components/paths/GuiltRadarExercise';
-import { AcceptanceWritingExercise } from '@/components/paths/AcceptanceWritingExercise';
 import { SelfAcceptanceAudioExercise } from '@/components/paths/SelfAcceptanceAudioExercise';
 import { CompassionateResponsibilityContractExercise } from '@/components/paths/CompassionateResponsibilityContractExercise';
 import { CriticismToGuideExercise } from '@/components/paths/CriticismToGuideExercise';
@@ -859,15 +858,17 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
       return <h3 key={index} className="text-xl font-bold text-primary mt-6 mb-3">{contentItem.text}</h3>;
     case 'paragraph':
       return <p key={index} className="text-base leading-relaxed whitespace-pre-line mb-4" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />;
-    case 'paragraphWithAudio':
-      return (
-        <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-          <p className="text-base leading-relaxed whitespace-pre-line flex-grow" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />
-          {contentItem.audioUrl && (
-            <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-full sm:max-w-[200px] shrink-0" />
-          )}
-        </div>
-      );
+    case 'paragraphWithAudio': {
+        const item = contentItem as ParagraphWithAudioContent;
+        return (
+          <div key={index} className="space-y-2 mb-4">
+            <p className="text-base leading-relaxed whitespace-pre-line" dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br />') }} />
+            {item.audioUrl && (
+              <audio src={item.audioUrl} controls controlsList="nodownload" className="w-full h-10" />
+            )}
+          </div>
+        );
+    }
     case 'list':
       return (
         <ul key={index} className="list-disc list-inside space-y-2 mb-4 pl-4">
