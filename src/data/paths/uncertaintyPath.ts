@@ -6,14 +6,12 @@ export const uncertaintyPath: Path = {
   title: 'Tolerar la Incertidumbre con Confianza',
   description: 'Aprende a convivir con lo incierto sin perder el equilibrio, transformando el control en confianza y la ansiedad en calma consciente.',
   dataAiHint: 'uncertainty trust mindfulness',
-  audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2.mp3',
   modules: [
     {
       id: 'incertidumbre_sem1',
       title: 'Semana 1: Entiende qué es la Incertidumbre y cómo la vivo',
       type: 'introduction',
       estimatedTime: '20-25 min',
-      audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3',
       content: [
         { type: 'paragraph', text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.' },
         { 
@@ -309,5 +307,7 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+    
 
     
