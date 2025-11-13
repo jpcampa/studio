@@ -108,12 +108,13 @@ export const uncertaintyPath: Path = {
       content: [
           { type: 'title', text: 'Psicoeducación' },
           {
-            type: 'collapsible',
-            title: '¿Por qué imaginamos lo peor?',
+            type: 'title',
+            text: '¿Por qué imaginamos lo peor?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3',
-            content: [
-                { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. ' },
-            ]
+          },
+          {
+            type: 'paragraph',
+            text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. ',
           },
           {
             type: 'collapsible',
@@ -201,7 +202,7 @@ export const uncertaintyPath: Path = {
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3'
           },
           { type: 'title', text: 'Psicoeducación' },
-          {
+          { 
             type: 'collapsible',
             title: '¿Qué es la rigidez cognitiva?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion3.mp3',
@@ -303,6 +304,7 @@ export const uncertaintyPath: Path = {
           {
             type: 'collapsible',
             title: 'Confiar no es saber cómo saldrá, es saber que puedes con ello',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion4.mp3',
             content: [
                 { type: 'paragraph', text: 'A veces creemos que solo estaremos bien si lo tenemos todo claro. Pero en realidad, lo que genera estabilidad no es la certeza, sino la confianza:\n✔️ Confianza en que sabrás responder\n✔️ Confianza en que podrás adaptarte, incluso con miedo\n✔️ Confianza en que no necesitas hacerlo perfecto para estar bien\nTu confianza no crece cuando todo es fácil. Crece cuando te atreves, incluso sin garantías.'}
             ]
