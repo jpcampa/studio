@@ -202,7 +202,7 @@ export const uncertaintyPath: Path = {
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3'
           },
           { type: 'title', text: 'Psicoeducación' },
-          { 
+          {
             type: 'collapsible',
             title: '¿Qué es la rigidez cognitiva?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion3.mp3',
@@ -293,7 +293,11 @@ export const uncertaintyPath: Path = {
         content: [
           { type: 'paragraphWithAudio', text: 'A veces, cuanto más intentas tenerlo todo bajo control, más te desgastas. Tu mente planea, prevé, se anticipa… creyendo que así estarás a salvo. Pero el exceso de control no siempre protege: muchas veces te encierra, te tensa y te aleja del presente.Esta semana vas a entrenar una forma distinta de sostenerte en lo incierto: desde la confianza, no desde el control. Aprenderás a aceptar lo que no puedes prever, a soltar el esfuerzo inútil por dominarlo todo y a conectar con tu capacidad de responder paso a paso, aunque no tengas todas las respuestas.Confiar no es rendirte. Es estar contigo, incluso cuando no sabes lo que va a pasar.', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion4.mp3'},
           { type: 'title', text: 'Psicoeducación' },
-          { type: 'paragraph', text: '¿Alguna vez has notado que cuanto más intentas tenerlo todo bajo control, más se te escapa?\nControlar cada detalle parece una estrategia segura, pero muchas veces es una trampa. Aumenta la ansiedad, la frustración y el cansancio emocional.\nEsta semana vas a explorar una forma distinta de vivir: confiar más en ti, en tu capacidad de adaptación y en la vida, incluso cuando no tienes todas las respuestas.'},
+          {
+            type: 'collapsible',
+            title: '¿Controlarlo todo te da paz… o te agota?',
+            content: [{ type: 'paragraph', text: '¿Alguna vez has notado que cuanto más intentas tenerlo todo bajo control, más se te escapa?\nControlar cada detalle parece una estrategia segura, pero muchas veces es una trampa. Aumenta la ansiedad, la frustración y el cansancio emocional.\nEsta semana vas a explorar una forma distinta de vivir: confiar más en ti, en tu capacidad de adaptación y en la vida, incluso cuando no tienes todas las respuestas.' }]
+          },
           {
             type: 'collapsible',
             title: 'Aceptar no es rendirse: es liberarte',
