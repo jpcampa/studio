@@ -113,8 +113,26 @@ export const uncertaintyPath: Path = {
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3',
           },
           { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. '},
-          { type: 'collapsible', title: '¿Cómo funciona la anticipación?', content: [{type: 'paragraph', text: 'Desde la TCC y la neurociencia afectiva, sabemos que: La preocupación es una cadena de pensamientos negativos sobre algo que normalmente no ha ocurrido, difíciles de controlar y que buscan prepararte para lo peor. Además, la preocupación te proporciona una falsa sensacion de control.   Pero en realidad, lo que consiguen estos pensamientos es activar el sistema de amenaza del cuerpo.   Esto puede generar síntomas como palpitaciones, tensión, insomnio o dificultad para concentrarse, incluso sin que la situación temida haya ocurrido.'}]},
-          { type: 'collapsible', title: '¿Te suenan estas ideas?', content: [{type: 'paragraph', text: '“¿Y si digo algo ridículo en la reunión?” “¿Y si enfermo justo antes del viaje?” “¿Y si se decepcionan conmigo?”   Estas frases no son inofensivas: cuando se repiten con frecuencia, entrenan a tu cuerpo para vivir en modo defensa constante.'}]},
+          {
+            type: 'collapsible',
+            title: '¿Cómo funciona la anticipación?',
+            content: [
+              {
+                type: 'paragraph',
+                text: 'Desde la TCC y la neurociencia afectiva, sabemos que: La preocupación es una cadena de pensamientos negativos sobre algo que normalmente no ha ocurrido, difíciles de controlar y que buscan prepararte para lo peor. Además, la preocupación te proporciona una falsa sensacion de control. Pero en realidad, lo que consiguen estos pensamientos es activar el sistema de amenaza del cuerpo. Esto puede generar síntomas como palpitaciones, tensión, insomnio o dificultad para concentrarse, incluso sin que la situación temida haya ocurrido.',
+              },
+            ],
+          },
+          {
+            type: 'collapsible',
+            title: '¿Te suenan estas ideas?',
+            content: [
+              {
+                type: 'paragraph',
+                text: '“¿Y si digo algo ridículo en la reunión?” “¿Y si enfermo justo antes del viaje?” “¿Y si se decepcionan conmigo?”   Estas frases no son inofensivas: cuando se repiten con frecuencia, entrenan a tu cuerpo para vivir en modo defensa constante.',
+              },
+            ],
+          },
           {
             type: 'collapsible',
             title: 'Tu sistema de amenaza: entre el miedo y la percepción',
@@ -135,6 +153,7 @@ export const uncertaintyPath: Path = {
           {
             type: 'collapsible',
             title: 'Herramientas para regular el sistema de amenaza',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio5Ruta2Sesion2.mp3',
             content: [
               { type: 'paragraph', text: 'La buena noticia es que puedes reentrenar tu cuerpo y tu mente. Aquí tienes 3 herramientas fundamentales para ello:'},
               { type: 'collapsible', title: 'Exposición progresiva', content: [{type: 'paragraph', text: 'Significa acercarte poco a poco a lo que hoy temes o evitas. No de golpe ni forzándote, sino con pasos realistas y graduales. Así, tu cuerpo aprende que no está en peligro y que puede sostener esa experiencia sin consecuencias catastróficas.'}]},
@@ -318,3 +337,5 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+    
