@@ -196,10 +196,10 @@ export const uncertaintyPath: Path = {
         type: 'skill_practice',
         estimatedTime: '15-20 min',
         content: [
-          { 
-            type: 'paragraphWithAudio', 
+          {
+            type: 'paragraphWithAudio',
             text: 'A veces, cuando algo te preocupa o no sabes qué va a ocurrir, tu mente se aferra a una sola forma de ver las cosas. Imagina lo peor. Cree que solo hay un camino posible. Esa rigidez mental puede darte una falsa sensación de control… pero también te impide adaptarte con libertad.Esta semana vas a entrenar tu flexibilidad cognitiva: la capacidad de cambiar de perspectiva, abrirte a nuevas opciones y responder con más calma y claridad cuando lo incierto te descoloca. No se trata de forzarte a pensar en positivo, sino de recordar que hay más de una manera de interpretar lo que ocurre… y más de una forma de seguir adelante.Adaptarte no es rendirte. Es crecer desde dentro.',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3' 
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion3.mp3'
           },
           { type: 'title', text: 'Psicoeducación' },
           {
@@ -207,10 +207,7 @@ export const uncertaintyPath: Path = {
             title: '¿Qué es la rigidez cognitiva?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion3.mp3',
             content: [
-              {
-                type: 'paragraph',
-                text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.',
-              },
+              { type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.' },
             ],
           },
           {
@@ -243,6 +240,7 @@ export const uncertaintyPath: Path = {
           {
             type: 'collapsible',
             title: '¿Qué entrenas cuando desarrollas tu flexibilidad mental?',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio4Ruta2Sesion3.mp3',
             content: [
               { type: 'list', items: [
                 'Soltar el bucle de pensamientos rumiativos',
@@ -355,5 +353,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-    
