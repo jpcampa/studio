@@ -300,7 +300,7 @@ export const uncertaintyPath: Path = {
           {
             type: 'collapsible',
             title: '¿Controlarlo todo te da paz… o te agota?',
-            content: [{ type: 'paragraph', text: '¿Alguna vez has notado que cuanto más intentas tenerlo todo bajo control, más se te escapa?\nControlar cada detalle parece una estrategia segura, pero muchas veces es una trampa. Aumenta la ansiedad, la frustración y el cansancio emocional.\nEsta semana vas a explorar una forma distinta de vivir: confiar más en ti, en tu capacidad de adaptación y en la vida, incluso cuando no tienes todas las respuestas.' }]
+            content: [{ type: 'paragraph', text: '¿Alguna vez has notado que cuanto más intentas tenerlo todo bajo control, más se te escapa?\nControlar cada detalle parece una estrategia segura, pero muchas veces es una trampa. Aumenta la ansiedad, la frustración y el cansancio emocional.\nEsta semana vas a explorar una forma distinta de vivir: confiar más en ti, en tu capacidad de adaptación y en la vida, incluso cuando no tienes todas las respuestas.'}]
           },
           {
             type: 'collapsible',
@@ -328,6 +328,7 @@ export const uncertaintyPath: Path = {
           {
             type: 'collapsible',
             title: 'Aceptar, confiar y avanzar',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio4Ruta2Sesion4.mp3',
             content: [
                 { type: 'paragraph', text: 'Esta semana vas a entrenar una nueva forma de relacionarte con la incertidumbre:' },
                 { type: 'list', items: [
@@ -375,4 +376,3 @@ export const uncertaintyPath: Path = {
   ],
 };
 
-    
