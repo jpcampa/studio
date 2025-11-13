@@ -5,6 +5,12 @@ export type ParagraphContent = {
   text: string;
 };
 
+export type ParagraphWithAudioContent = {
+  type: 'paragraphWithAudio';
+  text: string;
+  audioUrl?: string;
+};
+
 export type TitleContent = {
   type: 'title';
   text: string;
@@ -702,6 +708,7 @@ export type ImaginedCrisisRehearsalExerciseContent = {
 // A union type for all possible content block types within a module
 export type ModuleContent =
   | ParagraphContent
+  | ParagraphWithAudioContent
   | TitleContent
   | ListContent
   | QuoteContent
@@ -820,8 +827,3 @@ export type PathModule = {
   dataAiHint?: string; // For images if any
   audioUrl?: string; // Optional audio URL for the entire module
 };
-
-    
-
-
-    

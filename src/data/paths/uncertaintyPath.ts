@@ -108,13 +108,12 @@ export const uncertaintyPath: Path = {
       content: [
           { type: 'title', text: 'Psicoeducación' },
           {
-            type: 'title',
-            text: '¿Por qué imaginamos lo peor?',
+            type: 'collapsible',
+            title: '¿Por qué imaginamos lo peor?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3',
-          },
-          {
-            type: 'paragraph',
-            text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. ',
+            content: [
+                { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. ' },
+            ]
           },
           {
             type: 'collapsible',
@@ -206,9 +205,7 @@ export const uncertaintyPath: Path = {
             type: 'collapsible',
             title: '¿Qué es la rigidez cognitiva?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion3.mp3',
-            content: [
-              { type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.' },
-            ],
+            content: [{ type: 'paragraph', text: '¿Te ha pasado que sientes que solo hay una manera de ver las cosas? Como si tu mente se cerrara y te costara encontrar otras formas de entender lo que pasa.  Eso es rigidez cognitiva: cuando te cuesta adaptarte, cambiar de perspectiva o imaginar más de una posibilidad.   Es como tener una mente que solo acepta un camino, incluso cuando hay otros más seguros o adecuados. Todo parece blanco o negro, y cualquier cambio de plan genera incomodidad.' }]
           },
           {
             type: 'collapsible',
@@ -293,7 +290,7 @@ export const uncertaintyPath: Path = {
         type: 'summary',
         estimatedTime: '15-20 min',
         content: [
-          { type: 'paragraph', text: 'A veces, cuanto más intentas tenerlo todo bajo control, más te desgastas. Tu mente planea, prevé, se anticipa… creyendo que así estarás a salvo. Pero el exceso de control no siempre protege: muchas veces te encierra, te tensa y te aleja del presente.\nEsta semana vas a entrenar una forma distinta de sostenerte en lo incierto: desde la confianza, no desde el control. Aprenderás a aceptar lo que no puedes prever, a soltar el esfuerzo inútil por dominarlo todo y a conectar con tu capacidad de responder paso a paso, aunque no tengas todas las respuestas.\nConfiar no es rendirte. Es estar contigo, incluso cuando no sabes lo que va a pasar.'},
+          { type: 'paragraphWithAudio', text: 'A veces, cuanto más intentas tenerlo todo bajo control, más te desgastas. Tu mente planea, prevé, se anticipa… creyendo que así estarás a salvo. Pero el exceso de control no siempre protege: muchas veces te encierra, te tensa y te aleja del presente.Esta semana vas a entrenar una forma distinta de sostenerte en lo incierto: desde la confianza, no desde el control. Aprenderás a aceptar lo que no puedes prever, a soltar el esfuerzo inútil por dominarlo todo y a conectar con tu capacidad de responder paso a paso, aunque no tengas todas las respuestas.Confiar no es rendirte. Es estar contigo, incluso cuando no sabes lo que va a pasar.', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion4.mp3'},
           { type: 'title', text: 'Psicoeducación' },
           { type: 'paragraph', text: '¿Alguna vez has notado que cuanto más intentas tenerlo todo bajo control, más se te escapa?\nControlar cada detalle parece una estrategia segura, pero muchas veces es una trampa. Aumenta la ansiedad, la frustración y el cansancio emocional.\nEsta semana vas a explorar una forma distinta de vivir: confiar más en ti, en tu capacidad de adaptación y en la vida, incluso cuando no tienes todas las respuestas.'},
           {

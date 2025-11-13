@@ -764,7 +764,6 @@ ${progressText || 'No se registraron días.'}
 // ====================================================================
 // START OF RUTA 13 DYNAMIC COMPONENTS
 // ====================================================================
-
 // ====================================================================
 // END OF RUTA 13 DYNAMIC COMPONENTS
 // ====================================================================
@@ -784,10 +783,12 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
         </div>
       );
     case 'paragraph':
+      return <p key={index} className="text-base leading-relaxed whitespace-pre-line mb-4" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />;
+    case 'paragraphWithAudio':
       return (
-        <div key={index} className="flex items-center justify-between gap-4 mb-4">
-          <p className="text-base leading-relaxed whitespace-pre-line" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />
-          {'audioUrl' in contentItem && contentItem.audioUrl && (
+        <div key={index} className="flex items-start justify-between gap-4 mb-4">
+          <p className="text-base leading-relaxed whitespace-pre-line flex-grow" dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }} />
+          {contentItem.audioUrl && (
             <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] shrink-0" />
           )}
         </div>
@@ -1000,6 +1001,8 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
       return <ComplaintTransformationExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'guiltRadarExercise':
       return <GuiltRadarExercise key={index} content={contentItem as any} pathId={pathId} />;
+    case 'acceptanceWritingExercise':
+      return <AcceptanceWritingExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'selfAcceptanceAudioExercise': {
         const exerciseContent = contentItem as SelfAcceptanceAudioExerciseContent;
         return <SelfAcceptanceAudioExercise key={index} content={exerciseContent} pathId={pathId} audioUrl={exerciseContent.audioUrl} />;
