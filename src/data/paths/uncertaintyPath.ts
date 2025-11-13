@@ -166,7 +166,9 @@ export const uncertaintyPath: Path = {
             ]
           },
           { type: 'title', text: 'Técnicas Específicas' },
-          { type: 'exercise', title: 'Ejercicio 1: Calmar tu Cuerpo para Calmar tu Mente', objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.', content: [
+          { type: 'exercise', title: 'Ejercicio 1: Calmar tu Cuerpo para Calmar tu Mente', objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.', 
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio6tecnica1.mp3',
+            content: [
               { type: 'paragraph', text: 'Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.'}
           ]},
           { type: 'exercise', title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.', content: [
@@ -356,7 +358,9 @@ export const uncertaintyPath: Path = {
                 { type: 'paragraph', text: 'Cuando intentas controlarlo todo, tu mente se agota. Este ejercicio te propone soltar por un momento. Elige la forma que hoy más te ayude: Escribir y soltar, Respirar con intención o Cerrar el día con gratitud.'}
             ]
           },
-          { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
+          { 
+            type: 'therapeuticNotebookReflection', 
+            title: 'Reflexión Final de la Semana', 
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion4.mp3',
             prompts: [
              '¿Qué parte de ti se suaviza cuando dejas de intentar controlarlo todo?',
@@ -364,7 +368,11 @@ export const uncertaintyPath: Path = {
              '¿Qué cambia en tu mente cuando aceptas que no necesitas prever cada paso?',
              '¿Qué te gustaría recordarte la próxima vez que intentes tenerlo todo bajo control?'
           ]},
-          { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3' },
+          { 
+            type: 'title', 
+            text: 'Resumen Clave de la Semana',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3',
+          },
           { type: 'list', items: [
             'Controlarlo todo puede parecer seguro… pero suele alimentar tu ansiedad.',
             'Aceptar lo que no puedes cambiar es un acto de fuerza, no de rendición.',
