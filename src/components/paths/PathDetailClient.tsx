@@ -824,6 +824,7 @@ import { PersonalManifestoExercise } from '@/components/paths/PersonalManifestoE
 // RUTA 10
 import { ComplaintTransformationExercise } from '@/components/paths/ComplaintTransformationExercise';
 import { GuiltRadarExercise } from '@/components/paths/GuiltRadarExercise';
+import { AcceptanceWritingExercise } from '@/components/paths/AcceptanceWritingExercise';
 import { SelfAcceptanceAudioExercise } from '@/components/paths/SelfAcceptanceAudioExercise';
 import { CompassionateResponsibilityContractExercise } from '@/components/paths/CompassionateResponsibilityContractExercise';
 import { CriticismToGuideExercise } from '@/components/paths/CriticismToGuideExercise';
