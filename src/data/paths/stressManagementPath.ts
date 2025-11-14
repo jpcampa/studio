@@ -167,6 +167,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Tu detector interno de seguridad',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
                 content: [
                     { type: 'paragraph', text: 'Tu cuerpo tiene un sistema que está constantemente vigilando si estás en un entorno seguro o si hay algún riesgo. Se llama neurocepción, y funciona sin que tú te des cuenta.\nEste sistema se activa por cosas muy sutiles, como:\n•\tUna mirada que percibes como crítica.\n•\tUn tono de voz tenso.\n•\tUn ambiente impredecible.\n•\tUn recuerdo que se activa sin querer.\nY cuando detecta algo que “no cuadra”, activa el modo defensa: ansiedad, tensión, malestar.' },
                     { type: 'paragraph', text: 'Aquí entra en juego la Teoría Polivagal, desarrollada por el neurocientífico Stephen Porges. Esta teoría nos dice que no hay solo “estrés” o “calma”. El cuerpo tiene tres estados principales, como una escalera:\n1.\tConexión y calma: puedes pensar con claridad, estar presente, sentirte a gusto.\n2.\tLucha o huida: tu cuerpo se activa para defenderse.\n3.\tColapso o desconexión: si el peligro se siente abrumador, el cuerpo se apaga. Aparece la sensación de bloqueo, vacío, desconexión o “no estar aquí”.\nMuchos síntomas de ansiedad, tristeza o confusión no son fallos tuyos: son respuestas de un cuerpo que intenta protegerte, a su manera.' },
@@ -397,4 +398,5 @@ export const stressManagementPath: Path = {
 };
 
   
+
 
