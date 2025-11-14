@@ -286,7 +286,9 @@ export const uncertaintyPath: Path = {
             duration: '5–7 minutos',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion3audio6tecnica2.mp3',
           },
-           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
+           audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion3.mp3',
+           prompts: [
               '¿Qué historia rígida me he contado esta semana que no se cumplió tal como la imaginaba?',
               '¿Qué descubrí al permitirme ver la situación desde más de un ángulo?',
               '¿Cuál de las frases “pero también…” sentí más mía o quiero recordarme más a menudo?',
