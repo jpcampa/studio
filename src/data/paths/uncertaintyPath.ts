@@ -194,7 +194,7 @@ export const uncertaintyPath: Path = {
               '¿He notado algún cambio en cómo me siento al no tener el control total?',
               '¿Qué me gustaría seguir practicando para fortalecer mi confianza ante lo incierto?',
            ]},
-          { type: 'title', text: 'Resumen Clave de la Semana' },
+          { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio9Ruta2Sesion2.mp3' },
           { type: 'list', items: [
               'El cuerpo reacciona a la incertidumbre como si fuera una amenaza real, pero podemos enseñarle que no lo es.',
               'Técnicas como la respiración consciente, el escaneo corporal o el anclaje sensorial ayudan a activar el sistema de calma.',
@@ -404,5 +404,7 @@ export const uncertaintyPath: Path = {
   ],
 };
 
+
+    
 
     
