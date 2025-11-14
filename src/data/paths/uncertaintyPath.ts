@@ -357,7 +357,8 @@ export const uncertaintyPath: Path = {
             type: 'mantraExercise',
             title: 'Ejercicio 1: Mi mantra de confianza',
             objective: 'Crea una frase breve, realista y significativa que funcione como una brújula interna para recordarte que puedes sostenerte aunque no tengas todo resuelto.',
-            duration: '7–10 minutos'
+            duration: '7–10 minutos',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio5tecnica1.mp3'
           },
           {
             type: 'exercise',
@@ -396,3 +397,5 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+    
