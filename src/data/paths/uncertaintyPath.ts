@@ -1,4 +1,5 @@
 
+
 import type { Path } from '../pathsData';
 
 export const uncertaintyPath: Path = {
@@ -184,7 +185,9 @@ export const uncertaintyPath: Path = {
             content: [
               { type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. No anticipes el resultado. Haz la acción con conciencia.'}
           ]},
-           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
+           audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion2.mp3',
+           prompts: [
               '¿Qué he aprendido sobre mi forma de reaccionar ante lo incierto?',
               '¿Qué me ha ayudado más: calmarme antes, enfrentarme directamente o ambas cosas?',
               '¿Qué tipo de pensamientos suelen aumentar mi ansiedad? ¿Puedo verlos como historias, no como verdades?',
@@ -400,3 +403,6 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+
+
+    
