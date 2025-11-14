@@ -1002,7 +1002,7 @@ const renderContent = (contentItem: ModuleContent, index: number, pathId: string
     case 'acceptanceWritingExercise':
       return <AcceptanceWritingExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'selfAcceptanceAudioExercise': {
-        const exerciseContent = contentItem as any;
+        const exerciseContent = contentItem as SelfAcceptanceAudioExerciseContent;
         return <SelfAcceptanceAudioExercise key={index} content={exerciseContent} pathId={pathId} audioUrl={exerciseContent.audioUrl} />;
     }
     case 'compassionateResponsibilityContractExercise':
@@ -1185,6 +1185,11 @@ export function PathDetailClient({ path }: { path: Path }) {
                   </Badge>
                 )}
               </div>
+              {module.audioUrl && (
+                  <div className="pt-4">
+                      <audio src={module.audioUrl} controls controlsList="nodownload" className="w-full h-10" />
+                  </div>
+              )}
             </CardHeader>
             <CardContent>
                 {module.content.map((contentItem, i) => renderContent(contentItem, i, path.id))}
@@ -1225,4 +1230,3 @@ export function PathDetailClient({ path }: { path: Path }) {
     
 
     
-
