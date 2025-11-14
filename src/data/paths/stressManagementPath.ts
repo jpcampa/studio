@@ -85,6 +85,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Cómo saber si el estrés te está sobrepasando?',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/LoQueocurreentuCerebroyntucuerpo.mp3',
             content: [
               { type: 'paragraph', text: 'A veces el cuerpo lo sabe antes que tú:' },
               { type: 'list', items: [
@@ -390,9 +391,3 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
-    
-
-    
-
-    
