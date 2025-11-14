@@ -12,9 +12,10 @@ export const stressManagementPath: Path = {
       title: 'Semana 1: Comprende el Estrés y Cómo te Afecta',
       type: 'introduction',
       estimatedTime: '20-25 min',
+      audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
       content: [
         { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
-        { type: 'title', text: 'Psicoeducación' },
+        { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Queeselestresyporquenoestuenemigo.mp3' },
         { type: 'paragraph', text: '¿Alguna vez has sentido que no llegas a todo, que te desbordas, que tu cuerpo va por un lado y tu cabeza por otro?\nEso que sientes tiene nombre: estrés. Y aunque solemos verlo como el enemigo, en realidad es un sistema que intenta ayudarte. Es una respuesta natural del cuerpo y la mente cuando percibimos que lo que se nos pide es más de lo que creemos poder dar.' },
         {
           type: 'collapsible',
@@ -26,6 +27,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'No todas las personas viven el estrés igual',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comovivestuelestres.mp3',
             content: [
               { type: 'paragraph', text: 'Lo que para una persona puede ser un reto motivador, para otra puede ser una amenaza angustiante. Esto depende de nuestras experiencias, nuestra forma de pensar y nuestra manera de ver el mundo. Si llevas unas “gafas” mentales teñidas por la autoexigencia, la anticipación del fracaso o el miedo a decepcionar, es más probable que sientas muchas situaciones como amenazantes.\nPor eso es tan importante empezar por entender cómo funciona el estrés en ti.' },
             ],
@@ -33,6 +35,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'Tipos de estrés',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tiposdeestres.mp3',
             content: [
                 { type: 'list', items: [
                     'Estrés agudo: aparece de forma puntual, como antes de un examen o tras una discusión. Puede ser útil si te moviliza.',
