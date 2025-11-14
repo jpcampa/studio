@@ -365,6 +365,7 @@ export const uncertaintyPath: Path = {
             title: 'Ejercicio 2: Mi ritual de entrega consciente',
             objective: 'Aprende a soltar la tensión mental o física cuando el control se vuelve agotador, a través de la escritura, la respiración o la gratitud.',
             duration: '5–10 minutos por opción',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio6tecnica2.mp3',
             content: [
                 { type: 'paragraph', text: 'Cuando intentas controlarlo todo, tu mente se agota. Este ejercicio te propone soltar por un momento. Elige la forma que hoy más te ayude: Escribir y soltar, Respirar con intención o Cerrar el día con gratitud.'}
             ]
@@ -397,5 +398,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-    
