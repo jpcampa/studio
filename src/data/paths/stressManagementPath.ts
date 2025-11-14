@@ -121,7 +121,8 @@ export const stressManagementPath: Path = {
         },
         {
             type: 'title',
-            text: 'Resumen Clave de la Semana 1'
+            text: 'Resumen Clave de la Semana 1',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'
         },
         {
             type: 'list',
