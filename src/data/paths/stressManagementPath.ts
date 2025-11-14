@@ -49,6 +49,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Por qué sentimos estrés?',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3',
             content: [
               { type: 'paragraph', text: 'El estrés no depende solo de lo que pasa fuera, sino de cómo lo interpretas y con qué recursos cuentas para enfrentarlo.\nAlgunos factores que influyen:' },
               { type: 'list', items: [
@@ -390,3 +391,4 @@ export const stressManagementPath: Path = {
 
     
 
+    
