@@ -145,7 +145,6 @@ export const stressManagementPath: Path = {
         estimatedTime: '15-20 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
         content: [
-            { type: 'paragraph', text: 'Esta semana vas a descubrir cómo tu cuerpo también forma parte del proceso de autorregulación emocional. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: "ya estás a salvo".' },
             { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3' },
             { type: 'paragraph', text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.' },
             {
@@ -214,9 +213,7 @@ export const stressManagementPath: Path = {
             { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
                 { type: 'paragraph', text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.' }
             ], audioUrl: 'https://workwellfut.com/audios/R1_anclaje_sensorial_inmediato.m4a'},
-            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [
-                { type: 'paragraph', text: '🎧 Disponible en formato audio.' }
-            ], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
+            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
             { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', content: [
                 { type: 'paragraph', text: '🎧 A través de un audio o video guiado, irás tensando y soltando diferentes grupos musculares (piernas, abdomen, cara, hombros…).\nEste ejercicio te ayudará a sentir alivio físico y a reconocer cómo tu cuerpo acumula tensión.' }
             ], audioUrl: 'https://workwellfut.com/audios/rm/R1-parte-1-respiracion-muscular-progresiva.mp3'},
@@ -396,3 +393,6 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
+    
+
