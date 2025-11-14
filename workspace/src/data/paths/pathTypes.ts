@@ -1,4 +1,5 @@
 
+
 export type ParagraphContent = {
   type: 'paragraph';
   text: string;
@@ -91,6 +92,7 @@ export type UncertaintyMapExerciseContent = {
     title: string;
     objective?: string;
     duration?: string;
+    audioUrl?: string;
 };
 
 export type ControlTrafficLightExerciseContent = {
@@ -105,6 +107,7 @@ export type AlternativeStoriesExerciseContent = {
     title: string;
     objective?: string;
     duration?: string;
+    audioUrl?: string;
 };
 
 export type MantraExerciseContent = {
@@ -112,6 +115,7 @@ export type MantraExerciseContent = {
     title: string;
     objective?: string;
     duration?: string;
+    audioUrl?: string;
 };
 
 export type DelSabotajeALaAccionExerciseContent = {

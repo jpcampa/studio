@@ -770,23 +770,13 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
-// ====================================================================
-// START OF RUTA 13 DYNAMIC COMPONENTS
-// ====================================================================
-import { AnsiedadTieneSentidoExercise } from '@/components/paths/AnsiedadTieneSentidoExercise';
-import { VisualizacionGuiadaCuerpoAnsiedadExercise } from '@/components/paths/VisualizacionGuiadaCuerpoAnsiedadExercise';
-// ====================================================================
-// END OF RUTA 13 DYNAMIC COMPONENTS
-// ====================================================================
-
-
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
       return (
         <div key={index} className="flex items-center gap-4 mt-6 mb-3">
-            {contentItem.audioUrl && <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] sm:max-w-xs"/>}
             <h3 className="text-xl font-bold text-primary">{contentItem.text}</h3>
+            {contentItem.audioUrl && <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="h-8 max-w-[200px] sm:max-w-xs"/>}
         </div>
       );
     case 'paragraphWithAudio':
@@ -1230,5 +1220,7 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
+
+    
 
     
