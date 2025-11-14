@@ -294,7 +294,7 @@ export const uncertaintyPath: Path = {
               '¿Cuál de las frases “pero también…” sentí más mía o quiero recordarme más a menudo?',
               '¿En qué momento me sorprendí reaccionando con más flexibilidad de lo habitual?',
             ]},
-          { type: 'title', text: 'Resumen Clave de la Semana'},
+          { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion3.mp3' },
           { type: 'list', items: [
               'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guion.',
               'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
@@ -410,3 +410,4 @@ export const uncertaintyPath: Path = {
     
 
     
+
