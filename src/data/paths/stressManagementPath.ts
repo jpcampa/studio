@@ -63,6 +63,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Qué pasa si no lo gestionamos?',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Quepasasinologestionamos.mp3',
             content: [
               { type: 'paragraph', text: 'El estrés mantenido afecta a todos los niveles:' },
               { type: 'list', items: [
