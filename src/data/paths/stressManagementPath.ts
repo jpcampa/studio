@@ -35,6 +35,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'Tipos de estrés',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tiposdeestres.mp3',
             content: [
                 { type: 'list', items: [
                     'Estrés agudo: aparece de forma puntual, como antes de un examen o tras una discusión. Puede ser útil si te moviliza.',
@@ -388,3 +389,4 @@ export const stressManagementPath: Path = {
 };
 
     
+
