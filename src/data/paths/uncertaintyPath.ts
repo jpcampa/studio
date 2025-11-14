@@ -84,7 +84,9 @@ export const uncertaintyPath: Path = {
           objective: 'Diferencia entre lo que depende de ti, lo que puedes influir y lo que está fuera de tu control para enfocar tu energía en lo que sí puedes transformar.',
           duration: '6 a 9 minutos'
         },
-        { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+        { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
+        audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio9Ruta2Sesion1.mp3',
+        prompts: [
           '¿Qué intenté controlar esta semana que no estaba en mis manos?',
           '¿Cómo me sentí al soltarlo?',
           '¿Qué ideas me llevo sobre mi forma de vivir lo incierto?',
