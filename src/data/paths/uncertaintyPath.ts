@@ -91,7 +91,7 @@ export const uncertaintyPath: Path = {
           '¿Cómo me sentí al soltarlo?',
           '¿Qué ideas me llevo sobre mi forma de vivir lo incierto?',
         ]},
-        { type: 'title', text: 'Resumen Clave de la Semana' },
+        { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio10Ruta2Sesion1.mp3' },
         { type: 'list', items: [
             'La incertidumbre es parte de la vida, pero muchas veces la vivimos como amenaza.',
             'Nuestro cuerpo y mente tienden a sobreprotegernos cuando sentimos que no tenemos el control.',
