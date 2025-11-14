@@ -27,6 +27,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'No todas las personas viven el estrés igual',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comovivestuelestres.mp3',
             content: [
               { type: 'paragraph', text: 'Lo que para una persona puede ser un reto motivador, para otra puede ser una amenaza angustiante. Esto depende de nuestras experiencias, nuestra forma de pensar y nuestra manera de ver el mundo. Si llevas unas “gafas” mentales teñidas por la autoexigencia, la anticipación del fracaso o el miedo a decepcionar, es más probable que sientas muchas situaciones como amenazantes.\nPor eso es tan importante empezar por entender cómo funciona el estrés en ti.' },
             ],
