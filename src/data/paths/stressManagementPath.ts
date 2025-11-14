@@ -15,7 +15,7 @@ export const stressManagementPath: Path = {
       audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
       content: [
         { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
-        { type: 'title', text: 'Psicoeducación' },
+        { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Queeselestresyporquenoestuenemigo.mp3' },
         { type: 'paragraph', text: '¿Alguna vez has sentido que no llegas a todo, que te desbordas, que tu cuerpo va por un lado y tu cabeza por otro?\nEso que sientes tiene nombre: estrés. Y aunque solemos verlo como el enemigo, en realidad es un sistema que intenta ayudarte. Es una respuesta natural del cuerpo y la mente cuando percibimos que lo que se nos pide es más de lo que creemos poder dar.' },
         {
           type: 'collapsible',
