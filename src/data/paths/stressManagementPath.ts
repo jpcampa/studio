@@ -143,6 +143,7 @@ export const stressManagementPath: Path = {
         title: 'Semana 2: Activa tu Regulación Fisiológica',
         type: 'skill_practice',
         estimatedTime: '15-20 min',
+        audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
         content: [
             { type: 'paragraph', text: 'Esta semana vas a descubrir cómo tu cuerpo también forma parte del proceso de autorregulación emocional. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: "ya estás a salvo".' },
             { type: 'title', text: 'Psicoeducación' },
@@ -397,3 +398,4 @@ export const stressManagementPath: Path = {
     
 
     
+
