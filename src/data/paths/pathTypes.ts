@@ -63,6 +63,7 @@ export type TherapeuticNotebookReflection = {
     type: 'therapeuticNotebookReflection';
     title: string;
     prompts: string[];
+    audioUrl?: string;
 }
 
 export type DetectiveExerciseContent = {
@@ -91,6 +92,7 @@ export type UncertaintyMapExerciseContent = {
     title: string;
     objective?: string;
     duration?: string;
+    audioUrl?: string;
 };
 
 export type ControlTrafficLightExerciseContent = {
@@ -105,6 +107,7 @@ export type AlternativeStoriesExerciseContent = {
     title: string;
     objective?: string;
     duration?: string;
+    audioUrl?: string;
 };
 
 export type MantraExerciseContent = {
@@ -827,3 +830,20 @@ export type PathModule = {
   dataAiHint?: string; // For images if any
   audioUrl?: string; // Optional audio URL for the entire module
 };
+
+// Represents a single assessment dimension (e.g., "Emotional Regulation")
+export interface AssessmentDimension {
+  id: string;
+  name: string; // The user-facing name of the dimension
+  definition: string;
+  items: AssessmentItem[]; // The questions related to this dimension
+  recommendedPathId?: string; // Optional ID of a path recommended for this dimension
+}
+
+// Represents a single question/item within an assessment dimension
+export interface AssessmentItem {
+  id: string; // Unique identifier for the question item (e.g., "item1")
+  text: string; // The question text
+  weight: number; // The weight of the item for calculating scores
+  isInverse?: boolean; // True if a low score is "good" and a high score is "bad"
+}

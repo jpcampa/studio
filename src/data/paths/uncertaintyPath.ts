@@ -166,12 +166,18 @@ export const uncertaintyPath: Path = {
             ]
           },
           { type: 'title', text: 'Técnicas Específicas' },
-          { type: 'exercise', title: 'Ejercicio 1: Calmar tu Cuerpo para Calmar tu Mente', objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.', 
+          { 
+            type: 'exercise', 
+            title: 'Ejercicio 1: Calmar tu Cuerpo para Calmar tu Mente', 
+            objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.', 
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio6tecnica1.mp3',
             content: [
               { type: 'paragraph', text: 'Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.'}
           ]},
-          { type: 'exercise', title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.', 
+          { 
+            type: 'exercise', 
+            title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', 
+            objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
             content: [
               { type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. No anticipes el resultado. Haz la acción con conciencia.'}
@@ -265,7 +271,8 @@ export const uncertaintyPath: Path = {
             type: 'alternativeStoriesExercise',
             title: 'Ejercicio 1: Historias Alternativas',
             objective: 'Entrena tu flexibilidad mental imaginando más de un posible desenlace. No se trata de forzarte a pensar en positivo, sino de recordarte que lo que temes no siempre ocurre.',
-            duration: '5–10 minutos'
+            duration: '5–10 minutos',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion3audio5tecnica1.mp3'
           },
           {
             type: 'mantraExercise',
@@ -374,7 +381,7 @@ export const uncertaintyPath: Path = {
           { 
             type: 'title', 
             text: 'Resumen Clave de la Semana',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3'
           },
           { type: 'list', items: [
             'Controlarlo todo puede parecer seguro… pero suele alimentar tu ansiedad.',
@@ -389,5 +396,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-    
