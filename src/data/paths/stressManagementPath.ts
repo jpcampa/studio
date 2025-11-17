@@ -108,13 +108,13 @@ export const stressManagementPath: Path = {
           type: 'stressMapExercise',
           title: 'Ejercicio 1: Mapa del Estrés Personal',
           objective: 'Con este ejercicio empezarás a reconocer cómo se manifiesta el estrés en ti. Al explorar tus pensamientos, emociones, sensaciones físicas y comportamientos cuando te sientes bajo presión, podrás comprender mejor lo que te ocurre y dar los primeros pasos para recuperar el equilibrio y sentirte más en calma.',
-          duration: '5 a 10 minutos',
+          duration: '8-12 min',
         },
         {
             type: 'triggerExercise',
             title: 'Ejercicio 2: Identifica tu disparador',
             objective: 'Aprender a diferenciar si lo que te está generando estrés viene del entorno (externo) o de ti mismo/a (interno), para empezar a responder con conciencia en lugar de reaccionar en automático.',
-            duration: '5 a 8 minutos',
+            duration: '7-10 min',
         },
         {
             type: 'title',
@@ -139,7 +139,7 @@ export const stressManagementPath: Path = {
         id: 'estres_sem2',
         title: 'Semana 2: Activa tu Regulación Fisiológica',
         type: 'skill_practice',
-        estimatedTime: '20-25 min',
+        estimatedTime: '25-30 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
         content: [
             { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3'},
@@ -204,20 +204,20 @@ export const stressManagementPath: Path = {
                     { type: 'paragraph', text: 'Estas herramientas usan el cuerpo como puerta de entrada al bienestar. Algunas se basan en la respiración, otras en el movimiento, la atención plena o el contacto sensorial. Todas comparten un mismo propósito: ayudarte a regular tu sistema y conectar contigo desde un lugar de seguridad.\nPuedes usarlas:\n•\tEn el momento, si sientes ansiedad o bloqueo.\n•\tAntes de una situación desafiante.\n•\tComo rutina diaria para cultivar equilibrio.\n•\tPara conocerte mejor: observa cuáles te funcionan más.' },
                 ]
             },
-            { type: 'exercise', title: 'Respiración 4–2–6 con gesto de autocuidado', objective: 'Salir del modo estrés y activar el modo calma.', content: [
+            { type: 'exercise', title: 'Respiración 4–2–6 con gesto de autocuidado', objective: 'Salir del modo estrés y activar el modo calma.', duration: "2-3 min", content: [
                 { type: 'paragraph', text: '1.\tInhala por la nariz durante 4 segundos.\n2.\tMantén el aire 2 segundos.\n3.\tExhala lentamente por la boca durante 6 segundos.\n4.\tMientras respiras, coloca una mano sobre el pecho o el abdomen, como gesto de cuidado hacia ti.\nPractica esta respiración durante 1 o 2 minutos, varias veces al día o en momentos de tensión.\n' }
             ], audioUrl: 'https://workwellfut.com/audios/rm/R1_respiracion_4-2-6.mp3'},
-            { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
+            { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', duration: "3-5 min", content: [
                 { type: 'paragraph', text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.' }
             ], audioUrl: 'https://workwellfut.com/audios/R1_anclaje_sensorial_inmediato.m4a'},
-            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
-            { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', content: [
+            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', duration: "8-10 min", content: [], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
+            { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', duration: "10-12 min", content: [
                 { type: 'paragraph', text: '🎧 A través de un audio o video guiado, irás tensando y soltando diferentes grupos musculares (piernas, abdomen, cara, hombros…).\nEste ejercicio te ayudará a sentir alivio físico y a reconocer cómo tu cuerpo acumula tensión.' }
             ], audioUrl: 'https://workwellfut.com/audios/rm/R1-parte-1-respiracion-muscular-progresiva.mp3'},
-            { type: 'exercise', title: 'Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', content: [
+            { type: 'exercise', title: 'Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', duration: "2-5 min", content: [
                 { type: 'paragraph', text: 'Opciones que puedes probar:\n•\tAutoabrazo firme: Cruza los brazos sobre tu pecho y mantén la presión mientras respiras.\n•\tBalanceo suave: Sentado/a o de pie, realiza un vaivén rítmico con el cuerpo.\n•\tManta con peso (o varias mantas dobladas): Cúbrete durante unos minutos para activar el sistema de regulación interna.\nEstas prácticas envían señales de seguridad al cerebro. Úsalas tras situaciones exigentes o como parte de tu rutina diaria.' }
             ]},
-            { type: 'exercise', title: 'Contacto frío breve (reset inmediato)', objective: 'Interrumpir una activación emocional intensa.', content: [
+            { type: 'exercise', title: 'Contacto frío breve (reset inmediato)', objective: 'Interrumpir una activación emocional intensa.', duration: "1-2 min", content: [
                 { type: 'paragraph', text: 'Cómo aplicarlo:\n1.\tHumedece una toalla o paño con agua fría.\n2.\tAplícalo entre 10 y 20 segundos en:\no\tLa nuca\no\tLas muñecas\no\tLa parte interna de los brazos o las mejillas\n3.\tRespira mientras sientes el contacto del frío.\nSi estás fuera de casa, puedes usar agua del grifo o un cubito envuelto en tela.\nEste pequeño “shock” activa una respuesta calmante en tu cuerpo y te ayuda a pausar el bucle de ansiedad.' }
             ]},
             { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3' },
@@ -229,7 +229,7 @@ export const stressManagementPath: Path = {
         id: 'estres_sem3',
         title: 'Semana 3: Reestructura tus Pensamientos de Sobrecarga',
         type: 'skill_practice',
-        estimatedTime: '20-25 min',
+        estimatedTime: '25-30 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/INTRODUCCIONSEMANA3.mp3',
         content: [
             { type: 'paragraph', text: 'Esta semana vas a entrenar una habilidad fundamental para reducir el estrés: identificar y transformar los pensamientos que te sobrecargan. El objetivo es que aprendas a detectar cuándo tu mente se activa en modo exigencia, catastrofismo o rigidez, y puedas responder con mayor flexibilidad, realismo y amabilidad hacia ti.'},
@@ -325,12 +325,14 @@ export const stressManagementPath: Path = {
             { type: 'title', text: 'Técnicas Específicas'},
             { 
               type: 'detectiveExercise', 
-              title: 'Ejercicio 1: Detective de Pensamientos Estresantes', 
+              title: 'Ejercicio 1: Detective de Pensamientos Estresantes',
+              duration: '12-15 min',
               objective: 'En este ejercicio vas a convertirte en un detective de tu propia mente. Aprenderás a observar esos pensamientos automáticos que te sobrecargan, detectar los filtros que distorsionan tu percepción y reformularlos con una mirada más realista, flexible y amable. Esto fortalecerá tu conciencia emocional y te ayudará a regular ese diálogo interno que, a veces, se vuelve demasiado exigente.',
             },
             { 
               type: 'demandsExercise', 
-              title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales', 
+              title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales',
+              duration: '10-12 min',
               objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
             { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
@@ -342,7 +344,7 @@ export const stressManagementPath: Path = {
         id: 'estres_sem4',
         title: 'Semana 4: Plan de Acción y Prevención de Recaídas',
         type: 'summary',
-        estimatedTime: '20-25 min',
+        estimatedTime: '25-30 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/INTRODUCCIONSEMANA4.mp3',
         content: [
             { type: 'paragraph', text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.'},
@@ -386,6 +388,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'wellbeingPlanExercise',
                 title: 'Ejercicio 1: Diseña tu Plan de Bienestar Emocional',
+                duration: "15-20 min",
                 objective: 'Esta técnica te ayuda a crear un plan práctico y realista para prevenir recaídas. Vas a identificar tus señales personales de sobrecarga, elegir las estrategias que mejor te funcionan y definir rutinas mínimas de cuidado diario. El objetivo es que salgas de esta ruta sabiendo cómo cuidarte mejor en los momentos difíciles, aumentando así tu sensación de control, seguridad y confianza personal.',
             },
             {
@@ -402,5 +405,7 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
+    
 
     
