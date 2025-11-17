@@ -10,20 +10,11 @@ import { ArrowRight, Info, Shield, ListChecks, UserCheck, BookOpen } from 'lucid
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const SKIP_INTRO_SCREENS_KEY = 'workwell-skip-intro-screens';
-
 export default function AssessmentIntroPage() {
   const t = useTranslations();
   const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const skipIntro = localStorage.getItem(SKIP_INTRO_SCREENS_KEY) === 'true';
-      if (skipIntro) {
-        router.replace('/assessment');
-      }
-    }
-  }, [router]);
+  // Se ha eliminado el useEffect que redirigía automáticamente.
 
   return (
     <div className="container mx-auto py-8 flex justify-center">

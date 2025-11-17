@@ -19,9 +19,6 @@ import { pathsData } from '@/data/pathsData';
 import { generatePathPdf } from '@/lib/pdfGenerator';
 import type { Path } from '@/data/pathsData';
 
-
-const SKIP_INTRO_SCREENS_KEY = 'workwell-skip-intro-screens';
-
 export default function SettingsPage() {
   const t = useTranslations();
   const { user, updateUser, loading: userLoading } = useUser();
@@ -36,7 +33,6 @@ export default function SettingsPage() {
   const [dailyCheckIn, setDailyCheckIn] = useState(true);
   const [moduleReminders, setModuleReminders] = useState(true);
   const [motivationalQuotes, setMotivationalQuotes] = useState(false);
-  const [skipIntroScreens, setSkipIntroScreens] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
   const [appVersion, setAppVersion] = useState('');
@@ -47,10 +43,6 @@ export default function SettingsPage() {
       setName(user.name || '');
       setAgeRange(user.ageRange || '');
       setGender(user.gender || '');
-    }
-    if (typeof window !== 'undefined') {
-      const storedSkipIntro = localStorage.getItem(SKIP_INTRO_SCREENS_KEY);
-      setSkipIntroScreens(storedSkipIntro === 'true');
     }
   }, [user]);
 
@@ -123,17 +115,6 @@ export default function SettingsPage() {
     toast({
       title: t.clearEmotionalEntriesSuccessTitle,
       description: t.clearEmotionalEntriesSuccessMessage,
-    });
-  };
-
-  const handleSkipIntroChange = (checked: boolean) => {
-    setSkipIntroScreens(checked);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(SKIP_INTRO_SCREENS_KEY, JSON.stringify(checked));
-    }
-    toast({
-      title: "Preferencia Guardada",
-      description: checked ? "Ahora omitirás las pantallas introductorias." : "Ahora verás las pantallas introductorias.",
     });
   };
 
