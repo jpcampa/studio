@@ -373,6 +373,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 3: Prevención de recaídas',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa3Prevencionderecaidas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Recaer no es fracasar. Es aplicar lo aprendido en un nuevo ciclo.\nSeñales tempranas de recaída:'},
                     { type: 'list', items: ['Autoexigencia creciente', 'Abandono de rutinas de autocuidado', 'Pensamientos rígidos o catastrofistas']},
