@@ -315,6 +315,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Desde la neurociencia: por qué funciona',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Desdelaneurocienciaporquefunciona.mp3',
                 content: [
                     { type: 'paragraph', text: 'Cuando reinterpretas una situación, activas nuevas redes neuronales. Tu corteza prefrontal (la parte que decide) toma protagonismo frente al sistema límbico (la parte reactiva). Así, pasas de reaccionar por impulso a responder con claridad.\nTus pensamientos no siempre son verdad. Son interpretaciones. Y puedes aprender a elegir las que te cuidan.'}
                 ]
@@ -396,3 +397,5 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
+    
