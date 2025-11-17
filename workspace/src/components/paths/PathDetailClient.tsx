@@ -26,7 +26,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import type { ParagraphWithAudioContent } from '@/data/paths/pathTypes';
+import type { ParagraphWithAudioContent, ExerciseContent, SelfAcceptanceAudioExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
 // RUTA 1
@@ -770,6 +770,7 @@ ${progressText || 'No se registraron días.'}
 // END OF RUTA 3 DYNAMIC COMPONENTS
 // ====================================================================
 
+
 const renderContent = (contentItem: ModuleContent, index: number, pathId: string) => {
   switch (contentItem.type) {
     case 'title':
@@ -1158,6 +1159,11 @@ export function PathDetailClient({ path }: { path: Path }) {
         </div>
         <CardContent className="p-8">
           <p className="text-lg text-muted-foreground mt-2 text-center">{path.description}</p>
+          {path.audioUrl && (
+            <div className="mt-4 flex justify-center">
+              <audio src={path.audioUrl} controls controlsList="nodownload" className="w-full max-w-md h-10" />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -1224,3 +1230,4 @@ export function PathDetailClient({ path }: { path: Path }) {
     
 
     
+
