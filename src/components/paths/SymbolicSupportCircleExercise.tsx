@@ -40,7 +40,7 @@ export function SymbolicSupportCircleExercise({ content, pathId }: SymbolicSuppo
     pillars.filter(p => p.name).forEach(p => {
         notebookContent += `**Pilar:** ${p.name}\n- Aporta: ${p.contribution}\n- Gesto de cuidado: ${p.careAction}\n\n`;
     });
-    addNotebookEntry({ title: 'Mi Círculo de Sostén Simbólico', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Círculo de Sostén Simbólico', content: notebookContent, pathId: pathId });
     toast({ title: 'Círculo Guardado' });
     setIsSaved(true);
   };

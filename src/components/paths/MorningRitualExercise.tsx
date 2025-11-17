@@ -31,7 +31,7 @@ export function MorningRitualExercise({ content, pathId }: MorningRitualExercise
 **Mi cuidado para el cuerpo:** ${bodyCare}
 **Mi preparación mental:** ${mentalPrep}
     `;
-    addNotebookEntry({ title: 'Mi Ritual de Mañana Amable', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Ritual de Mañana Amable', content: notebookContent, pathId: pathId });
     toast({ title: 'Ritual Guardado', description: 'Tu ritual de mañana ha sido guardado.' });
     setIsSaved(true);
   };

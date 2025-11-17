@@ -38,7 +38,7 @@ ${people || 'No especificado.'}
 **Lugares que me llenan de energía:**
 ${places || 'No especificado.'}
     `;
-    addNotebookEntry({ title: 'Mi Mapa de Gratificación Emocional', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Mapa de Gratificación Emocional', content: notebookContent, pathId: pathId });
     toast({ title: 'Mapa Guardado', description: 'Tu mapa ha sido guardado en el cuaderno.' });
     setIsSaved(true);
   };

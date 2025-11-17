@@ -19,11 +19,11 @@ interface MeditacionGuiadaSinJuicioExerciseProps {
 
 export function MeditacionGuiadaSinJuicioExercise({ content, pathId }: MeditacionGuiadaSinJuicioExerciseProps) {
   const { toast } = useToast();
-  const [mode, setMode] = useState<'audio' | 'text'>('audio');
+  const [mode, setMode] = useState<'audio' | 'text'>(content.audioUrl ? 'audio' : 'text');
   const [reflection, setReflection] = useState('');
 
   const handleSave = () => {
-    addNotebookEntry({ title: 'Reflexión: Meditación sin Juicio', content: reflection, pathId });
+    addNotebookEntry({ title: 'Reflexión: Meditación sin Juicio', content: reflection, pathId: pathId });
     toast({ title: 'Reflexión guardada' });
   };
   

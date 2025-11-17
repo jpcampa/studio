@@ -41,7 +41,7 @@ export function SupportBankExercise({ content, pathId }: SupportBankExerciseProp
     people.filter(p => p.name).forEach(p => {
         notebookContent += `**Persona:** ${p.name}\n- Tipo de apoyo: ${p.supportType}\n- Confianza: ${p.confidence}/5\n\n`;
     });
-    addNotebookEntry({ title: 'Mi Banco de Apoyos', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Banco de Apoyos', content: notebookContent, pathId: pathId });
     toast({ title: 'Banco de Apoyos Guardado' });
     setIsSaved(true);
   };

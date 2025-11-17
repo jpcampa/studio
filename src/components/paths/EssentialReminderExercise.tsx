@@ -48,7 +48,7 @@ export function EssentialReminderExercise({ content, pathId }: EssentialReminder
 **Contenido:** ${reminderContent || 'No especificado'}
 **Ubicación:** ${placement || 'No especificado'}
     `;
-    addNotebookEntry({ title: `Mi Recordatorio Esencial`, content: notebookContent, pathId });
+    addNotebookEntry({ title: `Mi Recordatorio Esencial`, content: notebookContent, pathId: pathId });
     toast({ title: "Recordatorio Guardado", description: "Tu recordatorio esencial ha sido guardado." });
     setIsSaved(true);
   };

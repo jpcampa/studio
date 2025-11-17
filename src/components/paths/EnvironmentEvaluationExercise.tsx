@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -73,20 +74,21 @@ export function EnvironmentEvaluationExercise({ content, pathId }: EnvironmentEv
 
     const renderStep = () => {
         switch(step) {
-            case 0: return (
-                <div className="p-4 space-y-2">
-                    <Label className="font-semibold">Identifica tus entornos clave:</Label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {environments.map(e => (
-                            <div key={e.id} className="flex items-center space-x-2">
-                                <Checkbox id={e.id} checked={!!selectedEnvs[e.id]} onCheckedChange={c => setSelectedEnvs(p => ({...p, [e.id]: !!c}))} />
-                                <Label htmlFor={e.id} className="font-normal">{e.label}</Label>
-                            </div>
-                        ))}
+            case 0:
+                return (
+                    <div className="p-4 space-y-2">
+                        <Label className="font-semibold">Identifica tus entornos clave:</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {environments.map(e => (
+                                <div key={e.id} className="flex items-center space-x-2">
+                                    <Checkbox id={e.id} checked={!!selectedEnvs[e.id]} onCheckedChange={c => setSelectedEnvs(p => ({...p, [e.id]: !!c}))} />
+                                    <Label htmlFor={e.id} className="font-normal">{e.label}</Label>
+                                </div>
+                            ))}
+                        </div>
+                        <Button onClick={() => setStep(1)} className="w-full mt-4">Siguiente</Button>
                     </div>
-                    <Button onClick={() => setStep(1)} className="w-full mt-4">Siguiente</Button>
-                </div>
-            );
+                );
             case 1: return (
                 <div className="p-4 space-y-4">
                     {selectedEnvironments.length > 0 ? selectedEnvironments.map(e => (

@@ -31,7 +31,7 @@ export function VisualizeDayExercise({ content, pathId }: VisualizeDayExercisePr
 **Mi día ideal:** ${idealDay}
 **Gesto clave:** ${keyGesture}
     `;
-    addNotebookEntry({ title: 'Mi Visualización del Día', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Visualización del Día', content: notebookContent, pathId: pathId });
     toast({ title: 'Visualización Guardada', description: 'Tu visualización del día ha sido guardada.' });
     setIsSaved(true);
   };

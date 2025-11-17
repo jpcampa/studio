@@ -33,7 +33,7 @@ export function DailyEnergyCheckExercise({ content, pathId }: DailyEnergyCheckEx
 **Me recargó:** ${rechargedBy}
 **Me drenó:** ${drainedBy}
     `;
-    addNotebookEntry({ title: 'Mi Mini-Check de Energía Diaria', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Mini-Check de Energía Diaria', content: notebookContent, pathId: pathId });
     toast({ title: 'Registro Guardado', description: 'Tu registro de energía ha sido guardado.' });
     setIsSaved(true);
   };

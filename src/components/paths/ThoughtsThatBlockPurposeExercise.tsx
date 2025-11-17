@@ -51,7 +51,7 @@ export function ThoughtsThatBlockPurposeExercise({ content, pathId }: ThoughtsTh
 **Distorsiones detectadas:** ${selectedDistortions.join(', ') || 'Ninguna.'}
 **Reformulación consciente:** "${reformulation}"
     `;
-    addNotebookEntry({ title: `Micropráctica: Pensamientos que Bloquean`, content: notebookContent, pathId });
+    addNotebookEntry({ title: `Micropráctica: Pensamientos que Bloquean`, content: notebookContent, pathId: pathId });
     toast({ title: "Práctica Guardada", description: "Tu ejercicio ha sido guardado." });
     setIsSaved(true);
   };

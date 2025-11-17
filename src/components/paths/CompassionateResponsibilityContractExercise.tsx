@@ -41,7 +41,7 @@ ${howToRespond}
 *Firma del contrato:*
 ${signature}
     `;
-    addNotebookEntry({ title: 'Mi Contrato de Autorresponsabilidad Compasiva', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Contrato de Autorresponsabilidad Compasiva', content: notebookContent, pathId: pathId });
     toast({ title: 'Contrato Guardado', description: 'Tu contrato ha sido guardado.' });
     setIsSaved(true);
   };

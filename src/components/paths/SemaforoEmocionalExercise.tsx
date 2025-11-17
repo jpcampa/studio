@@ -26,7 +26,7 @@ export function SemaforoEmocionalExercise({ content, pathId }: SemaforoEmocional
   const [action, setAction] = useState('');
 
   const handleSave = () => {
-    addNotebookEntry({ title: 'Registro de Semáforo Emocional', content: `Estado: ${light}. Acción de cuidado: ${action}`, pathId });
+    addNotebookEntry({ title: 'Registro de Semáforo Emocional', content: `Estado: ${light}. Acción de cuidado: ${action}`, pathId: pathId });
     toast({ title: 'Registro Guardado' });
   };
   
@@ -68,4 +68,3 @@ export function SemaforoEmocionalExercise({ content, pathId }: SemaforoEmocional
     </Card>
   );
 }
-

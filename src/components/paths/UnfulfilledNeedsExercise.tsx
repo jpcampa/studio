@@ -45,7 +45,7 @@ ${reason}
 *Plan para mañana:*
 ${tomorrowPlan}
     `;
-    addNotebookEntry({ title: `Micropráctica: Necesidades No Atendidas`, content: notebookContent, pathId });
+    addNotebookEntry({ title: `Micropráctica: Necesidades No Atendidas`, content: notebookContent, pathId: pathId });
     toast({ title: "Reflexión Guardada", description: "Tu reflexión ha sido guardada en el cuaderno." });
     setIsSaved(true);
   };

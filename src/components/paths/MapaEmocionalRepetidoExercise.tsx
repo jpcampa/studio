@@ -50,7 +50,7 @@ Conducta: ${behavior}
 Patrón Repetido: ${isRepeated}
 Esquema Activado: ${schema}
 `;
-    addNotebookEntry({ title: 'Mi Mapa Emocional Repetido', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Mapa Emocional Repetido', content: notebookContent, pathId: pathId });
     toast({ title: 'Mapa Guardado' });
     setStep(prev => prev + 1);
   };

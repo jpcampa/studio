@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -50,7 +51,7 @@ export function SmallDecisionsLogExercise({ content, pathId }: SmallDecisionsLog
             notebookContent += `- Cómo me sentí: ${log.aftermath}\n`;
             notebookContent += `- Próxima vez: ${log.nextTime}\n\n`;
         });
-        addNotebookEntry({ title: 'Registro de Decisiones Pequeñas', content: notebookContent, pathId });
+        addNotebookEntry({ title: 'Registro de Decisiones Pequeñas', content: notebookContent, pathId: pathId });
         toast({ title: 'Registro Guardado' });
         setStep(2);
     };
@@ -114,4 +115,3 @@ export function SmallDecisionsLogExercise({ content, pathId }: SmallDecisionsLog
         </Card>
     );
 }
-    

@@ -55,7 +55,7 @@ ${decision}
 ${commitment}
     `;
 
-    addNotebookEntry({ title: 'Mi Plan A/B Emocional', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Plan A/B Emocional', content: notebookContent, pathId: pathId });
     toast({ title: 'Plan Guardado', description: 'Tu plan A/B se ha guardado en el cuaderno.' });
     setIsSaved(true);
   };

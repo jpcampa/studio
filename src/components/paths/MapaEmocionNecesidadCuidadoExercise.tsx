@@ -66,7 +66,7 @@ export function MapaEmocionNecesidadCuidadoExercise({ content, pathId }: MapaEmo
 *Acción de cuidado elegida:* ${finalCareAction}
     `;
 
-    addNotebookEntry({ title: 'Mi Mapa Emoción-Necesidad-Cuidado', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Mapa Emoción-Necesidad-Cuidado', content: notebookContent, pathId: pathId });
     toast({ title: 'Registro Guardado' });
   };
   

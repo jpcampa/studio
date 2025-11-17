@@ -41,7 +41,7 @@ export function FutureSelfVisualizationExercise({ content, pathId, audioUrl }: F
 *Beneficios en mi vida:* ${benefits}
 *Pasos que me ayudaron:* ${steps}
         `;
-        addNotebookEntry({ title: 'Mi Visualización del Yo Futuro', content: notebookContent, pathId });
+        addNotebookEntry({ title: 'Mi Visualización del Yo Futuro', content: notebookContent, pathId: pathId });
         toast({ title: 'Visualización Guardada', description: 'Tu ejercicio se ha guardado en el cuaderno.' });
         setSaved(true);
     };

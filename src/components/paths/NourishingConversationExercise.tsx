@@ -41,7 +41,7 @@ export function NourishingConversationExercise({ content, pathId }: NourishingCo
 - Descubrí: ${reflection.discovered}
 - Para fortalecer el vínculo: ${reflection.strengthen}
     `;
-    addNotebookEntry({ title: 'Registro de Conversación Nutritiva', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Registro de Conversación Nutritiva', content: notebookContent, pathId: pathId });
     toast({ title: 'Registro Guardado' });
     setIsSaved(true);
   };

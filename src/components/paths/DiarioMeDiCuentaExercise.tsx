@@ -44,7 +44,7 @@ ${howNoticed}
 *¿Qué necesito ahora que me he dado cuenta de esto?:*
 ${whatINeed}
 `;
-    addNotebookEntry({ title: 'Mi "Me di cuenta" del día', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi "Me di cuenta" del día', content: notebookContent, pathId: pathId });
     toast({ title: 'Entrada Guardada' });
     setStep(prev => prev + 1);
   };

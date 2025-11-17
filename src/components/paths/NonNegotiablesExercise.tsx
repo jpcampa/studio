@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -8,6 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import type { NonNegotiablesExerciseContent } from '@/data/paths/pathTypes';
 import { Edit3, Save } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
+import { useToast } from '@/hooks/use-toast';
 
 const valuesList = [
     'Autenticidad', 'Honestidad', 'Respeto', 'Cuidado propio', 'Amor', 'Familia', 'Amistad',
@@ -28,6 +31,7 @@ export function NonNegotiablesExercise({ content, pathId }: NonNegotiablesExerci
     const [brokenValue, setBrokenValue] = useState<Record<string, boolean>>({});
     const [nonNegotiables, setNonNegotiables] = useState<string[]>([]);
     const [commitments, setCommitments] = useState<string[]>(['', '', '']);
+    const { toast } = useToast();
 
     const handleNonNegotiableSelect = (value: string, checked: boolean) => {
         if (checked && nonNegotiables.length < 3) {
@@ -37,6 +41,20 @@ export function NonNegotiablesExercise({ content, pathId }: NonNegotiablesExerci
         }
     };
     
+    const handleSave = () => {
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+**Mis 3 no negociables:**
+${nonNegotiables.join(', ')}
+
+**Mis compromisos para cuidarlos:**
+${nonNegotiables.map((v, i) => `- ${v}: ${commitments[i]}`).join('\n')}
+        `;
+        addNotebookEntry({ title: 'Mis No Negociables', content: notebookContent, pathId: pathId });
+        toast({ title: 'No Negociables Guardados' });
+    }
+
     const renderStep = () => {
         switch (step) {
             case 0: return <div className="p-4"><Label>Recuerda una situación en la que actuaste en contra de lo que sentías correcto.</Label><Textarea value={pastSituation} onChange={e => setPastSituation(e.target.value)} /><Button onClick={() => setStep(1)} className="w-full mt-2">Siguiente</Button></div>;
@@ -51,7 +69,7 @@ export function NonNegotiablesExercise({ content, pathId }: NonNegotiablesExerci
                 </div>
                 <Button onClick={() => setStep(2)} className="w-full mt-2" disabled={nonNegotiables.length !== 3}>Siguiente</Button>
             </div>;
-            case 2: return <div className="p-4">{nonNegotiables.map((v, i) => <div key={i} className="space-y-2 mb-2"><Label>{v}:</Label><Textarea value={commitments[i]} onChange={e => { const newC = [...commitments]; newC[i] = e.target.value; setCommitments(newC);}} /></div>)}<Button className="w-full mt-2"><Save className="mr-2 h-4 w-4" />Guardar</Button></div>;
+            case 2: return <div className="p-4">{nonNegotiables.map((v, i) => <div key={i} className="space-y-2 mb-2"><Label>{v}:</Label><Textarea value={commitments[i]} onChange={e => { const newC = [...commitments]; newC[i] = e.target.value; setCommitments(newC);}} /></div>)}<Button onClick={handleSave} className="w-full mt-2"><Save className="mr-2 h-4 w-4" />Guardar</Button></div>;
             default: return null;
         }
     }
@@ -66,5 +84,3 @@ export function NonNegotiablesExercise({ content, pathId }: NonNegotiablesExerci
         </Card>
     );
 }
-
-    

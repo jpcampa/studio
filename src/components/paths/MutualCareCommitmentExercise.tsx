@@ -32,7 +32,7 @@ export function MutualCareCommitmentExercise({ content, pathId }: MutualCareComm
             notebookContent += `- Para cuidar a ${p}: ${actions[i]}\n`;
         }
     });
-    addNotebookEntry({ title: 'Mi Compromiso de Cuidado Mutuo', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Compromiso de Cuidado Mutuo', content: notebookContent, pathId: pathId });
     toast({ title: 'Compromiso Guardado' });
     setIsSaved(true);
   };

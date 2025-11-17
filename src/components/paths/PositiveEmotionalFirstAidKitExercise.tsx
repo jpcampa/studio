@@ -35,7 +35,7 @@ export function PositiveEmotionalFirstAidKitExercise({ content, pathId }: Positi
 **Gesto (Sonrisa o risa):** ${gesture}
 **Frase (Autoinstrucción):** ${phrase}
     `;
-    addNotebookEntry({ title: 'Mi Botiquín Emocional Positivo', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Botiquín Emocional Positivo', content: notebookContent, pathId: pathId });
     toast({ title: 'Botiquín Guardado', description: 'Tu botiquín emocional ha sido guardado.' });
     setIsSaved(true);
   };

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -12,6 +13,8 @@ import { Edit3, Save } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { emotions as emotionOptions } from '@/components/dashboard/EmotionalEntryForm';
 import { useTranslations } from '@/lib/translations';
+import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
+import { useToast } from '@/hooks/use-toast';
 
 const valuesList = [
     'Autenticidad', 'Honestidad', 'Respeto', 'Cuidado propio', 'Amor', 'Familia', 'Amistad',
@@ -28,6 +31,7 @@ interface IntegrityDecisionsExerciseProps {
 
 export function IntegrityDecisionsExercise({ content, pathId }: IntegrityDecisionsExerciseProps) {
     const t = useTranslations();
+    const { toast } = useToast();
     const [decision, setDecision] = useState('');
     const [values, setValues] = useState<Record<string, boolean>>({});
     const [emotions, setEmotions] = useState<string[]>([]);
@@ -36,6 +40,24 @@ export function IntegrityDecisionsExercise({ content, pathId }: IntegrityDecisio
     const [reflectsWhoIAm, setReflectsWhoIAm] = useState(false);
     const [coherence, setCoherence] = useState(5);
     const [adjustment, setAdjustment] = useState('');
+
+    const handleSave = () => {
+        const selectedValues = Object.keys(values).filter(k => values[k]);
+        const notebookContent = `
+**Ejercicio: ${content.title}**
+
+**Decisión a tomar:** ${decision}
+**Valores implicados:** ${selectedValues.join(', ')}
+**Emociones predominantes:** ${emotions.join(', ')}
+**Impacto a largo plazo:** ${impact}
+**Orgullo:** ${isProud ? 'Sí' : 'No'}
+**Refleja quién soy:** ${reflectsWhoIAm ? 'Sí' : 'No'}
+**Nivel de coherencia:** ${coherence}/10
+**Ajuste necesario:** ${adjustment || 'Ninguno.'}
+        `;
+        addNotebookEntry({ title: 'Decisión con Integridad', content: notebookContent, pathId: pathId });
+        toast({ title: 'Reflexión Guardada' });
+    }
 
     return (
         <Card className="bg-muted/30 my-6 shadow-md">
@@ -68,10 +90,8 @@ export function IntegrityDecisionsExercise({ content, pathId }: IntegrityDecisio
                 </div>
                 <div><Label>Nivel de coherencia: {coherence}/10</Label><Slider value={[coherence]} onValueChange={v => setCoherence(v[0])} min={0} max={10} step={1} /></div>
                 <div className="space-y-2"><Label>Si algo no encaja, ¿qué cambiarías para sentirte en paz?</Label><Textarea value={adjustment} onChange={e => setAdjustment(e.target.value)} /></div>
-                <Button className="w-full"><Save className="mr-2 h-4 w-4" />Guardar en mi cuaderno</Button>
+                <Button onClick={handleSave} className="w-full"><Save className="mr-2 h-4 w-4" />Guardar en mi cuaderno</Button>
             </CardContent>
         </Card>
     );
 }
-
-    

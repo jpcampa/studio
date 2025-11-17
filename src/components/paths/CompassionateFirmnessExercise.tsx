@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -31,7 +32,7 @@ export function CompassionateFirmnessExercise({ content, pathId }: Compassionate
     }
     const phraseToSave = finalPhrase || `Veo que te sientes ${otherEmotion}, y al mismo tiempo, yo necesito ${myNeed}.`;
 
-    addNotebookEntry({ title: "Mi Frase de Firmeza Compasiva", content: `"${phraseToSave}"`, pathId });
+    addNotebookEntry({ title: "Mi Frase de Firmeza Compasiva", content: `"${phraseToSave}"`, pathId: pathId });
     toast({ title: "Frase Guardada", description: "Tu frase se ha guardado en el cuaderno." });
     next();
   };

@@ -42,13 +42,13 @@ ${letterBody}
 Con cariño,
 Tu emoción: ${finalEmotion}
         `;
-        addNotebookEntry({ title: `Carta desde mi ${finalEmotion}`, content: fullLetter, pathId });
+        addNotebookEntry({ title: `Carta desde mi ${finalEmotion}`, content: fullLetter, pathId: pathId });
         toast({ title: 'Carta Guardada' });
     };
     
     const renderStep = () => {
         switch(step) {
-            case 0: return <div className="p-4 space-y-4"><Label>¿Qué emoción te está pidiendo ser escuchada hoy?</Label><Select value={emotion} onValueChange={setEmotion}><SelectTrigger><SelectValue placeholder="Elige una emoción..." /></SelectTrigger><SelectContent>{emotionOptions.map(e => <SelectItem key={e.value} value={e.value}>{t[e.labelKey as keyof typeof t]}</SelectItem>)}<SelectItem value="otra">Otra...</SelectItem></SelectContent></Select>{emotion === 'otra' && <Textarea value={otherEmotion} onChange={e => setOtherEmotion(e.target.value)} />}<Button onClick={() => setStep(1)} className="w-full mt-2">Siguiente</Button></div>;
+            case 0: return <div className="p-4 space-y-4"><Label>¿Qué emoción te está pidiendo ser escuchada hoy?</Label><Select value={emotion} onValueChange={setEmotion}><SelectTrigger><SelectValue placeholder="Elige una emoción..." /></SelectTrigger><SelectContent>{emotionOptions.map(e => <SelectItem key={e.value} value={e.value}>{t[e.labelKey as keyof typeof t]}</SelectItem>)}<SelectItem value="otra">Otra...</SelectItem></SelectContent></Select>{emotion === 'otra' && <Textarea value={otherEmotion} onChange={e => setOtherEmotion(e.target.value)} /> }<Button onClick={() => setStep(1)} className="w-full mt-2">Siguiente</Button></div>;
             case 1: return <div className="p-4 space-y-4"><Label>¿En qué tono quieres escribir esta carta?</Label><Select value={tone} onValueChange={setTone}><SelectTrigger><SelectValue placeholder="Elige un tono..." /></SelectTrigger><SelectContent><SelectItem value="compasivo">Compasivo y suave</SelectItem><SelectItem value="firme">Claro, firme y directo</SelectItem><SelectItem value="sereno">Sereno y tranquilizador</SelectItem></SelectContent></Select><Button onClick={() => setStep(2)} className="w-full mt-2">Siguiente</Button></div>;
             case 2: return <div className="p-4 space-y-4"><Label>Lo que realmente estás necesitando ahora es...</Label><Textarea value={need} onChange={e => setNeed(e.target.value)} /><Label>Cuerpo de la carta (opcional):</Label><Textarea value={letterBody} onChange={e => setLetterBody(e.target.value)} /><Button onClick={handleSave} className="w-full mt-2"><Save className="mr-2 h-4 w-4"/>Guardar Carta</Button></div>;
             default: return null;

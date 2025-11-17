@@ -49,7 +49,7 @@ ${Object.keys(selectedValues).filter(k => selectedValues[k]).join(', ')}
 *Recordatorio:*
 ${reminder.type === 'Otro' ? reminder.custom : reminder.type}
     `;
-    addNotebookEntry({ title: 'Mi Declaración de Compromiso Personal', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Declaración de Compromiso Personal', content: notebookContent, pathId: pathId });
     toast({ title: 'Declaración Guardada', description: 'Tu declaración de compromiso ha sido guardada.' });
     setIsSaved(true);
   };

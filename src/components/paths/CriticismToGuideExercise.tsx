@@ -6,17 +6,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Edit3, Save, CheckCircle } from 'lucide-react';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import type { CriticismToGuideExerciseContent } from '@/data/paths/pathTypes';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Checkbox } from '../ui/checkbox';
 
 interface CriticismToGuideExerciseProps {
   content: CriticismToGuideExerciseContent;
   pathId: string;
 }
+
+const distortionOptions = [
+    { value: 'catastrophism', label: 'Catastrofismo' },
+    { value: 'dichotomous', label: 'Pensamiento dicotómico (todo o nada)' },
+    { value: 'mind_reading', label: 'Adivinación del pensamiento o futuro' },
+    { value: 'personalization', label: 'Personalización' },
+];
 
 export function CriticismToGuideExercise({ content, pathId }: CriticismToGuideExerciseProps) {
   const { toast } = useToast();
@@ -47,7 +54,7 @@ ${hiddenObjective}
 *Mi frase reformulada como guía:*
 "${reformulatedPhrase}"
     `;
-    addNotebookEntry({ title: 'Transformación de Crítica a Guía', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Transformación de Crítica a Guía', content: notebookContent, pathId: pathId });
     toast({ title: 'Ejercicio Guardado', description: 'Tu transformación ha sido guardada.' });
     setIsSaved(true);
   };

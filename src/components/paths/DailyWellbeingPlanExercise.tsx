@@ -31,7 +31,7 @@ export function DailyWellbeingPlanExercise({ content, pathId }: DailyWellbeingPl
 **Microhábito Emocional:** ${emotionalHabit}
 **Microhábito Mental:** ${mentalHabit}
     `;
-    addNotebookEntry({ title: 'Mi Plan Diario de Bienestar', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Plan Diario de Bienestar', content: notebookContent, pathId: pathId });
     toast({ title: 'Plan Guardado', description: 'Tu plan de microhábitos ha sido guardado.' });
     setIsSaved(true);
   };
@@ -68,8 +68,8 @@ export function DailyWellbeingPlanExercise({ content, pathId }: DailyWellbeingPl
           </div>
           <div className="space-y-2">
             <Label>Paso 3: Microhábito mental</Label>
-            <Select onValueChange={setMentalHabit} disabled={isSaved}>
-              <SelectTrigger><SelectValue placeholder="Elige un hábito mental..." /></SelectTrigger>
+             <Select onValueChange={setMentalHabit} disabled={isSaved}>
+              <SelectTrigger><SelectValue placeholder="Elige una preparación..." /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Respiración consciente 5 minutos">Respiración consciente 5 minutos</SelectItem>
                 <SelectItem value="Leer una página de un libro">Leer una página de un libro</SelectItem>
@@ -77,7 +77,7 @@ export function DailyWellbeingPlanExercise({ content, pathId }: DailyWellbeingPl
               </SelectContent>
             </Select>
           </div>
-          {!isSaved ? (
+           {!isSaved ? (
             <Button onClick={handleSave} className="w-full mt-4"><Save className="mr-2 h-4 w-4" /> Guardar mi plan diario</Button>
           ) : (
             <div className="flex items-center justify-center p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-md">

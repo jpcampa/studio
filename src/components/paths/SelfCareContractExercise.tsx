@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, type FormEvent } from 'react';
@@ -43,7 +44,7 @@ ${commitment}
 **Lo haré de forma:**
 ${how}
 `;
-    addNotebookEntry({ title: "Mi Contrato Interno de Autocuidado", content: notebookContent, pathId });
+    addNotebookEntry({ title: "Mi Contrato Interno de Autocuidado", content: notebookContent, pathId: pathId });
     toast({ title: "Contrato Guardado", description: "Tu contrato interno se ha guardado en el cuaderno." });
     next();
   };

@@ -44,7 +44,7 @@ ${reminder}
 *Mi frase de acompañamiento emocional es:*
 "${anchorPhrase}"
     `;
-    addNotebookEntry({ title: 'Mi Pacto Conmigo', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Pacto Conmigo', content: notebookContent, pathId: pathId });
     toast({ title: 'Pacto Guardado', description: 'Tu pacto contigo se ha guardado en el cuaderno.' });
     setIsSaved(true);
   };

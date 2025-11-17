@@ -46,7 +46,7 @@ export function ValuesCompassExercise({ content, pathId }: ValuesCompassExercise
     setReflections(prev => ({
         ...prev,
         [id]: {
-            ...prev[id],
+            ...(prev[id] || { importance: '', howToLive: '', value: '' }),
             [field]: value
         }
     }));
@@ -63,7 +63,7 @@ export function ValuesCompassExercise({ content, pathId }: ValuesCompassExercise
         notebookContent += `- ¿Cómo me gustaría vivirla?: ${reflection.howToLive || 'No respondido.'}\n`;
         notebookContent += `- Valor asociado: ${reflection.value || 'No respondido.'}\n\n`;
     });
-    addNotebookEntry({ title: 'Mi Brújula de Valores', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Brújula de Valores', content: notebookContent, pathId: pathId });
     toast({ title: 'Brújula Guardada', description: 'Tu brújula de valores ha sido guardada en el cuaderno.' });
     setStep(prev => prev + 1);
   };

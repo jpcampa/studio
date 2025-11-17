@@ -31,7 +31,7 @@ export function MotivationIn3LayersExercise({ content, pathId }: MotivationIn3La
 **Valor personal:** ${value}
 **Sentido mayor:** ${purpose}
     `;
-    addNotebookEntry({ title: 'Mi Motivación en 3 Capas', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Motivación en 3 Capas', content: notebookContent, pathId: pathId });
     toast({ title: 'Motivación Guardada', description: 'Tu motivación en 3 capas ha sido guardada.' });
     setIsSaved(true);
   };

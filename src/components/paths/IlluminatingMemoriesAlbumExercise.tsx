@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Edit3, Save, CheckCircle } from 'lucide-react';
+import { Edit3, CheckCircle, Save } from 'lucide-react';
 import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
 import type { IlluminatingMemoriesAlbumExerciseContent } from '@/data/paths/pathTypes';
 
@@ -31,7 +31,7 @@ export function IlluminatingMemoriesAlbumExercise({ content, pathId }: Illuminat
 **Recuerdo 2:** ${moment2}
 **Recuerdo 3:** ${moment3}
     `;
-    addNotebookEntry({ title: 'Mi Álbum de Recuerdos que Iluminan', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Álbum de Recuerdos que Iluminan', content: notebookContent, pathId: pathId });
     toast({ title: 'Álbum Guardado', description: 'Tus recuerdos han sido guardados.' });
     setIsSaved(true);
   };

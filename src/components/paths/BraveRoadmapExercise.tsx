@@ -56,7 +56,7 @@ export function BraveRoadmapExercise({ content, pathId }: BraveRoadmapExercisePr
 **Acción 2:** ${action2} (Coraje: ${courage2}/3, Valor: ${value2})
 **Acción 3:** ${action3} (Coraje: ${courage3}/3, Valor: ${value3})
     `;
-    addNotebookEntry({ title: `Mi Hoja de Ruta Valiente`, content: notebookContent, pathId });
+    addNotebookEntry({ title: `Mi Hoja de Ruta Valiente`, content: notebookContent, pathId: pathId });
     toast({ title: "Hoja de Ruta Guardada", description: "Tus acciones han sido guardadas." });
     setIsSaved(true);
     next();

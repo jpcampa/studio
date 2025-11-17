@@ -35,7 +35,7 @@ export function ClearRequestMapExercise({ content, pathId }: ClearRequestMapExer
 *Situación:* ${situation}
 *Petición final:* ${finalPhrase}
     `;
-    addNotebookEntry({ title: 'Mi Petición Clara', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Mi Petición Clara', content: notebookContent, pathId: pathId });
     toast({ title: 'Petición Guardada' });
     setIsSaved(true);
   };

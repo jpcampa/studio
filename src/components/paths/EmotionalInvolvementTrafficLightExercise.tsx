@@ -54,7 +54,7 @@ export function EmotionalInvolvementTrafficLightExercise({ content, pathId }: Em
     notebookContent += `- ¿Qué relación necesitas revisar?: ${reflection.q3 || 'No respondido.'}\n`;
     notebookContent += `- ¿Qué vínculo te gustaría cuidar más?: ${reflection.q4 || 'No respondido.'}\n`;
 
-    addNotebookEntry({ title: `Semáforo de Implicación Emocional`, content: notebookContent, pathId });
+    addNotebookEntry({ title: `Semáforo de Implicación Emocional`, content: notebookContent, pathId: pathId });
     toast({ title: "Ejercicio Guardado", description: "Tu reflexión se ha guardado en el Cuaderno Terapéutico." });
     setIsSaved(true);
   };
@@ -154,5 +154,3 @@ export function EmotionalInvolvementTrafficLightExercise({ content, pathId }: Em
     </Card>
   );
 }
-
-    

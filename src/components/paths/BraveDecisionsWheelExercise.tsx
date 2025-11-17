@@ -37,7 +37,7 @@ export function BraveDecisionsWheelExercise({ content, pathId }: BraveDecisionsW
 *Decisión desde la desesperanza:* ${despairDecision || 'No especificado.'}
 *Mi elección final:* ${finalChoice || 'No especificada.'}
 `;
-    addNotebookEntry({ title: 'Rueda de Decisiones Valientes', content: notebookContent, pathId });
+    addNotebookEntry({ title: 'Rueda de Decisiones Valientes', content: notebookContent, pathId: pathId });
     toast({ title: 'Decisión Guardada', description: 'Tu reflexión ha sido guardada.' });
     setStep(prev => prev + 1);
   };

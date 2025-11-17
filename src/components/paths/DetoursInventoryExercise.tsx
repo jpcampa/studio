@@ -82,7 +82,7 @@ export function DetoursInventoryExercise({ content, pathId }: DetoursInventoryEx
     notebookContent += `**Mi compromiso de cambio:**\nSi... entonces... ${commitment}\n\n`;
     notebookContent += `**Mis gestos de reconexión:**\n${reconnectionGestures || 'No especificados.'}`;
 
-    addNotebookEntry({ title: `Inventario de Desvíos`, content: notebookContent, pathId });
+    addNotebookEntry({ title: `Inventario de Desvíos`, content: notebookContent, pathId: pathId });
     toast({ title: "Ejercicio Guardado", description: "Tu inventario ha sido guardado." });
   };
   
@@ -152,7 +152,7 @@ export function DetoursInventoryExercise({ content, pathId }: DetoursInventoryEx
                     <Label htmlFor="reconnection-gestures">Tu kit personal de reconexión</Label>
                     <Textarea id="reconnection-gestures" value={reconnectionGestures} onChange={e => setReconnectionGestures(e.target.value)} placeholder="Ej: Poner mi canción favorita y moverme un rato." />
                 </div>
-                <Button onClick={handleSave} className="w-full"><Save className="mr-2 h-4 w-4" />Guardar mi Inventario</Button>
+                <Button onClick={handleSave} className="w-full"><Save className="mr-2 h-4 w-4"/>Guardar mi Inventario</Button>
             </div>
         );
       default: return null;
