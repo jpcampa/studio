@@ -6,6 +6,7 @@ export const stressManagementPath: Path = {
   title: 'Gestionar el Estrés con Conciencia',
   description: 'El estrés no es tu enemigo, es una señal que merece ser escuchada. En esta ruta aprenderás a reconocer cómo se activa en ti, regularlo con técnicas efectivas y responder con más calma y conciencia.',
   dataAiHint: 'stress management mindfulness',
+  audioUrl: 'https://workwellfut.com/audios/ruta1/INTRODUCCIONRUTA.mp3',
   modules: [
     {
       id: 'estres_sem1',

@@ -1159,6 +1159,11 @@ export function PathDetailClient({ path }: { path: Path }) {
         </div>
         <CardContent className="p-8">
           <p className="text-lg text-muted-foreground mt-2 text-center">{path.description}</p>
+          {path.audioUrl && (
+            <div className="mt-4 flex justify-center">
+              <audio src={path.audioUrl} controls controlsList="nodownload" className="w-full max-w-md h-10" />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -1185,11 +1190,6 @@ export function PathDetailClient({ path }: { path: Path }) {
                   </Badge>
                 )}
               </div>
-              {module.audioUrl && (
-                  <div className="pt-4">
-                      <audio src={module.audioUrl} controls controlsList="nodownload" className="w-full h-10" />
-                  </div>
-              )}
             </CardHeader>
             <CardContent>
                 {module.content.map((contentItem, i) => renderContent(contentItem, i, path.id))}
@@ -1230,3 +1230,4 @@ export function PathDetailClient({ path }: { path: Path }) {
     
 
     
+
