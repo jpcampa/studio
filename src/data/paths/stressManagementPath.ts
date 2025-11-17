@@ -12,7 +12,7 @@ export const stressManagementPath: Path = {
       id: 'estres_sem1',
       title: 'Semana 1: Comprende el Estrés y Cómo te Afecta',
       type: 'introduction',
-      estimatedTime: '20-25 min',
+      estimatedTime: '25-30 min',
       audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
       content: [
         { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
@@ -139,7 +139,7 @@ export const stressManagementPath: Path = {
         id: 'estres_sem2',
         title: 'Semana 2: Activa tu Regulación Fisiológica',
         type: 'skill_practice',
-        estimatedTime: '15-20 min',
+        estimatedTime: '20-25 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
         content: [
             { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3'},
@@ -342,7 +342,7 @@ export const stressManagementPath: Path = {
         id: 'estres_sem4',
         title: 'Semana 4: Plan de Acción y Prevención de Recaídas',
         type: 'summary',
-        estimatedTime: '15-20 min',
+        estimatedTime: '20-25 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/INTRODUCCIONSEMANA4.mp3',
         content: [
             { type: 'paragraph', text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.'},
@@ -402,3 +402,5 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
+    
