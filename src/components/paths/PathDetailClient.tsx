@@ -26,7 +26,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import type { ParagraphWithAudioContent } from '@/data/paths/pathTypes';
+import type { ParagraphWithAudioContent, ExerciseContent, SelfAcceptanceAudioExerciseContent } from '@/data/paths/pathTypes';
 import { useUser } from '@/contexts/UserContext';
 import { Badge } from '@/components/ui/badge';
 // RUTA 1
@@ -1230,4 +1230,5 @@ export function PathDetailClient({ path }: { path: Path }) {
     
 
     
+
 
