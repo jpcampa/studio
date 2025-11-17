@@ -360,6 +360,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 2: Objetivos y estrategias',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa2Objetivosyestrategias.mp3',
                 content: [
                     { type: 'paragraph', text: 'Tu plan de acción se construye sobre lo que ya has practicado. No necesitas hacerlo perfecto, sino contar con algunas herramientas bien integradas que puedas activar cuando lo necesites.\nEstrategias cognitivas:'},
                     { type: 'list', items: ['Reestructuración cognitiva: detectar pensamientos automáticos y transformarlos en versiones más amables', 'Autoinstrucciones positivas: Ej. “Estoy haciendo lo que puedo con lo que tengo”', 'Identificación de pensamientos exigentes (Semana 3)']},
@@ -402,5 +403,3 @@ export const stressManagementPath: Path = {
 
     
 
-
-    
