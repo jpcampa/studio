@@ -171,7 +171,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: '¿Qué genera seguridad?',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Quegeneraseguridad.mp3',
+                audioUrl: "https://workwellfut.com/audios/ruta1/semana2/Quegeneraseguridad.mp3",
                 content: [
                     { type: 'paragraph', text: 'La seguridad no es solo un pensamiento. Es un estado que se siente en el cuerpo. Cuando te sientes en confianza:\n•\tTu respiración se regula sola.\n•\tTu expresión facial se relaja.\n•\tTu cuerpo se afloja.\n•\tTu mente se siente más presente.\nY eso puede pasar por estar con alguien que te escucha, envolverte en una manta suave o simplemente sentir que respiras sin tensión. Son pequeños gestos que le dicen a tu cuerpo: “Estás bien, puedes soltar”.' }
                 ]
@@ -273,6 +273,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Las distorsiones cognitivas: filtros mentales que aumentan tu estrés',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Distorsionescognitivas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Nuestro cerebro tiende a interpretar la realidad con atajos que a veces fallan. Estas distorsiones son formas automáticas y poco realistas de pensar que exageran lo negativo, minimizan lo positivo o interpretan las cosas de forma rígida. Aprender a identificarlas te permite ganar claridad y aliviar tu carga emocional.'},
                     { 
