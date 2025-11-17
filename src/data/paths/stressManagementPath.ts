@@ -263,6 +263,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Un mismo hecho, dos emociones distintas',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Unmismohechodosemocionesdistintas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Situación: Tu pareja no contesta a tu mensaje en horas.'},
                     { type: 'list', items: ['Pensamiento 1: “Está enfadado/a conmigo” → Ansiedad, inseguridad.', 'Pensamiento 2: “Estará ocupado/a” → Calma, paciencia.']},
