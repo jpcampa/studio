@@ -16,23 +16,23 @@ export default function TherapeuticNotebookPage() {
   const { user, loading: userLoading } = useUser();
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
 
-  // Esta función se llamará para refrescar el estado desde localStorage
+  // This function will be called to refresh the state from localStorage
   const updateEntriesAndDebugInfo = () => {
     setEntries(getNotebookEntries());
   };
 
   useEffect(() => {
-    // Carga inicial cuando el componente se monta
+    // Initial load when the component mounts
     updateEntriesAndDebugInfo();
 
-    // Configurar un event listener para cuando el cuaderno se actualice en otro lugar
+    // Set up an event listener for when the notebook is updated elsewhere
     window.addEventListener('notebook-updated', updateEntriesAndDebugInfo);
 
-    // Limpiar el event listener cuando el componente se desmonte
+    // Clean up the event listener when the component unmounts
     return () => {
       window.removeEventListener('notebook-updated', updateEntriesAndDebugInfo);
     };
-  }, []); // El array de dependencias vacío asegura que esto se ejecute solo una vez al montar y desmontar
+  }, []); // The empty dependency array ensures this runs only once on mount and unmount
 
   return (
     <div className="container mx-auto py-8 space-y-8">

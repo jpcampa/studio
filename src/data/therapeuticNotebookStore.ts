@@ -69,8 +69,11 @@ export function addNotebookEntry(newEntryData: Omit<NotebookEntry, 'id' | 'times
     const currentEntries = getNotebookEntries();
     const updatedEntries = [newEntry, ...currentEntries].slice(0, MAX_NOTEBOOK_ENTRIES);
     localStorage.setItem(NOTEBOOK_ENTRIES_KEY, JSON.stringify(updatedEntries));
-    console.log("TherapeuticNotebookStore: Saved new entry to localStorage. Total entries now:", updatedEntries.length);
+    console.log("TherapeuticNotebookStore: Saved new entry to localStorage. Total entries now:", updatedEntries.length, "Entry:", newEntry);
     
+    // Dispatch event so other components can update
+    window.dispatchEvent(new Event('notebook-updated'));
+
     // Send to server
     sendNotebookEntryToServer(newEntry);
 
@@ -80,6 +83,7 @@ export function addNotebookEntry(newEntryData: Omit<NotebookEntry, 'id' | 'times
     return newEntry;
   }
 }
+
 
 async function sendNotebookEntryToServer(entry: NotebookEntry) {
     const storedUserStr = localStorage.getItem('workwell-simulated-user');
