@@ -3,14 +3,27 @@
 
 import type { AssessmentDimension } from './paths/pathTypes';
 
-// Esta función ahora solo es utilizada por componentes de CLIENTE.
-// Su única responsabilidad es llamar a nuestra propia ruta API interna, que actúa como proxy.
-export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
+// La función para obtener las preguntas desde el proxy de API
+async function fetchFromApi(): Promise<AssessmentDimension[]> {
+  try {
+    const response = await fetch('/api/assessment-questions', { cache: 'no-store' });
+    if (!response.ok) {
+        console.error("Error fetching from API, status:", response.status);
+        throw new Error(`Failed to fetch from API: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data as AssessmentDimension[];
+  } catch (error) {
+    console.error("Error fetching assessment dimensions from API proxy:", error);
+    return [];
+  }
+}
+
+// La función para obtener las preguntas desde la URL estática temporal
+async function fetchFromUrl(): Promise<AssessmentDimension[]> {
   const temporaryUrl = 'https://workwellfut.com/preguntaseval/assessment-questions.json';
   try {
-    const response = await fetch(temporaryUrl, {
-      cache: 'no-store'
-    });
+    const response = await fetch(temporaryUrl, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`Failed to fetch from temporary URL: ${response.statusText}`);
     }
@@ -18,9 +31,18 @@ export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> 
     return data as AssessmentDimension[];
   } catch (error) {
     console.error("Error fetching assessment dimensions from client-side URL:", error);
-    // En caso de error, devolvemos un array vacío para no romper la UI.
-    // El error ya se muestra en la consola.
     return [];
+  }
+}
+
+
+export async function getAssessmentDimensions(useTestUrl = false): Promise<AssessmentDimension[]> {
+  if (useTestUrl) {
+    console.log("Using test URL to fetch assessment dimensions.");
+    return fetchFromUrl();
+  } else {
+    console.log("Using API proxy to fetch assessment dimensions.");
+    return fetchFromApi();
   }
 }
 

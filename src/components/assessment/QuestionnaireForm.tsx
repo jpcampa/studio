@@ -50,9 +50,10 @@ interface InProgressData {
 interface QuestionnaireFormProps {
   onSubmit: (answers: Record<string, { score: number; weight: number }>) => Promise<void>;
   isSubmitting: boolean;
+  useTestUrl: boolean;
 }
 
-export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormProps) {
+export function QuestionnaireForm({ onSubmit, isSubmitting, useTestUrl }: QuestionnaireFormProps) {
   const t = useTranslations();
   const router = useRouter();
   const { toast } = useToast();
@@ -70,7 +71,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     async function loadQuestions() {
       try {
         setIsLoading(true);
-        const dimensions = await getAssessmentDimensions();
+        const dimensions = await getAssessmentDimensions(useTestUrl);
         setAssessmentDimensions(dimensions);
         
         const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
@@ -102,7 +103,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
       }
     }
     loadQuestions();
-  }, [toast]);
+  }, [toast, useTestUrl]);
   
   const saveProgress = (dimIndex: number, itemIndex: number, currentAnswers: Record<string, { score: number; weight: number }>) => {
     try {

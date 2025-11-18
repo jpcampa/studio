@@ -94,6 +94,12 @@ export default function AssessmentIntroPage() {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
+          <Button asChild size="lg" variant="secondary" className="w-full sm:w-auto sm:max-w-md text-base py-3 shadow-lg transition-shadow">
+            <Link href="/assessment?testUrl=true">
+              {t.assessmentIntroPageStartButton} (Prueba URL)
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
         </CardFooter>
       </Card>
     </div>

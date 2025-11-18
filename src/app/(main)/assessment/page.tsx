@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { QuestionnaireForm } from '@/components/assessment/QuestionnaireForm';
 import { submitAssessment, type ServerAssessmentResult } from '@/actions/assessment';
 import { saveAssessment, type SaveResult } from '@/actions/client-assessment';
@@ -40,9 +41,13 @@ export default function AssessmentPage() {
   const { toast } = useToast();
   const { user } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
   const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
+
+  const useTestUrl = searchParams.get('testUrl') === 'true';
 
   const handleSubmit = async (answers: Record<string, { score: number; weight: number }>) => {
     setIsSubmitting(true);
@@ -139,7 +144,7 @@ export default function AssessmentPage() {
   };
 
   const handleDevSubmit = async () => {
-    const assessmentDimensions = await getAssessmentDimensions();
+    const assessmentDimensions = await getAssessmentDimensions(useTestUrl);
     const randomAnswers: Record<string, { score: number, weight: number }> = {};
     assessmentDimensions.forEach(dimension => {
       dimension.items.forEach((item: any) => { // Type added here
@@ -164,7 +169,7 @@ export default function AssessmentPage() {
           </Button>
         </div>
       )}
-      <QuestionnaireForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      <QuestionnaireForm onSubmit={handleSubmit} isSubmitting={isSubmitting} useTestUrl={useTestUrl} />
         
       {generatedSaveUrl && (
         <Card className="mt-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
