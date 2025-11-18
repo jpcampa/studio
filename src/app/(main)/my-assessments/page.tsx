@@ -172,6 +172,7 @@ export default function MyAssessmentsPage() {
       console.log("MyAssessmentsPage: Fetching assessments from URL (first 150 chars):", constructedApiUrl.substring(0,150) + "...");
 
       const signal = AbortSignal.timeout(API_TIMEOUT_MS);
+      
       const response = await fetch(constructedApiUrl, { signal });
       let responseText = await response.text();
       
