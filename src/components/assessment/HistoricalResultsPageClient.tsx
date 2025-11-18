@@ -23,6 +23,7 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rawAnswersWithWeight, setRawAnswersWithWeight] = useState<Record<string, { score: number, weight: number }> | null>(null);
 
   useEffect(() => {
     if (assessmentId) {
@@ -47,6 +48,28 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       setAssessmentRecord(null);
     }
   }, [assessmentId]);
+
+  useEffect(() => {
+    const fetchDimensionsAndProcess = async () => {
+      if (assessmentRecord?.data.respuestas) {
+        const assessmentDimensions = await getAssessmentDimensions();
+        const processedAnswers = Object.entries(assessmentRecord.data.respuestas).reduce((acc, [key, value]) => {
+          let weight = 1;
+          for (const dim of assessmentDimensions) {
+            const item = dim.items.find(i => i.id === key);
+            if (item) {
+              weight = item.weight;
+              break;
+            }
+          }
+          acc[key] = { score: value, weight: weight };
+          return acc;
+        }, {} as Record<string, { score: number, weight: number }>);
+        setRawAnswersWithWeight(processedAnswers);
+      }
+    };
+    fetchDimensionsAndProcess();
+  }, [assessmentRecord]);
 
   const handleRetakeAssessment = () => {
     router.push('/assessment/intro');
@@ -82,37 +105,11 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
     );
   }
 
-  // We need to pass the nested 'data' object from the record to the component
   const resultsForDisplay = {
       emotionalProfile: assessmentRecord.data.emotionalProfile,
       priorityAreas: assessmentRecord.data.priorityAreas,
       feedback: assessmentRecord.data.feedback,
   };
-  
-  const [rawAnswersWithWeight, setRawAnswersWithWeight] = useState<Record<string, { score: number, weight: number }> | null>(null);
-
-  useEffect(() => {
-    const fetchDimensionsAndProcess = async () => {
-      if (assessmentRecord?.data.respuestas) {
-        const assessmentDimensions = await getAssessmentDimensions();
-        const processedAnswers = Object.entries(assessmentRecord.data.respuestas).reduce((acc, [key, value]) => {
-          let weight = 1;
-          for (const dim of assessmentDimensions) {
-            const item = dim.items.find(i => i.id === key);
-            if (item) {
-              weight = item.weight;
-              break;
-            }
-          }
-          acc[key] = { score: value, weight: weight };
-          return acc;
-        }, {} as Record<string, { score: number, weight: number }>);
-        setRawAnswersWithWeight(processedAnswers);
-      }
-    };
-    fetchDimensionsAndProcess();
-  }, [assessmentRecord]);
-
 
   return (
     <div className="container mx-auto py-8">
