@@ -19,31 +19,9 @@ async function fetchFromApi(): Promise<AssessmentDimension[]> {
   }
 }
 
-// La función para obtener las preguntas desde la URL estática temporal
-async function fetchFromUrl(): Promise<AssessmentDimension[]> {
-  const temporaryUrl = 'https://workwellfut.com/preguntaseval/assessment-questions.json';
-  try {
-    const response = await fetch(temporaryUrl, { cache: 'no-store' });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch from temporary URL: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data as AssessmentDimension[];
-  } catch (error) {
-    console.error("Error fetching assessment dimensions from client-side URL:", error);
-    return [];
-  }
-}
-
-
-export async function getAssessmentDimensions(useTestUrl = false): Promise<AssessmentDimension[]> {
-  if (useTestUrl) {
-    console.log("Using test URL to fetch assessment dimensions.");
-    return fetchFromUrl();
-  } else {
-    console.log("Using API proxy to fetch assessment dimensions.");
-    return fetchFromApi();
-  }
+export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
+  console.log("Using API proxy to fetch assessment dimensions.");
+  return fetchFromApi();
 }
 
 export const likertOptions = [
