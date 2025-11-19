@@ -414,19 +414,6 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
         </CardContent>
       </Card>
       
-      {payloadForDebug && (
-        <Card className="shadow-lg mt-8">
-           <CardHeader>
-              <CardTitle className="flex items-center"><FileJson className="mr-2 h-5 w-5 text-muted-foreground" /> Payload de Guardado (Depuración)</CardTitle>
-           </CardHeader>
-           <CardContent>
-              <pre className="mt-2 w-full whitespace-pre-wrap break-all rounded-md bg-slate-950 p-4 text-xs text-white">
-                <code>{JSON.stringify(payloadForDebug, null, 2)}</code>
-              </pre>
-           </CardContent>
-        </Card>
-      )}
-
       <Card className="shadow-xl mt-8">
         <CardHeader>
           <CardTitle className="flex items-center">
