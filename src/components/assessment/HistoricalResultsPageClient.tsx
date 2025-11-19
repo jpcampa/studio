@@ -9,7 +9,7 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 import { useUser } from '@/contexts/UserContext';
-import { getAssessmentDimensions } from '@/data/assessmentDimensions';
+import { fetchExternalAssessmentDimensions } from '@/data/assessment-service'; // Importar desde el nuevo servicio
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
 interface HistoricalResultsPageClientProps {
@@ -40,7 +40,7 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       try {
         // Cargar dimensiones y registro en paralelo
         const [dimensions, record] = await Promise.all([
-          getAssessmentDimensions(),
+          fetchExternalAssessmentDimensions(), // Llamada directa a la función del servicio
           getAssessmentById(assessmentId)
         ]);
 
@@ -129,6 +129,7 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
         userId={user?.id}
         onRetake={handleRetakeAssessment}
         assessmentTimestamp={assessmentRecord.timestamp} 
+        assessmentDimensions={assessmentDimensions} // Pasar las dimensiones
       />
        <div className="mt-8 text-center">
         <Button onClick={handleViewHistory} variant="outline">

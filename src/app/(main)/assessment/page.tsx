@@ -1,5 +1,5 @@
 
-import { getAssessmentDimensions } from '@/data/assessmentDimensions';
+import { getAssessmentDimensions } from '@/data/assessment-service'; // Importar desde el nuevo servicio
 import { QuestionnaireForm } from '@/components/assessment/QuestionnaireForm';
 import { AssessmentPageClient } from '@/components/assessment/AssessmentPageClient';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
@@ -11,6 +11,7 @@ async function AssessmentPageWrapper() {
   let error: string | null = null;
 
   try {
+    // Llamada directa a la función del servicio, sin fetch a la API interna
     assessmentDimensions = await getAssessmentDimensions();
   } catch (e) {
     console.error("Error fetching assessment dimensions on server:", e);

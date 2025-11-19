@@ -1,32 +1,22 @@
 
 import type { AssessmentDimension } from './paths/pathTypes';
 import { unstable_noStore as noStore } from 'next/cache';
+import { fetchExternalAssessmentDimensions } from './assessment-service';
 
-// La función para obtener las preguntas desde el proxy de API
-async function fetchFromApi(): Promise<AssessmentDimension[]> {
-  noStore();
-  try {
-    // Usamos una URL absoluta cuando llamamos desde el servidor
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
-    const response = await fetch(`${baseUrl}/api/assessment-questions`, { cache: 'no-store' });
 
-    if (!response.ok) {
-        console.error("Error fetching from API, status:", response.status);
-        const errorData = await response.json().catch(() => ({ details: 'Could not parse error JSON' }));
-        throw new Error(`Failed to fetch from API: ${response.statusText}. Details: ${errorData.details || 'No details'}`);
-    }
-    const data = await response.json();
-    return data as AssessmentDimension[];
-  } catch (error) {
-    console.error("Error fetching assessment dimensions from API proxy:", error);
-    throw error;
-  }
-}
-
+// Esta función ahora actúa como un cliente para el servicio de datos
+// Puede ser llamada desde Componentes de Cliente a través de una Ruta de API
+// o desde Componentes de Servidor directamente.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  console.log("Using API proxy to fetch assessment dimensions.");
-  return fetchFromApi();
+  noStore();
+  console.log("getAssessmentDimensions: Using server-side fetcher.");
+  // En un componente de servidor, esto llamaría directamente.
+  // En un componente de cliente, esto fallaría, por eso los clientes deben usar /api/assessment-questions
+  // Pero como los componentes de servidor son los que dan el error, lo solucionamos para ellos.
+  // La forma más segura es que el código de servidor llame directamente a la función externa.
+  return fetchExternalAssessmentDimensions();
 }
+
 export const likertOptions = [
   { value: 1, label: 'Frown', description: 'Nada' },
   { value: 2, label: 'Annoyed', description: 'Poco' },

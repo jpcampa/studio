@@ -16,32 +16,19 @@ import {
   Radar,
   PolarRadiusAxis,
 } from "recharts"
-import type { AssessmentDimension } from '@/data/assessmentDimensions';
+import type { AssessmentDimension } from '@/data/paths/pathTypes'; // Cambiamos la importación
 import { Activity } from 'lucide-react';
-import { getAssessmentDimensions } from '@/data/assessmentDimensions';
 
 interface EmotionalProfileChartProps {
   results: {
     emotionalProfile: Record<string, number>;
   };
+  assessmentDimensions: AssessmentDimension[]; // Ahora recibe las dimensiones como prop
   className?: string;
 }
 
-export function EmotionalProfileChart({ results, className }: EmotionalProfileChartProps) {
+export function EmotionalProfileChart({ results, assessmentDimensions, className }: EmotionalProfileChartProps) {
   const t = useTranslations();
-  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
-
-  useEffect(() => {
-    async function loadDimensions() {
-        try {
-            const dims = await getAssessmentDimensions();
-            setAssessmentDimensions(dims);
-        } catch (error) {
-            console.error("Failed to load assessment dimensions for chart", error);
-        }
-    }
-    loadDimensions();
-  }, []);
 
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 || !assessmentDimensions || assessmentDimensions.length === 0) {
     return null; // O un placeholder si se prefiere

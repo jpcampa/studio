@@ -26,7 +26,7 @@ import {
   Cell,
   type DotProps,
 } from "recharts"
-import { getAssessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions';
+import type { AssessmentDimension } from '@/data/paths/pathTypes'; // Cambiamos la importación
 import { assessmentInterpretations, type InterpretationLevels } from '@/data/assessmentInterpretations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useRouter } from 'next/navigation';
@@ -40,6 +40,7 @@ interface AssessmentResultsDisplayProps {
   userId?: string | null;
   onRetake: () => void;
   assessmentTimestamp?: string;
+  assessmentDimensions: AssessmentDimension[]; // Ahora es una prop requerida
 }
 
 interface CategorizedDimension extends AssessmentDimension {
@@ -81,14 +82,9 @@ const getInterpretationLevel = (score: number, interpretations: InterpretationLe
   return t.scoreLevelLow || "Bajo";
 };
 
-export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake, assessmentTimestamp }: AssessmentResultsDisplayProps) {
+export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake, assessmentTimestamp, assessmentDimensions }: AssessmentResultsDisplayProps) {
   const t = useTranslations();
   const router = useRouter();
-  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
-
-  useEffect(() => {
-    getAssessmentDimensions().then(setAssessmentDimensions);
-  }, []);
 
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 ||
       Object.values(results.emotionalProfile).some(score => typeof score !== 'number') ||

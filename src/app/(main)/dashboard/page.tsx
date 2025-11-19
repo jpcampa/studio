@@ -32,7 +32,8 @@ import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "@/comp
 import Link from "next/link";
 import { getAssessmentHistory, type AssessmentRecord } from "@/data/assessmentHistoryStore";
 import { EmotionalProfileChart } from "@/components/dashboard/EmotionalProfileChart";
-import type { AssessmentDimension } from "@/data/assessmentDimensions";
+import type { AssessmentDimension } from '@/data/paths/pathTypes';
+import { fetchExternalAssessmentDimensions } from "@/data/assessment-service";
 
 
 interface ProcessedChartDataPoint {
@@ -97,13 +98,21 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
-    const loadInitialData = () => {
+    const loadInitialData = async () => {
         const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
         const loadedAllEntries = getEmotionalEntries(); 
         const assessmentHistory = getAssessmentHistory();
         
         if (assessmentHistory.length > 0) {
             setLatestAssessment(assessmentHistory[0]);
+        }
+
+        try {
+          const dims = await fetchExternalAssessmentDimensions();
+          setAssessmentDimensions(dims);
+        } catch (error) {
+          console.error("Failed to load assessment dimensions on dashboard:", error);
+          // Optional: show a toast or error message
         }
 
         setRecentEntries(loadedRecentEntries);

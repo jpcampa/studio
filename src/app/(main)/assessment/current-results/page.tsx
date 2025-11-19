@@ -7,7 +7,7 @@ import { AssessmentResultsDisplay } from '@/components/assessment/AssessmentResu
 import { useTranslations } from '@/lib/translations';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { StoredAssessmentResults } from '../page';
+import type { StoredAssessmentResults } from '@/components/assessment/AssessmentPageClient';
 import { useUser } from '@/contexts/UserContext';
 
 
@@ -27,10 +27,10 @@ export default function CurrentResultsPage() {
       if (item) {
         const parsedResults = JSON.parse(item) as StoredAssessmentResults;
         // Basic validation
-        if (parsedResults && parsedResults.aiInterpretation && parsedResults.rawAnswers) {
+        if (parsedResults && parsedResults.aiInterpretation && parsedResults.rawAnswers && parsedResults.assessmentDimensions) {
           setStoredResults(parsedResults);
         } else {
-          setError("Los datos de la evaluación guardados son inválidos.");
+          setError("Los datos de la evaluación guardados son inválidos o incompletos.");
           console.error("CurrentResultsPage: Invalid assessment data structure in sessionStorage", parsedResults);
         }
       } else {
@@ -86,6 +86,7 @@ export default function CurrentResultsPage() {
       <AssessmentResultsDisplay 
         results={storedResults.aiInterpretation}
         rawAnswers={storedResults.rawAnswers}
+        assessmentDimensions={storedResults.assessmentDimensions}
         userId={user?.id}
         onRetake={handleRetakeAssessment} 
       />

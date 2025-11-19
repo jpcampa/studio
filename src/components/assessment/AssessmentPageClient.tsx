@@ -4,7 +4,6 @@
 import { useState } from 'react';
 import { QuestionnaireForm } from '@/components/assessment/QuestionnaireForm';
 import { submitAssessment, type ServerAssessmentResult } from '@/actions/assessment';
-import { saveAssessment, type SaveResult } from '@/actions/client-assessment';
 import { useTranslations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
@@ -16,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle as DialogModalTitle, D
 import { useRouter } from 'next/navigation';
 import { saveAssessmentToHistory } from '@/data/assessmentHistoryStore';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
+import { saveAssessment as saveAssessmentToServer } from '@/actions/client-assessment';
 
 
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
@@ -34,6 +34,7 @@ interface AssessmentSavePayload {
 export interface StoredAssessmentResults {
     aiInterpretation: InitialAssessmentOutput;
     rawAnswers: Record<string, { score: number; weight: number }>;
+    assessmentDimensions: AssessmentDimension[]; // Añadido para pasar al siguiente componente
 }
 
 interface AssessmentPageClientProps {
@@ -67,7 +68,8 @@ export function AssessmentPageClient({ assessmentDimensions }: AssessmentPageCli
       try {
         const resultsToStore: StoredAssessmentResults = {
             aiInterpretation: result.data,
-            rawAnswers: answers
+            rawAnswers: answers,
+            assessmentDimensions: assessmentDimensions, // Incluir las dimensiones
         };
         localStorage.setItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY, JSON.stringify(resultsToStore));
         
@@ -106,7 +108,7 @@ export function AssessmentPageClient({ assessmentDimensions }: AssessmentPageCli
           assessmentTimestamp: assessmentTimestamp,
         };
         
-        const saveResult: SaveResult = await saveAssessment(payloadToSave);
+        const saveResult = await saveAssessmentToServer(payloadToSave);
 
         setGeneratedSaveUrl(saveResult.debugUrl || "No URL generated");
 
