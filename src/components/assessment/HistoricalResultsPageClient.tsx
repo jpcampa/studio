@@ -24,10 +24,12 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
   const [rawAnswersWithWeight, setRawAnswersWithWeight] = useState<Record<string, { score: number, weight: number }> | null>(null);
 
   useEffect(() => {
     const fetchAndProcessData = async () => {
+      setIsLoading(true);
       if (!assessmentId) {
         setError("ID de evaluación no proporcionado.");
         setIsLoading(false);
@@ -36,15 +38,21 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       }
       
       try {
-        const record = getAssessmentById(assessmentId);
+        // Cargar dimensiones y registro en paralelo
+        const [dimensions, record] = await Promise.all([
+          getAssessmentDimensions(),
+          getAssessmentById(assessmentId)
+        ]);
+
+        setAssessmentDimensions(dimensions);
+
         if (record) {
           setAssessmentRecord(record);
           
-          if (record.data.respuestas) {
-            const assessmentDimensions = await getAssessmentDimensions();
+          if (record.data.respuestas && dimensions.length > 0) {
             const processedAnswers = Object.entries(record.data.respuestas).reduce((acc, [key, value]) => {
               let weight = 1; // Default weight
-              for (const dim of assessmentDimensions) {
+              for (const dim of dimensions) {
                 const item = dim.items.find(i => i.id === key);
                 if (item) {
                   weight = item.weight;
