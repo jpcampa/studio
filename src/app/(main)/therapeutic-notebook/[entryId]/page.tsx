@@ -9,6 +9,29 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, NotebookText, AlertTriangle, Loader2, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
+// Componente para formatear el contenido del cuaderno
+function FormattedNotebookContent({ content }: { content: string }) {
+  const lines = content.split('\n').filter(line => line.trim() !== '');
+
+  return (
+    <div className="prose prose-sm dark:prose-invert max-w-none space-y-3">
+      {lines.map((line, index) => {
+        if (line.startsWith('**') && line.endsWith('**')) {
+          return <h4 key={index} className="font-semibold text-primary !mt-4 !mb-1">{line.substring(2, line.length - 2)}</h4>;
+        }
+        if (line.startsWith('*') && line.endsWith('*')) {
+          return <p key={index} className="italic text-muted-foreground !my-0">{line.substring(1, line.length - 1)}</p>;
+        }
+        if (line.startsWith('- ')) {
+          return <p key={index} className="!my-0 pl-4">{`• ${line.substring(2)}`}</p>;
+        }
+        return <p key={index} className="!my-1 whitespace-pre-wrap">{line}</p>;
+      })}
+    </div>
+  );
+}
+
+
 export default function NotebookEntryDetailPage() {
   const router = useRouter();
   const params = useParams();
@@ -71,10 +94,7 @@ export default function NotebookEntryDetailPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {/* Usamos 'whitespace-pre-line' para respetar los saltos de línea y 'break-words' para evitar desbordamientos */}
-          <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-line break-words">
-             {entry.content}
-          </div>
+          <FormattedNotebookContent content={entry.content} />
         </CardContent>
         <CardFooter>
           <Button onClick={() => router.back()} variant="outline">
