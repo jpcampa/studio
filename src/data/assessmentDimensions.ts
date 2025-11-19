@@ -1,22 +1,28 @@
 
-"use client";
+// "use client" directive removed to allow server-side usage
 
 import type { AssessmentDimension } from './paths/pathTypes';
+import { unstable_noStore as noStore } from 'next/cache';
 
 // La función para obtener las preguntas desde el proxy de API
 async function fetchFromApi(): Promise<AssessmentDimension[]> {
+  // Asegura que la llamada no se cachee y sea siempre dinámica
+  noStore();
   try {
-    const response = await fetch('/api/assessment-questions', { cache: 'no-store' });
+    // Usamos una URL absoluta cuando llamamos desde el servidor
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+    const response = await fetch(`${baseUrl}/api/assessment-questions`, { cache: 'no-store' });
+
     if (!response.ok) {
         console.error("Error fetching from API, status:", response.status);
         const errorData = await response.json().catch(() => ({ details: 'Could not parse error JSON' }));
-        throw new Error(`Failed to fetch from API: ${response.statusText}. Details: ${errorData.details}`);
+        throw new Error(`Failed to fetch from API: ${response.statusText}. Details: ${errorData.details || 'No details'}`);
     }
     const data = await response.json();
     return data as AssessmentDimension[];
   } catch (error) {
     console.error("Error fetching assessment dimensions from API proxy:", error);
-    // Para facilitar la depuración, podrías lanzar el error para que el componente que llama lo capture.
+    // Para facilitar la depuración, lanzamos el error para que el componente que llama lo capture.
     throw error;
   }
 }

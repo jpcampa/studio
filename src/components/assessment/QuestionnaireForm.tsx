@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, type FormEvent, useEffect } from 'react';
-import { getAssessmentDimensions, likertOptions, type AssessmentItem, type AssessmentDimension } from '@/data/assessmentDimensions';
+import { likertOptions, type AssessmentItem, type AssessmentDimension } from '@/data/assessmentDimensions';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -50,16 +50,13 @@ interface InProgressData {
 interface QuestionnaireFormProps {
   onSubmit: (answers: Record<string, { score: number; weight: number }>) => Promise<void>;
   isSubmitting: boolean;
+  assessmentDimensions: AssessmentDimension[];
 }
 
-export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormProps) {
+export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions }: QuestionnaireFormProps) {
   const t = useTranslations();
   const router = useRouter();
   const { toast } = useToast();
-
-  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [currentDimensionIndex, setCurrentDimensionIndex] = useState(0);
   const [currentItemIndexInDimension, setCurrentItemIndexInDimension] = useState(0);
@@ -67,42 +64,32 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
 
   useEffect(() => {
-    async function loadQuestions() {
-      try {
-        setIsLoading(true);
-        const dimensions = await getAssessmentDimensions();
-        setAssessmentDimensions(dimensions);
-        
-        const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
-        if (savedProgress) {
-          const parsedData = JSON.parse(savedProgress) as InProgressData;
-          if (parsedData.answers && parsedData.position) {
-              setAnswers(parsedData.answers);
-              const isLastDimension = parsedData.position.dimension >= dimensions.length - 1;
-              const isLastItem = isLastDimension && parsedData.position.item >= dimensions[dimensions.length - 1].items.length - 1;
+    try {
+      const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
+      if (savedProgress) {
+        const parsedData = JSON.parse(savedProgress) as InProgressData;
+        if (parsedData.answers && parsedData.position && assessmentDimensions.length > 0) {
+            setAnswers(parsedData.answers);
+            const isLastDimension = parsedData.position.dimension >= assessmentDimensions.length - 1;
+            const isLastItem = isLastDimension && parsedData.position.item >= assessmentDimensions[assessmentDimensions.length - 1].items.length - 1;
 
-              if (!isLastItem) {
-                setCurrentDimensionIndex(parsedData.position.dimension);
-                setCurrentItemIndexInDimension(parsedData.position.item);
-              } else {
-                setCurrentDimensionIndex(dimensions.length - 1);
-                setCurrentItemIndexInDimension(dimensions[dimensions.length - 1].items.length - 1);
-              }
-              toast({
-                title: "Evaluación Reanudada",
-                description: "Hemos cargado tu progreso anterior.",
-              });
-          }
+            if (!isLastItem) {
+              setCurrentDimensionIndex(parsedData.position.dimension);
+              setCurrentItemIndexInDimension(parsedData.position.item);
+            } else {
+              setCurrentDimensionIndex(assessmentDimensions.length - 1);
+              setCurrentItemIndexInDimension(assessmentDimensions[assessmentDimensions.length - 1].items.length - 1);
+            }
+            toast({
+              title: "Evaluación Reanudada",
+              description: "Hemos cargado tu progreso anterior.",
+            });
         }
-      } catch (e) {
-        setError("No se pudieron cargar las preguntas de la evaluación. Por favor, inténtalo de nuevo más tarde.");
-        console.error("Error fetching assessment dimensions:", e);
-      } finally {
-        setIsLoading(false);
       }
+    } catch (error) {
+      console.error("Error loading in-progress assessment:", error);
     }
-    loadQuestions();
-  }, [toast]);
+  }, [toast, assessmentDimensions]);
   
   const saveProgress = (dimIndex: number, itemIndex: number, currentAnswers: Record<string, { score: number; weight: number }>) => {
     try {
@@ -136,10 +123,9 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
   const handleAnswerChange = (item: AssessmentItem, value: string) => {
     const newAnswers = { ...answers, [item.id]: { score: parseInt(value), weight: item.weight } };
     setAnswers(newAnswers);
-    // Avance automático
     setTimeout(() => {
         handleNextStep();
-    }, 250); // Pequeño delay para que el usuario vea su selección
+    }, 250);
   };
 
   const handleDialogContinue = () => {
@@ -194,18 +180,8 @@ export function QuestionnaireForm({ onSubmit, isSubmitting }: QuestionnaireFormP
     await onSubmit(answers);
   };
 
-  if (isLoading) {
-    return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive" className="my-8">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>Error al Cargar</AlertTitle>
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
+  if (assessmentDimensions.length === 0) {
+      return null;
   }
 
   if (!currentDimension || !currentItem) {
