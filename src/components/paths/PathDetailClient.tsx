@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { type ReactNode, useState, useEffect, type FormEvent } from 'react';
@@ -1231,7 +1232,7 @@ ${progressText || 'No se registraron días.'}
               locale={es}
               className="rounded-md border p-3"
               components={{
-                DayContent: ({ date }) => renderDayContent(date),
+                DayContent: ({ date, displayMonth }) => renderDayContent(date),
               }}
             />
             {selectedDate && (
@@ -1309,7 +1310,14 @@ function ContentItemRenderer({
   index: number;
   pathId: string;
 }) {
-  // Aquí metemos TODO el switch que ahora mismo tienes en `renderContent`
+  if (!contentItem) {
+    console.error(`ContentItemRenderer: contentItem at index ${index} is undefined.`);
+    return <div className="p-4 my-2 border border-destructive bg-destructive/10 rounded-md">
+        <p className="text-destructive font-semibold">Error: No se pudo cargar este contenido.</p>
+        <p className="text-sm text-destructive/80">El elemento de contenido está dañado o no se encontró.</p>
+    </div>;
+  }
+  
   switch (contentItem.type) {
     case 'title':
       return (
@@ -1325,7 +1333,6 @@ function ContentItemRenderer({
           )}
         </div>
       );
-    // TODO: copia aquí el resto de cases tal cual los tienes ahora
     case 'paragraphWithAudio':
       return (
         <div key={index} className="space-y-2 mb-4">
@@ -1382,14 +1389,20 @@ function ContentItemRenderer({
             </AccordionTrigger>
             <AccordionContent className="px-4 pb-4">
               <div className="border-t pt-4">
-                {contentItem.content.map((item, i) => ContentItemRenderer(item, i, pathId))}
+                {contentItem.content.map((item, i) => (
+                  <ContentItemRenderer
+                    key={`${index}-child-${i}`}
+                    contentItem={item}
+                    index={i}
+                    pathId={pathId}
+                  />
+                ))}
               </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       );
     case 'exercise':
-      // Special handler for "Visualización del Yo Futuro"
       if (contentItem.title === 'Ejercicio 2: Visualización del Yo Futuro') {
         return (
           <FutureSelfVisualizationExercise
@@ -1420,7 +1433,6 @@ function ContentItemRenderer({
       if (contentItem.title === 'Ejercicio 2: Seguimiento Amable + Refuerzo Visual') {
         return <GentleTrackingExercise key={index} content={contentItem as ExerciseContent} pathId={pathId} />;
       }
-      // Fallback for other exercises, including audio player logic
       return (
         <Card key={index} className="bg-muted/30 my-6 shadow-md">
           <CardHeader>
@@ -1439,7 +1451,14 @@ function ContentItemRenderer({
             )}
           </CardHeader>
           <CardContent>
-            {contentItem.content.map((item, i) => ContentItemRenderer(item, i, pathId))}
+            {contentItem.content.map((item, i) => (
+               <ContentItemRenderer
+                 key={`${index}-child-${i}`}
+                 contentItem={item}
+                 index={i}
+                 pathId={pathId}
+               />
+            ))}
           </CardContent>
           {contentItem.duration && (
             <CardFooter className="text-xs text-muted-foreground">
@@ -1545,7 +1564,7 @@ function ContentItemRenderer({
       return (
         <AuthenticityThermometerExercise
           key={index}
-          content={contentItem}
+          content={contentItem }
           pathId={pathId}
         />
       );
@@ -1574,7 +1593,7 @@ function ContentItemRenderer({
         />
       );
     case 'empathicShieldVisualizationExercise': {
-      const exerciseContent = contentItem;
+      const exerciseContent = contentItem ;
       return (
         <EmpathicShieldVisualizationExercise
           key={index}
@@ -1595,7 +1614,7 @@ function ContentItemRenderer({
       return (
         <SignificantRelationshipsInventoryExercise
           key={index}
-          content={contentItem}
+          content={contentItem }
           pathId={pathId}
         />
       );
@@ -1603,546 +1622,155 @@ function ContentItemRenderer({
       return (
         <RelationalCommitmentExercise
           key={index}
-          content={contentItem}
+          content={contentItem }
           pathId={pathId}
         />
       );
     // RUTA 6
     case 'detectiveDeEmocionesExercise':
-      return (
-        <DetectiveDeEmocionesExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <DetectiveDeEmocionesExercise key={index} content={contentItem} pathId={pathId} />;
     case 'unaPalabraCadaDiaExercise':
-      return (
-        <UnaPalabraCadaDiaExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <UnaPalabraCadaDiaExercise key={index} content={contentItem} pathId={pathId} />;
     case 'mapaEmocionNecesidadCuidadoExercise':
-      return (
-        <MapaEmocionNecesidadCuidadoExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <MapaEmocionNecesidadCuidadoExercise key={index} content={contentItem} pathId={pathId} />;
     case 'cartaDesdeLaEmocionExercise':
-      return (
-        <CartaDesdeLaEmocionExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <CartaDesdeLaEmocionExercise key={index} content={contentItem} pathId={pathId} />;
     case 'mapaEmocionalRepetidoExercise':
-      return (
-        <MapaEmocionalRepetidoExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <MapaEmocionalRepetidoExercise key={index} content={contentItem} pathId={pathId} />;
     case 'semaforoEmocionalExercise':
-      return (
-        <SemaforoEmocionalExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <SemaforoEmocionalExercise key={index} content={contentItem} pathId={pathId} />;
     case 'meditacionGuiadaSinJuicioExercise':
-      return (
-        <MeditacionGuiadaSinJuicioExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <MeditacionGuiadaSinJuicioExercise key={index} content={contentItem} pathId={pathId} />;
     case 'diarioMeDiCuentaExercise':
-      return (
-        <DiarioMeDiCuentaExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <DiarioMeDiCuentaExercise key={index} content={contentItem} pathId={pathId} />;
     // RUTA 7
     case 'valuesCompassExercise':
-      return (
-        <ValuesCompassExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <ValuesCompassExercise key={index} content={contentItem} pathId={pathId} />;
     case 'energySenseMapExercise':
-      return (
-        <EnergySenseMapExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <EnergySenseMapExercise key={index} content={contentItem} pathId={pathId} />;
     case 'detoursInventoryExercise':
-      return (
-        <DetoursInventoryExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <DetoursInventoryExercise key={index} content={contentItem} pathId={pathId} />;
     case 'presentVsEssentialSelfExercise':
-      return (
-        <PresentVsEssentialSelfExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <PresentVsEssentialSelfExercise key={index} content={contentItem} pathId={pathId} />;
     case 'mentalNoiseTrafficLightExercise':
-      return (
-        <MentalNoiseTrafficLightExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <MentalNoiseTrafficLightExercise key={index} content={contentItem} pathId={pathId} />;
     case 'directedDecisionsExercise':
-      return (
-        <DirectedDecisionsExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <DirectedDecisionsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'senseChecklistExercise':
-      return (
-        <SenseChecklistExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <SenseChecklistExercise key={index} content={contentItem} pathId={pathId} />;
     case 'unfulfilledNeedsExercise':
-      return (
-        <UnfulfilledNeedsExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <UnfulfilledNeedsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'braveRoadmapExercise':
-      return (
-        <BraveRoadmapExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <BraveRoadmapExercise key={index} content={contentItem} pathId={pathId} />;
     case 'essentialReminderExercise':
-      return (
-        <EssentialReminderExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <EssentialReminderExercise key={index} content={contentItem} pathId={pathId} />;
     case 'thoughtsThatBlockPurposeExercise':
-      return (
-        <ThoughtsThatBlockPurposeExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <ThoughtsThatBlockPurposeExercise key={index} content={contentItem} pathId={pathId} />;
     // RUTA 8
     case 'resilienceTimelineExercise':
-      return (
-        <ResilienceTimelineExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <ResilienceTimelineExercise key={index} content={contentItem} pathId={pathId} />;
     case 'personalDefinitionExercise':
-      return (
-        <PersonalDefinitionExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <PersonalDefinitionExercise key={index} content={contentItem} pathId={pathId} />;
     case 'anchorInStormExercise':
-      return (
-        <AnchorInStormExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <AnchorInStormExercise key={index} content={contentItem} pathId={pathId} />;
     case 'intensityScaleExercise':
-      return (
-        <IntensityScaleExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <IntensityScaleExercise key={index} content={contentItem} pathId={pathId} />;
     case 'braveDecisionsWheelExercise':
-      return (
-        <BraveDecisionsWheelExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <BraveDecisionsWheelExercise key={index} content={contentItem} pathId={pathId} />;
     case 'planABExercise':
-      return (
-        <PlanABExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <PlanABExercise key={index} content={contentItem} pathId={pathId} />;
     case 'changeTimelineExercise':
-      return (
-        <ChangeTimelineExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <ChangeTimelineExercise key={index} content={contentItem} pathId={pathId} />;
     case 'myPactExercise':
-      return (
-        <MyPactExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <MyPactExercise key={index} content={contentItem} pathId={pathId} />;
     // RUTA 9
     case 'coherenceCompassExercise':
-      return (
-        <CoherenceCompassExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <CoherenceCompassExercise key={index} content={contentItem} pathId={pathId} />;
     case 'smallDecisionsLogExercise':
-      return (
-        <SmallDecisionsLogExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <SmallDecisionsLogExercise key={index} content={contentItem} pathId={pathId} />;
     case 'internalTensionsMapExercise':
-      return (
-        <InternalTensionsMapExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <InternalTensionsMapExercise key={index} content={contentItem} pathId={pathId} />;
     case 'ethicalMirrorExercise':
-      return (
-        <EthicalMirrorExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <EthicalMirrorExercise key={index} content={contentItem} pathId={pathId} />;
     case 'integrityDecisionsExercise':
-      return (
-        <IntegrityDecisionsExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <IntegrityDecisionsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'nonNegotiablesExercise':
-      return (
-        <NonNegotiablesExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <NonNegotiablesExercise key={index} content={contentItem} pathId={pathId} />;
     case 'environmentEvaluationExercise':
-      return (
-        <EnvironmentEvaluationExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <EnvironmentEvaluationExercise key={index} content={contentItem} pathId={pathId} />;
     case 'personalManifestoExercise':
-      return (
-        <PersonalManifestoExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+      return <PersonalManifestoExercise key={index} content={contentItem} pathId={pathId} />;
     // RUTA 10
     case 'complaintTransformationExercise':
-      return (
-        <ComplaintTransformationExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <ComplaintTransformationExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'guiltRadarExercise':
-      return (
-        <GuiltRadarExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <GuiltRadarExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'acceptanceWritingExercise':
-      return (
-        <AcceptanceWritingExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <AcceptanceWritingExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'selfAcceptanceAudioExercise': {
-      const exerciseContent = contentItem as SelfAcceptanceAudioExerciseContent;
-      return (
-        <SelfAcceptanceAudioExercise
-          key={index}
-          content={exerciseContent}
-          pathId={pathId}
-          audioUrl={exerciseContent.audioUrl}
-        />
-      );
+        const exerciseContent = contentItem as SelfAcceptanceAudioExerciseContent;
+        return <SelfAcceptanceAudioExercise key={index} content={exerciseContent} pathId={pathId} audioUrl={exerciseContent.audioUrl} />;
     }
     case 'compassionateResponsibilityContractExercise':
-      return (
-        <CompassionateResponsibilityContractExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <CompassionateResponsibilityContractExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'criticismToGuideExercise':
-      return (
-        <CriticismToGuideExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <CriticismToGuideExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'influenceWheelExercise':
-      return (
-        <InfluenceWheelExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <InfluenceWheelExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'personalCommitmentDeclarationExercise':
-      return (
-        <PersonalCommitmentDeclarationExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <PersonalCommitmentDeclarationExercise key={index} content={contentItem as any} pathId={pathId} />;
     // RUTA 11
     case 'supportMapExercise':
-      return (
-        <SupportMapExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <SupportMapExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'blockingThoughtsExercise':
-      return (
-        <BlockingThoughtsExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <BlockingThoughtsExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'nutritiveDrainingSupportMapExercise':
-      return (
-        <NutritiveDrainingSupportMapExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <NutritiveDrainingSupportMapExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'nourishingConversationExercise':
-      return (
-        <NourishingConversationExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+      return <NourishingConversationExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'clearRequestMapExercise':
-      return (
-        <ClearRequestMapExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+        return <ClearRequestMapExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'supportBankExercise':
-      return (
-        <SupportBankExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+        return <SupportBankExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'mutualCareCommitmentExercise':
-      return (
-        <MutualCareCommitmentExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+        return <MutualCareCommitmentExercise key={index} content={contentItem as any} pathId={pathId} />;
     case 'symbolicSupportCircleExercise':
-      return (
-        <SymbolicSupportCircleExercise
-          key={index}
-          content={contentItem as any}
-          pathId={pathId}
-        />
-      );
+        return <SymbolicSupportCircleExercise key={index} content={contentItem as any} pathId={pathId} />;
     // RUTA 12
     case 'emotionalGratificationMapExercise':
-      return (
-        <EmotionalGratificationMapExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <EmotionalGratificationMapExercise key={index} content={contentItem} pathId={pathId} />;
     case 'dailyEnergyCheckExercise':
-      return (
-        <DailyEnergyCheckExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <DailyEnergyCheckExercise key={index} content={contentItem} pathId={pathId} />;
     case 'dailyWellbeingPlanExercise':
-      return (
-        <DailyWellbeingPlanExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <DailyWellbeingPlanExercise key={index} content={contentItem} pathId={pathId} />;
     case 'morningRitualExercise':
-      return (
-        <MorningRitualExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <MorningRitualExercise key={index} content={contentItem} pathId={pathId} />;
     case 'motivationIn3LayersExercise':
-      return (
-        <MotivationIn3LayersExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <MotivationIn3LayersExercise key={index} content={contentItem} pathId={pathId} />;
     case 'visualizeDayExercise':
-      return (
-        <VisualizeDayExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <VisualizeDayExercise key={index} content={contentItem} pathId={pathId} />;
     case 'illuminatingMemoriesAlbumExercise':
-      return (
-        <IlluminatingMemoriesAlbumExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <IlluminatingMemoriesAlbumExercise key={index} content={contentItem} pathId={pathId} />;
     case 'positiveEmotionalFirstAidKitExercise':
-      return (
-        <PositiveEmotionalFirstAidKitExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <PositiveEmotionalFirstAidKitExercise key={index} content={contentItem} pathId={pathId} />;
     // RUTA 13 (NUEVA)
     case 'ansiedadTieneSentidoExercise':
-      return (
-        <AnsiedadTieneSentidoExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <AnsiedadTieneSentidoExercise key={index} content={contentItem} pathId={pathId} />;
     case 'visualizacionGuiadaCuerpoAnsiedadExercise':
-      return (
-        <VisualizacionGuiadaCuerpoAnsiedadExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <VisualizacionGuiadaCuerpoAnsiedadExercise key={index} content={contentItem} pathId={pathId} />;
     case 'stopExercise':
-      return <StopExercise key={index} content={contentItem} pathId={pathId} />;
+        return <StopExercise key={index} content={contentItem} pathId={pathId} />;
     case 'questionYourIfsExercise':
-      return (
-        <QuestionYourIfsExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <QuestionYourIfsExercise key={index} content={contentItem} pathId={pathId} />;
     case 'exposureLadderExercise':
-      return (
-        <ExposureLadderExercise
-          key={index}
-          content={contentItem}
-          pathId={pathId}
-        />
-      );
+        return <ExposureLadderExercise key={index} content={contentItem} pathId={pathId} />;
     case 'calmVisualizationExercise': {
-      const calmVisContent = contentItem;
-      return (
-        <CalmVisualizationExercise
-          key={index}
-          content={calmVisContent}
-          pathId={pathId}
-        />
-      );
+        const calmVisContent = contentItem ;
+        return <CalmVisualizationExercise key={index} content={calmVisContent} pathId={pathId} />;
     }
     case 'imaginedCrisisRehearsalExercise': {
-      const crisisRehearsalContent = contentItem;
-      return (
-        <ImaginedCrisisRehearsalExercise
-          key={index}
-          content={crisisRehearsalContent}
-          pathId={pathId}
-        />
-      );
+      const crisisRehearsalContent = contentItem ;
+      return <ImaginedCrisisRehearsalExercise key={index} content={crisisRehearsalContent} pathId={pathId} />;
     }
 
     // ...
@@ -2351,3 +1979,5 @@ export function PathDetailClient({ path }: { path: Path }) {
     </div>
   );
 }
+
+    
