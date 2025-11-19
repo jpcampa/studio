@@ -5,8 +5,9 @@ import { unstable_noStore as noStore } from 'next/cache';
 async function fetchFromApi(): Promise<AssessmentDimension[]> {
   noStore();
   try {
-    // Usamos una ruta relativa que funciona tanto en cliente como en servidor (para RSC)
-    const response = await fetch(`/api/assessment-questions`, { cache: 'no-store' });
+    // Usamos una URL absoluta cuando llamamos desde el servidor
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+    const response = await fetch(`${baseUrl}/api/assessment-questions`, { cache: 'no-store' });
 
     if (!response.ok) {
         console.error("Error fetching from API, status:", response.status);
