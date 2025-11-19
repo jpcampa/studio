@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useTranslations } from "@/lib/translations";
 import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/data/therapeuticNotebookStore";
 import { ArrowLeft, NotebookText, Calendar, Eye } from "lucide-react";
