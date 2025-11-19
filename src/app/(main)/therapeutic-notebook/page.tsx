@@ -61,7 +61,7 @@ export default function TherapeuticNotebookPage() {
           entries.map((entry) => (
             <Card key={entry.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardHeader>
-                <CardTitle className="text-xl text-accent">{entry.title}</CardTitle>
+                <CardTitle className="text-xl text-accent">{entry.content}</CardTitle>
                 <CardDescription className="flex items-center text-xs pt-1">
                   <Calendar className="mr-2 h-4 w-4" />
                   {formatEntryTimestamp(entry.timestamp)}
@@ -76,7 +76,7 @@ export default function TherapeuticNotebookPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-foreground/90 whitespace-pre-line">{entry.content}</p>
+                
               </CardContent>
             </Card>
           ))
