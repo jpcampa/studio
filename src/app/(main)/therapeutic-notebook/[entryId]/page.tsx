@@ -9,26 +9,53 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, NotebookText, AlertTriangle, Loader2, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
-// Componente para formatear el contenido del cuaderno
+// Componente mejorado para formatear el contenido del cuaderno
 function FormattedNotebookContent({ content }: { content: string }) {
-  const lines = content.split('\n').filter(line => line.trim() !== '');
+    const blocks = content.split('\n\n'); // Dividir por párrafos (doble salto de línea)
 
-  return (
-    <div className="prose prose-lg dark:prose-invert max-w-none space-y-4">
-      {lines.map((line, index) => {
-        if (line.startsWith('**') && line.endsWith('**')) {
-          return <h4 key={index} className="font-semibold text-primary !mt-6 !mb-2 text-xl">{line.substring(2, line.length - 2)}</h4>;
-        }
-        if (line.startsWith('*') && line.endsWith('*')) {
-          return <p key={index} className="italic text-muted-foreground !my-1">{line.substring(1, line.length - 1)}</p>;
-        }
-        if (line.startsWith('- ')) {
-          return <li key={index} className="!my-1 ml-4">{line.substring(2)}</li>;
-        }
-        return <p key={index} className="!my-2 whitespace-pre-wrap">{line}</p>;
-      })}
-    </div>
-  );
+    return (
+        <div className="prose prose-lg dark:prose-invert max-w-none space-y-4">
+            {blocks.map((block, blockIndex) => {
+                const lines = block.split('\n').filter(line => line.trim() !== '');
+                if (lines.length === 0) return null;
+                
+                // Detectar si es una lista
+                const isList = lines.every(line => line.trim().startsWith('-'));
+                if (isList) {
+                    return (
+                        <ul key={blockIndex} className="list-disc space-y-1 pl-5">
+                            {lines.map((item, itemIndex) => (
+                                <li key={itemIndex} className="!my-1">{item.trim().substring(1).trim()}</li>
+                            ))}
+                        </ul>
+                    );
+                }
+
+                // Procesar cada línea dentro del bloque
+                return (
+                    <div key={blockIndex} className="space-y-2">
+                        {lines.map((line, lineIndex) => {
+                            if (line.startsWith('**') && line.endsWith('**')) {
+                                return (
+                                    <h4 key={lineIndex} className="font-semibold text-primary !mt-6 !mb-2 text-xl">
+                                        {line.substring(2, line.length - 2)}
+                                    </h4>
+                                );
+                            }
+                            if (line.startsWith('*') && line.endsWith('*')) {
+                                return <p key={lineIndex} className="italic text-muted-foreground !my-1">{line.substring(1, line.length - 1)}</p>;
+                            }
+                            // Detectar una línea que es una pregunta (termina con :)
+                            if (line.trim().endsWith(':')) {
+                                return <p key={lineIndex} className="font-semibold text-foreground !mb-1">{line}</p>;
+                            }
+                            return <p key={lineIndex} className="!my-1 whitespace-pre-wrap">{line}</p>;
+                        })}
+                    </div>
+                );
+            })}
+        </div>
+    );
 }
 
 
