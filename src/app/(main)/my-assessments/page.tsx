@@ -451,19 +451,6 @@ export default function MyAssessmentsPage() {
                       {t.viewAssessmentResultsButton}
                     </Link>
                   </Button>
-                  <Accordion type="single" collapsible>
-                      <AccordionItem value="item-1" className="border-b-0">
-                          <AccordionTrigger className="text-sm text-muted-foreground hover:no-underline justify-center">
-                              <FileJson className="mr-2 h-4 w-4" />
-                              Mostrar datos de la evaluación (Payload)
-                          </AccordionTrigger>
-                          <AccordionContent>
-                              <pre className="mt-2 w-full whitespace-pre-wrap break-all rounded-md bg-slate-950 p-4 text-xs text-white">
-                                  <code>{JSON.stringify(payloadForDisplay, null, 2)}</code>
-                              </pre>
-                          </AccordionContent>
-                      </AccordionItem>
-                  </Accordion>
                 </CardFooter>
               </Card>
             )
@@ -473,3 +460,5 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
+
+    
