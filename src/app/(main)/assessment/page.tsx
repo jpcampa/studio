@@ -1,5 +1,5 @@
 
-import { getAssessmentDimensions } from '@/data/assessment-service'; // Importar desde el nuevo servicio
+import { fetchExternalAssessmentDimensions as getAssessmentDimensions } from '@/data/assessment-service'; // Importar desde el nuevo servicio
 import { QuestionnaireForm } from '@/components/assessment/QuestionnaireForm';
 import { AssessmentPageClient } from '@/components/assessment/AssessmentPageClient';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';

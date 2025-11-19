@@ -9,8 +9,8 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 import { useUser } from '@/contexts/UserContext';
-import { fetchExternalAssessmentDimensions } from '@/data/assessment-service'; // Importar desde el nuevo servicio
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
+import { useToast } from '@/hooks/use-toast';
 
 interface HistoricalResultsPageClientProps {
   assessmentId: string;
@@ -20,6 +20,7 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
   const t = useTranslations();
   const router = useRouter();
   const { user } = useUser();
+  const { toast } = useToast();
 
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,12 +39,15 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       }
       
       try {
-        // Cargar dimensiones y registro en paralelo
-        const [dimensions, record] = await Promise.all([
-          fetchExternalAssessmentDimensions(), // Llamada directa a la función del servicio
+        const [dimensionsRes, record] = await Promise.all([
+          fetch('/api/assessment-questions'), // Llamada a la API interna
           getAssessmentById(assessmentId)
         ]);
 
+        if (!dimensionsRes.ok) {
+           throw new Error(`Failed to fetch assessment dimensions, status: ${dimensionsRes.status}`);
+        }
+        const dimensions = await dimensionsRes.json();
         setAssessmentDimensions(dimensions);
 
         if (record) {
@@ -73,13 +77,18 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
         console.error("HistoricalAssessmentResultsPage: Error loading assessment data:", e);
         setError("Error al cargar los resultados de la evaluación histórica.");
         setAssessmentRecord(null);
+        toast({
+            title: "Error de Carga",
+            description: "No se pudieron cargar los datos necesarios para mostrar la evaluación.",
+            variant: "destructive"
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchAndProcessData();
-  }, [assessmentId]);
+  }, [assessmentId, toast]);
 
   const handleRetakeAssessment = () => {
     router.push('/assessment/intro');
@@ -139,3 +148,5 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
     </div>
   );
 }
+
+    

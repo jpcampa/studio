@@ -33,7 +33,6 @@ import Link from "next/link";
 import { getAssessmentHistory, type AssessmentRecord } from "@/data/assessmentHistoryStore";
 import { EmotionalProfileChart } from "@/components/dashboard/EmotionalProfileChart";
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
-import { fetchExternalAssessmentDimensions } from "@/data/assessment-service";
 
 
 interface ProcessedChartDataPoint {
@@ -108,11 +107,20 @@ export default function DashboardPage() {
         }
 
         try {
-          const dims = await fetchExternalAssessmentDimensions();
+          // Usar la ruta API interna en lugar de la llamada directa
+          const res = await fetch('/api/assessment-questions');
+          if (!res.ok) {
+            throw new Error(`Failed to fetch assessment dimensions, status: ${res.status}`);
+          }
+          const dims = await res.json();
           setAssessmentDimensions(dims);
         } catch (error) {
           console.error("Failed to load assessment dimensions on dashboard:", error);
-          // Optional: show a toast or error message
+          toast({
+            title: "Error de Carga",
+            description: "No se pudieron cargar los datos de la evaluación para el gráfico. Por favor, recarga la página.",
+            variant: "destructive"
+          });
         }
 
         setRecentEntries(loadedRecentEntries);
@@ -126,7 +134,7 @@ export default function DashboardPage() {
         }
     };
     loadInitialData();
-  }, [t]);
+  }, [t, toast]);
 
 
   const chartData = useMemo(() => {
@@ -467,3 +475,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
