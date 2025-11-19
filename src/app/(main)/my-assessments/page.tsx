@@ -412,25 +412,9 @@ export default function MyAssessmentsPage() {
                   <CardTitle className="text-xl text-accent">{t.assessmentDateLabel.replace("{date}", formatAssessmentTimestamp(assessment.timestamp).split(',')[0])}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  {assessment.data.priorityAreas && assessment.data.priorityAreas.length > 0 && (
-                    <>
-                      <p className="text-sm font-medium text-muted-foreground mb-1 flex items-center">
-                          <ListChecks className="h-4 w-4 mr-2 text-primary/80" />
-                          Áreas Prioritarias Identificadas:
-                      </p>
-                      <ul className="list-disc list-inside pl-1 space-y-0.5 text-sm">
-                        {assessment.data.priorityAreas.slice(0, 2).map((area, index) => (
-                          <li key={index} className="truncate" title={area}>{area.split('(')[0].trim()}</li>
-                        ))}
-                        {assessment.data.priorityAreas.length > 2 && (
-                          <li className="text-xs text-muted-foreground italic">...y {assessment.data.priorityAreas.length - 2} más.</li>
-                        )}
-                      </ul>
-                    </>
-                  )}
-                  {(!assessment.data.priorityAreas || assessment.data.priorityAreas.length === 0) && (
-                      <p className="text-sm text-muted-foreground italic">No se identificaron áreas prioritarias específicas en esta evaluación.</p>
-                  )}
+                   <p className="text-sm text-muted-foreground line-clamp-3">
+                    {assessment.data.feedback}
+                  </p>
                 </CardContent>
                 <CardFooter className="flex-col items-stretch space-y-4">
                   <Button asChild variant="default" className="w-full">

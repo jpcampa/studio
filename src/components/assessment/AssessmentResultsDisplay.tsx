@@ -387,6 +387,15 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
 
       <Card className="shadow-lg mt-8">
         <CardHeader>
+          <CardTitle>{t.summaryAndRecommendations}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="whitespace-pre-line text-base leading-relaxed">{results.feedback}</p>
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-lg mt-8">
+        <CardHeader>
           <CardTitle>{t.detailedAnalysisTitle || "Análisis Detallado por Dimensión"}</CardTitle>
           <CardDescription>Explora tus resultados en cada área. Las dimensiones se agrupan según tu puntuación.</CardDescription>
         </CardHeader>
@@ -398,15 +407,6 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
           {(highStrengthDimensions.length === 0 && functionalDimensions.length === 0 && priorityImprovementDimensions.length === 0) && (
              <p className="text-muted-foreground text-center py-4">No se pudieron categorizar las dimensiones para el análisis detallado. Verifica los datos de entrada.</p>
           )}
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-lg mt-8">
-        <CardHeader>
-          <CardTitle>{t.summaryAndRecommendations}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="whitespace-pre-line text-base leading-relaxed">{results.feedback}</p>
         </CardContent>
       </Card>
       
