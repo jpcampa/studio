@@ -11,11 +11,13 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/lib/translations';
-import { Edit3, Save, CheckCircle, NotebookText } from 'lucide-react';
+import { Edit3, Save, CheckCircle, NotebookText, Compass } from 'lucide-react';
 import { emotions } from '@/components/dashboard/EmotionalEntryForm';
 import type { TriggerExerciseContent } from '@/data/paths/pathTypes';
 import { Separator } from '../ui/separator';
-import { addNotebookEntry } from '@/data/therapeuticNotebookStore'; // Importar la función para guardar
+import { addNotebookEntry } from '@/data/therapeuticNotebookStore';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
+import { StressCompass } from './StressCompass';
 
 interface TriggerExerciseProps {
   content: TriggerExerciseContent;
@@ -25,7 +27,6 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
   const t = useTranslations();
   const { toast } = useToast();
 
-  // State for the main exercise
   const [emotion, setEmotion] = useState('');
   const [situation, setSituation] = useState('');
   const [otherSituation, setOtherSituation] = useState('');
@@ -33,12 +34,12 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
   const [hadAutomaticImage, setHadAutomaticImage] = useState<boolean | 'indeterminate'>('indeterminate');
   const [automaticImageDesc, setAutomaticImageDesc] = useState('');
   const [anticipation, setAnticipation] = useState('');
-  const [triggerSource, setTriggerSource] = useState('');
+  const [triggerSource, setTriggerSource] = useState<'externo' | 'interno' | 'ambos' | ''>('');
   const [copingResponse, setCopingResponse] = useState('');
   const [otherCopingResponse, setOtherCopingResponse] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+  const [showCompass, setShowCompass] = useState(false);
 
-  // State for the reflection
   const [reflectionSituations, setReflectionSituations] = useState('');
   const [reflectionActions, setReflectionActions] = useState('');
   const [reflectionNextTime, setReflectionNextTime] = useState('');
@@ -225,7 +226,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
 
            <div>
             <Label className="font-semibold">6. ¿De dónde vino el disparador principal?</Label>
-            <RadioGroup onValueChange={setTriggerSource} value={triggerSource} className="space-y-1 mt-2" disabled={isSaved}>
+            <RadioGroup onValueChange={(v) => setTriggerSource(v as any)} value={triggerSource} className="space-y-1 mt-2" disabled={isSaved}>
                 <div className="flex items-center space-x-2">
                     <RadioGroupItem value="externo" id="source-external" />
                     <Label htmlFor="source-external" className="font-normal">Externo (personas, tareas, entorno)</Label>
@@ -271,9 +272,27 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
                 <Save className="mr-2 h-4 w-4" /> Guardar Ejercicio
             </Button>
           ) : (
-            <div className="flex items-center justify-center p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-md">
-                <CheckCircle className="mr-2 h-5 w-5" />
-                <p className="font-medium">Tu ejercicio ha sido guardado.</p>
+            <div className="flex flex-col items-center justify-center p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-md">
+                <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-5 w-5" />
+                    <p className="font-medium">Tu ejercicio ha sido guardado.</p>
+                </div>
+                <Dialog open={showCompass} onOpenChange={setShowCompass}>
+                  <DialogTrigger asChild>
+                    <Button variant="link" className="text-green-800 dark:text-green-200 mt-2">
+                        <Compass className="mr-2 h-4 w-4" /> Ver mi Brújula de Estrés
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Brújula de Estrés</DialogTitle>
+                      <DialogDescription>
+                        Esta brújula visual muestra si la principal fuente de tu estrés fue interna, externa o una combinación de ambas.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <StressCompass sourceType={triggerSource} />
+                  </DialogContent>
+                </Dialog>
             </div>
           )}
         </form>
