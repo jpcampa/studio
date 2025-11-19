@@ -9,9 +9,9 @@ async function fetchFromApi(): Promise<AssessmentDimension[]> {
   // Asegura que la llamada no se cachee y sea siempre dinámica
   noStore();
   try {
-    // Usamos una ruta relativa que funciona tanto en servidor como en cliente.
-    // NEXT_PUBLIC_APP_URL no es fiable en el servidor y puede dar problemas.
-    const response = await fetch(`/api/assessment-questions`, { cache: 'no-store' });
+    // Usamos una URL absoluta cuando llamamos desde el servidor
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+    const response = await fetch(`${baseUrl}/api/assessment-questions`, { cache: 'no-store' });
 
     if (!response.ok) {
         console.error("Error fetching from API, status:", response.status);
