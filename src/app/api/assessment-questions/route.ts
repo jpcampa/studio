@@ -1,3 +1,4 @@
+
 import { NextResponse, type NextRequest } from 'next/server';
  
 // Los tipos se definen directamente aquí para evitar dependencias conflictivas.
@@ -74,8 +75,7 @@ async function fetchExternalAssessmentDimensions(): Promise<AssessmentDimension[
   return parsed as AssessmentDimension[];
 }
 
-// Se añade el parámetro request para forzar el renderizado dinámico
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const questions = await fetchExternalAssessmentDimensions();
     return NextResponse.json(questions);

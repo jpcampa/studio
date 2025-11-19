@@ -28,7 +28,7 @@ import { useActivePath } from "@/contexts/ActivePathContext";
 import type { ActivePathDetails as StoredActivePathDetails} from "@/lib/progressStore";
 import { pathsData, type Path as AppPathData } from "@/data/pathsData";
 import { fetchUserActivities } from "@/actions/auth";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { getAssessmentHistory, type AssessmentRecord } from "@/data/assessmentHistoryStore";
 import { EmotionalProfileChart } from "@/components/dashboard/EmotionalProfileChart";
@@ -64,7 +64,7 @@ const API_TIMEOUT_MS_ACTIVITY = 10000;
 const NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD = 4;
 
 
-export default function DashboardPage({ assessmentDimensions }: { assessmentDimensions: AssessmentDimension[] }) {
+export default function DashboardPage() {
   const t = useTranslations();
   const { user } = useUser();
   const { toast } = useToast();
@@ -76,6 +76,8 @@ export default function DashboardPage({ assessmentDimensions }: { assessmentDime
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   const [isRefreshingEmotions, setIsRefreshingEmotions] = useState(false);
   const [latestAssessment, setLatestAssessment] = useState<AssessmentRecord | null>(null);
+  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
+
 
   const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
     const activityPayload: SingleEmotionalEntryActivity = { entry: newEntryData };
@@ -431,7 +433,7 @@ export default function DashboardPage({ assessmentDimensions }: { assessmentDime
       <section aria-labelledby="visualizations-heading">
         <h2 id="visualizations-heading" className="sr-only">Visualizaciones de Progreso</h2>
         <div className="grid gap-8 lg:grid-cols-2">
-            {latestAssessment && assessmentDimensions && assessmentDimensions.length > 0 ? (
+            {latestAssessment ? (
                 <EmotionalProfileChart 
                     results={latestAssessment.data}
                     assessmentDimensions={assessmentDimensions}
