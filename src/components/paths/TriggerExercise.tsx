@@ -138,7 +138,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
           <p className="text-sm text-foreground/80 italic">Recuerda un momento reciente de estrés. Responde al cuestionario guiado. Al finalizar, recibirás un resumen visual tipo "brújula del estrés", que te mostrará si tus estresores habituales son externos, internos o mixtos.</p>
           
           <div>
-            <Label htmlFor="emotion" className="font-semibold">¿Cómo te sentiste en ese momento?</Label>
+            <Label htmlFor="emotion" className="font-semibold">1. ¿Cómo te sentiste en ese momento?</Label>
             <Select value={emotion} onValueChange={setEmotion} disabled={isSaved}>
               <SelectTrigger id="emotion">
                 <SelectValue placeholder="Selecciona la emoción principal" />
@@ -154,7 +154,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
           </div>
           
           <div>
-            <Label className="font-semibold">¿Qué situación estaba ocurriendo?</Label>
+            <Label className="font-semibold">2. ¿Qué situación estaba ocurriendo?</Label>
             <RadioGroup onValueChange={setSituation} value={situation} className="space-y-2 mt-2" disabled={isSaved}>
                 {situationOptions.map(opt => (
                      <div key={opt.id} className="flex items-center space-x-2">
@@ -179,18 +179,18 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
           </div>
 
           <div>
-            <Label htmlFor="thoughts" className="font-semibold">¿Qué pasó por tu cabeza justo antes de sentirte así?</Label>
+            <Label htmlFor="thoughts" className="font-semibold">3. ¿Qué pasó por tu cabeza justo antes de sentirte así?</Label>
             <Textarea
               id="thoughts"
               value={thoughts}
               onChange={(e) => setThoughts(e.target.value)}
-              placeholder="Ej: 'No soy capaz', 'Esto va a salir mal'"
+              placeholder="Ej: 'No soy capaz', 'Todo va a salir mal'"
               disabled={isSaved}
             />
           </div>
 
           <div>
-            <Label className="font-semibold">¿Te vino alguna imagen o recuerdo automático?</Label>
+            <Label className="font-semibold">4. ¿Te vino alguna imagen o recuerdo automático?</Label>
              <RadioGroup onValueChange={(val) => setHadAutomaticImage(val === 'yes')} value={hadAutomaticImage === 'indeterminate' ? '' : (hadAutomaticImage ? 'yes' : 'no')} className="flex space-x-4 mt-2" disabled={isSaved}>
                 <div className="flex items-center space-x-2">
                     <RadioGroupItem value="yes" id="hadImage-yes" />
@@ -213,7 +213,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
           </div>
           
           <div>
-            <Label htmlFor="anticipation" className="font-semibold">¿Qué pensaste que podría pasar? (Anticipación de amenaza)</Label>
+            <Label htmlFor="anticipation" className="font-semibold">5. ¿Qué pensaste que podría pasar? (Anticipación de amenaza)</Label>
             <Textarea
               id="anticipation"
               value={anticipation}
@@ -224,7 +224,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
           </div>
 
            <div>
-            <Label className="font-semibold">¿De dónde vino el disparador principal?</Label>
+            <Label className="font-semibold">6. ¿De dónde vino el disparador principal?</Label>
             <RadioGroup onValueChange={setTriggerSource} value={triggerSource} className="space-y-1 mt-2" disabled={isSaved}>
                 <div className="flex items-center space-x-2">
                     <RadioGroupItem value="externo" id="source-external" />
@@ -242,7 +242,7 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
           </div>
 
           <div>
-            <Label className="font-semibold">¿Qué hiciste para calmarte o evitarlo?</Label>
+            <Label className="font-semibold">7. ¿Qué hiciste para calmarte o evitarlo?</Label>
              <RadioGroup onValueChange={setCopingResponse} value={copingResponse} className="space-y-2 mt-2" disabled={isSaved}>
                 {copingOptions.map(opt => (
                      <div key={opt.id} className="flex items-center space-x-2">
@@ -338,5 +338,3 @@ export function TriggerExercise({ content }: TriggerExerciseProps) {
     </Card>
   );
 }
-
-    
