@@ -167,7 +167,7 @@ export default function DashboardPage() {
   }, [allEntriesForChart, t]);
 
 
-  const handleEmotionalEntrySubmit = async (data: { situation: string; emotion: string }) => {
+  const handleEmotionalEntrySubmit = async (data: { situation: string; thought: string; emotion: string }) => {
     if (!user || !user.id) {
       toast({
         title: "Error de Usuario",

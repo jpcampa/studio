@@ -16,7 +16,7 @@ import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
 
 interface EmotionalEntryFormProps {
-  onSubmit: (data: { situation: string; emotion: string }) => void;
+  onSubmit: (data: { situation: string; thought: string; emotion: string }) => void;
 }
 
 // Moved emotions here to be exportable and usable by dashboard page
@@ -35,11 +35,12 @@ export function EmotionalEntryForm({ onSubmit }: EmotionalEntryFormProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const [situation, setSituation] = useState("");
+  const [thought, setThought] = useState("");
   const [selectedEmotion, setSelectedEmotion] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!situation.trim() || !selectedEmotion) {
+    if (!situation.trim() || !thought.trim() || !selectedEmotion) {
       toast({
         title: t.errorOccurred,
         description: t.fillAllFields,
@@ -47,9 +48,10 @@ export function EmotionalEntryForm({ onSubmit }: EmotionalEntryFormProps) {
       });
       return;
     }
-    onSubmit({ situation, emotion: selectedEmotion });
+    onSubmit({ situation, thought, emotion: selectedEmotion });
     // Reset form fields after successful submission
     setSituation("");
+    setThought("");
     setSelectedEmotion("");
   };
 
@@ -64,7 +66,20 @@ export function EmotionalEntryForm({ onSubmit }: EmotionalEntryFormProps) {
           value={situation}
           onChange={(e) => setSituation(e.target.value)}
           placeholder={t.situationPlaceholder}
-          rows={4}
+          rows={3}
+          className="text-sm"
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="thought" className="text-base">
+          {t.thoughtLabel}
+        </Label>
+        <Textarea
+          id="thought"
+          value={thought}
+          onChange={(e) => setThought(e.target.value)}
+          placeholder={t.thoughtPlaceholder}
+          rows={3}
           className="text-sm"
         />
       </div>
@@ -91,5 +106,3 @@ export function EmotionalEntryForm({ onSubmit }: EmotionalEntryFormProps) {
     </form>
   );
 }
-
-    

@@ -267,7 +267,7 @@ export const t = {
   registerEmotionDialogDescription: "Describe cómo te sientes. Este espacio es para ti.",
   situationLabel: "¿Qué situación relevante viviste hoy o recientemente?",
   situationPlaceholder: "Ej: Tuve una reunión importante, recibí una noticia, tuve una conversación difícil...",
-  thoughtLabel: "¿Qué pensamiento automático tuviste en ese momento?",
+  thoughtLabel: "¿Qué pensaste en ese momento?",
   thoughtPlaceholder: "Ej: 'No soy capaz', 'Todo va a salir mal', 'Esto es injusto'...",
   emotionLabel: "¿Qué emoción principal sentiste?",
   emotionPlaceholder: "Selecciona una emoción",

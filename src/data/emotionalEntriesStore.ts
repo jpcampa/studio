@@ -7,6 +7,7 @@ import { es } from 'date-fns/locale';
 export interface EmotionalEntry {
   id: string;
   situation: string;
+  thought: string;
   emotion: string; // e.g., "alegria"
   timestamp: string; // ISO string
 }
@@ -32,7 +33,7 @@ export function getEmotionalEntries(): EmotionalEntry[] {
   }
 }
 
-export function addEmotionalEntry(newEntryData: { situation: string; emotion: string }): EmotionalEntry {
+export function addEmotionalEntry(newEntryData: { situation: string; thought: string; emotion: string }): EmotionalEntry {
   if (typeof window === "undefined") {
     const placeholderEntry: EmotionalEntry = {
         id: crypto.randomUUID(),
@@ -46,6 +47,7 @@ export function addEmotionalEntry(newEntryData: { situation: string; emotion: st
   const newEntry: EmotionalEntry = {
     id: crypto.randomUUID(),
     situation: newEntryData.situation,
+    thought: newEntryData.thought,
     emotion: newEntryData.emotion,
     timestamp: new Date().toISOString(),
   };
