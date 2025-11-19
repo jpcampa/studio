@@ -1,5 +1,4 @@
 
-"use client";
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -14,17 +13,6 @@ import { DailyCheckInPopup } from '@/components/daily-check-in/DailyCheckInPopup
 import type { AssessmentDimension } from '@/data/assessmentDimensions';
 import { getAssessmentDimensions } from '@/data/assessmentDimensions';
 import * as React from 'react';
-
-
-function DailyCheckInManager({ children }: { children: ReactNode }) {
-  const { showPopup, closePopup } = useDailyCheckIn();
-  return (
-    <>
-      {children}
-      <DailyCheckInPopup isOpen={showPopup} onClose={closePopup} />
-    </>
-  );
-}
 
 // Este es el layout principal que ahora es un Server Component por defecto
 export default async function MainAppLayout({ children }: { children: ReactNode }) {
@@ -44,6 +32,21 @@ export default async function MainAppLayout({ children }: { children: ReactNode 
   );
 }
 
+// ====================================================================
+// A partir de aquí, definimos los componentes de cliente.
+// La directiva "use client" debe estar al principio de la sección de cliente.
+// ====================================================================
+"use client";
+
+function DailyCheckInManager({ children }: { children: ReactNode }) {
+  const { showPopup, closePopup } = useDailyCheckIn();
+  return (
+    <>
+      {children}
+      <DailyCheckInPopup isOpen={showPopup} onClose={closePopup} />
+    </>
+  );
+}
 
 // Creamos un componente cliente para manejar la lógica de hooks
 function MainAppLayoutClient({ children, assessmentDimensions }: { children: ReactNode, assessmentDimensions: AssessmentDimension[] }) {
@@ -89,4 +92,3 @@ function MainAppLayoutClient({ children, assessmentDimensions }: { children: Rea
     </TooltipProvider>
   );
 }
-
