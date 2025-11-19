@@ -13,6 +13,8 @@ import { DailyCheckInProvider, useDailyCheckIn } from '@/hooks/use-daily-check-i
 import { DailyCheckInPopup } from '@/components/daily-check-in/DailyCheckInPopup';
 import type { AssessmentDimension } from '@/data/assessmentDimensions';
 import { getAssessmentDimensions } from '@/data/assessmentDimensions';
+import * as React from 'react';
+
 
 function DailyCheckInManager({ children }: { children: ReactNode }) {
   const { showPopup, closePopup } = useDailyCheckIn();
@@ -87,3 +89,4 @@ function MainAppLayoutClient({ children, assessmentDimensions }: { children: Rea
     </TooltipProvider>
   );
 }
+
