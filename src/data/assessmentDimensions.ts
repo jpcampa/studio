@@ -9,13 +9,15 @@ async function fetchFromApi(): Promise<AssessmentDimension[]> {
     const response = await fetch('/api/assessment-questions', { cache: 'no-store' });
     if (!response.ok) {
         console.error("Error fetching from API, status:", response.status);
-        throw new Error(`Failed to fetch from API: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({ details: 'Could not parse error JSON' }));
+        throw new Error(`Failed to fetch from API: ${response.statusText}. Details: ${errorData.details}`);
     }
     const data = await response.json();
     return data as AssessmentDimension[];
   } catch (error) {
     console.error("Error fetching assessment dimensions from API proxy:", error);
-    return [];
+    // Para facilitar la depuración, podrías lanzar el error para que el componente que llama lo capture.
+    throw error;
   }
 }
 
@@ -23,6 +25,7 @@ export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> 
   console.log("Using API proxy to fetch assessment dimensions.");
   return fetchFromApi();
 }
+
 
 export const likertOptions = [
   { value: 1, label: 'Frown', description: 'Nada' },

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
  
 // Los tipos se definen directamente aquí para evitar dependencias conflictivas.
 interface AssessmentItem {
@@ -31,9 +31,6 @@ function buildToken(): string {
   const raw = `${clave}|${fecha}`;
   const token = Buffer.from(raw, 'utf8').toString('base64');
  
-  console.log('API Route buildToken raw:', raw);
-  console.log('API Route buildToken base64:', token);
- 
   return token;
 }
  
@@ -41,7 +38,6 @@ function buildToken(): string {
 async function fetchExternalAssessmentDimensions(): Promise<AssessmentDimension[]> {
   const token = buildToken();
  
-  // ⚠️ IMPORTANTE: usar BACKTICKS, no comillas normales
   const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
  
   console.log('API Route: Fetching from external URL:', externalUrl);
@@ -52,7 +48,6 @@ async function fetchExternalAssessmentDimensions(): Promise<AssessmentDimension[
  
   const text = await response.text();
   console.log('API Route: Raw response status:', response.status);
-  console.log('API Route: Raw response body:', text);
  
   if (!response.ok) {
     throw new Error(
@@ -78,8 +73,9 @@ async function fetchExternalAssessmentDimensions(): Promise<AssessmentDimension[
  
   return parsed as AssessmentDimension[];
 }
- 
-export async function GET() {
+
+// Se añade el parámetro request para forzar el renderizado dinámico
+export async function GET(request: NextRequest) {
   try {
     const questions = await fetchExternalAssessmentDimensions();
     return NextResponse.json(questions);
