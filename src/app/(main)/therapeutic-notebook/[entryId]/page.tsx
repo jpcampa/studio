@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { getNotebookEntryById, type NotebookEntry, formatEntryTimestamp } from '@/data/therapeuticNotebookStore';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, NotebookText, AlertTriangle, Loader2, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
@@ -85,4 +85,3 @@ export default function NotebookEntryDetailPage() {
     </div>
   );
 }
-
