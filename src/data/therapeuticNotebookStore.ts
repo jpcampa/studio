@@ -45,6 +45,16 @@ export function getNotebookEntries(): NotebookEntry[] {
 }
 
 /**
+ * Retrieves a single notebook entry by its ID.
+ */
+export function getNotebookEntryById(id: string): NotebookEntry | undefined {
+  if (typeof window === "undefined") return undefined;
+  const entries = getNotebookEntries();
+  return entries.find(entry => entry.id === id);
+}
+
+
+/**
  * Adds a new entry to the therapeutic notebook and triggers the server save.
  * It now accepts the current user object to reliably get the user ID.
  */

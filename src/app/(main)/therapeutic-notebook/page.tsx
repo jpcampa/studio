@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/lib/translations";
 import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/data/therapeuticNotebookStore";
-import { ArrowLeft, NotebookText, Calendar, ChevronRight } from "lucide-react";
+import { ArrowLeft, NotebookText, Calendar, Eye } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useUser } from "@/contexts/UserContext";
 
@@ -60,24 +60,26 @@ export default function TherapeuticNotebookPage() {
         {entries.length > 0 ? (
           entries.map((entry) => (
             <Card key={entry.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardHeader>
-                <CardTitle className="text-xl text-accent">{entry.title}</CardTitle>
-                <CardDescription className="flex items-center text-xs pt-1">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  {formatEntryTimestamp(entry.timestamp)}
-                  {entry.pathId && (
-                     <>
-                        <Separator orientation="vertical" className="h-4 mx-2" />
-                        <Link href={`/paths/${entry.pathId}`} className="flex items-center text-primary hover:underline">
-                            Ver en la ruta <ChevronRight className="h-4 w-4 ml-1" />
-                        </Link>
-                     </>
-                  )}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-foreground whitespace-pre-line break-words">{entry.content}</p>
-              </CardContent>
+                <CardHeader>
+                    <CardTitle className="text-xl text-accent">{entry.title}</CardTitle>
+                    <CardDescription className="flex items-center text-xs pt-1">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {formatEntryTimestamp(entry.timestamp)}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-foreground/80 line-clamp-3 whitespace-pre-line break-words">
+                        {entry.content}
+                    </p>
+                </CardContent>
+                <CardFooter>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href={`/therapeutic-notebook/${entry.id}`}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        Ver Entrada Completa
+                      </Link>
+                    </Button>
+                </CardFooter>
             </Card>
           ))
         ) : (
