@@ -27,8 +27,6 @@ export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> 
   console.log("Using API proxy to fetch assessment dimensions.");
   return fetchFromApi();
 }
-
-
 export const likertOptions = [
   { value: 1, label: 'Frown', description: 'Nada' },
   { value: 2, label: 'Annoyed', description: 'Poco' },
