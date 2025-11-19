@@ -14,18 +14,18 @@ function FormattedNotebookContent({ content }: { content: string }) {
   const lines = content.split('\n').filter(line => line.trim() !== '');
 
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none space-y-3">
+    <div className="prose prose-lg dark:prose-invert max-w-none space-y-4">
       {lines.map((line, index) => {
         if (line.startsWith('**') && line.endsWith('**')) {
-          return <h4 key={index} className="font-semibold text-primary !mt-4 !mb-1">{line.substring(2, line.length - 2)}</h4>;
+          return <h4 key={index} className="font-semibold text-primary !mt-6 !mb-2 text-xl">{line.substring(2, line.length - 2)}</h4>;
         }
         if (line.startsWith('*') && line.endsWith('*')) {
-          return <p key={index} className="italic text-muted-foreground !my-0">{line.substring(1, line.length - 1)}</p>;
+          return <p key={index} className="italic text-muted-foreground !my-1">{line.substring(1, line.length - 1)}</p>;
         }
         if (line.startsWith('- ')) {
-          return <p key={index} className="!my-0 pl-4">{`• ${line.substring(2)}`}</p>;
+          return <li key={index} className="!my-1 ml-4">{line.substring(2)}</li>;
         }
-        return <p key={index} className="!my-1 whitespace-pre-wrap">{line}</p>;
+        return <p key={index} className="!my-2 whitespace-pre-wrap">{line}</p>;
       })}
     </div>
   );
@@ -70,16 +70,16 @@ export default function NotebookEntryDetailPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 max-w-2xl">
+    <div className="container mx-auto py-8 max-w-3xl">
       <Card className="shadow-xl">
         <CardHeader>
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-2xl text-primary flex items-center gap-3">
-                <NotebookText className="h-6 w-6" />
+              <CardTitle className="text-2xl md:text-3xl text-primary flex items-center gap-3">
+                <NotebookText className="h-7 w-7" />
                 {entry.title}
               </CardTitle>
-              <CardDescription className="flex items-center text-xs pt-2">
+              <CardDescription className="flex items-center text-sm pt-2 text-muted-foreground">
                 <Calendar className="mr-2 h-4 w-4" />
                 {formatEntryTimestamp(entry.timestamp)}
               </CardDescription>
@@ -93,10 +93,10 @@ export default function NotebookEntryDetailPage() {
             )}
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="py-6">
           <FormattedNotebookContent content={entry.content} />
         </CardContent>
-        <CardFooter>
+        <CardFooter className="border-t pt-6">
           <Button onClick={() => router.back()} variant="outline">
             <ArrowLeft className="mr-2 h-4 w-4" /> Volver
           </Button>
