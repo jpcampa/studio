@@ -400,18 +400,6 @@ export default function MyAssessmentsPage() {
       {assessments.length > 0 && (
         <div className="space-y-8">
           {assessments.map((assessment) => {
-            const payloadForDisplay = {
-                assessmentId: assessment.id,
-                userId: user?.id, // Use the currently logged-in user's ID
-                assessmentTimestamp: assessment.timestamp,
-                rawAnswers: assessment.data.respuestas, // The raw answers are in the 'respuestas' field
-                aiInterpretation: {
-                    emotionalProfile: assessment.data.emotionalProfile,
-                    priorityAreas: assessment.data.priorityAreas,
-                    feedback: assessment.data.feedback,
-                },
-            };
-
             return (
               <Card key={assessment.id} className="shadow-lg hover:shadow-xl transition-shadow flex flex-col max-w-2xl mx-auto">
                 <CardHeader>
@@ -460,5 +448,3 @@ export default function MyAssessmentsPage() {
     </div>
   );
 }
-
-    
