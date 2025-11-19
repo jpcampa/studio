@@ -207,7 +207,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
           <CardTitle className="text-lg font-semibold text-center text-primary">
             Cuestionario de Evaluación App: Personalidad, Estado de Ánimo y Ansiedad
           </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground mt-2 text-center px-2">{currentDimension.definition}</CardDescription>
+          
         </CardHeader>
         {!showDimensionCompletedDialog && (
           <CardContent className="pt-2 px-2 sm:px-6">
