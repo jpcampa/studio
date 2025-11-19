@@ -7,18 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useTranslations } from "@/lib/translations";
 import { getNotebookEntries, formatEntryTimestamp, type NotebookEntry } from "@/data/therapeuticNotebookStore";
-import { ArrowLeft, NotebookText, Calendar, Eye } from "lucide-react";
+import { ArrowLeft, NotebookText, Calendar, Eye, FileJson } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useUser } from "@/contexts/UserContext";
+
+const DEBUG_NOTEBOOK_FETCH_URL_KEY = "workwell-debug-notebook-fetch-url";
 
 export default function TherapeuticNotebookPage() {
   const t = useTranslations();
   const { user, loading: userLoading } = useUser();
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
+  const [debugUrl, setDebugUrl] = useState<string | null>(null);
 
   // This function will be called to refresh the state from localStorage
   const updateEntriesAndDebugInfo = () => {
     setEntries(getNotebookEntries());
+    if (typeof window !== 'undefined') {
+      setDebugUrl(sessionStorage.getItem(DEBUG_NOTEBOOK_FETCH_URL_KEY));
+    }
   };
 
   useEffect(() => {
@@ -26,11 +32,16 @@ export default function TherapeuticNotebookPage() {
     updateEntriesAndDebugInfo();
 
     // Set up an event listener for when the notebook is updated elsewhere
-    window.addEventListener('notebook-updated', updateEntriesAndDebugInfo);
+    // This includes when the login action saves a new debug URL
+    const handleStorageUpdate = () => updateEntriesAndDebugInfo();
+    window.addEventListener('notebook-updated', handleStorageUpdate);
+    window.addEventListener('notebook-url-updated', handleStorageUpdate);
+
 
     // Clean up the event listener when the component unmounts
     return () => {
-      window.removeEventListener('notebook-updated', updateEntriesAndDebugInfo);
+      window.removeEventListener('notebook-updated', handleStorageUpdate);
+      window.removeEventListener('notebook-url-updated', handleStorageUpdate);
     };
   }, []); // The empty dependency array ensures this runs only once on mount and unmount
 
@@ -91,6 +102,26 @@ export default function TherapeuticNotebookPage() {
           </Card>
         )}
       </div>
+
+      {debugUrl && (
+        <Card className="mt-8 shadow-md border-amber-500 bg-amber-50 dark:bg-amber-900/30">
+          <CardHeader>
+            <CardTitle className="text-lg text-amber-700 dark:text-amber-300 flex items-center">
+              <FileJson className="mr-2 h-5 w-5" />
+              Información de Depuración
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground mb-2">
+              Esta es la URL completa que se utilizó para obtener los datos de tu cuaderno. Puedes copiarla y pegarla en una nueva pestaña del navegador para ver la respuesta directa de la API.
+            </p>
+            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+              <code>{debugUrl}</code>
+            </pre>
+          </CardContent>
+        </Card>
+      )}
+
     </div>
   );
 }
