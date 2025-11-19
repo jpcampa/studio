@@ -29,6 +29,7 @@ export function StressMapExercise({ content }: StressMapExerciseProps) {
   const [emotionIntensity, setEmotionIntensity] = useState(50);
   const [physicalReactions, setPhysicalReactions] = useState('');
   const [responseAction, setResponseAction] = useState('');
+  const [reflections, setReflections] = useState(''); // Nuevo estado para reflexiones
   const [isSaved, setIsSaved] = useState(false);
   const audioUrl = "https://workwellfut.com/audios/r1_desc/Tecnica-1-mapa-del-estres-personal.mp3";
 
@@ -49,6 +50,7 @@ export function StressMapExercise({ content }: StressMapExerciseProps) {
     // The full context can be saved to a different store or extended in the future.
     addEmotionalEntry({
       situation: situation,
+      thought: thoughts, // Asegurarse de que el thought se guarda
       emotion: selectedEmotion,
       // You could extend the store to save intensity, thoughts, etc.
     });
@@ -147,6 +149,17 @@ export function StressMapExercise({ content }: StressMapExerciseProps) {
               value={responseAction}
               onChange={(e) => setResponseAction(e.target.value)}
               placeholder="¿Cómo reaccionaste? Ej: 'Me quedé paralizada y luego trabajé sin parar hasta muy tarde'."
+              disabled={isSaved}
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="reflections" className="font-semibold">6. Mis Reflexiones</Label>
+            <Textarea
+              id="reflections"
+              value={reflections}
+              onChange={(e) => setReflections(e.target.value)}
+              placeholder="Anota aquí cualquier idea, descubrimiento o aprendizaje que te lleves de este mapa..."
               disabled={isSaved}
             />
           </div>
