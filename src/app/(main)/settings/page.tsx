@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useUser } from "@/contexts/UserContext";
 import { useTranslations } from "@/lib/translations";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, Palette, Trash2, AlertTriangle, ShieldAlert, KeyRound, FastForward, Download } from 'lucide-react'; 
+import { Loader2, Save, Palette, Trash2, AlertTriangle, ShieldAlert, KeyRound, FastForward, Download, FileText } from 'lucide-react'; 
 import { useTheme } from 'next-themes';
 import { clearAllEmotionalEntries } from '@/data/emotionalEntriesStore';
 import Link from 'next/link';
@@ -197,7 +197,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
           
-          <Card>
+           <Card>
             <CardHeader>
                 <CardTitle className="text-xl">{t.language}</CardTitle>
             </CardHeader>
@@ -329,10 +329,16 @@ export default function SettingsPage() {
           </Card>
 
         </CardContent>
-        <CardFooter>
-          <p className="text-xs text-muted-foreground w-full text-right pt-4 mt-4 border-t">
-            Versión: {appVersion}
-          </p>
+        <CardFooter className="flex-col items-start gap-4 p-6 border-t">
+            <Button variant="link" asChild className="p-0 h-auto">
+              <Link href="/settings/legal">
+                <FileText className="mr-2 h-4 w-4" />
+                Aviso Legal y Política de Privacidad
+              </Link>
+            </Button>
+            <p className="text-xs text-muted-foreground w-full text-right pt-2 mt-2">
+              Versión: {appVersion}
+            </p>
         </CardFooter>
       </Card>
     </div>
