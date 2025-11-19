@@ -4,7 +4,7 @@
 // All text literals should be sourced from here.
 
 export const t = {
-  appName: "WorkWell",
+  appName: "EMOTIVA",
   // General
   welcome: "¡Hola!",
   loading: "Cargando...",
@@ -47,7 +47,7 @@ export const t = {
   navTherapeuticNotebook: "Cuaderno Terapéutico",
   navMyEmotions: "Mis Emociones",
   // Welcome Page / Dashboard (Old, parts might be reused or removed)
-  welcomeToWorkWell: "Te damos la bienvenida a WorkWell, un espacio para reconectar contigo. Este viaje es personal.",
+  welcomeToWorkWell: "Te damos la bienvenida a EMOTIVA, un espacio para reconectar contigo. Este viaje es personal.",
   startYourJourney: "Comienza tu viaje hacia el bienestar",
   takeInitialAssessment: "Realizar Evaluación Inicial",
   continueYourPath: "Continúa tu Ruta",
@@ -327,5 +327,3 @@ export type Translations = typeof t;
 export function useTranslations(): Translations {
   return t;
 }
-
-    

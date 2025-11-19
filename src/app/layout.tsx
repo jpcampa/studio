@@ -14,13 +14,13 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: 'WorkWell',
+  title: 'EMOTIVA',
   description: 'Tu app de acompañamiento emocional',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'WorkWell',
+    title: 'EMOTIVA',
   },
 };
 

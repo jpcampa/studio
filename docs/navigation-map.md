@@ -1,4 +1,4 @@
-# Mapa de Navegación de la Aplicación WorkWell
+# Mapa de Navegación de la Aplicación EMOTIVA
 
 Este documento describe la estructura de navegación y las rutas principales de la aplicación.
 
