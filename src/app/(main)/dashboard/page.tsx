@@ -32,6 +32,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import Link from "next/link";
 import { getAssessmentHistory, type AssessmentRecord } from "@/data/assessmentHistoryStore";
 import { EmotionalProfileChart } from "@/components/dashboard/EmotionalProfileChart";
+import { getAssessmentDimensions, type AssessmentDimension } from "@/data/assessmentDimensions";
 
 
 interface ProcessedChartDataPoint {
@@ -75,6 +76,7 @@ export default function DashboardPage() {
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   const [isRefreshingEmotions, setIsRefreshingEmotions] = useState(false);
   const [latestAssessment, setLatestAssessment] = useState<AssessmentRecord | null>(null);
+  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
 
 
   const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
@@ -95,23 +97,40 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
-    const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
-    const loadedAllEntries = getEmotionalEntries(); 
-    const assessmentHistory = getAssessmentHistory();
-    if (assessmentHistory.length > 0) {
-        setLatestAssessment(assessmentHistory[0]);
-    }
+    const loadInitialData = async () => {
+        const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
+        const loadedAllEntries = getEmotionalEntries(); 
+        const assessmentHistory = getAssessmentHistory();
+        
+        if (assessmentHistory.length > 0) {
+            setLatestAssessment(assessmentHistory[0]);
+        }
 
-    setRecentEntries(loadedRecentEntries);
-    setAllEntriesForChart(loadedAllEntries);
+        setRecentEntries(loadedRecentEntries);
+        setAllEntriesForChart(loadedAllEntries);
 
-    if (loadedRecentEntries.length > 0) {
-      const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
-      if (lastRegisteredEmotion) {
-        setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
-      }
-    }
-  }, [t, user]);
+        if (loadedRecentEntries.length > 0) {
+            const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
+            if (lastRegisteredEmotion) {
+                setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
+            }
+        }
+
+        // Cargar las dimensiones de la evaluación
+        try {
+            const dimensions = await getAssessmentDimensions();
+            setAssessmentDimensions(dimensions);
+        } catch (error) {
+            console.error("Dashboard: Failed to load assessment dimensions", error);
+            toast({
+                title: "Error de Carga",
+                description: "No se pudieron cargar los datos para el gráfico de perfil.",
+                variant: "destructive"
+            });
+        }
+    };
+    loadInitialData();
+  }, [t, user, toast]);
 
 
   const chartData = useMemo(() => {
@@ -427,9 +446,10 @@ export default function DashboardPage() {
       <section aria-labelledby="visualizations-heading">
         <h2 id="visualizations-heading" className="sr-only">Visualizaciones de Progreso</h2>
         <div className="grid gap-8 lg:grid-cols-2">
-            {latestAssessment ? (
+            {latestAssessment && assessmentDimensions.length > 0 ? (
                 <EmotionalProfileChart 
                     results={latestAssessment.data}
+                    assessmentDimensions={assessmentDimensions}
                     className="lg:h-[450px]"
                 />
             ) : (
@@ -451,8 +471,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
-
-    
-

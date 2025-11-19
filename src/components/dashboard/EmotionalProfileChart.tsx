@@ -16,25 +16,21 @@ import {
   Radar,
   PolarRadiusAxis,
 } from "recharts"
-import { getAssessmentDimensions, type AssessmentDimension } from '@/data/assessmentDimensions';
+import { type AssessmentDimension } from '@/data/paths/pathTypes';
 import { Activity } from 'lucide-react';
 
 interface EmotionalProfileChartProps {
   results: {
     emotionalProfile: Record<string, number>;
   };
+  assessmentDimensions: AssessmentDimension[];
   className?: string;
 }
 
-export function EmotionalProfileChart({ results, className }: EmotionalProfileChartProps) {
+export function EmotionalProfileChart({ results, assessmentDimensions, className }: EmotionalProfileChartProps) {
   const t = useTranslations();
-  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
 
-  useEffect(() => {
-    getAssessmentDimensions().then(setAssessmentDimensions);
-  }, []);
-
-  if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 || assessmentDimensions.length === 0) {
+  if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 || !assessmentDimensions || assessmentDimensions.length === 0) {
     return null; // O un placeholder si se prefiere
   }
   
@@ -105,6 +101,3 @@ export function EmotionalProfileChart({ results, className }: EmotionalProfileCh
     </Card>
   );
 }
-
-
-    

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHistoryStore';
 import { useUser } from '@/contexts/UserContext';
 import { getAssessmentDimensions } from '@/data/assessmentDimensions';
+import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
 interface HistoricalResultsPageClientProps {
   assessmentId: string;
@@ -26,50 +27,51 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
   const [rawAnswersWithWeight, setRawAnswersWithWeight] = useState<Record<string, { score: number, weight: number }> | null>(null);
 
   useEffect(() => {
-    if (assessmentId) {
+    const fetchAndProcessData = async () => {
+      if (!assessmentId) {
+        setError("ID de evaluación no proporcionado.");
+        setIsLoading(false);
+        setAssessmentRecord(null);
+        return;
+      }
+      
       try {
         const record = getAssessmentById(assessmentId);
         if (record) {
           setAssessmentRecord(record);
+          
+          if (record.data.respuestas) {
+            const assessmentDimensions = await getAssessmentDimensions();
+            const processedAnswers = Object.entries(record.data.respuestas).reduce((acc, [key, value]) => {
+              let weight = 1; // Default weight
+              for (const dim of assessmentDimensions) {
+                const item = dim.items.find(i => i.id === key);
+                if (item) {
+                  weight = item.weight;
+                  break;
+                }
+              }
+              acc[key] = { score: value, weight: weight };
+              return acc;
+            }, {} as Record<string, { score: number, weight: number }>);
+            setRawAnswersWithWeight(processedAnswers);
+          }
+
         } else {
           setError(`No se encontró una evaluación con el ID: ${assessmentId}.`);
           setAssessmentRecord(null);
         }
       } catch (e) {
-        console.error("HistoricalAssessmentResultsPage: Error loading assessment from history store:", e);
+        console.error("HistoricalAssessmentResultsPage: Error loading assessment data:", e);
         setError("Error al cargar los resultados de la evaluación histórica.");
         setAssessmentRecord(null);
       } finally {
         setIsLoading(false);
       }
-    } else {
-      setError("ID de evaluación no proporcionado.");
-      setIsLoading(false);
-      setAssessmentRecord(null);
-    }
-  }, [assessmentId]);
-
-  useEffect(() => {
-    const fetchDimensionsAndProcess = async () => {
-      if (assessmentRecord?.data.respuestas) {
-        const assessmentDimensions = await getAssessmentDimensions();
-        const processedAnswers = Object.entries(assessmentRecord.data.respuestas).reduce((acc, [key, value]) => {
-          let weight = 1;
-          for (const dim of assessmentDimensions) {
-            const item = dim.items.find(i => i.id === key);
-            if (item) {
-              weight = item.weight;
-              break;
-            }
-          }
-          acc[key] = { score: value, weight: weight };
-          return acc;
-        }, {} as Record<string, { score: number, weight: number }>);
-        setRawAnswersWithWeight(processedAnswers);
-      }
     };
-    fetchDimensionsAndProcess();
-  }, [assessmentRecord]);
+
+    fetchAndProcessData();
+  }, [assessmentId]);
 
   const handleRetakeAssessment = () => {
     router.push('/assessment/intro');
