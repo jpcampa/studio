@@ -88,7 +88,7 @@ export function AssessmentResultsDisplay({ results, rawAnswers, userId, onRetake
 
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 ||
       Object.values(results.emotionalProfile).some(score => typeof score !== 'number') ||
-      !results.priorityAreas) {
+      !results.priorityAreas || !Array.isArray(results.priorityAreas)) { // Added Array.isArray check
     return (
       <div className="container mx-auto py-8 text-center">
         <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
