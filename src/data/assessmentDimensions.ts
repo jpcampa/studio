@@ -1,19 +1,10 @@
-
 import type { AssessmentDimension } from './paths/pathTypes';
-import { unstable_noStore as noStore } from 'next/cache';
 import { fetchExternalAssessmentDimensions } from './assessment-service';
 
-
 // Esta función ahora actúa como un cliente para el servicio de datos
-// Puede ser llamada desde Componentes de Cliente a través de una Ruta de API
-// o desde Componentes de Servidor directamente.
+// y es la que debe ser usada por el resto de la aplicación.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  noStore();
-  console.log("getAssessmentDimensions: Using server-side fetcher.");
-  // En un componente de servidor, esto llamaría directamente.
-  // En un componente de cliente, esto fallaría, por eso los clientes deben usar /api/assessment-questions
-  // Pero como los componentes de servidor son los que dan el error, lo solucionamos para ellos.
-  // La forma más segura es que el código de servidor llame directamente a la función externa.
+  // Llama a la función centralizada que realmente hace el fetch.
   return fetchExternalAssessmentDimensions();
 }
 

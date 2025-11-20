@@ -1,15 +1,15 @@
-
 // app/(main)/assessment/page.tsx
 import AssessmentPageClient from '@/components/assessment/AssessmentPageClient';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
-import { getAssessmentDimensions } from '@/data/assessment-service';
+import { getAssessmentDimensions } from '@/data/assessmentDimensions'; // Se importa la función correcta
 
-// Now we use the centralized getAssessmentDimensions function.
+// Ahora usamos la función directamente desde el servicio unificado
 async function fetchDimensionsForPage(): Promise<{
   dimensions: AssessmentDimension[] | null;
   error: string | null;
 }> {
   try {
+    // Se llama a la función correcta que está diseñada para este propósito
     const dimensions = await getAssessmentDimensions();
     return { dimensions, error: null };
   } catch (e) {
