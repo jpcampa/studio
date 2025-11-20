@@ -1,10 +1,11 @@
+
 // src/data/assessment-service.ts
 import type { AssessmentDimension } from './paths/pathTypes';
 import { unstable_noStore as noStore } from 'next/cache';
 
 // Esta es la única función que hablará con la API externa.
 // Puede ser llamada de forma segura tanto desde rutas de API como desde Componentes de Servidor.
-export async function fetchExternalAssessmentDimensions(): Promise<AssessmentDimension[]> {
+export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
   noStore();
   const externalUrl = `https://firebasestorage.googleapis.com/v0/b/workwell-c4rlk.firebasestorage.app/o/assessment-questions.json?alt=media&token=02f5710e-38c0-4a29-90d5-0e3681acf4c4`;
   
@@ -40,3 +41,4 @@ export async function fetchExternalAssessmentDimensions(): Promise<AssessmentDim
     throw new Error('External assessment questions returned invalid JSON');
   }
 }
+

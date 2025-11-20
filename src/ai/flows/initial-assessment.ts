@@ -10,29 +10,9 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { getAssessmentDimensions } from '@/data/assessment-service';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
-// Esta función ahora contiene la lógica de fetch directo a la API externa
-// porque se ejecuta en el servidor y no tiene problemas de CORS.
-async function getAssessmentDimensionsForFlow(): Promise<AssessmentDimension[]> {
-  const externalUrl = `https://firebasestorage.googleapis.com/v0/b/workwell-c4rlk.firebasestorage.app/o/assessment-questions.json?alt=media&token=02f5710e-38c0-4a29-90d5-0e3681acf4c4`;
-
-  try {
-    console.log(`AI Flow: Fetching dimensions directly from new Firebase Storage URL: ${externalUrl}`);
-    const response = await fetch(externalUrl, { cache: 'no-store' });
-    if (!response.ok) {
-      throw new Error(`AI Flow - Failed to fetch from external URL: ${response.statusText}`);
-    }
-    const data = await response.json();
-    if (!Array.isArray(data)) {
-      throw new Error('AI Flow - Data from external URL is not an array.');
-    }
-    return data as AssessmentDimension[];
-  } catch (error) {
-    console.error("Error fetching assessment dimensions for AI Flow:", error);
-    throw error;
-  }
-}
 
 const InitialAssessmentInputSchema = z.object({
   answers: z
@@ -88,9 +68,9 @@ type PromptHandlebarsInput = z.infer<typeof PromptHandlebarsInputSchema>;
 
 
 export async function initialAssessment(input: InitialAssessmentInput): Promise<InitialAssessmentOutput> {
-  const assessmentDimensions = await getAssessmentDimensionsForFlow(); // Usa la nueva función de fetch para el flow
+  const assessmentDimensions = await getAssessmentDimensions(); // Use the centralized service
   const itemDetails: Record<string, { text: string, dimensionName: string, weight: number, isInverse?: boolean }> = {};
-  const dimensionNames: string[] = []; // This will be the list of actual dimension names
+  const dimensionNames: string[] = [];
   assessmentDimensions.forEach(dim => {
     dimensionNames.push(dim.name);
     dim.items.forEach(item => {
@@ -108,12 +88,12 @@ export async function initialAssessment(input: InitialAssessmentInput): Promise<
     itemDetails: itemDetails,
   };
   
-  const flowEntryPointInput: FlowInternalInput = { // This object matches FlowInternalInputSchema
+  const flowEntryPointInput: FlowInternalInput = {
     promptData: promptFlowInput,
-    allDimensionNames: dimensionNames, // Pass the populated dimensionNames array
+    allDimensionNames: dimensionNames,
   };
   console.log("InitialAssessment Function: Calling flow with flowEntryPointInput (first 1000 chars):", JSON.stringify(flowEntryPointInput, null, 2).substring(0,1000) + "...");
-  return initialAssessmentFlow(flowEntryPointInput); // Calling the flow with a single object
+  return initialAssessmentFlow(flowEntryPointInput);
 }
 
 const prompt = ai.definePrompt({
