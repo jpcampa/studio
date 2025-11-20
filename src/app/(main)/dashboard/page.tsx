@@ -107,7 +107,6 @@ export default function DashboardPage() {
         }
 
         try {
-          // Usar la ruta API interna en lugar de la llamada directa
           const res = await fetch('/api/assessment-questions');
           if (!res.ok) {
             throw new Error(`Failed to fetch assessment dimensions, status: ${res.status}`);
@@ -475,5 +474,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

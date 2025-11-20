@@ -16,14 +16,14 @@ import {
   Radar,
   PolarRadiusAxis,
 } from "recharts"
-import type { AssessmentDimension } from '@/data/paths/pathTypes'; // Cambiamos la importación
+import type { AssessmentDimension } from '@/data/paths/pathTypes'; 
 import { Activity } from 'lucide-react';
 
 interface EmotionalProfileChartProps {
   results: {
     emotionalProfile: Record<string, number>;
   };
-  assessmentDimensions: AssessmentDimension[]; // Ahora recibe las dimensiones como prop
+  assessmentDimensions: AssessmentDimension[]; 
   className?: string;
 }
 
@@ -31,7 +31,7 @@ export function EmotionalProfileChart({ results, assessmentDimensions, className
   const t = useTranslations();
 
   if (!results || !results.emotionalProfile || Object.keys(results.emotionalProfile).length === 0 || !assessmentDimensions || assessmentDimensions.length === 0) {
-    return null; // O un placeholder si se prefiere
+    return null; 
   }
   
   const radarData = assessmentDimensions.map(dim => {

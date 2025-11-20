@@ -4,7 +4,7 @@ import type { AssessmentDimension, AssessmentItem } from './paths/pathTypes';
 // This function is now just a placeholder and should not be used as a primary data source.
 // The data is now imported directly into the page component from the JSON file.
 export function getAssessmentDimensions(): AssessmentDimension[] {
-  console.warn("getAssessmentDimensions is deprecated. Questions should be sourced directly from the JSON file or API route.");
+  console.warn("getAssessmentDimensions is deprecated. Questions should be sourced from the API route.");
   return [];
 }
 

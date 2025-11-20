@@ -11,7 +11,8 @@ import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHisto
 import { useUser } from '@/contexts/UserContext';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 import { useToast } from '@/hooks/use-toast';
-import { getAssessmentDimensions } from '@/data/assessmentDimensions';
+import { fetchExternalAssessmentDimensions } from '@/data/assessment-service';
+
 
 interface HistoricalResultsPageClientProps {
   assessmentId: string;
@@ -40,13 +41,14 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       }
       
       try {
+        // Ahora, ambas fuentes de datos son asíncronas y pueden fallar.
         const [dimensions, record] = await Promise.all([
-          getAssessmentDimensions(), // Llamada a la función unificada
+          fetchExternalAssessmentDimensions(), // Llamada a la función de servicio que usa la API
           getAssessmentById(assessmentId)
         ]);
 
         if (!dimensions || dimensions.length === 0) {
-           throw new Error(`Failed to fetch assessment dimensions.`);
+           throw new Error(`Failed to fetch assessment dimensions from the API.`);
         }
         
         setAssessmentDimensions(dimensions);
@@ -76,7 +78,8 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
         }
       } catch (e) {
         console.error("HistoricalAssessmentResultsPage: Error loading assessment data:", e);
-        setError("Error al cargar los resultados de la evaluación histórica.");
+        const errorMessage = e instanceof Error ? e.message : "Error desconocido al cargar los datos.";
+        setError(`Error al cargar los resultados de la evaluación histórica: ${errorMessage}`);
         setAssessmentRecord(null);
         toast({
             title: "Error de Carga",
