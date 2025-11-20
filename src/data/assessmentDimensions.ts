@@ -1,10 +1,14 @@
+
 import type { AssessmentDimension } from './paths/pathTypes';
 import { fetchExternalAssessmentDimensions } from './assessment-service';
 
 // Esta función ahora actúa como un cliente para el servicio de datos
 // y es la que debe ser usada por el resto de la aplicación.
 export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  // Llama a la función centralizada que realmente hace el fetch.
+  // En un entorno de servidor, podríamos llamar a fetch directamente.
+  // Pero para mantener la consistencia y hacerlo funcionar en todas partes,
+  // podríamos optar por tener una ruta API que haga de proxy.
+  // Por ahora, asumimos que el componente que la llama sabe cómo manejar el fetch.
   return fetchExternalAssessmentDimensions();
 }
 

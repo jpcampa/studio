@@ -9,7 +9,6 @@ import { useTranslations } from '@/lib/translations';
 import { ArrowRight, Info, Shield, ListChecks, UserCheck, BookOpen, FileJson } from 'lucide-react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchExternalAssessmentDimensions } from '@/data/assessment-service';
 import { useToast } from '@/hooks/use-toast';
 
 const ASSESSMENT_QUESTIONS_STORAGE_KEY = 'workwell-assessment-questions-cache';
@@ -23,23 +22,30 @@ export default function AssessmentIntroPage() {
   useEffect(() => {
     const preFetchQuestions = async () => {
       try {
-        console.log('AssessmentIntroPage: Pre-fetching assessment questions...');
-        const dimensions = await fetchExternalAssessmentDimensions();
+        console.log('AssessmentIntroPage: Pre-fetching assessment questions via internal API...');
+        // Use the internal API route
+        const response = await fetch('/api/assessment-questions');
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.details || `Server responded with ${response.status}`);
+        }
+
+        const dimensions = await response.json();
+        
         if (dimensions && dimensions.length > 0) {
           localStorage.setItem(ASSESSMENT_QUESTIONS_STORAGE_KEY, JSON.stringify(dimensions));
           console.log('AssessmentIntroPage: Questions pre-fetched and stored successfully.');
         } else {
-          throw new Error('No dimensions fetched.');
+          throw new Error('No dimensions fetched from internal API.');
         }
       } catch (error) {
         console.error("AssessmentIntroPage: Failed to pre-fetch assessment questions:", error);
-        // Optionally, inform the user that there might be an issue
         toast({
           title: "Error de Carga",
           description: "No se pudieron precargar las preguntas de la evaluación. La página podría no funcionar correctamente.",
           variant: "destructive"
         });
-        // Clear any old/bad data
         localStorage.removeItem(ASSESSMENT_QUESTIONS_STORAGE_KEY);
       }
     };
