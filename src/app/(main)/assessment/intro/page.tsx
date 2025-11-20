@@ -7,52 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/lib/translations';
 import { ArrowRight, Info, Shield, ListChecks, UserCheck, BookOpen, FileJson } from 'lucide-react';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
-
-const ASSESSMENT_QUESTIONS_STORAGE_KEY = 'workwell-assessment-questions-cache';
 
 export default function AssessmentIntroPage() {
   const t = useTranslations();
-  const router = useRouter();
-  const { toast } = useToast();
-
-  // Pre-fetch questions when the component mounts on the client
-  useEffect(() => {
-    const preFetchQuestions = async () => {
-      try {
-        console.log('AssessmentIntroPage: Pre-fetching assessment questions via internal API...');
-        // Use the internal API route
-        const response = await fetch('/api/assessment-questions');
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.details || `Server responded with ${response.status}`);
-        }
-
-        const dimensions = await response.json();
-        
-        if (dimensions && dimensions.length > 0) {
-          localStorage.setItem(ASSESSMENT_QUESTIONS_STORAGE_KEY, JSON.stringify(dimensions));
-          console.log('AssessmentIntroPage: Questions pre-fetched and stored successfully.');
-        } else {
-          throw new Error('No dimensions fetched from internal API.');
-        }
-      } catch (error) {
-        console.error("AssessmentIntroPage: Failed to pre-fetch assessment questions:", error);
-        toast({
-          title: "Error de Carga",
-          description: "No se pudieron precargar las preguntas de la evaluación. La página podría no funcionar correctamente.",
-          variant: "destructive"
-        });
-        localStorage.removeItem(ASSESSMENT_QUESTIONS_STORAGE_KEY);
-      }
-    };
-    preFetchQuestions();
-  }, [toast]);
-
-
+  
+  // La URL del JSON para el botón de depuración
   const questionsJsonUrl = "https://firebasestorage.googleapis.com/v0/b/workwell-c4rlk.firebasestorage.app/o/assessment-questions.json?alt=media&token=02f5710e-38c0-4a29-90d5-0e3681acf4c4";
 
   return (

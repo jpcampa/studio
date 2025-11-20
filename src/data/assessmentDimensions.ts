@@ -1,15 +1,11 @@
 
 import type { AssessmentDimension } from './paths/pathTypes';
-import { fetchExternalAssessmentDimensions } from './assessment-service';
+import assessmentQuestions from '@/components/resources/assesment-questions.json';
 
-// Esta función ahora actúa como un cliente para el servicio de datos
-// y es la que debe ser usada por el resto de la aplicación.
-export async function getAssessmentDimensions(): Promise<AssessmentDimension[]> {
-  // En un entorno de servidor, podríamos llamar a fetch directamente.
-  // Pero para mantener la consistencia y hacerlo funcionar en todas partes,
-  // podríamos optar por tener una ruta API que haga de proxy.
-  // Por ahora, asumimos que el componente que la llama sabe cómo manejar el fetch.
-  return fetchExternalAssessmentDimensions();
+// Esta función ahora simplemente devuelve los datos importados.
+// Se mantiene por si en el futuro se quiere volver a una lógica más compleja.
+export function getAssessmentDimensions(): AssessmentDimension[] {
+  return assessmentQuestions as AssessmentDimension[];
 }
 
 export const likertOptions = [

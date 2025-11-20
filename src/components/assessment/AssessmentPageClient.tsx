@@ -7,9 +7,9 @@ import { submitAssessment, type ServerAssessmentResult } from '@/actions/assessm
 import { useTranslations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TestTube2, ShieldQuestion, Loader2, AlertTriangle } from 'lucide-react';
+import { TestTube2, ShieldQuestion, Loader2 } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle as DialogModalTitle, DialogDescription as DialogModalDescription } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
@@ -17,11 +17,9 @@ import { saveAssessmentToHistory } from '@/data/assessmentHistoryStore';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 import { saveAssessment as saveAssessmentToServer } from '@/actions/client-assessment';
 
-
 const DEVELOPER_EMAIL = 'jpcampa@example.com';
 const SESSION_STORAGE_ASSESSMENT_RESULTS_KEY = 'workwell-assessment-results';
 const IN_PROGRESS_ANSWERS_KEY = 'workwell-assessment-in-progress';
-
 
 interface AssessmentSavePayload {
   assessmentId: string;
@@ -38,12 +36,10 @@ export interface StoredAssessmentResults {
 }
 
 interface AssessmentPageClientProps {
-  assessmentDimensions: AssessmentDimension[] | null;
-  initialError: string | null;
-  isLoading: boolean;
+  assessmentDimensions: AssessmentDimension[];
 }
 
-export default function AssessmentPageClient({ assessmentDimensions, initialError, isLoading }: AssessmentPageClientProps) {
+export default function AssessmentPageClient({ assessmentDimensions }: AssessmentPageClientProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const { user } = useUser();
@@ -52,38 +48,6 @@ export default function AssessmentPageClient({ assessmentDimensions, initialErro
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
   const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
-
-  // Decidimos qué renderizar aquí, en el componente cliente, una vez tenemos todos los estados.
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (initialError) {
-    return (
-      <div className="container mx-auto py-8 text-center">
-        <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
-        <p className="mt-4 text-lg font-semibold text-destructive">{t.errorOccurred}</p>
-        <p className="text-muted-foreground">{initialError}</p>
-        <Button onClick={() => router.push('/assessment/intro')} className="mt-6">Volver a la Introducción</Button>
-      </div>
-    )
-  }
-
-  // Comprobación CRÍTICA: No renderizar el formulario hasta que las dimensiones estén listas.
-  if (!assessmentDimensions || assessmentDimensions.length === 0) {
-     return (
-      <div className="container mx-auto py-8 text-center">
-        <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
-        <p className="mt-4 text-lg font-semibold text-destructive">Error de Carga</p>
-        <p className="text-muted-foreground">No se pudieron cargar las dimensiones de la evaluación. Por favor, vuelve a la introducción e inténtalo de nuevo.</p>
-         <Button onClick={() => router.push('/assessment/intro')} className="mt-6">Volver a la Introducción</Button>
-      </div>
-    );
-  }
 
   const handleSubmit = async (answers: Record<string, { score: number; weight: number }>) => {
     setIsSubmitting(true);
@@ -208,20 +172,20 @@ export default function AssessmentPageClient({ assessmentDimensions, initialErro
         
       {generatedSaveUrl && (
         <Card className="mt-8 shadow-md border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30">
-        <CardHeader>
-            <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
-            <ShieldQuestion className="mr-2 h-5 w-5" />
-            {t.generatedAssessmentSaveUrlLabel}
-            </CardTitle>
-        </CardHeader>
-        <CardContent>
-            <p className="text-xs text-muted-foreground mb-2">
-            Esta URL se genera para el intento de guardado y se muestra aquí para depuración.
-            </p>
-            <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
-            <code>{generatedSaveUrl}</code>
-            </pre>
-        </CardContent>
+          <CardHeader>
+              <CardTitle className="text-lg text-yellow-700 dark:text-yellow-300 flex items-center">
+              <ShieldQuestion className="mr-2 h-5 w-5" />
+              {t.generatedAssessmentSaveUrlLabel}
+              </CardTitle>
+          </CardHeader>
+          <CardContent>
+              <p className="text-xs text-muted-foreground mb-2">
+              Esta URL se genera para el intento de guardado y se muestra aquí para depuración.
+              </p>
+              <pre className="text-xs bg-background p-2 rounded overflow-x-auto whitespace-pre-wrap break-all shadow-inner">
+              <code>{generatedSaveUrl}</code>
+              </pre>
+          </CardContent>
         </Card>
       )}
 
