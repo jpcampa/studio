@@ -11,6 +11,7 @@ import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHisto
 import { useUser } from '@/contexts/UserContext';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 import { useToast } from '@/hooks/use-toast';
+import { getAssessmentDimensions } from '@/data/assessmentDimensions';
 
 interface HistoricalResultsPageClientProps {
   assessmentId: string;
@@ -39,15 +40,15 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       }
       
       try {
-        const [dimensionsRes, record] = await Promise.all([
-          fetch('/api/assessment-questions'), // Llamada a la API interna
+        const [dimensions, record] = await Promise.all([
+          getAssessmentDimensions(), // Llamada a la función unificada
           getAssessmentById(assessmentId)
         ]);
 
-        if (!dimensionsRes.ok) {
-           throw new Error(`Failed to fetch assessment dimensions, status: ${dimensionsRes.status}`);
+        if (!dimensions || dimensions.length === 0) {
+           throw new Error(`Failed to fetch assessment dimensions.`);
         }
-        const dimensions = await dimensionsRes.json();
+        
         setAssessmentDimensions(dimensions);
 
         if (record) {
@@ -148,5 +149,3 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
     </div>
   );
 }
-
-    
