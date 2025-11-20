@@ -2,32 +2,13 @@
 import type { AssessmentDimension } from './paths/pathTypes';
 import { unstable_noStore as noStore } from 'next/cache';
 
-// Helper para construir el token exactamente como lo espera PHP
-function buildToken(): string {
-  const clave = 'SJDFgfds788sdfs8888KLLLL';
-
-  const now = new Date();
-  const pad = (n: number) => n.toString().padStart(2, '0');
-
-  // Formato "YYYY-MM-DD HH:mm:ss"
-  const fecha = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
-    now.getDate(),
-  )} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-
-  const raw = `${clave}|${fecha}`;
-  const token = Buffer.from(raw, 'utf8').toString('base64');
-
-  return token;
-}
-
 // Esta es la única función que hablará con la API externa.
 // Puede ser llamada de forma segura tanto desde rutas de API como desde Componentes de Servidor.
 export async function fetchExternalAssessmentDimensions(): Promise<AssessmentDimension[]> {
   noStore();
-  const token = buildToken();
-  const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
+  const externalUrl = `https://firebasestorage.googleapis.com/v0/b/workwell-c4rlk.firebasestorage.app/o/assessment-questions.json?alt=media&token=02f5710e-38c0-4a29-90d5-0e3681acf4c4`;
   
-  console.log('Assessment Service: Fetching from external URL:', externalUrl);
+  console.log('Assessment Service: Fetching from new Firebase Storage URL:', externalUrl);
 
   const response = await fetch(externalUrl, {
     cache: 'no-store',
@@ -40,7 +21,7 @@ export async function fetchExternalAssessmentDimensions(): Promise<AssessmentDim
       errorText
     );
     throw new Error(
-      `PHP API returned error HTTP ${response.status}: ${errorText}`
+      `Firebase Storage returned error HTTP ${response.status}: ${errorText}`
     );
   }
 

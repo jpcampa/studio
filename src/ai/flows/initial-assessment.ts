@@ -12,25 +12,13 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
-const clave = "SJDFgfds788sdfs8888KLLLL";
-
 // Esta función ahora contiene la lógica de fetch directo a la API externa
 // porque se ejecuta en el servidor y no tiene problemas de CORS.
 async function getAssessmentDimensionsForFlow(): Promise<AssessmentDimension[]> {
-  //const externalUrl = `https://workwellfut.com/preguntaseval/assessment-questions.json`;
+  const externalUrl = `https://firebasestorage.googleapis.com/v0/b/workwell-c4rlk.firebasestorage.app/o/assessment-questions.json?alt=media&token=02f5710e-38c0-4a29-90d5-0e3681acf4c4`;
 
-const clave = "SJDFgfds788sdfs8888KLLLL";
-const fecha = new Date().toISOString().slice(0, 19).replace("T", " "); // "YYYY-MM-DD HH:mm:ss"
-const raw = `${clave}|${fecha}`;
-const token = Buffer.from(raw).toString('base64');
- 
-const externalUrl = `https://workwellfut.com/wp-content/programacion/traejson.php?archivo=preguntas&token=${encodeURIComponent(token)}`;
-
-
-
-  
   try {
-    console.log(`AI Flow: Fetching dimensions directly from external URL: ${externalUrl}`);
+    console.log(`AI Flow: Fetching dimensions directly from new Firebase Storage URL: ${externalUrl}`);
     const response = await fetch(externalUrl, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`AI Flow - Failed to fetch from external URL: ${response.statusText}`);
