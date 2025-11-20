@@ -40,9 +40,10 @@ export interface StoredAssessmentResults {
 interface AssessmentPageClientProps {
   assessmentDimensions: AssessmentDimension[] | null;
   initialError: string | null;
+  isLoading: boolean; // Añadimos isLoading como prop
 }
 
-export default function AssessmentPageClient({ assessmentDimensions, initialError }: AssessmentPageClientProps) {
+export default function AssessmentPageClient({ assessmentDimensions, initialError, isLoading }: AssessmentPageClientProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const { user } = useUser();
@@ -52,21 +53,33 @@ export default function AssessmentPageClient({ assessmentDimensions, initialErro
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
   const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
 
+  // Decidimos qué renderizar aquí, en el componente cliente, una vez tenemos todos los estados.
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   if (initialError) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-8 text-center">
         <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
-        <p className="mt-4 text-center text-lg font-semibold text-destructive">{t.errorOccurred}</p>
-        <p className="text-center text-muted-foreground">{initialError}</p>
+        <p className="mt-4 text-lg font-semibold text-destructive">{t.errorOccurred}</p>
+        <p className="text-muted-foreground">{initialError}</p>
+        <Button onClick={() => router.push('/assessment/intro')} className="mt-6">Volver a la Introducción</Button>
       </div>
     )
   }
 
-  if (!assessmentDimensions) {
+  if (!assessmentDimensions || assessmentDimensions.length === 0) {
      return (
       <div className="container mx-auto py-8 text-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="mt-4 text-muted-foreground">{t.loading}</p>
+        <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
+        <p className="mt-4 text-lg font-semibold text-destructive">Error de Carga</p>
+        <p className="text-muted-foreground">No se pudieron cargar las dimensiones de la evaluación.</p>
+         <Button onClick={() => router.push('/assessment/intro')} className="mt-6">Volver a la Introducción</Button>
       </div>
     );
   }
@@ -227,5 +240,3 @@ export default function AssessmentPageClient({ assessmentDimensions, initialErro
     </div>
   );
 }
-
-    

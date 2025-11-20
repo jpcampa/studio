@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import AssessmentPageClient from '@/components/assessment/AssessmentPageClient';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
-import { Loader2, AlertTriangle } from 'lucide-react';
 import { useTranslations } from '@/lib/translations';
 
 const ASSESSMENT_QUESTIONS_STORAGE_KEY = 'workwell-assessment-questions-cache';
@@ -24,32 +23,25 @@ export default function AssessmentPage() {
             setDimensions(parsedDimensions);
             console.log("AssessmentPage: Successfully loaded questions from localStorage.");
         } else {
-            throw new Error("Cached data is empty or invalid.");
+            throw new Error("Los datos de preguntas en caché están vacíos o son inválidos.");
         }
       } else {
-        throw new Error("No cached assessment questions found. Please visit the introduction page first.");
+        throw new Error("No se han podido cargar las preguntas de la evaluación. Por favor, vuelve a la página de introducción para que se carguen e inténtalo de nuevo.");
       }
     } catch (e: any) {
       console.error("AssessmentPage: Error loading questions from localStorage:", e);
-      setError(`No se han podido cargar las preguntas de la evaluación. Asegúrate de visitar primero la página de introducción. Error: ${e.message}`);
+      setError(`Error: ${e.message}`);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  if (isLoading) {
-    return (
-        <div className="flex h-screen items-center justify-center bg-background">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        </div>
-    );
-  }
-
-  // Pass error and dimensions to the client component to handle rendering
+  // Pasamos todos los estados al componente cliente para que él decida qué renderizar.
   return (
     <AssessmentPageClient
       assessmentDimensions={dimensions}
       initialError={error}
+      isLoading={isLoading}
     />
   );
 }
