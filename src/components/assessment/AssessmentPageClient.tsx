@@ -49,6 +49,16 @@ export default function AssessmentPageClient({ assessmentDimensions }: Assessmen
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
   const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
 
+  // Si no hay dimensiones, muestra un estado de carga para evitar errores.
+  if (!assessmentDimensions || assessmentDimensions.length === 0) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-4 text-muted-foreground">Cargando preguntas...</p>
+      </div>
+    );
+  }
+
   const handleSubmit = async (answers: Record<string, { score: number; weight: number }>) => {
     setIsSubmitting(true);
     setIsProcessingModalVisible(true);

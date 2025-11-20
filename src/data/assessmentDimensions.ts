@@ -1,15 +1,10 @@
 
 import type { AssessmentDimension, AssessmentItem } from './paths/pathTypes';
 
-// Ahora este archivo es solo para la función de acceso y los tipos
-
+// This function is now just a placeholder and should not be used as a primary data source.
+// The data is now imported directly into the page component from the JSON file.
 export function getAssessmentDimensions(): AssessmentDimension[] {
-  // En un futuro, esto podría hacer un fetch o leer desde un servicio
-  // Por ahora, asumimos que los datos están disponibles de alguna forma
-  // pero el componente que lo usa no debería saber cómo se obtienen.
-  // Esta capa de abstracción es útil.
-  // Dejamos un array vacío como fallback seguro.
-  console.error("getAssessmentDimensions: Esta función está obsoleta y no debería ser la fuente principal de datos. Los datos están incrustados en la página.");
+  console.warn("getAssessmentDimensions is deprecated. Questions should be sourced directly from the JSON file or API route.");
   return [];
 }
 
