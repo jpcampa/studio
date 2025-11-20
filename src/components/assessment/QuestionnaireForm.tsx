@@ -184,8 +184,9 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
     await onSubmit(answers);
   };
 
-  if (!currentDimension || !currentItem) {
-    return <div className="text-center py-8">Cargando preguntas de la evaluación...</div>;
+  // Esta comprobación es clave para evitar el error.
+  if (!currentItem) {
+    return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
   
   const isLastItemOfLastDimension = currentDimensionIndex === assessmentDimensions.length - 1 && currentItemIndexInDimension === currentDimension.items.length - 1;

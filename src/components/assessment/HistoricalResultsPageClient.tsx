@@ -11,7 +11,15 @@ import { getAssessmentById, type AssessmentRecord } from '@/data/assessmentHisto
 import { useUser } from '@/contexts/UserContext';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 import { useToast } from '@/hooks/use-toast';
-import { fetchExternalAssessmentDimensions } from '@/data/assessment-service';
+
+// Esta es ahora la fuente ÚNICA de verdad para las preguntas.
+async function fetchAssessmentQuestions(): Promise<AssessmentDimension[]> {
+    const res = await fetch('/api/assessment-questions');
+    if (!res.ok) {
+        throw new Error(`Failed to fetch assessment questions: ${res.statusText}`);
+    }
+    return res.json();
+}
 
 
 interface HistoricalResultsPageClientProps {
@@ -41,9 +49,8 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       }
       
       try {
-        // Ahora, ambas fuentes de datos son asíncronas y pueden fallar.
         const [dimensions, record] = await Promise.all([
-          fetchExternalAssessmentDimensions(), // Llamada a la función de servicio que usa la API
+          fetchAssessmentQuestions(), 
           getAssessmentById(assessmentId)
         ]);
 
