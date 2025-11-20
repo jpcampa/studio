@@ -9,12 +9,43 @@ import { useTranslations } from '@/lib/translations';
 import { ArrowRight, Info, Shield, ListChecks, UserCheck, BookOpen, FileJson } from 'lucide-react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { fetchExternalAssessmentDimensions } from '@/data/assessment-service';
+import { useToast } from '@/hooks/use-toast';
+
+const ASSESSMENT_QUESTIONS_STORAGE_KEY = 'workwell-assessment-questions-cache';
 
 export default function AssessmentIntroPage() {
   const t = useTranslations();
   const router = useRouter();
+  const { toast } = useToast();
 
-  // Se ha eliminado el useEffect que redirigía automáticamente.
+  // Pre-fetch questions when the component mounts on the client
+  useEffect(() => {
+    const preFetchQuestions = async () => {
+      try {
+        console.log('AssessmentIntroPage: Pre-fetching assessment questions...');
+        const dimensions = await fetchExternalAssessmentDimensions();
+        if (dimensions && dimensions.length > 0) {
+          localStorage.setItem(ASSESSMENT_QUESTIONS_STORAGE_KEY, JSON.stringify(dimensions));
+          console.log('AssessmentIntroPage: Questions pre-fetched and stored successfully.');
+        } else {
+          throw new Error('No dimensions fetched.');
+        }
+      } catch (error) {
+        console.error("AssessmentIntroPage: Failed to pre-fetch assessment questions:", error);
+        // Optionally, inform the user that there might be an issue
+        toast({
+          title: "Error de Carga",
+          description: "No se pudieron precargar las preguntas de la evaluación. La página podría no funcionar correctamente.",
+          variant: "destructive"
+        });
+        // Clear any old/bad data
+        localStorage.removeItem(ASSESSMENT_QUESTIONS_STORAGE_KEY);
+      }
+    };
+    preFetchQuestions();
+  }, [toast]);
+
 
   const questionsJsonUrl = "https://firebasestorage.googleapis.com/v0/b/workwell-c4rlk.firebasestorage.app/o/assessment-questions.json?alt=media&token=02f5710e-38c0-4a29-90d5-0e3681acf4c4";
 
