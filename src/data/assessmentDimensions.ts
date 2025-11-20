@@ -1,11 +1,16 @@
 
-import type { AssessmentDimension } from './paths/pathTypes';
-import assessmentQuestions from '@/components/resources/assesment-questions.json';
+import type { AssessmentDimension, AssessmentItem } from './paths/pathTypes';
 
-// Esta función ahora simplemente devuelve los datos importados.
-// Se mantiene por si en el futuro se quiere volver a una lógica más compleja.
+// Ahora este archivo es solo para la función de acceso y los tipos
+
 export function getAssessmentDimensions(): AssessmentDimension[] {
-  return assessmentQuestions as AssessmentDimension[];
+  // En un futuro, esto podría hacer un fetch o leer desde un servicio
+  // Por ahora, asumimos que los datos están disponibles de alguna forma
+  // pero el componente que lo usa no debería saber cómo se obtienen.
+  // Esta capa de abstracción es útil.
+  // Dejamos un array vacío como fallback seguro.
+  console.error("getAssessmentDimensions: Esta función está obsoleta y no debería ser la fuente principal de datos. Los datos están incrustados en la página.");
+  return [];
 }
 
 export const likertOptions = [
