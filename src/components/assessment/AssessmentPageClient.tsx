@@ -7,7 +7,7 @@ import { submitAssessment, type ServerAssessmentResult } from '@/actions/assessm
 import { useTranslations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TestTube2, ShieldQuestion, Loader2 } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
