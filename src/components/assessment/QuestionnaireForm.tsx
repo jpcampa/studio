@@ -64,11 +64,12 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
   const [showDimensionCompletedDialog, setShowDimensionCompletedDialog] = useState(false);
 
   useEffect(() => {
+    if (assessmentDimensions.length === 0) return; // Don't run effect if dimensions aren't loaded
     try {
       const savedProgress = localStorage.getItem(IN_PROGRESS_ANSWERS_KEY);
       if (savedProgress) {
         const parsedData = JSON.parse(savedProgress) as InProgressData;
-        if (parsedData.answers && parsedData.position && assessmentDimensions.length > 0) {
+        if (parsedData.answers && parsedData.position) {
             setAnswers(parsedData.answers);
             const isLastDimension = parsedData.position.dimension >= assessmentDimensions.length - 1;
             const isLastItem = isLastDimension && parsedData.position.item >= assessmentDimensions[assessmentDimensions.length - 1].items.length - 1;
@@ -110,6 +111,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
   const itemsInCurrentDimensionProgress = currentDimension ? Math.round(((currentItemIndexInDimension + 1) / currentDimension.items.length) * 100) : 0;
 
   const handleNextStep = () => {
+    if (!currentDimension) return;
     const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
     if (isLastItemInDimension) {
       if (!isSubmitting) { 
@@ -156,6 +158,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
   };
 
   const handleSaveForLater = () => {
+    if (!currentDimension) return;
     const isLastDimension = currentDimensionIndex === assessmentDimensions.length - 1;
     let dimToSave = currentDimensionIndex;
     let itemToSave = currentItemIndexInDimension;
@@ -180,12 +183,8 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
     await onSubmit(answers);
   };
 
-  if (assessmentDimensions.length === 0) {
-      return null;
-  }
-
   if (!currentDimension || !currentItem) {
-    return <div className="text-center py-8">No se ha podido cargar la evaluación.</div>;
+    return <div className="text-center py-8">Cargando preguntas de la evaluación...</div>;
   }
   
   const isLastItemOfLastDimension = currentDimensionIndex === assessmentDimensions.length - 1 && currentItemIndexInDimension === currentDimension.items.length - 1;
