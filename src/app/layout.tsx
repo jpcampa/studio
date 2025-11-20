@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'EMOTIVA',
   },
+ 
 };
 
 export const viewport: Viewport = {

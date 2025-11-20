@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, type FormEvent, useEffect } from 'react';
-import { likertOptions, type AssessmentItem } from '@/data/assessmentDimensions';
+import { likertOptions } from '@/data/assessmentDimensions';
+import type { AssessmentItem, AssessmentDimension } from '@/data/paths/pathTypes';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -22,7 +23,6 @@ import {
 import { useRouter } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
 const FrownIcon = require('lucide-react').Frown;
 const AnnoyedIcon = require('lucide-react').Annoyed;
