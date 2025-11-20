@@ -40,7 +40,7 @@ export interface StoredAssessmentResults {
 interface AssessmentPageClientProps {
   assessmentDimensions: AssessmentDimension[] | null;
   initialError: string | null;
-  isLoading: boolean; // Añadimos isLoading como prop
+  isLoading: boolean;
 }
 
 export default function AssessmentPageClient({ assessmentDimensions, initialError, isLoading }: AssessmentPageClientProps) {
@@ -73,12 +73,13 @@ export default function AssessmentPageClient({ assessmentDimensions, initialErro
     )
   }
 
+  // Comprobación CRÍTICA: No renderizar el formulario hasta que las dimensiones estén listas.
   if (!assessmentDimensions || assessmentDimensions.length === 0) {
      return (
       <div className="container mx-auto py-8 text-center">
         <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
         <p className="mt-4 text-lg font-semibold text-destructive">Error de Carga</p>
-        <p className="text-muted-foreground">No se pudieron cargar las dimensiones de la evaluación.</p>
+        <p className="text-muted-foreground">No se pudieron cargar las dimensiones de la evaluación. Por favor, vuelve a la introducción e inténtalo de nuevo.</p>
          <Button onClick={() => router.push('/assessment/intro')} className="mt-6">Volver a la Introducción</Button>
       </div>
     );
