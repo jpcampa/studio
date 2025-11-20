@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { type InitialAssessmentOutput } from '@/ai/flows/initial-assessment';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TestTube2, ShieldQuestion, Loader2 } from 'lucide-react';
+import { TestTube2, ShieldQuestion, Loader2, AlertTriangle } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle as DialogModalTitle, DialogDescription as DialogModalDescription } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
@@ -34,14 +34,15 @@ interface AssessmentSavePayload {
 export interface StoredAssessmentResults {
     aiInterpretation: InitialAssessmentOutput;
     rawAnswers: Record<string, { score: number; weight: number }>;
-    assessmentDimensions: AssessmentDimension[]; // Añadido para pasar al siguiente componente
+    assessmentDimensions: AssessmentDimension[];
 }
 
 interface AssessmentPageClientProps {
-  assessmentDimensions: AssessmentDimension[];
+  assessmentDimensions: AssessmentDimension[] | null;
+  initialError: string | null;
 }
 
-export function AssessmentPageClient({ assessmentDimensions }: AssessmentPageClientProps) {
+export function AssessmentPageClient({ assessmentDimensions, initialError }: AssessmentPageClientProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const { user } = useUser();
@@ -50,6 +51,25 @@ export function AssessmentPageClient({ assessmentDimensions }: AssessmentPageCli
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedSaveUrl, setGeneratedSaveUrl] = useState<string | null>(null);
   const [isProcessingModalVisible, setIsProcessingModalVisible] = useState(false);
+
+  if (initialError) {
+    return (
+      <div className="container mx-auto py-8">
+        <AlertTriangle className="mx-auto h-12 w-12 text-destructive" />
+        <p className="mt-4 text-center text-lg font-semibold text-destructive">{t.errorOccurred}</p>
+        <p className="text-center text-muted-foreground">{initialError}</p>
+      </div>
+    )
+  }
+
+  if (!assessmentDimensions) {
+     return (
+      <div className="container mx-auto py-8 text-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="mt-4 text-muted-foreground">{t.loading}</p>
+      </div>
+    );
+  }
 
   const handleSubmit = async (answers: Record<string, { score: number; weight: number }>) => {
     setIsSubmitting(true);
@@ -69,7 +89,7 @@ export function AssessmentPageClient({ assessmentDimensions }: AssessmentPageCli
         const resultsToStore: StoredAssessmentResults = {
             aiInterpretation: result.data,
             rawAnswers: answers,
-            assessmentDimensions: assessmentDimensions, // Incluir las dimensiones
+            assessmentDimensions: assessmentDimensions,
         };
         localStorage.setItem(SESSION_STORAGE_ASSESSMENT_RESULTS_KEY, JSON.stringify(resultsToStore));
         
