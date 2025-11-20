@@ -42,7 +42,7 @@ interface AssessmentPageClientProps {
   initialError: string | null;
 }
 
-export function AssessmentPageClient({ assessmentDimensions, initialError }: AssessmentPageClientProps) {
+export default function AssessmentPageClient({ assessmentDimensions, initialError }: AssessmentPageClientProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const { user } = useUser();
@@ -227,3 +227,5 @@ export function AssessmentPageClient({ assessmentDimensions, initialError }: Ass
     </div>
   );
 }
+
+    
