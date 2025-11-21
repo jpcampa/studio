@@ -8,7 +8,7 @@ import { Loader2, AlertTriangle, Save } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { likertOptions } from '@/data/assessmentDimensions';
+import { likertOptions } from '@/data/assessmentQuestions';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/contexts/UserContext';

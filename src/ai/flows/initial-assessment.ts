@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 // Se importa directamente del archivo que ahora tiene la lógica centralizada
-import { getAssessmentDimensions } from '@/data/assessmentDimensions';
+import { fetchExternalAssessmentDimensions } from '@/data/assessment-service';
 import type { AssessmentDimension } from '@/data/paths/pathTypes';
 
 
@@ -69,7 +69,7 @@ type PromptHandlebarsInput = z.infer<typeof PromptHandlebarsInputSchema>;
 
 
 export async function initialAssessment(input: InitialAssessmentInput): Promise<InitialAssessmentOutput> {
-  const assessmentDimensions = getAssessmentDimensions(); // Use the centralized service
+  const assessmentDimensions = await fetchExternalAssessmentDimensions(); // Use the centralized service
   const itemDetails: Record<string, { text: string, dimensionName: string, weight: number, isInverse?: boolean }> = {};
   const dimensionNames: string[] = [];
   assessmentDimensions.forEach(dim => {
@@ -236,3 +236,5 @@ const initialAssessmentFlow = ai.defineFlow(
     return finalOutput;
   }
 );
+
+    
