@@ -37,7 +37,7 @@ const iconMap: Record<string, React.ElementType> = {
   Laugh: LaughIcon,
 };
 
-// Directly embedding likertOptions to remove external dependency
+// DATOS INCRUSTADOS PARA ELIMINAR IMPORTACIONES ERRÓNEAS
 const likertOptions = [
   { value: 1, label: 'Frown', description: 'Nunca o Casi Nunca / Muy Mal' },
   { value: 2, label: 'Annoyed', description: 'A Veces / Mal' },
