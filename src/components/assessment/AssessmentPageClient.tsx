@@ -177,6 +177,7 @@ export default function AssessmentPageClient({ assessmentDimensions }: Assessmen
       <QuestionnaireForm
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
+        assessmentDimensions={assessmentDimensions}
       />
         
       {generatedSaveUrl && (
@@ -214,5 +215,3 @@ export default function AssessmentPageClient({ assessmentDimensions }: Assessmen
     </div>
   );
 }
-
-    
