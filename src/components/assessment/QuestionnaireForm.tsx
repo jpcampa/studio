@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, type FormEvent, useEffect } from 'react';
-import { likertOptions } from '@/data/assessmentDimensions';
 import type { AssessmentItem, AssessmentDimension } from '@/data/paths/pathTypes';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -37,6 +36,15 @@ const iconMap: Record<string, React.ElementType> = {
   Smile: SmileIcon,
   Laugh: LaughIcon,
 };
+
+// Directly embedding likertOptions to remove external dependency
+const likertOptions = [
+  { value: 1, label: 'Frown', description: 'Nunca o Casi Nunca / Muy Mal' },
+  { value: 2, label: 'Annoyed', description: 'A Veces / Mal' },
+  { value: 3, label: 'Meh', description: 'Regularmente / Regular' },
+  { value: 4, label: 'Smile', description: 'Frecuentemente / Bien' },
+  { value: 5, label: 'Laugh', description: 'Siempre o Casi Siempre / Muy Bien' },
+];
 
 const IN_PROGRESS_ANSWERS_KEY = 'workwell-assessment-in-progress';
 
@@ -112,7 +120,7 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
   const itemsInCurrentDimensionProgress = currentDimension ? Math.round(((currentItemIndexInDimension + 1) / currentDimension.items.length) * 100) : 0;
 
   const handleNextStep = () => {
-    if (!currentDimension) return;
+    if (!currentItem || !answers[currentItem.id]) return; // Prevent advancing if no answer is selected
     const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
     if (isLastItemInDimension) {
       if (!isSubmitting) { 
@@ -127,7 +135,16 @@ export function QuestionnaireForm({ onSubmit, isSubmitting, assessmentDimensions
     const newAnswers = { ...answers, [item.id]: { score: parseInt(value), weight: item.weight } };
     setAnswers(newAnswers);
     setTimeout(() => {
-        handleNextStep();
+        // Auto-advance
+        if (!item) return;
+        const isLastItemInDimension = currentItemIndexInDimension === currentDimension.items.length - 1;
+        if (isLastItemInDimension) {
+          if (!isSubmitting) { 
+            setShowDimensionCompletedDialog(true);
+          }
+        } else {
+          setCurrentItemIndexInDimension(prev => prev + 1);
+        }
     }, 250);
   };
 
