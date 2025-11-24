@@ -181,8 +181,7 @@ export const stressManagementPath: Path = {
             '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ]
         },
-        { type: 'title', text: 'Resumen Clave de la Semana 1' },
-        { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'},
+        { type: 'title', text: 'Resumen Clave de la Semana 1', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'},
         {
           type: 'list',
           items: [
@@ -303,8 +302,8 @@ export const stressManagementPath: Path = {
                 '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
               ]
             },
+            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
             { type: 'title', text: 'Resumen Clave'},
-            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3' },
             { type: 'list', items: ['Tu cuerpo también forma parte de tu sistema de regulación emocional.', 'El sistema nervioso reacciona con alarma incluso ante estímulos cotidianos.', 'Puedes activar el sistema de calma mediante técnicas sencillas y efectivas.', 'La respiración, el movimiento suave o el contacto físico envían señales de seguridad al cerebro.', 'Cuanto más entrenas estas técnicas, más fácil te resulta acceder a la calma cuando la necesitas.'] },
             { type: 'quote', text: 'Respirar con conciencia es el gesto más pequeño y poderoso que puedes hacer por ti.'}
         ]
@@ -420,14 +419,14 @@ export const stressManagementPath: Path = {
               title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales', 
               objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
-            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3', prompts: [
-              'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',
-              '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',
-              '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',
-              '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?',
-            ]},
-            { type: 'title', text: 'Resumen Clave'},
-            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
+            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/REFLEXION.mp3', prompts: [
+                'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',
+                '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',
+                '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',
+                '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
+              ]
+            },
+            { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
             { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
         ]
