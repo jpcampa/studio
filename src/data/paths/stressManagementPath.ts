@@ -326,13 +326,11 @@ export const stressManagementPath: Path = {
             { 
               type: 'detectiveExercise', 
               title: 'Ejercicio 1: Detective de Pensamientos Estresantes',
-              duration: '12-15 min',
               objective: 'En este ejercicio vas a convertirte en un detective de tu propia mente. Aprenderás a observar esos pensamientos automáticos que te sobrecargan, detectar los filtros que distorsionan tu percepción y reformularlos con una mirada más realista, flexible y amable. Esto fortalecerá tu conciencia emocional y te ayudará a regular ese diálogo interno que, a veces, se vuelve demasiado exigente.',
             },
             { 
               type: 'demandsExercise', 
-              title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales',
-              duration: '10-12 min',
+              title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales', 
               objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
             { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
@@ -388,7 +386,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'wellbeingPlanExercise',
                 title: 'Ejercicio 1: Diseña tu Plan de Bienestar Emocional',
-                duration: "15-20 min",
                 objective: 'Esta técnica te ayuda a crear un plan práctico y realista para prevenir recaídas. Vas a identificar tus señales personales de sobrecarga, elegir las estrategias que mejor te funcionan y definir rutinas mínimas de cuidado diario. El objetivo es que salgas de esta ruta sabiendo cómo cuidarte mejor en los momentos difíciles, aumentando así tu sensación de control, seguridad y confianza personal.',
             },
             {
