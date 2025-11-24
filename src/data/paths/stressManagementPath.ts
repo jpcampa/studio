@@ -182,7 +182,7 @@ export const stressManagementPath: Path = {
         },
         {
           type: 'therapeuticNotebookReflection',
-          title: 'Reflexión',
+          title: 'Reflexión Final de la Semana',
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3',
           prompts: [
             'Tómate un momento para integrar todo lo aprendido:',
@@ -192,8 +192,12 @@ export const stressManagementPath: Path = {
           ],
         },
         {
-          type: 'paragraphWithAudio',
+          type: 'title',
           text: 'Resumen Clave de la Semana 1',
+        },
+        {
+          type: 'paragraphWithAudio',
+          text: '',
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
         },
         {
@@ -422,7 +426,7 @@ export const stressManagementPath: Path = {
             'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
-        { type: 'title', text: 'Resumen Clave'},
+        { type: 'title', text: 'Resumen Clave de la Semana'},
         {
           type: 'paragraphWithAudio',
           text: '',
@@ -607,5 +611,7 @@ export const stressManagementPath: Path = {
             { type: 'quote', text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.'}
         ]
     }
-  ],
+  ]
 };
+
+    
