@@ -421,7 +421,10 @@ export const stressManagementPath: Path = {
               objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
             { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/REFLEXION.mp3', prompts: [
-                'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',    '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',   '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',   '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
+                'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',
+                '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',
+                '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',
+                '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
               ]
             },
             { type: 'title', text: 'Resumen Clave' },
@@ -490,6 +493,14 @@ export const stressManagementPath: Path = {
               duration: '10-15 min',
               audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3",
             },
+            { 
+              type: 'therapeuticNotebookReflection', 
+              title: 'Reflexión', 
+              prompts: [
+                'Hemos llegado casi al final de la Ruta. ¡Enhorabuena! Respira, ponte en un lugar tranquilo y reflexiona sobre lo aprendido.',
+                '¿Qué quiero recordarme cuando vuelva a sentirme desbordado/a?'
+              ]
+            },
             { type: 'title', text: 'Resumen Clave de la Semana'},
             { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/RESUMEN.mp3' },
             { type: 'list', items: ['El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.', 'Tener un plan personal te permite actuar antes de desbordarte.', 'Reconocer tus señales tempranas es una forma de autocuidado.', 'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.']},
@@ -498,7 +509,3 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
-    
-
-
