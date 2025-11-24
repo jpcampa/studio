@@ -195,7 +195,6 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
   const [assessmentRecord, setAssessmentRecord] = useState<AssessmentRecord | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
   const [rawAnswersWithWeight, setRawAnswersWithWeight] = useState<Record<string, { score: number, weight: number }> | null>(null);
 
   useEffect(() => {
@@ -209,11 +208,8 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
       }
       
       try {
-        // Data is now embedded, so we can use it directly
         const dimensions = assessmentDimensionsData;
         const record = getAssessmentById(assessmentId);
-
-        setAssessmentDimensions(dimensions);
 
         if (record) {
           setAssessmentRecord(record);
@@ -304,7 +300,7 @@ export function HistoricalResultsPageClient({ assessmentId }: HistoricalResultsP
         userId={user?.id}
         onRetake={handleRetakeAssessment}
         assessmentTimestamp={assessmentRecord.timestamp} 
-        assessmentDimensions={assessmentDimensions} // Pasar las dimensiones
+        assessmentDimensions={assessmentDimensionsData} // Pasar las dimensiones
       />
        <div className="mt-8 text-center">
         <Button onClick={handleViewHistory} variant="outline">
