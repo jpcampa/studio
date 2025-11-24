@@ -57,7 +57,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Por qué sentimos estrés?',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3',
+            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3",
             content: [
               { type: 'paragraph', text: 'El estrés no depende solo de lo que pasa fuera, sino de cómo lo interpretas y con qué recursos cuentas para enfrentarlo.\nAlgunos factores que influyen:' },
               { type: 'list', items: [
@@ -71,7 +71,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Qué pasa si no lo gestionamos?',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Quepasasinologestionamos.mp3',
+            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Quepasasinologestionamos.mp3",
             content: [
               { type: 'paragraph', text: 'El estrés mantenido afecta a todos los niveles:' },
               { type: 'list', items: [
@@ -85,7 +85,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'Tus “mínimos no negociables”',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tusminimosnonegociables.mp3',
+            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Tusminimosnonegociables.mp3",
             content: [
               { type: 'paragraph', text: 'Cuando el estrés aparece, lo primero que solemos dejar de lado son las cosas que más nos sostienen: dormir bien, comer con calma, mover el cuerpo, hablar con alguien que nos escucha.\nEstas pequeñas acciones no son lujos, son necesidades básicas. Las llamamos “mínimos no negociables” porque son el suelo emocional sobre el que puedes caminar cada día. Si los abandonas, el estrés encuentra terreno fértil para crecer.\nDormir entre 7 y 8 horas, moverte al menos 15 minutos al día, comer con conciencia, tener pausas reales de desconexión y mantener vínculos afectivos de calidad… son tu mejor red de protección.' },
             ],
@@ -93,7 +93,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Cómo saber si el estrés te está sobrepasando?',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
+            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3",
             content: [
               { type: 'paragraph', text: 'A veces el cuerpo lo sabe antes que tú:' },
               { type: 'list', items: [
@@ -129,7 +129,11 @@ export const stressManagementPath: Path = {
         },
         {
             type: 'title',
-            text: 'Resumen Clave de la Semana 1',
+            text: 'Resumen Clave de la Semana 1'
+        },
+        {
+            type: 'paragraphWithAudio',
+            text: '',
             audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'
         },
         {
