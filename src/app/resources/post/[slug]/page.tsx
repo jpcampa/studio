@@ -1,32 +1,23 @@
 
-import { getPostBySlug } from '@/data/resourcesData';
-import { notFound } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Clock, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { getPostBySlug, type ResourcePost } from '@/data/resourcesData';
+import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import type { Metadata } from 'next';
 import type { RoutePageProps } from '@/types/page-props';
 
-// No necesitamos generateStaticParams si vamos a renderizar dinámicamente
-// export async function generateStaticParams() {
-//     return getAllPostSlugs();
-// }
+// Fija la página a renderizado dinámico para asegurar que los datos se obtienen en cada petición
+export const dynamic = 'force-dynamic';
 
-export default async function PostPage({ params }: RoutePageProps<{ slug: string }>) {
-  let slug: string;
-  try {
-    const resolvedParams = await params;
-    slug = resolvedParams.slug;
-  } catch (error) {
-    console.error("Error resolving params:", error);
-    notFound();
-    return;
-  }
+export default async function Page({ params }: RoutePageProps<{ slug: string }>) {
+  const { slug } = params;
 
-  let post;
-  let error = null;
+  let post: ResourcePost | undefined;
+  let error: string | null = null;
   
   try {
     post = await getPostBySlug(slug);
@@ -34,7 +25,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
     console.error(`Error fetching post ${slug}:`, e);
     error = "No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.";
   }
-  
+
   if (error) {
     return (
         <div className="container mx-auto py-8 text-center">
@@ -57,7 +48,11 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
       notFound();
   }
 
-  const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://workwellfut.com/imgapp/800x300/default_800x300.jpg';
+  let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  if (imageUrl) {
+    imageUrl = imageUrl.replace('workwellfut.hl1450.dinaserver.com', 'workwellfut.com');
+  }
+
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
@@ -76,6 +71,7 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
             )}
             <div className="p-6">
                 <CardTitle className="text-3xl md:text-4xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                
                 <CardDescription className="flex flex-wrap items-center text-sm text-muted-foreground pt-2 gap-x-4 gap-y-1">
                     <span className="flex items-center">
                     <Clock className="h-4 w-4 mr-1.5" /> Publicado el {new Date(post.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -97,4 +93,12 @@ export default async function PostPage({ params }: RoutePageProps<{ slug: string
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({ params }: RoutePageProps<{ slug: string }>): Promise<Metadata> {
+  const { slug } = params;
+  const post = await getPostBySlug(slug);
+  return {
+    title: post?.title.rendered || 'Artículo',
+  };
 }

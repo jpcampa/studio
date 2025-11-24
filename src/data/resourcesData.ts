@@ -103,6 +103,16 @@ export async function getPostBySlug(slug: string): Promise<ResourcePost | undefi
 }
 
 /**
+ * Obtiene todos los slugs de las categorías para la generación de páginas estáticas.
+ */
+export async function getAllCategorySlugs() {
+    const categories = await getResourceCategories();
+    return categories.map((cat) => ({
+      slug: cat.slug,
+    }));
+}
+
+/**
  * Obtiene una categoría específica por su slug.
  */
 export async function getCategoryBySlug(slug: string): Promise<ResourceCategory | undefined> {
