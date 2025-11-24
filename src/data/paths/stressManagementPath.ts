@@ -139,7 +139,7 @@ export const stressManagementPath: Path = {
         id: 'estres_sem2',
         title: 'Semana 2: Activa tu Regulación Fisiológica',
         type: 'skill_practice',
-        estimatedTime: '25-30 min',
+        estimatedTime: '15-20 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
         content: [
             { type: 'title', text: 'Psicoeducación', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3'},
@@ -344,7 +344,7 @@ export const stressManagementPath: Path = {
         id: 'estres_sem4',
         title: 'Semana 4: Plan de Acción y Prevención de Recaídas',
         type: 'summary',
-        estimatedTime: '25-30 min',
+        estimatedTime: '15-20 min',
         audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/INTRODUCCIONSEMANA4.mp3',
         content: [
             { type: 'paragraph', text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.'},
@@ -405,6 +405,8 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
+    
 
     
 
