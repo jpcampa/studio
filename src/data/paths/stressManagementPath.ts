@@ -422,7 +422,12 @@ export const stressManagementPath: Path = {
             'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
-        { type: 'paragraphWithAudio', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
+        { type: 'title', text: 'Resumen Clave'},
+        {
+          type: 'paragraphWithAudio',
+          text: '',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3',
+        },
         {
           type: 'list',
           items: [
@@ -593,8 +598,7 @@ export const stressManagementPath: Path = {
             {
               type: 'imaginedCrisisRehearsalExercise',
               title: 'Ejercicio 2: Ensayo de Crisis Imaginaria',
-              objective:
-                'Este ejercicio te permite imaginar una situación de alto estrés desde el yo que eres hoy, con más herramientas, conciencia y autocompasión. Visualizar cómo te cuidarías ante una crisis fortalece tu confianza y refuerza la sensación de que tienes un plan posible cuando todo se vuelve difícil.',
+              objective: 'Este ejercicio te permite imaginar una situación de alto estrés desde el yo que eres hoy, con más herramientas, conciencia y autocompasión. Visualizar cómo te cuidarías ante una crisis fortalece tu confianza y refuerza la sensación de que tienes un plan posible cuando todo se vuelve difícil.',
               duration: '10-15 min',
               audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3",
             },
@@ -605,8 +609,3 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
-
-    
-
-    
