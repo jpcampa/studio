@@ -55,18 +55,18 @@ export const stressManagementPath: Path = {
             ],
         },
         {
-            type: 'collapsible',
-            title: '¿Por qué sentimos estrés?',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3',
-            content: [
-              { type: 'paragraph', text: 'El estrés no depende solo de lo que pasa fuera, sino de cómo lo interpretas y con qué recursos cuentas para enfrentarlo.\nAlgunos factores que influyen:' },
-              { type: 'list', items: [
-                  'Tu estilo de pensamiento: Si sueles exigirte mucho, anticipar lo peor o pensar que todo depende de ti, es más fácil que actives la respuesta de estrés.',
-                  'Tu historia personal: Si creciste con mucha inseguridad, crítica o miedo, es posible que tu sistema nervioso sea más sensible.',
-                  'Tu tolerancia a la incertidumbre: Las personas que necesitan tenerlo todo bajo control suelen sufrir más ante lo imprevisible.',
-                  'Tus recursos y límites: Si sueles decir que sí a todo, cargas con más de lo que puedes sostener o te olvidas de ti para cuidar a los demás, es normal que tu cuerpo acabe agotado.'
-              ]}
-            ]
+          type: 'collapsible',
+          title: '¿Por qué sentimos estrés?',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3',
+          content: [
+            { type: 'paragraph', text: 'El estrés no depende solo de lo que pasa fuera, sino de cómo lo interpretas y con qué recursos cuentas para enfrentarlo.\nAlgunos factores que influyen:' },
+            { type: 'list', items: [
+                'Tu estilo de pensamiento: Si sueles exigirte mucho, anticipar lo peor o pensar que todo depende de ti, es más fácil que actives la respuesta de estrés.',
+                'Tu historia personal: Si creciste con mucha inseguridad, crítica o miedo, es posible que tu sistema nervioso sea más sensible.',
+                'Tu tolerancia a la incertidumbre: Las personas que necesitan tenerlo todo bajo control suelen sufrir más ante lo imprevisible.',
+                'Tus recursos y límites: Si sueles decir que sí a todo, cargas con más de lo que puedes sostener o te olvidas de ti para cuidar a los demás, es normal que tu cuerpo acabe agotado.'
+            ]}
+          ]
         },
         {
             type: 'collapsible',
@@ -138,8 +138,15 @@ export const stressManagementPath: Path = {
               '¿Qué podría probar diferente la próxima vez?'
             ]
         },
-        { type: 'title', text: 'Resumen Clave de la Semana 1'},
-        { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'},
+        {
+          type: 'title',
+          text: 'Resumen Clave de la Semana 1',
+        },
+        {
+          type: 'paragraphWithAudio',
+          text: '',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
+        },
         {
             type: 'list',
             items: [
@@ -160,8 +167,7 @@ export const stressManagementPath: Path = {
         type: 'skill_practice',
         estimatedTime: '15-20 min',
         content: [
-            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3' },
-            { type: 'paragraph', text: 'Esta semana vas a descubrir cómo tu cuerpo también forma parte del proceso de autorregulación emocional. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: "ya estás a salvo".' },
+            { type: 'paragraphWithAudio', text: '¿Sabías que tu cuerpo también forma parte del proceso de autorregulación emocional? Bienvenida o bienvenido a la segunda sesión de esta ruta: “Activa tu regulación fisiológica”.\n\nEsta semana vas a descubrir cómo tu cuerpo participa en la gestión del estrés. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: “ya estás a salvo”.\n\nMientras escuchas este audio, piensa en algún momento reciente en que tu cuerpo te haya ayudado a calmarte sin proponértelo.\n\nEn el siguiente audio te explicaré por qué esto no es casualidad.', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3' },
             { type: 'title', text: 'Psicoeducación' },
             { type: 'paragraph', text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.' },
             {
@@ -411,3 +417,5 @@ export const stressManagementPath: Path = {
   ],
 };
 
+
+    
