@@ -15,12 +15,8 @@ export const stressManagementPath: Path = {
       content: [
         {
           type: 'paragraphWithAudio',
-          text: '',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
-        },
-        {
-          type: 'paragraph',
           text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
         },
         { type: 'title', text: 'Psicoeducación' },
         {
@@ -38,8 +34,6 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Lo que ocurre en tu cerebro y en tu cuerpo',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana1/LoQueocurreentuCerebroyntucuerpo.mp3',
           content: [
             {
               type: 'paragraph',
@@ -83,7 +77,6 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Por qué sentimos estrés?',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3',
           content: [
             {
               type: 'paragraph',
@@ -103,7 +96,8 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Qué pasa si no lo gestionamos?',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Quepasasinologestionamos.mp3',
+          audioUrl:
+            'https://workwellfut.com/audios/ruta1/semana1/Quepasasinologestionamos.mp3',
           content: [
             {
               type: 'paragraph',
@@ -123,7 +117,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Tus “mínimos no negociables”',
-           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tusminimosnonegociables.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tusminimosnonegociables.mp3',
           content: [
             {
               type: 'paragraph',
@@ -134,7 +128,8 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Cómo saber si el estrés te está sobrepasando?',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
+          audioUrl:
+            'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
           content: [
             {
               type: 'paragraph',
@@ -197,7 +192,10 @@ export const stressManagementPath: Path = {
             '¿Qué podría probar diferente la próxima vez?',
           ],
         },
-        { type: 'title', text: 'Resumen Clave de la Semana 1' },
+        {
+          type: 'title',
+          text: 'Resumen Clave de la Semana 1',
+        },
         {
           type: 'paragraphWithAudio',
           text: '',
@@ -226,9 +224,8 @@ export const stressManagementPath: Path = {
       content: [
         {
           type: 'paragraphWithAudio',
-          text: '¿Sabías que tu cuerpo también forma parte del proceso de autorregulación emocional? Bienvenida o bienvenido a la segunda sesión de esta ruta: “Activa tu regulación fisiológica”.\n\nEsta semana vas a descubrir cómo tu cuerpo participa en la gestión del estrés. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: “ya estás a salvo”.\n\nMientras escuchas este audio, piensa en algún momento reciente en que tu cuerpo te haya ayudado a calmarte sin proponértelo.\n\nEn el siguiente audio te explicaré por qué esto no es casualidad.',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
+          text: '¿Sabías que tu cuerpo también forma parte del proceso de autorregulación emocional? Bienvenida o bienvenido a la segunda sesión de esta ruta: “Activa tu regulación fisiológica”.   Esta semana vas a descubrir cómo tu cuerpo participa en la gestión del estrés. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: “ya estás a salvo”.   Mientras escuchas este audio, piensa en algún momento reciente en que tu cuerpo te haya ayudado a calmarte sin proponértelo.   En el siguiente audio te explicaré por qué esto no es casualidad.',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
         },
         { type: 'title', text: 'Psicoeducación' },
         {
@@ -250,6 +247,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Rama simpática: tu sistema de alarma',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Ramasimpatica.mp3',
           content: [
             {
               type: 'paragraph',
@@ -447,349 +445,169 @@ export const stressManagementPath: Path = {
       ],
     },
     {
-      id: 'estres_sem3',
-      title: 'Semana 3: Reestructura tus Pensamientos de Sobrecarga',
-      type: 'skill_practice',
-      estimatedTime: '20-25 min',
-      content: [
-        {
-          type: 'paragraph',
-          text: 'Esta semana vas a entrenar una habilidad fundamental para reducir el estrés: identificar y transformar los pensamientos que te sobrecargan. El objetivo es que aprendas a detectar cuándo tu mente se activa en modo exigencia, catastrofismo o rigidez, y puedas responder con mayor flexibilidad, realismo y amabilidad hacia ti.',
-        },
-        { type: 'title', text: 'Psicoeducación' },
-        {
-          type: 'paragraph',
-          text: 'Lo que piensas puede calmarte… o estresarte aún más.\n¿Te has dicho alguna vez cosas como “no voy a poder”, “todo depende de mí” o “si no lo hago perfecto, es un fracaso”? Estos pensamientos no son solo frases: son como unas gafas que se colocan solas y tiñen todo lo que vives. Muchas veces el estrés no viene solo de lo que ocurre, sino de lo que te dices cuando eso ocurre.',
-        },
-        {
-          type: 'collapsible',
-          title: '¿Qué son los pensamientos automáticos?',
-          content: [
+        id: 'estres_sem3',
+        title: 'Semana 3: Reestructura tus Pensamientos de Sobrecarga',
+        type: 'skill_practice',
+        estimatedTime: '20-25 min',
+        content: [
+            { type: 'paragraph', text: 'Esta semana vas a entrenar una habilidad fundamental para reducir el estrés: identificar y transformar los pensamientos que te sobrecargan. El objetivo es que aprendas a detectar cuándo tu mente se activa en modo exigencia, catastrofismo o rigidez, y puedas responder con mayor flexibilidad, realismo y amabilidad hacia ti.'},
+            { type: 'title', text: 'Psicoeducación' },
+            { type: 'paragraph', text: 'Lo que piensas puede calmarte… o estresarte aún más.\n¿Te has dicho alguna vez cosas como “no voy a poder”, “todo depende de mí” o “si no lo hago perfecto, es un fracaso”? Estos pensamientos no son solo frases: son como unas gafas que se colocan solas y tiñen todo lo que vives. Muchas veces el estrés no viene solo de lo que ocurre, sino de lo que te dices cuando eso ocurre.'},
             {
-              type: 'paragraph',
-              text: 'Son ideas breves y espontáneas que aparecen en tu mente casi sin darte cuenta. Aunque parecen simples, influyen mucho en cómo te sientes y en cómo actúas. Por ejemplo, si alguien dice “tenemos que hablar”, puedes sentir ansiedad solo porque aparece el pensamiento “algo va mal”.\nEstos pensamientos no siempre son racionales, pero sí muy poderosos. Por eso, aprender a identificarlos y cuestionarlos puede ayudarte a transformar tu forma de sentir y actuar.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Las creencias exigentes: una fuente silenciosa de tensión',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Muchas personas viven con un diálogo interno muy exigente:',
+                type: 'collapsible',
+                title: '¿Qué son los pensamientos automáticos?',
+                content: [{ type: 'paragraph', text: 'Son ideas breves y espontáneas que aparecen en tu mente casi sin darte cuenta. Aunque parecen simples, influyen mucho en cómo te sientes y en cómo actúas. Por ejemplo, si alguien dice “tenemos que hablar”, puedes sentir ansiedad solo porque aparece el pensamiento “algo va mal”.\nEstos pensamientos no siempre son racionales, pero sí muy poderosos. Por eso, aprender a identificarlos y cuestionarlos puede ayudarte a transformar tu forma de sentir y actuar.'}]
             },
             {
-              type: 'list',
-              items: [
-                '“Tengo que poder con todo.”',
-                '“No puedo permitirme fallar.”',
-                '“Los demás lo hacen mejor que yo.”',
-              ],
+                type: 'collapsible',
+                title: 'Las creencias exigentes: una fuente silenciosa de tensión',
+                content: [
+                    { type: 'paragraph', text: 'Muchas personas viven con un diálogo interno muy exigente:'},
+                    { type: 'list', items: ['“Tengo que poder con todo.”', '“No puedo permitirme fallar.”', '“Los demás lo hacen mejor que yo.”']},
+                    { type: 'paragraph', text: 'Estas creencias generan tensión constante, te ponen en deuda contigo y con los demás, y te hacen vivir como si nunca fuera suficiente.'}
+                ]
             },
             {
-              type: 'paragraph',
-              text: 'Estas creencias generan tensión constante, te ponen en deuda contigo y con los demás, y te hacen vivir como si nunca fuera suficiente.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'El modelo ABC: cómo se conectan pensamiento, emoción y acción',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Desde la Terapia Cognitivo-Conductual usamos el modelo A-B-C:',
+                type: 'collapsible',
+                title: 'El modelo ABC: cómo se conectan pensamiento, emoción y acción',
+                content: [
+                    { type: 'paragraph', text: 'Desde la Terapia Cognitivo-Conductual usamos el modelo A-B-C:'},
+                    { type: 'list', items: ['A (Acontecimiento): Lo que pasa. Ej: Tu jefe te encarga algo urgente.', 'B (Creencia o pensamiento): Lo que piensas. Ej: “No voy a dar la talla”.', 'C (Consecuencia): Cómo te sientes y actúas. Ej: Ansiedad + bloqueo + trabajar con angustia.']},
+                    { type: 'paragraph', text: 'Solemos creer que A causa directamente C, pero en realidad, lo que te estresa no es solo lo que pasa, sino cómo lo interpretas.'}
+                ]
             },
             {
-              type: 'list',
-              items: [
-                'A (Acontecimiento): Lo que pasa. Ej: Tu jefe te encarga algo urgente.',
-                'B (Creencia o pensamiento): Lo que piensas. Ej: “No voy a dar la talla”.',
-                'C (Consecuencia): Cómo te sientes y actúas. Ej: Ansiedad + bloqueo + trabajar con angustia.',
-              ],
+                type: 'collapsible',
+                title: 'Un mismo hecho, dos emociones distintas',
+                content: [
+                    { type: 'paragraph', text: 'Situación: Tu pareja no contesta a tu mensaje en horas.'},
+                    { type: 'list', items: ['Pensamiento 1: “Está enfadado/a conmigo” → Ansiedad, inseguridad.', 'Pensamiento 2: “Estará ocupado/a” → Calma, paciencia.']},
+                    { type: 'paragraph', text: 'La misma situación puede vivirse con emociones muy diferentes según el pensamiento que la acompaña.'}
+                ]
             },
             {
-              type: 'paragraph',
-              text: 'Solemos creer que A causa directamente C, pero en realidad, lo que te estresa no es solo lo que pasa, sino cómo lo interpretas.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Un mismo hecho, dos emociones distintas',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Situación: Tu pareja no contesta a tu mensaje en horas.',
-            },
-            {
-              type: 'list',
-              items: [
-                'Pensamiento 1: “Está enfadado/a conmigo” → Ansiedad, inseguridad.',
-                'Pensamiento 2: “Estará ocupado/a” → Calma, paciencia.',
-              ],
-            },
-            {
-              type: 'paragraph',
-              text: 'La misma situación puede vivirse con emociones muy diferentes según el pensamiento que la acompaña.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title:
-            'Las distorsiones cognitivas: filtros mentales que aumentan tu estrés',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Nuestro cerebro tiende a interpretar la realidad con atajos que a veces fallan. Estas distorsiones son formas automáticas y poco realistas de pensar que exageran lo negativo, minimizan lo positivo o interpretan las cosas de forma rígida. Aprender a identificarlas te permite ganar claridad y aliviar tu carga emocional.',
+                type: 'collapsible',
+                title: 'Las distorsiones cognitivas: filtros mentales que aumentan tu estrés',
+                content: [
+                    { type: 'paragraph', text: 'Nuestro cerebro tiende a interpretar la realidad con atajos que a veces fallan. Estas distorsiones son formas automáticas y poco realistas de pensar que exageran lo negativo, minimizan lo positivo o interpretan las cosas de forma rígida. Aprender a identificarlas te permite ganar claridad y aliviar tu carga emocional.'},
+                    { 
+                        type: 'collapsible',
+                        title: 'Aquí tienes una descripción breve de las más frecuentes, con ejemplos:',
+                        content: [
+                            { type: 'list', items: [
+                                'Catastrofismo: Imaginar el peor escenario como inevitable. Ejemplo: “Si fallo esta presentación, arruinaré mi carrera.”',
+                                'Pensamiento dicotómico (todo o nada): Ver todo en extremos, sin matices. Ejemplo: “Si no lo hago perfecto, es un fracaso.”',
+                                'Sobregeneralización: Extraer una conclusión general a partir de un solo hecho negativo. Ejemplo: “Me equivoqué una vez, siempre lo hago mal.”',
+                                'Personalización: Creer que todo lo que pasa tiene que ver contigo. Ejemplo: “Están serios, seguro hice algo mal.”',
+                                'Adivinación del pensamiento o del futuro: Suponer sin evidencia qué piensan los demás o lo que ocurrirá. Ejemplo: “No respondió el mensaje, seguro está molesto conmigo.”',
+                                'Abstracción selectiva: Fijarse solo en lo negativo y pasar por alto lo positivo. Ejemplo: “Me equivoqué en una palabra, así que todo salió mal.”',
+                                'Razonamiento emocional: Creer que algo es verdad solo porque lo sientes intensamente. Ejemplo: “Me siento inútil, así que debo serlo.”',
+                                '“Deberías” rígidos: Imponerse normas estrictas que generan culpa o presión. Ejemplo: “Debería poder con todo sin quejarme.”',
+                                'Minimizar lo positivo / Maximizar lo negativo: Restar valor a los logros y agrandar los errores. Ejemplo: “Sí, me felicitaron, pero seguro fue por compromiso.”',
+                                'Perfeccionismo: Necesidad de cumplir con estándares imposibles. Ejemplo: “Si no es perfecto, no vale la pena.”',
+                                'Comparación negativa: Compararte solo con lo que te falta respecto a otros. Ejemplo: “Ella gana más que yo, así que soy un fracaso.”',
+                                'Falacia del control: Creer que todo depende de ti o que no tienes control en absoluto. Ejemplo: “Si mi hijo no está bien, es culpa mía.”',
+                                'Exageración de la responsabilidad: Sentirse culpable de todo lo que ocurre, incluso sin pruebas. Ejemplo: “Si algo sale mal, será por mi culpa.”',
+                'Distorsión del tiempo: Creer que lo que vives ahora será así para siempre. Ejemplo: “Nunca voy a salir de esto.”',
+                                'Túnel atencional negativo: Solo ver lo que falta o lo que está mal. Ejemplo: “Hoy ha sido horrible porque tuve una discusión”, ignorando que el resto del día fue positivo.'
+                            ]},
+                            { type: 'paragraph', text: 'Detectarlas no significa eliminarlas de golpe, pero sí abrir un espacio para mirar con más claridad y cuidarte mejor.'}
+                        ]
+                    }
+                ]
             },
             {
-              type: 'collapsible',
-              title:
-                'Aquí tienes una descripción breve de las más frecuentes, con ejemplos:',
-              content: [
-                {
-                  type: 'list',
-                  items: [
-                    'Catastrofismo: Imaginar el peor escenario como inevitable. Ejemplo: “Si fallo esta presentación, arruinaré mi carrera.”',
-                    'Pensamiento dicotómico (todo o nada): Ver todo en extremos, sin matices. Ejemplo: “Si no lo hago perfecto, es un fracaso.”',
-                    'Sobregeneralización: Extraer una conclusión general a partir de un solo hecho negativo. Ejemplo: “Me equivoqué una vez, siempre lo hago mal.”',
-                    'Personalización: Creer que todo lo que pasa tiene que ver contigo. Ejemplo: “Están serios, seguro hice algo mal.”',
-                    'Adivinación del pensamiento o del futuro: Suponer sin evidencia qué piensan los demás o lo que ocurrirá. Ejemplo: “No respondió el mensaje, seguro está molesto conmigo.”',
-                    'Abstracción selectiva: Fijarse solo en lo negativo y pasar por alto lo positivo. Ejemplo: “Me equivoqué en una palabra, así que todo salió mal.”',
-                    'Razonamiento emocional: Creer que algo es verdad solo porque lo sientes intensamente. Ejemplo: “Me siento inútil, así que debo serlo.”',
-                    '“Deberías” rígidos: Imponerse normas estrictas que generan culpa o presión. Ejemplo: “Debería poder con todo sin quejarme.”',
-                    'Minimizar lo positivo / Maximizar lo negativo: Restar valor a los logros y agrandar los errores. Ejemplo: “Sí, me felicitaron, pero seguro fue por compromiso.”',
-                    'Perfeccionismo: Necesidad de cumplir con estándares imposibles. Ejemplo: “Si no es perfecto, no vale la pena.”',
-                    'Comparación negativa: Compararte solo con lo que te falta respecto a otros. Ejemplo: “Ella gana más que yo, así que soy un fracaso.”',
-                    'Falacia del control: Creer que todo depende de ti o que no tienes control en absoluto. Ejemplo: “Si mi hijo no está bien, es culpa mía.”',
-                    'Exageración de la responsabilidad: Sentirse culpable de todo lo que ocurre, incluso sin pruebas. Ejemplo: “Si algo sale mal, será por mi culpa.”',
-                    'Distorsión del tiempo: Creer que lo que vives ahora será así para siempre. Ejemplo: “Nunca voy a salir de esto.”',
-                    'Túnel atencional negativo: Solo ver lo que falta o lo que está mal. Ejemplo: “Hoy ha sido horrible porque tuve una discusión”, ignorando que el resto del día fue positivo.',
-                  ],
-                },
-                {
-                  type: 'paragraph',
-                  text: 'Detectarlas no significa eliminarlas de golpe, pero sí abrir un espacio para mirar con más claridad y cuidarte mejor.',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: '¿Qué hacer cuando detectas un pensamiento negativo?',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'No se trata de forzarte a “pensar en positivo”, sino de pensar de forma más realista y compasiva. Puedes preguntarte:',
+                type: 'collapsible',
+                title: '¿Qué hacer cuando detectas un pensamiento negativo?',
+                content: [
+                    { type: 'paragraph', text: 'No se trata de forzarte a “pensar en positivo”, sino de pensar de forma más realista y compasiva. Puedes preguntarte:'},
+                    { type: 'list', items: ['¿Qué evidencia tengo de que esto sea cierto?', '¿Estoy exagerando o anticipando?', '¿Qué le diría a alguien que quiero si pensara esto?', '¿Este pensamiento me ayuda o me hace daño?']},
+                    { type: 'paragraph', text: 'Este proceso se llama reestructuración cognitiva: es como entrenar tu mente para dejar de castigarte y empezar a hablarte de otra forma.'}
+                ]
             },
             {
-              type: 'list',
-              items: [
-                '¿Qué evidencia tengo de que esto sea cierto?',
-                '¿Estoy exagerando o anticipando?',
-                '¿Qué le diría a alguien que quiero si pensara esto?',
-                '¿Este pensamiento me ayuda o me hace daño?',
-              ],
+                type: 'collapsible',
+                title: 'Desde la neurociencia: por qué funciona',
+                content: [
+                    { type: 'paragraph', text: 'Cuando reinterpretas una situación, activas nuevas redes neuronales. Tu corteza prefrontal (la parte que decide) toma protagonismo frente al sistema límbico (la parte reactiva). Así, pasas de reaccionar por impulso a responder con claridad.\nTus pensamientos no siempre son verdad. Son interpretaciones. Y puedes aprender a elegir las que te cuidan.'}
+                ]
             },
-            {
-              type: 'paragraph',
-              text: 'Este proceso se llama reestructuración cognitiva: es como entrenar tu mente para dejar de castigarte y empezar a hablarte de otra forma.',
+            { type: 'quote', text: 'No puedes parar las olas, pero puedes aprender a surfear tus pensamientos.' },
+            { type: 'title', text: 'Técnicas Específicas'},
+            { 
+              type: 'detectiveExercise', 
+              title: 'Ejercicio 1: Detective de Pensamientos Estresantes', 
+              objective: 'En este ejercicio vas a convertirte en un detective de tu propia mente. Aprenderás a observar esos pensamientos automáticos que te sobrecargan, detectar los filtros que distorsionan tu percepción y reformularlos con una mirada más realista, flexible y amable. Esto fortalecerá tu conciencia emocional y te ayudará a regular ese diálogo interno que, a veces, se vuelve demasiado exigente.',
             },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Desde la neurociencia: por qué funciona',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Cuando reinterpretas una situación, activas nuevas redes neuronales. Tu corteza prefrontal (la parte que decide) toma protagonismo frente al sistema límbico (la parte reactiva). Así, pasas de reaccionar por impulso a responder con claridad.\nTus pensamientos no siempre son verdad. Son interpretaciones. Y puedes aprender a elegir las que te cuidan.',
+            { 
+              type: 'demandsExercise', 
+              title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales', 
+              objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
-          ],
-        },
-        {
-          type: 'quote',
-          text: 'No puedes parar las olas, pero puedes aprender a surfear tus pensamientos.',
-        },
-        { type: 'title', text: 'Técnicas Específicas' },
-        {
-          type: 'detectiveExercise',
-          title: 'Ejercicio 1: Detective de Pensamientos Estresantes',
-          objective:
-            'En este ejercicio vas a convertirte en un detective de tu propia mente. Aprenderás a observar esos pensamientos automáticos que te sobrecargan, detectar los filtros que distorsionan tu percepción y reformularlos con una mirada más realista, flexible y amable. Esto fortalecerá tu conciencia emocional y te ayudará a regular ese diálogo interno que, a veces, se vuelve demasiado exigente.',
-        },
-        {
-          type: 'demandsExercise',
-          title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales',
-          objective:
-            'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
-        },
-        { type: 'title', text: 'Resumen Clave' },
-        {
-          type: 'list',
-          items: [
-            'El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.',
-            'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.',
-            'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.',
-            'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.',
-            'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.',
-          ],
-        },
-        {
-          type: 'quote',
-          text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.',
-        },
-      ],
+            { type: 'title', text: 'Resumen Clave' },
+            { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
+            { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
+        ]
     },
     {
-      id: 'estres_sem4',
-      title: 'Semana 4: Plan de Acción y Prevención de Recaídas',
-      type: 'summary',
-      estimatedTime: '15-20 min',
-      content: [
-        {
-          type: 'paragraph',
-          text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.',
-        },
-        { type: 'title', text: 'Psicoeducación' },
-        {
-          type: 'paragraph',
-          text: 'De la teoría a la práctica: tu plan personal para sostenerte\nEl estrés no desaparece para siempre. Vuelve en forma de tareas acumuladas, expectativas, interrupciones o pensamientos exigentes. Por eso, el objetivo de esta semana es ayudarte a crear tu propio plan de acción: un mapa de recursos, señales de alerta y estrategias que te ayuden a cuidarte cuando lo necesites.\nMás adelante, en la Técnica 1, empezarás a diseñar tu plan personalizado.\nPero antes, necesitas entender para qué sirve, cuáles son sus partes y cómo te ayuda a sostenerte en los momentos difíciles. Este contexto será tu base para crear algo realmente útil y tuyo.\nEste plan no es un protocolo rígido. Es una herramienta viva, ajustada a tu realidad y fortalecida por todo lo que has aprendido. Aquí no buscamos perfección, sino continuidad. Porque prevenir recaídas no es evitar el estrés, sino prepararte para responder con mayor conciencia cuando vuelva a aparecer.',
-        },
-        {
-          type: 'collapsible',
-          title: 'Etapa 1: Evaluación y conciencia',
-          content: [
+        id: 'estres_sem4',
+        title: 'Semana 4: Plan de Acción y Prevención de Recaídas',
+        type: 'summary',
+        estimatedTime: '15-20 min',
+        content: [
+            { type: 'paragraph', text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.'},
+            { type: 'title', text: 'Psicoeducación' },
+            { type: 'paragraph', text: 'De la teoría a la práctica: tu plan personal para sostenerte\nEl estrés no desaparece para siempre. Vuelve en forma de tareas acumuladas, expectativas, interrupciones o pensamientos exigentes. Por eso, el objetivo de esta semana es ayudarte a crear tu propio plan de acción: un mapa de recursos, señales de alerta y estrategias que te ayuden a cuidarte cuando lo necesites.\nMás adelante, en la Técnica 1, empezarás a diseñar tu plan personalizado.\nPero antes, necesitas entender para qué sirve, cuáles son sus partes y cómo te ayuda a sostenerte en los momentos difíciles. Este contexto será tu base para crear algo realmente útil y tuyo.\nEste plan no es un protocolo rígido. Es una herramienta viva, ajustada a tu realidad y fortalecida por todo lo que has aprendido. Aquí no buscamos perfección, sino continuidad. Porque prevenir recaídas no es evitar el estrés, sino prepararte para responder con mayor conciencia cuando vuelva a aparecer.'},
             {
-              type: 'paragraph',
-              text: 'Todo buen plan empieza por observarte.\nDurante estas semanas, has aprendido a identificar cómo se activa el estrés en ti: qué lo dispara, cómo reacciona tu cuerpo, qué pensamientos se repiten y qué emociones se intensifican. Ahora es momento de consolidar esa información para que se convierta en una alerta temprana que te ayude a actuar antes de desbordarte.\n¿Cómo saber que el estrés está empezando a subir?',
+                type: 'collapsible',
+                title: 'Etapa 1: Evaluación y conciencia',
+                content: [
+                    { type: 'paragraph', text: 'Todo buen plan empieza por observarte.\nDurante estas semanas, has aprendido a identificar cómo se activa el estrés en ti: qué lo dispara, cómo reacciona tu cuerpo, qué pensamientos se repiten y qué emociones se intensifican. Ahora es momento de consolidar esa información para que se convierta en una alerta temprana que te ayude a actuar antes de desbordarte.\n¿Cómo saber que el estrés está empezando a subir?'},
+                    { type: 'list', items: ['Me cuesta dormir o me despierto cansado/a', 'Tensión muscular (cuello, mandíbula, pecho)', 'Me irrito o me siento desconectada/o sin saber por qué', 'Me aíslo o aumento conductas evasivas (pantallas, comida, control excesivo)', 'Vuelvo a pensar “no puedo con esto” o “tengo que hacerlo todo perfecto”']},
+                    { type: 'paragraph', text: 'Detectar estas señales no es debilidad. Es autoconocimiento.'}
+                ]
             },
             {
-              type: 'list',
-              items: [
-                'Me cuesta dormir o me despierto cansado/a',
-                'Tensión muscular (cuello, mandíbula, pecho)',
-                'Me irrito o me siento desconectada/o sin saber por qué',
-                'Me aíslo o aumento conductas evasivas (pantallas, comida, control excesivo)',
-                'Vuelvo a pensar “no puedo con esto” o “tengo que hacerlo todo perfecto”',
-              ],
+                type: 'collapsible',
+                title: 'Etapa 2: Objetivos y estrategias',
+                content: [
+                    { type: 'paragraph', text: 'Tu plan de acción se construye sobre lo que ya has practicado. No necesitas hacerlo perfecto, sino contar con algunas herramientas bien integradas que puedas activar cuando lo necesites.\nEstrategias cognitivas:'},
+                    { type: 'list', items: ['Reestructuración cognitiva: detectar pensamientos automáticos y transformarlos en versiones más amables', 'Autoinstrucciones positivas: Ej. “Estoy haciendo lo que puedo con lo que tengo”', 'Identificación de pensamientos exigentes (Semana 3)']},
+                    { type: 'paragraph', text: 'Estrategias conductuales:'},
+                    { type: 'list', items: ['Respiración diafragmática, 4-2-6', 'Anclaje sensorial 5-4-3-2-1', 'Escaneo corporal breve', 'Registro emocional y frases ancla compasivas']},
+                    { type: 'paragraph', text: 'Contenido extra disponible en la app: (otras rutas o recursos)'},
+                    { type: 'list', items: ['Resolución de problemas', 'Planificación del placer y tiempo', 'Asertividad y habilidades sociales', 'Otros recursos (Gestión del estrés y ansiedad)']}
+                ]
             },
             {
-              type: 'paragraph',
-              text: 'Detectar estas señales no es debilidad. Es autoconocimiento.',
+                type: 'collapsible',
+                title: 'Etapa 3: Prevención de recaídas',
+                content: [
+                    { type: 'paragraph', text: 'Recaer no es fracasar. Es aplicar lo aprendido en un nuevo ciclo.\nSeñales tempranas de recaída:'},
+                    { type: 'list', items: ['Autoexigencia creciente', 'Abandono de rutinas de autocuidado', 'Pensamientos rígidos o catastrofistas']},
+                    { type: 'paragraph', text: 'Qué hacer si te sientes desbordada/o:'},
+                    { type: 'list', items: ['Pausa y observa: “¿Qué me está activando? ¿Qué parte de mí necesita cuidado?”', 'Evita la catastrofización: Un mal día no borra tus avances', 'Vuelve a lo básico: respiración, frase ancla, conectar contigo', 'Activa tu red de apoyo: no tienes que sostenerte sola/o']}
+                ]
             },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Etapa 2: Objetivos y estrategias',
-          content: [
+            { type: 'title', text: 'Técnicas Específicas'},
             {
-              type: 'paragraph',
-              text: 'Tu plan de acción se construye sobre lo que ya has practicado. No necesitas hacerlo perfecto, sino contar con algunas herramientas bien integradas que puedas activar cuando lo necesites.\nEstrategias cognitivas:',
-            },
-            {
-              type: 'list',
-              items: [
-                'Reestructuración cognitiva: detectar pensamientos automáticos y transformarlos en versiones más amables',
-                'Autoinstrucciones positivas: Ej. “Estoy haciendo lo que puedo con lo que tengo”',
-                'Identificación de pensamientos exigentes (Semana 3)',
-              ],
+                type: 'wellbeingPlanExercise',
+                title: 'Ejercicio 1: Diseña tu Plan de Bienestar Emocional',
+                objective: 'Esta técnica te ayuda a crear un plan práctico y realista para prevenir recaídas. Vas a identificar tus señales personales de sobrecarga, elegir las estrategias que mejor te funcionan y definir rutinas mínimas de cuidado diario. El objetivo es que salgas de esta ruta sabiendo cómo cuidarte mejor en los momentos difíciles, aumentando así tu sensación de control, seguridad y confianza personal.',
             },
             {
-              type: 'paragraph',
-              text: 'Estrategias conductuales:',
+              type: 'imaginedCrisisRehearsalExercise',
+              title: 'Ejercicio 2: Ensayo de Crisis Imaginaria',
+              objective:
+                'Este ejercicio te permite imaginar una situación de alto estrés desde el yo que eres hoy, con más herramientas, conciencia y autocompasión. Visualizar cómo te cuidarías ante una crisis fortalece tu confianza y refuerza la sensación de que tienes un plan posible cuando todo se vuelve difícil.',
+              duration: '10-15 min',
+              audioUrl:
+                'https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3',
             },
-            {
-              type: 'list',
-              items: [
-                'Respiración diafragmática, 4-2-6',
-                'Anclaje sensorial 5-4-3-2-1',
-                'Escaneo corporal breve',
-                'Registro emocional y frases ancla compasivas',
-              ],
-            },
-            {
-              type: 'paragraph',
-              text: 'Contenido extra disponible en la app: (otras rutas o recursos)',
-            },
-            {
-              type: 'list',
-              items: [
-                'Resolución de problemas',
-                'Planificación del placer y tiempo',
-                'Asertividad y habilidades sociales',
-                'Otros recursos (Gestión del estrés y ansiedad)',
-              ],
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Etapa 3: Prevención de recaídas',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Recaer no es fracasar. Es aplicar lo aprendido en un nuevo ciclo.\nSeñales tempranas de recaída:',
-            },
-            {
-              type: 'list',
-              items: [
-                'Autoexigencia creciente',
-                'Abandono de rutinas de autocuidado',
-                'Pensamientos rígidos o catastrofistas',
-              ],
-            },
-            {
-              type: 'paragraph',
-              text: 'Qué hacer si te sientes desbordada/o:',
-            },
-            {
-              type: 'list',
-              items: [
-                'Pausa y observa: “¿Qué me está activando? ¿Qué parte de mí necesita cuidado?”',
-                'Evita la catastrofización: Un mal día no borra tus avances',
-                'Vuelve a lo básico: respiración, frase ancla, conectar contigo',
-                'Activa tu red de apoyo: no tienes que sostenerte sola/o',
-              ],
-            },
-          ],
-        },
-        { type: 'title', text: 'Técnicas Específicas' },
-        {
-          type: 'wellbeingPlanExercise',
-          title: 'Ejercicio 1: Diseña tu Plan de Bienestar Emocional',
-          objective:
-            'Esta técnica te ayuda a crear un plan práctico y realista para prevenir recaídas. Vas a identificar tus señales personales de sobrecarga, elegir las estrategias que mejor te funcionan y definir rutinas mínimas de cuidado diario. El objetivo es que salgas de esta ruta sabiendo cómo cuidarte mejor en los momentos difíciles, aumentando así tu sensación de control, seguridad y confianza personal.',
-        },
-        {
-          type: 'imaginedCrisisRehearsalExercise',
-          title: 'Ejercicio 2: Ensayo de Crisis Imaginaria',
-          objective:
-            'Este ejercicio te permite imaginar una situación de alto estrés desde el yo que eres hoy, con más herramientas, conciencia y autocompasión. Visualizar cómo te cuidarías ante una crisis fortalece tu confianza y refuerza la sensación de que tienes un plan posible cuando todo se vuelve difícil.',
-          duration: '10-15 min',
-          audioUrl:
-            'https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3',
-        },
-        { type: 'title', text: 'Resumen Clave de la Semana' },
-        {
-          type: 'list',
-          items: [
-            'El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.',
-            'Tener un plan personal te permite actuar antes de desbordarte.',
-            'Reconocer tus señales tempranas es una forma de autocuidado.',
-            'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.',
-          ],
-        },
-        {
-          type: 'quote',
-          text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.',
-        },
-      ],
-    },
+            { type: 'title', text: 'Resumen Clave de la Semana'},
+            { type: 'list', items: ['El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.', 'Tener un plan personal te permite actuar antes de desbordarte.', 'Reconocer tus señales tempranas es una forma de autocuidado.', 'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.']},
+            { type: 'quote', text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.'}
+        ]
+    }
   ],
 };
