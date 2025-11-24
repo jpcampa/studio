@@ -1334,13 +1334,13 @@ function ContentItemRenderer({
     case 'paragraphWithAudio':
       return (
         <div key={index} className="space-y-2 mb-4">
-          {contentItem.audioUrl && (
-            <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="w-full h-10" />
-          )}
           <p
             className="text-base leading-relaxed whitespace-pre-line"
             dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }}
           />
+          {contentItem.audioUrl && (
+            <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="w-full h-10 mt-2" />
+          )}
         </div>
       );
     case 'paragraph':
