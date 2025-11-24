@@ -192,7 +192,11 @@ export const stressManagementPath: Path = {
         {
           type: 'title',
           text: 'Resumen Clave de la Semana 1',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
+        },
+        {
+            type: 'paragraphWithAudio',
+            text: '',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'
         },
         {
           type: 'list',
@@ -223,8 +227,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Por qué ocurre esto?',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3',
           content: [
             {
               type: 'paragraph',
@@ -267,8 +270,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Tu detector interno de seguridad',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
           content: [
             {
               type: 'paragraph',
@@ -419,12 +421,12 @@ export const stressManagementPath: Path = {
         },
         {
           type: 'title',
-          text: 'Resumen Clave de la Semana',
+          text: 'Resumen Clave',
         },
         {
-          type: 'paragraphWithAudio',
-          text: '',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3',
+            type: 'paragraphWithAudio',
+            text: '',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'
         },
         {
           type: 'list',
@@ -458,6 +460,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: '¿Qué son los pensamientos automáticos?',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Pensamientosautomaticos.mp3',
                 content: [{ type: 'paragraph', text: 'Son ideas breves y espontáneas que aparecen en tu mente casi sin darte cuenta. Aunque parecen simples, influyen mucho en cómo te sientes y en cómo actúas. Por ejemplo, si alguien dice “tenemos que hablar”, puedes sentir ansiedad solo porque aparece el pensamiento “algo va mal”.\nEstos pensamientos no siempre son racionales, pero sí muy poderosos. Por eso, aprender a identificarlos y cuestionarlos puede ayudarte a transformar tu forma de sentir y actuar.'}]
             },
             {
