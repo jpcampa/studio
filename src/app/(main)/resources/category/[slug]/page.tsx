@@ -41,7 +41,7 @@ type ResourcePost = {
 };
 
 export default async function Page({ params }: RoutePageProps<{ slug: string }>) {
-  const { slug } = await params;
+  const { slug } = params;
   
   let category: ResourceCategory | undefined;
   let posts: ResourcePost[] = [];
@@ -139,7 +139,7 @@ export default async function Page({ params }: RoutePageProps<{ slug: string }>)
 }
 
 export async function generateMetadata({ params }: RoutePageProps<{ slug: string }>): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = params;
   const category = await getCategoryBySlug(slug);
   return {
     title: `Recursos sobre ${category?.name || 'Categoría'}`,

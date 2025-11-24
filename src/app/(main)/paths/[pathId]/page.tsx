@@ -5,6 +5,8 @@ import type { Metadata } from 'next';
 
 type PageProps = { params: { pathId: string } };
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page({ params }: PageProps) {
   const { pathId } = params;
   const path = pathsData.find(p => p.id === pathId);
@@ -16,11 +18,12 @@ export default async function Page({ params }: PageProps) {
   return <PathDetailClient path={path} />;
 }
 
-export async function generateStaticParams(): Promise<{pathId: string}[]> {
-  return pathsData.map((path) => ({
-    pathId: path.id,
-  }));
-}
+// Se elimina generateStaticParams para forzar renderizado dinámico
+// export async function generateStaticParams(): Promise<{pathId: string}[]> {
+//   return pathsData.map((path) => ({
+//     pathId: path.id,
+//   }));
+// }
 
 export async function generateMetadata(
   { params }: PageProps
