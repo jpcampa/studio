@@ -6,4 +6,4 @@ runConfig:
   # more instances in response to increased traffic.
   maxInstances: 1
 # Regenerating build config to solve fetch step issue.
-
+# This comment is added to force a clean build and invalidate the cache.
