@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, type FormEvent, useEffect } from 'react';
 import { QuestionnaireForm } from '@/components/assessment/QuestionnaireForm';
 import { submitAssessment, type ServerAssessmentResult } from '@/actions/assessment';
 import { useTranslations } from '@/lib/translations';
