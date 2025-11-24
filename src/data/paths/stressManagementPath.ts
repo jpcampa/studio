@@ -85,6 +85,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'Tus “mínimos no negociables”',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tusminimosnonegociables.mp3',
             content: [
               { type: 'paragraph', text: 'Cuando el estrés aparece, lo primero que solemos dejar de lado son las cosas que más nos sostienen: dormir bien, comer con calma, mover el cuerpo, hablar con alguien que nos escucha.\nEstas pequeñas acciones no son lujos, son necesidades básicas. Las llamamos “mínimos no negociables” porque son el suelo emocional sobre el que puedes caminar cada día. Si los abandonas, el estrés encuentra terreno fértil para crecer.\nDormir entre 7 y 8 horas, moverte al menos 15 minutos al día, comer con conciencia, tener pausas reales de desconexión y mantener vínculos afectivos de calidad… son tu mejor red de protección.' },
             ],
@@ -406,10 +407,3 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
-    
-
-
-    
-
-    
