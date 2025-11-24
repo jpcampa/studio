@@ -193,12 +193,14 @@ export const stressManagementPath: Path = {
           ],
         },
         {
-          type: 'paragraphWithAudio',
-          text: '',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
+          type: 'title',
+          text: 'Resumen Clave de la Semana 1',
         },
-        { type: 'title', text: 'Resumen Clave de la Semana 1' },
+        {
+            type: 'paragraphWithAudio',
+            text: '',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
+        },
         {
           type: 'list',
           items: [
@@ -291,6 +293,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Qué genera seguridad?',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Quegeneraseguridad.mp3',
           content: [
             {
               type: 'paragraph',
@@ -609,3 +612,6 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
+
+    
