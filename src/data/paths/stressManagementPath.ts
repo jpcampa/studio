@@ -204,20 +204,22 @@ export const stressManagementPath: Path = {
                     { type: 'paragraph', text: 'Estas herramientas usan el cuerpo como puerta de entrada al bienestar. Algunas se basan en la respiración, otras en el movimiento, la atención plena o el contacto sensorial. Todas comparten un mismo propósito: ayudarte a regular tu sistema y conectar contigo desde un lugar de seguridad.\nPuedes usarlas:\n•\tEn el momento, si sientes ansiedad o bloqueo.\n•\tAntes de una situación desafiante.\n•\tComo rutina diaria para cultivar equilibrio.\n•\tPara conocerte mejor: observa cuáles te funcionan más.' },
                 ]
             },
-            { type: 'exercise', title: 'Respiración 4–2–6 con gesto de autocuidado', objective: 'Salir del modo estrés y activar el modo calma.', duration: "2-3 min", content: [
+            { type: 'exercise', title: 'Respiración 4–2–6 con gesto de autocuidado', objective: 'Salir del modo estrés y activar el modo calma.', content: [
                 { type: 'paragraph', text: '1.\tInhala por la nariz durante 4 segundos.\n2.\tMantén el aire 2 segundos.\n3.\tExhala lentamente por la boca durante 6 segundos.\n4.\tMientras respiras, coloca una mano sobre el pecho o el abdomen, como gesto de cuidado hacia ti.\nPractica esta respiración durante 1 o 2 minutos, varias veces al día o en momentos de tensión.\n' }
             ], audioUrl: 'https://workwellfut.com/audios/rm/R1_respiracion_4-2-6.mp3'},
-            { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', duration: "3-5 min", content: [
+            { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
                 { type: 'paragraph', text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.' }
             ], audioUrl: 'https://workwellfut.com/audios/R1_anclaje_sensorial_inmediato.m4a'},
-            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', duration: "8-10 min", content: [], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
-            { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', duration: "10-12 min", content: [
+            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [
+                { type: 'paragraph', text: '🎧 Disponible en formato audio.' }
+            ], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
+            { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', content: [
                 { type: 'paragraph', text: '🎧 A través de un audio o video guiado, irás tensando y soltando diferentes grupos musculares (piernas, abdomen, cara, hombros…).\nEste ejercicio te ayudará a sentir alivio físico y a reconocer cómo tu cuerpo acumula tensión.' }
             ], audioUrl: 'https://workwellfut.com/audios/rm/R1-parte-1-respiracion-muscular-progresiva.mp3'},
-            { type: 'exercise', title: 'Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', duration: "2-5 min", content: [
+            { type: 'exercise', title: 'Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', content: [
                 { type: 'paragraph', text: 'Opciones que puedes probar:\n•\tAutoabrazo firme: Cruza los brazos sobre tu pecho y mantén la presión mientras respiras.\n•\tBalanceo suave: Sentado/a o de pie, realiza un vaivén rítmico con el cuerpo.\n•\tManta con peso (o varias mantas dobladas): Cúbrete durante unos minutos para activar el sistema de regulación interna.\nEstas prácticas envían señales de seguridad al cerebro. Úsalas tras situaciones exigentes o como parte de tu rutina diaria.' }
             ]},
-            { type: 'exercise', title: 'Contacto frío breve (reset inmediato)', objective: 'Interrumpir una activación emocional intensa.', duration: "1-2 min", content: [
+            { type: 'exercise', title: 'Contacto frío breve (reset inmediato)', objective: 'Interrumpir una activación emocional intensa.', content: [
                 { type: 'paragraph', text: 'Cómo aplicarlo:\n1.\tHumedece una toalla o paño con agua fría.\n2.\tAplícalo entre 10 y 20 segundos en:\no\tLa nuca\no\tLas muñecas\no\tLa parte interna de los brazos o las mejillas\n3.\tRespira mientras sientes el contacto del frío.\nSi estás fuera de casa, puedes usar agua del grifo o un cubito envuelto en tela.\nEste pequeño “shock” activa una respuesta calmante en tu cuerpo y te ayuda a pausar el bucle de ansiedad.' }
             ]},
             { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3' },
@@ -333,7 +335,7 @@ export const stressManagementPath: Path = {
               title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales', 
               objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
-            { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
+            { type: 'title', text: 'Resumen Clave' },
             { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
         ]
@@ -343,7 +345,6 @@ export const stressManagementPath: Path = {
         title: 'Semana 4: Plan de Acción y Prevención de Recaídas',
         type: 'summary',
         estimatedTime: '15-20 min',
-        audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/INTRODUCCIONSEMANA4.mp3',
         content: [
             { type: 'paragraph', text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.'},
             { type: 'title', text: 'Psicoeducación' },
@@ -351,7 +352,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 1: Evaluación y conciencia',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa1Evaluacionyconciencia.mp3',
                 content: [
                     { type: 'paragraph', text: 'Todo buen plan empieza por observarte.\nDurante estas semanas, has aprendido a identificar cómo se activa el estrés en ti: qué lo dispara, cómo reacciona tu cuerpo, qué pensamientos se repiten y qué emociones se intensifican. Ahora es momento de consolidar esa información para que se convierta en una alerta temprana que te ayude a actuar antes de desbordarte.\n¿Cómo saber que el estrés está empezando a subir?'},
                     { type: 'list', items: ['Me cuesta dormir o me despierto cansado/a', 'Tensión muscular (cuello, mandíbula, pecho)', 'Me irrito o me siento desconectada/o sin saber por qué', 'Me aíslo o aumento conductas evasivas (pantallas, comida, control excesivo)', 'Vuelvo a pensar “no puedo con esto” o “tengo que hacerlo todo perfecto”']},
@@ -361,7 +361,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 2: Objetivos y estrategias',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa2Objetivosyestrategias.mp3',
                 content: [
                     { type: 'paragraph', text: 'Tu plan de acción se construye sobre lo que ya has practicado. No necesitas hacerlo perfecto, sino contar con algunas herramientas bien integradas que puedas activar cuando lo necesites.\nEstrategias cognitivas:'},
                     { type: 'list', items: ['Reestructuración cognitiva: detectar pensamientos automáticos y transformarlos en versiones más amables', 'Autoinstrucciones positivas: Ej. “Estoy haciendo lo que puedo con lo que tengo”', 'Identificación de pensamientos exigentes (Semana 3)']},
@@ -374,7 +373,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 3: Prevención de recaídas',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa3Prevencionderecaidas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Recaer no es fracasar. Es aplicar lo aprendido en un nuevo ciclo.\nSeñales tempranas de recaída:'},
                     { type: 'list', items: ['Autoexigencia creciente', 'Abandono de rutinas de autocuidado', 'Pensamientos rígidos o catastrofistas']},
@@ -395,7 +393,7 @@ export const stressManagementPath: Path = {
               duration: '10-15 min',
               audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3",
             },
-            { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/RESUMEN.mp3'},
+            { type: 'title', text: 'Resumen Clave de la Semana'},
             { type: 'list', items: ['El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.', 'Tener un plan personal te permite actuar antes de desbordarte.', 'Reconocer tus señales tempranas es una forma de autocuidado.', 'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.']},
             { type: 'quote', text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.'}
         ]
@@ -410,3 +408,4 @@ export const stressManagementPath: Path = {
     
 
     
+
