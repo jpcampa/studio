@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 
 type PageProps = { params: { pathId: string } };
 
+// Se fuerza el renderizado dinámico para evitar errores de compilación estática en producción.
 export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }: PageProps) {
@@ -18,7 +19,7 @@ export default async function Page({ params }: PageProps) {
   return <PathDetailClient path={path} />;
 }
 
-// Se elimina generateStaticParams para forzar renderizado dinámico
+// Se elimina generateStaticParams para forzar renderizado dinámico.
 // export async function generateStaticParams(): Promise<{pathId: string}[]> {
 //   return pathsData.map((path) => ({
 //     pathId: path.id,
