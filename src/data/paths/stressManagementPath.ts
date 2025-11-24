@@ -57,7 +57,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Por qué sentimos estrés?',
-            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3",
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3',
             content: [
               { type: 'paragraph', text: 'El estrés no depende solo de lo que pasa fuera, sino de cómo lo interpretas y con qué recursos cuentas para enfrentarlo.\nAlgunos factores que influyen:' },
               { type: 'list', items: [
@@ -93,6 +93,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Cómo saber si el estrés te está sobrepasando?',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
             content: [
               { type: 'paragraph', text: 'A veces el cuerpo lo sabe antes que tú:' },
               { type: 'list', items: [
@@ -107,7 +108,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'El estrés como brújula',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Elestrescomobrujulaycierredelapsicoeducacion.mp3',
+            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Elestrescomobrujulaycierredelapsicoeducacion.mp3",
             content: [
               { type: 'paragraph', text: 'El estrés no es una señal de que estés rota o roto. Es una brújula que te está mostrando que algo en tu vida necesita atención, cambio o cuidado.\nIgnorarlo o luchar contra él solo lo hace más fuerte. Aprender a escucharlo con curiosidad y compasión es el verdadero camino hacia la calma.\nVer el estrés con conciencia no significa eliminarlo, sino recuperar el poder sobre tu vida. Y ese poder empieza aquí, ahora, con tu decisión de mirar hacia dentro con valentía.' }
             ]
@@ -407,3 +408,4 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
