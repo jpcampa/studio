@@ -128,8 +128,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Cómo saber si el estrés te está sobrepasando?',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
           content: [
             {
               type: 'paragraph',
@@ -175,11 +174,11 @@ export const stressManagementPath: Path = {
           duration: '5 a 10 minutos',
         },
         {
-          type: 'triggerExercise',
-          title: 'Ejercicio 2: Identifica tu disparador',
-          objective:
-            'Aprender a diferenciar si lo que te está generando estrés viene del entorno (externo) o de ti mismo/a (interno), para empezar a responder con conciencia en lugar de reaccionar en automático.',
-          duration: '5 a 8 minutos',
+            type: 'triggerExercise',
+            title: 'Ejercicio 2: Identifica tu disparador',
+            objective:
+              'Aprender a diferenciar si lo que te está generando estrés viene del entorno (externo) o de ti mismo/a (interno), para empezar a responder con conciencia en lugar de reaccionar en automático.',
+            duration: '5 a 8 minutos',
         },
         {
           type: 'therapeuticNotebookReflection',
@@ -197,10 +196,9 @@ export const stressManagementPath: Path = {
           text: 'Resumen Clave de la Semana 1',
         },
         {
-          type: 'paragraphWithAudio',
-          text: '',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
+            type: 'paragraphWithAudio',
+            text: '',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'
         },
         {
           type: 'list',
@@ -258,6 +256,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Rama parasimpática: tu sistema de descanso y seguridad',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Ramaparasimpatica.mp3',
           content: [
             {
               type: 'paragraph',
@@ -601,8 +600,7 @@ export const stressManagementPath: Path = {
               objective:
                 'Este ejercicio te permite imaginar una situación de alto estrés desde el yo que eres hoy, con más herramientas, conciencia y autocompasión. Visualizar cómo te cuidarías ante una crisis fortalece tu confianza y refuerza la sensación de que tienes un plan posible cuando todo se vuelve difícil.',
               duration: '10-15 min',
-              audioUrl:
-                'https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3',
+              audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3",
             },
             { type: 'title', text: 'Resumen Clave de la Semana'},
             { type: 'list', items: ['El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.', 'Tener un plan personal te permite actuar antes de desbordarte.', 'Reconocer tus señales tempranas es una forma de autocuidado.', 'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.']},
