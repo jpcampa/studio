@@ -12,12 +12,9 @@ export const stressManagementPath: Path = {
       title: 'Semana 1: Comprende el Estrés y Cómo te Afecta',
       type: 'introduction',
       estimatedTime: '20-25 min',
+      audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
       content: [
-        {
-          type: 'paragraphWithAudio',
-          text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
-        },
+        { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
         { type: 'title', text: 'Psicoeducación' },
         {
           type: 'collapsible',
@@ -213,228 +210,118 @@ export const stressManagementPath: Path = {
       ],
     },
     {
-      id: 'estres_sem2',
-      title: 'Semana 2: Activa tu Regulación Fisiológica',
-      type: 'skill_practice',
-      estimatedTime: '15-20 min',
-      content: [
-        {
-          type: 'paragraphWithAudio',
-          text: '¿Sabías que tu cuerpo también forma parte del proceso de autorregulación emocional? Bienvenida o bienvenido a la segunda sesión de esta ruta: “Activa tu regulación fisiológica”.   Esta semana vas a descubrir cómo tu cuerpo participa en la gestión del estrés. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: “ya estás a salvo”.   Mientras escuchas este audio, piensa en algún momento reciente en que tu cuerpo te haya ayudado a calmarte sin proponértelo.   En el siguiente audio te explicaré por qué esto no es casualidad.',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
-        },
-        { type: 'paragraph', text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.' },
-        {
-          type: 'collapsible',
-          title: '¿Por qué ocurre esto?',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3',
-          content: [
+        id: 'estres_sem2',
+        title: 'Semana 2: Activa tu Regulación Fisiológica',
+        type: 'skill_practice',
+        estimatedTime: '15-20 min',
+        content: [
             {
-              type: 'paragraph',
-              text: 'Porque dentro de ti hay un sistema que trabaja sin que tú lo controles, llamado Sistema Nervioso Autónomo. Es como un piloto automático que regula tu respiración, el ritmo del corazón, la tensión de tus músculos… y lo hace todo sin que tengas que pensarlo.\nEste sistema tiene dos ramas principales:\n•\tUna te activa cuando hay peligro.\n•\tLa otra te ayuda a calmarte y recuperarte.\nCuando estas dos partes están en equilibrio, te sientes presente, tranquilo/a y con energía. Pero si la balanza se inclina demasiado hacia el lado de la activación… empiezas a vivir en modo alerta constante.',
+                type: 'paragraphWithAudio',
+                text: '¿Sabías que tu cuerpo también forma parte del proceso de autorregulación emocional? Bienvenida o bienvenido a la segunda sesión de esta ruta: “Activa tu regulación fisiológica”.   Esta semana vas a descubrir cómo tu cuerpo participa en la gestión del estrés. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: “ya estás a salvo”.   Mientras escuchas este audio, piensa en algún momento reciente en que tu cuerpo te haya ayudado a calmarte sin proponértelo.   En el siguiente audio te explicaré por qué esto no es casualidad.',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
             },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Rama simpática: tu sistema de alarma',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Ramasimpatica.mp3',
-          content: [
+            { type: 'paragraph', text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.' },
             {
-              type: 'paragraph',
-              text: 'Esta es la parte que se enciende cuando algo se percibe como una amenaza. Y no hace falta que sea un peligro real. El cuerpo no distingue entre un león y un correo urgente: si tu sistema cree que algo puede salir mal, activa la alarma igual.\nEn ese momento, tu corazón se acelerada, respiras más rápido, tus músculos se tensan… Es tu cuerpo preparándose para “luchar o huir”. A corto plazo, esta reacción puede ayudarte a resolver un problema. Pero si se mantiene encendida mucho tiempo, te agota, te desconecta y puede dejar encendida la ansiedad.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Rama parasimpática: tu sistema de descanso y seguridad',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Ramaparasimpatica.mp3',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Esta es la parte que le dice al cuerpo: “Ya estás a salvo, puedes bajar la guardia”.\nCuando se activa:\n•\tTu respiración se vuelve más lenta.\n•\tTus músculos se relajan.\n•\tSe reduce la tensión.\n•\tTu cuerpo recupera energía.\n•\tSe activa un estado de bienestar profundo.\nY lo más importante: tu mente también se aclara. Puedes pensar con más calma, decidir mejor y sentirte más conectado/a contigo.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'No es solo una cuestión de pensar en positivo…',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Desde la neurociencia, sabemos que muchas respuestas del cuerpo al estrés no pasan por tu mente consciente. Es decir, no decides sentir ansiedad: tu cuerpo la genera porque interpreta que hay una amenaza, aunque no sea evidente.\nPor eso, técnicas como la respiración profunda, los ejercicios de anclaje sensorial o el movimiento suave no son trucos para relajarte: son formas reales de enseñarle a tu cuerpo que puede volver a un estado de calma.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: 'Tu detector interno de seguridad',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Tu cuerpo tiene un sistema que está constantemente vigilando si estás en un entorno seguro o si hay algún riesgo. Se llama neurocepción, y funciona sin que tú te des cuenta.\nEste sistema se activa por cosas muy sutiles, como:\n•\tUna mirada que percibes como crítica.\n•\tUn tono de voz tenso.\n•\tUn ambiente impredecible.\n•\tUn recuerdo que se activa sin querer.\nY cuando detecta algo que “no cuadra”, activa el modo defensa: ansiedad, tensión, malestar.',
+                type: 'collapsible',
+                title: '¿Por qué ocurre esto?',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3',
+                content: [
+                    { type: 'paragraph', text: 'Porque dentro de ti hay un sistema que trabaja sin que tú lo controles, llamado Sistema Nervioso Autónomo. Es como un piloto automático que regula tu respiración, el ritmo del corazón, la tensión de tus músculos… y lo hace todo sin que tengas que pensarlo.\nEste sistema tiene dos ramas principales:\n•\tUna te activa cuando hay peligro.\n•\tLa otra te ayuda a calmarte y recuperarte.\nCuando estas dos partes están en equilibrio, te sientes presente, tranquilo/a y con energía. Pero si la balanza se inclina demasiado hacia el lado de la activación… empiezas a vivir en modo alerta constante.' },
+                ]
             },
             {
-              type: 'paragraph',
-              text: 'Aquí entra en juego la Teoría Polivagal, desarrollada por el neurocientífico Stephen Porges. Esta teoría nos dice que no hay solo “estrés” o “calma”. El cuerpo tiene tres estados principales, como una escalera:\n1.\tConexión y calma: puedes pensar con claridad, estar presente, sentirte a gusto.\n2.\tLucha o huida: tu cuerpo se activa para defenderse.\n3.\tColapso o desconexión: si el peligro se siente abrumador, el cuerpo se apaga. Aparece la sensación de bloqueo, vacío, desconexión o “no estar aquí”.\nMuchos síntomas de ansiedad, tristeza o confusión no son fallos tuyos: son respuestas de un cuerpo que intenta protegerte, a su manera.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: '¿Qué genera seguridad?',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Quegeneraseguridad.mp3',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'La seguridad no es solo un pensamiento. Es un estado que se siente en el cuerpo. Cuando te sientes en confianza:\n•\tTu respiración se regula sola.\n•\tTu expresión facial se relaja.\n•\tTu cuerpo se afloja.\n•\tTu mente se siente más presente.\nY eso puede pasar por estar con alguien que te escucha, envolverte en una manta suave o simplemente sentir que respiras sin tensión. Son pequeños gestos que le dicen a tu cuerpo: “Estás bien, puedes soltar”.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: '¿Por qué es importante todo esto?',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Porque entender cómo funciona tu cuerpo te ayuda a dejar de luchar contra él. Si sientes ansiedad, no es que estés “exagerando” o que no sepas controlarte. Es tu sistema de defensa intentando protegerte. Lo que necesitas no es pelear con él, sino enseñarle que ya no hay peligro.\nY eso se hace desde lo corporal: con respiraciones, con movimientos suaves, con contacto reconfortante.\nEn esta semana, vas a practicar técnicas que activan tu sistema de calma:\n•\tRespiraciones que calman el sistema nervioso.\n•\tTécnicas para volver al presente con los sentidos.\n•\tGestos que le recuerdan a tu cuerpo que está a salvo.\nNo se trata de “calmarte a la fuerza”. Se trata de crear las condiciones para que tu cuerpo pueda hacerlo por sí mismo. Y eso, aunque parezca pequeño, es un acto profundo de cuidado.',
-            },
-          ],
-        },
-        { type: 'title', text: 'Técnicas Específicas' },
-        {
-          type: 'paragraph',
-          text: 'A continuación, te presentamos una serie de técnicas físicas de regulación emocional, validadas por la ciencia, que puedes practicar a diario y también en momentos puntuales de ansiedad. Explora las que te proponemos y elige las que más se ajusten a ti. Practícalas a tu ritmo, sin prisa pero sin pausa.',
-        },
-        {
-          type: 'collapsible',
-          title: '¿Por qué estas técnicas funcionan?',
-          content: [
-            {
-              type: 'paragraph',
-              text: 'Cuando estás en modo alerta —con el corazón acelerado, el cuerpo tenso y la mente agitada— tu sistema nervioso está intentando protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas ayudan a activar tu sistema parasimpático, el encargado de enviarle al cuerpo el mensaje de que ya no hay peligro. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios han demostrado que practicar respiración consciente o mindfulness durante al menos 8 semanas puede producir cambios reales en el cerebro, como la reducción del volumen de la amígdala (centro de alerta y miedo). Es decir: te entrenas para vivir con más calma.',
-            },
-          ],
-        },
-        {
-          type: 'collapsible',
-          title: '¿Qué cambia cuando las practicas?',
-          content: [
-            { type: 'paragraph', text: 'En tu cuerpo:' },
-            {
-              type: 'list',
-              items: ['La respiración se vuelve más profunda y regular.', 'Se regula el CO₂ en sangre, reduciendo mareos y sensaciones de ahogo.', 'Se libera tensión muscular acumulada.', 'Aparece una sensación de alivio, calor o tranquilidad.'],
-            },
-            { type: 'paragraph', text: 'En tu mente:' },
-            {
-              type: 'list',
-              items: ['Recuperas el control y vuelves al presente.', 'Se interrumpe el bucle de pensamientos ansiosos.', 'Refuerzas el autocuidado y la conexión contigo.'],
+                type: 'collapsible',
+                title: 'Rama simpática: tu sistema de alarma',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Ramasimpatica.mp3',
+                content: [
+                    { type: 'paragraph', text: 'Esta es la parte que se enciende cuando algo se percibe como una amenaza. Y no hace falta que sea un peligro real. El cuerpo no distingue entre un león y un correo urgente: si tu sistema cree que algo puede salir mal, activa la alarma igual.\nEn ese momento, tu corazón se acelerada, respiras más rápido, tus músculos se tensan… Es tu cuerpo preparándose para “luchar o huir”. A corto plazo, esta reacción puede ayudarte a resolver un problema. Pero si se mantiene encendida mucho tiempo, te agota, te desconecta y puede dejar encendida la ansiedad.' },
+                ]
             },
             {
-              type: 'paragraph',
-              text: 'Estas herramientas usan el cuerpo como puerta de entrada al bienestar. Algunas se basan en la respiración, otras en el movimiento, la atención plena o el contacto sensorial. Todas comparten un mismo propósito: ayudarte a regular tu sistema y conectar contigo desde un lugar de seguridad.\nPuedes usarlas:\n•\tEn el momento, si sientes ansiedad o bloqueo.\n•\tAntes de una situación desafiante.\n•\tComo rutina diaria para cultivar equilibrio.\n•\tPara conocerte mejor: observa cuáles te funcionan más.',
+                type: 'collapsible',
+                title: 'Rama parasimpática: tu sistema de descanso y seguridad',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Ramaparasimpatica.mp3',
+                content: [
+                    { type: 'paragraph', text: 'Esta es la parte que le dice al cuerpo: “Ya estás a salvo, puedes bajar la guardia”.\nCuando se activa:\n•\tTu respiración se vuelve más lenta.\n•\tTus músculos se relajan.\n•\tSe reduce la tensión.\n•\tTu cuerpo recupera energía.\n•\tSe activa un estado de bienestar profundo.\nY lo más importante: tu mente también se aclara. Puedes pensar con más calma, decidir mejor y sentirte más conectado/a contigo.' },
+                ]
             },
-          ],
-        },
-        {
-          type: 'exercise',
-          title: 'Respiración 4–2–6 con gesto de autocuidado',
-          objective: 'Salir del modo estrés y activar el modo calma.',
-          content: [
             {
-              type: 'paragraph',
-              text: '1.\tInhala por la nariz durante 4 segundos.\n2.\tMantén el aire 2 segundos.\n3.\tExhala lentamente por la boca durante 6 segundos.\n4.\tMientras respiras, coloca una mano sobre el pecho o el abdomen, como gesto de cuidado hacia ti.\nPractica esta respiración durante 1 o 2 minutos, varias veces al día o en momentos de tensión.\n',
+                type: 'collapsible',
+                title: 'No es solo una cuestión de pensar en positivo…',
+                content: [
+                    { type: 'paragraph', text: 'Desde la neurociencia, sabemos que muchas respuestas del cuerpo al estrés no pasan por tu mente consciente. Es decir, no decides sentir ansiedad: tu cuerpo la genera porque interpreta que hay una amenaza, aunque no sea evidente.\nPor eso, técnicas como la respiración profunda, los ejercicios de anclaje sensorial o el movimiento suave no son trucos para relajarte: son formas reales de enseñarle a tu cuerpo que puede volver a un estado de calma.' },
+                ]
             },
-          ],
-          audioUrl:
-            'https://workwellfut.com/audios/rm/R1_respiracion_4-2-6.mp3',
-        },
-        {
-          type: 'exercise',
-          title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)',
-          objective: 'Salir del bucle mental ansioso y volver al momento presente.',
-          content: [
             {
-              type: 'paragraph',
-              text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.',
+                type: 'collapsible',
+                title: 'Tu detector interno de seguridad',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
+                content: [
+                    { type: 'paragraph', text: 'Tu cuerpo tiene un sistema que está constantemente vigilando si estás en un entorno seguro o si hay algún riesgo. Se llama neurocepción, y funciona sin que tú te des cuenta.\nEste sistema se activa por cosas muy sutiles, como:\n•\tUna mirada que percibes como crítica.\n•\tUn tono de voz tenso.\n•\tUn ambiente impredecible.\n•\tUn recuerdo que se activa sin querer.\nY cuando detecta algo que “no cuadra”, activa el modo defensa: ansiedad, tensión, malestar.' },
+                    { type: 'paragraph', text: 'Aquí entra en juego la Teoría Polivagal, desarrollada por el neurocientífico Stephen Porges. Esta teoría nos dice que no hay solo “estrés” o “calma”. El cuerpo tiene tres estados principales, como una escalera:\n1.\tConexión y calma: puedes pensar con claridad, estar presente, sentirte a gusto.\n2.\tLucha o huida: tu cuerpo se activa para defenderse.\n3.\tColapso o desconexión: si el peligro se siente abrumador, el cuerpo se apaga. Aparece la sensación de bloqueo, vacío, desconexión o “no estar aquí”.\nMuchos síntomas de ansiedad, tristeza o confusión no son fallos tuyos: son respuestas de un cuerpo que intenta protegerte, a su manera.' },
+                ]
             },
-          ],
-          audioUrl:
-            'https://workwellfut.com/audios/R1_anclaje_sensorial_inmediato.m4a',
-        },
-        {
-          type: 'exercise',
-          title: 'Escaneo corporal sin juicio (body scan)',
-          objective:
-            'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.',
-          content: [
-            { type: 'paragraph', text: '🎧 Disponible en formato audio.' },
-          ],
-          audioUrl:
-            'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3',
-        },
-        {
-          type: 'exercise',
-          title: 'Relajación muscular progresiva (Jacobson)',
-          objective: 'Liberar la tensión física generada por el estrés.',
-          content: [
             {
-              type: 'paragraph',
-              text: '🎧 A través de un audio o video guiado, irás tensando y soltando diferentes grupos musculares (piernas, abdomen, cara, hombros…).\nEste ejercicio te ayudará a sentir alivio físico y a reconocer cómo tu cuerpo acumula tensión.',
+                type: 'collapsible',
+                title: '¿Qué genera seguridad?',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Quegeneraseguridad.mp3',
+                content: [
+                    { type: 'paragraph', text: 'La seguridad no es solo un pensamiento. Es un estado que se siente en el cuerpo. Cuando te sientes en confianza:\n•\tTu respiración se regula sola.\n•\tTu expresión facial se relaja.\n•\tTu cuerpo se afloja.\n•\tTu mente se siente más presente.\nY eso puede pasar por estar con alguien que te escucha, envolverte en una manta suave o simplemente sentir que respiras sin tensión. Son pequeños gestos que le dicen a tu cuerpo: “Estás bien, puedes soltar”.' }
+                ]
             },
-          ],
-          audioUrl:
-            'https://workwellfut.com/audios/rm/R1-parte-1-respiracion-muscular-progresiva.mp3',
-        },
-        {
-          type: 'exercise',
-          title: 'Técnicas de presión profunda y balanceo corporal',
-          objective:
-            'Generar una sensación de seguridad y arraigo desde el cuerpo.',
-          content: [
             {
-              type: 'paragraph',
-              text: 'Opciones que puedes probar:\n•\tAutoabrazo firme: Cruza los brazos sobre tu pecho y mantén la presión mientras respiras.\n•\tBalanceo suave: Sentado/a o de pie, realiza un vaivén rítmico con el cuerpo.\n•\tManta con peso (o varias mantas dobladas): Cúbrete durante unos minutos para activar el sistema de regulación interna.\nEstas prácticas envían señales de seguridad al cerebro. Úsalas tras situaciones exigentes o como parte de tu rutina diaria.',
+                type: 'collapsible',
+                title: '¿Por qué es importante todo esto?',
+                content: [
+                    { type: 'paragraph', text: 'Porque entender cómo funciona tu cuerpo te ayuda a dejar de luchar contra él. Si sientes ansiedad, no es que estés “exagerando” o que no sepas controlarte. Es tu sistema de defensa intentando protegerte. Lo que necesitas no es pelear con él, sino enseñarle que ya no hay peligro.\nY eso se hace desde lo corporal: con respiraciones, con movimientos suaves, con contacto reconfortante.\nEn esta semana, vas a practicar técnicas que activan tu sistema de calma:\n•\tRespiraciones que calman el sistema nervioso.\n•\tTécnicas para volver al presente con los sentidos.\n•\tGestos que le recuerdan a tu cuerpo que está a salvo.\nNo se trata de “calmarte a la fuerza”. Se trata de crear las condiciones para que tu cuerpo pueda hacerlo por sí mismo. Y eso, aunque parezca pequeño, es un acto profundo de cuidado.' }
+                ]
             },
-          ],
-        },
-        {
-          type: 'exercise',
-          title: 'Contacto frío breve (reset inmediato)',
-          objective: 'Interrumpir una activación emocional intensa.',
-          content: [
+            { type: 'title', text: 'Técnicas Específicas' },
+            { type: 'paragraph', text: 'A continuación, te presentamos una serie de técnicas físicas de regulación emocional, validadas por la ciencia, que puedes practicar a diario y también en momentos puntuales de ansiedad. Explora las que te proponemos y elige las que más se ajusten a ti. Practícalas a tu ritmo, sin prisa pero sin pausa.' },
             {
-              type: 'paragraph',
-              text: 'Cómo aplicarlo:\n1.\tHumedece una toalla o paño con agua fría.\n2.\tAplícalo entre 10 y 20 segundos en:\no\tLa nuca\no\tLas muñecas\no\tLa parte interna de los brazos o las mejillas\n3.\tRespira mientras sientes el contacto del frío.\nSi estás fuera de casa, puedes usar agua del grifo o un cubito envuelto en tela.\nEste pequeño “shock” activa una respuesta calmante en tu cuerpo y te ayuda a pausar el bucle de ansiedad.',
+                type: 'collapsible',
+                title: '¿Por qué estas técnicas funcionan?',
+                content: [
+                    { type: 'paragraph', text: 'Cuando estás en modo alerta —con el corazón acelerado, el cuerpo tenso y la mente agitada— tu sistema nervioso está intentando protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas ayudan a activar tu sistema parasimpático, el encargado de enviarle al cuerpo el mensaje de que ya no hay peligro. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios han demostrado que practicar respiración consciente o mindfulness durante al menos 8 semanas puede producir cambios reales en el cerebro, como la reducción del volumen de la amígdala (centro de alerta y miedo). Es decir: te entrenas para vivir con más calma.' },
+                ]
             },
-          ],
-        },
-        {
-          type: 'therapeuticNotebookReflection',
-          title: 'Reflexión',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/REFLEXION.mp3',
-          prompts: [
-            'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
-          ],
-        },
-        { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
-        {
-          type: 'list',
-          items: [
-            'Tu cuerpo también forma parte de tu sistema de regulación emocional.',
-            'El sistema nervioso reacciona con alarma incluso ante estímulos cotidianos.',
-            'Puedes activar el sistema de calma mediante técnicas sencillas y efectivas.',
-            'La respiración, el movimiento suave o el contacto físico envían señales de seguridad al cerebro.',
-            'Cuanto más entrenas estas técnicas, más fácil te resulta acceder a la calma cuando la necesitas.',
-          ],
-        },
-        {
-          type: 'quote',
-          text: 'Respirar con conciencia es el gesto más pequeño y poderoso que puedes hacer por ti.',
-        },
-      ],
+            {
+                type: 'collapsible',
+                title: '¿Qué cambia cuando las practicas?',
+                content: [
+                    { type: 'paragraph', text: 'En tu cuerpo:' },
+                    { type: 'list', items: ['La respiración se vuelve más profunda y regular.', 'Se regula el CO₂ en sangre, reduciendo mareos y sensaciones de ahogo.', 'Se libera tensión muscular acumulada.', 'Aparece una sensación de alivio, calor o tranquilidad.'] },
+                    { type: 'paragraph', text: 'En tu mente:' },
+                    { type: 'list', items: ['Recuperas el control y vuelves al presente.', 'Se interrumpe el bucle de pensamientos ansiosos.', 'Refuerzas el autocuidado y la conexión contigo.'] },
+                    { type: 'paragraph', text: 'Estas herramientas usan el cuerpo como puerta de entrada al bienestar. Algunas se basan en la respiración, otras en el movimiento, la atención plena o el contacto sensorial. Todas comparten un mismo propósito: ayudarte a regular tu sistema y conectar contigo desde un lugar de seguridad.\nPuedes usarlas:\n•\tEn el momento, si sientes ansiedad o bloqueo.\n•\tAntes de una situación desafiante.\n•\tComo rutina diaria para cultivar equilibrio.\n•\tPara conocerte mejor: observa cuáles te funcionan más.' },
+                ]
+            },
+            { type: 'exercise', title: 'Respiración 4–2–6 con gesto de autocuidado', objective: 'Salir del modo estrés y activar el modo calma.', content: [
+                { type: 'paragraph', text: '1.\tInhala por la nariz durante 4 segundos.\n2.\tMantén el aire 2 segundos.\n3.\tExhala lentamente por la boca durante 6 segundos.\n4.\tMientras respiras, coloca una mano sobre el pecho o el abdomen, como gesto de cuidado hacia ti.\nPractica esta respiración durante 1 o 2 minutos, varias veces al día o en momentos de tensión.\n' }
+            ], audioUrl: 'https://workwellfut.com/audios/rm/R1_respiracion_4-2-6.mp3'},
+            { type: 'exercise', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', objective: 'Salir del bucle mental ansioso y volver al momento presente.', content: [
+                { type: 'paragraph', text: 'Instrucciones (con respiración 6-2-4 previa):\n1.\tInhala 6 s – mantén 2 s – exhala 4 s (2 veces).\n2.\tNombra mentalmente:\no\t5 cosas que ves.\no\t4 cosas que puedes tocar.\no\t3 sonidos que escuchas.\no\t2 olores que detectas o recuerdas.\no\t1 sabor presente en tu boca.\nAl terminar, haz una respiración profunda y siente cómo has interrumpido el piloto automático.' }
+            ], audioUrl: 'https://workwellfut.com/audios/R1_anclaje_sensorial_inmediato.m4a'},
+            { type: 'exercise', title: 'Escaneo corporal sin juicio (body scan)', objective: 'Observar tu cuerpo con amabilidad y disminuir la tensión acumulada. En esta técnica guiada, recorrerás mentalmente tu cuerpo de pies a cabeza sin intentar cambiar nada. Solo observarás y acompañarás las sensaciones físicas con una actitud amable.', content: [
+                { type: 'paragraph', text: '🎧 Disponible en formato audio.' }
+            ], audioUrl: 'https://workwellfut.com/audios/rm/R_body_scan_breve.mp3'},
+            { type: 'exercise', title: 'Relajación muscular progresiva (Jacobson)', objective: 'Liberar la tensión física generada por el estrés.', content: [
+                { type: 'paragraph', text: '🎧 A través de un audio o video guiado, irás tensando y soltando diferentes grupos musculares (piernas, abdomen, cara, hombros…).\nEste ejercicio te ayudará a sentir alivio físico y a reconocer cómo tu cuerpo acumula tensión.' }
+            ], audioUrl: 'https://workwellfut.com/audios/rm/R1-parte-1-respiracion-muscular-progresiva.mp3'},
+            { type: 'exercise', title: 'Técnicas de presión profunda y balanceo corporal', objective: 'Generar una sensación de seguridad y arraigo desde el cuerpo.', content: [
+                { type: 'paragraph', text: 'Opciones que puedes probar:\n•\tAutoabrazo firme: Cruza los brazos sobre tu pecho y mantén la presión mientras respiras.\n•\tBalanceo suave: Sentado/a o de pie, realiza un vaivén rítmico con el cuerpo.\n•\tManta con peso (o varias mantas dobladas): Cúbrete durante unos minutos para activar el sistema de regulación interna.\nEstas prácticas envían señales de seguridad al cerebro. Úsalas tras situaciones exigentes o como parte de tu rutina diaria.' }
+            ]},
+            { type: 'exercise', title: 'Contacto frío breve (reset inmediato)', objective: 'Interrumpir una activación emocional intensa.', content: [
+                { type: 'paragraph', text: 'Cómo aplicarlo:\n1.\tHumedece una toalla o paño con agua fría.\n2.\tAplícalo entre 10 y 20 segundos en:\no\tLa nuca\no\tLas muñecas\no\tLa parte interna de los brazos o las mejillas\n3.\tRespira mientras sientes el contacto del frío.\nSi estás fuera de casa, puedes usar agua del grifo o un cubito envuelto en tela.\nEste pequeño “shock” activa una respuesta calmante en tu cuerpo y te ayuda a pausar el bucle de ansiedad.' }
+            ]},
+            { type: 'therapeuticNotebookReflection', title: 'Reflexión', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/REFLEXION.mp3', prompts: [
+                'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
+              ]
+            },
+            { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
+            { type: 'list', items: ['Tu cuerpo también forma parte de tu sistema de regulación emocional.', 'El sistema nervioso reacciona con alarma incluso ante estímulos cotidianos.', 'Puedes activar el sistema de calma mediante técnicas sencillas y efectivas.', 'La respiración, el movimiento suave o el contacto físico envían señales de seguridad al cerebro.', 'Cuanto más entrenas estas técnicas, más fácil te resulta acceder a la calma cuando la necesitas.'] },
+            { type: 'quote', text: 'Respirar con conciencia es el gesto más pequeño y poderoso que puedes hacer por ti.'}
+        ]
     },
     {
         id: 'estres_sem3',
@@ -468,6 +355,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'El modelo ABC: cómo se conectan pensamiento, emoción y acción',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/ElmodeloABCpensamientoemocionyaccion.mp3',
                 content: [
                     { type: 'paragraph', text: 'Desde la Terapia Cognitivo-Conductual usamos el modelo A-B-C:'},
                     { type: 'list', items: ['A (Acontecimiento): Lo que pasa. Ej: Tu jefe te encarga algo urgente.', 'B (Creencia o pensamiento): Lo que piensas. Ej: “No voy a dar la talla”.', 'C (Consecuencia): Cómo te sientes y actúas. Ej: Ansiedad + bloqueo + trabajar con angustia.']},
@@ -607,4 +495,3 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
