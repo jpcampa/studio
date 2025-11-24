@@ -248,13 +248,11 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: '¿Qué son los pensamientos automáticos?',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Pensamientosautomaticos.mp3',
                 content: [{ type: 'paragraph', text: 'Son ideas breves y espontáneas que aparecen en tu mente casi sin darte cuenta. Aunque parecen simples, influyen mucho en cómo te sientes y en cómo actúas. Por ejemplo, si alguien dice “tenemos que hablar”, puedes sentir ansiedad solo porque aparece el pensamiento “algo va mal”.\nEstos pensamientos no siempre son racionales, pero sí muy poderosos. Por eso, aprender a identificarlos y cuestionarlos puede ayudarte a transformar tu forma de sentir y actuar.'}]
             },
             {
                 type: 'collapsible',
                 title: 'Las creencias exigentes: una fuente silenciosa de tensión',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Creenciasexigentesunafuentesilenciosadetension.mp3',
                 content: [
                     { type: 'paragraph', text: 'Muchas personas viven con un diálogo interno muy exigente:'},
                     { type: 'list', items: ['“Tengo que poder con todo.”', '“No puedo permitirme fallar.”', '“Los demás lo hacen mejor que yo.”']},
@@ -264,7 +262,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'El modelo ABC: cómo se conectan pensamiento, emoción y acción',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/ElmodeloABCpensamientoemocionyaccion.mp3',
                 content: [
                     { type: 'paragraph', text: 'Desde la Terapia Cognitivo-Conductual usamos el modelo A-B-C:'},
                     { type: 'list', items: ['A (Acontecimiento): Lo que pasa. Ej: Tu jefe te encarga algo urgente.', 'B (Creencia o pensamiento): Lo que piensas. Ej: “No voy a dar la talla”.', 'C (Consecuencia): Cómo te sientes y actúas. Ej: Ansiedad + bloqueo + trabajar con angustia.']},
@@ -274,7 +271,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Un mismo hecho, dos emociones distintas',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Unmismohechodosemocionesdistintas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Situación: Tu pareja no contesta a tu mensaje en horas.'},
                     { type: 'list', items: ['Pensamiento 1: “Está enfadado/a conmigo” → Ansiedad, inseguridad.', 'Pensamiento 2: “Estará ocupado/a” → Calma, paciencia.']},
@@ -284,7 +280,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Las distorsiones cognitivas: filtros mentales que aumentan tu estrés',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Distorsionescognitivas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Nuestro cerebro tiende a interpretar la realidad con atajos que a veces fallan. Estas distorsiones son formas automáticas y poco realistas de pensar que exageran lo negativo, minimizan lo positivo o interpretan las cosas de forma rígida. Aprender a identificarlas te permite ganar claridad y aliviar tu carga emocional.'},
                     { 
@@ -316,7 +311,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: '¿Qué hacer cuando detectas un pensamiento negativo?',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Quehacercuandodetectasunpensamientonegativo.mp3',
                 content: [
                     { type: 'paragraph', text: 'No se trata de forzarte a “pensar en positivo”, sino de pensar de forma más realista y compasiva. Puedes preguntarte:'},
                     { type: 'list', items: ['¿Qué evidencia tengo de que esto sea cierto?', '¿Estoy exagerando o anticipando?', '¿Qué le diría a alguien que quiero si pensara esto?', '¿Este pensamiento me ayuda o me hace daño?']},
@@ -326,7 +320,6 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Desde la neurociencia: por qué funciona',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Desdelaneurocienciaporquefunciona.mp3',
                 content: [
                     { type: 'paragraph', text: 'Cuando reinterpretas una situación, activas nuevas redes neuronales. Tu corteza prefrontal (la parte que decide) toma protagonismo frente al sistema límbico (la parte reactiva). Así, pasas de reaccionar por impulso a responder con claridad.\nTus pensamientos no siempre son verdad. Son interpretaciones. Y puedes aprender a elegir las que te cuidan.'}
                 ]
@@ -409,3 +402,6 @@ export const stressManagementPath: Path = {
   ],
 };
 
+
+
+    
