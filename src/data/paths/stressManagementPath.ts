@@ -419,15 +419,7 @@ export const stressManagementPath: Path = {
             'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
-        {
-          type: 'title',
-          text: 'Resumen Clave',
-        },
-        {
-            type: 'paragraphWithAudio',
-            text: '',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'
-        },
+        { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
         {
           type: 'list',
           items: [
@@ -466,6 +458,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Las creencias exigentes: una fuente silenciosa de tensión',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Creenciasexigentesunafuentesilenciosadetension.mp3',
                 content: [
                     { type: 'paragraph', text: 'Muchas personas viven con un diálogo interno muy exigente:'},
                     { type: 'list', items: ['“Tengo que poder con todo.”', '“No puedo permitirme fallar.”', '“Los demás lo hacen mejor que yo.”']},
@@ -614,3 +607,4 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
