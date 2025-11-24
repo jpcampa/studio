@@ -160,6 +160,7 @@ export const stressManagementPath: Path = {
         type: 'skill_practice',
         estimatedTime: '15-20 min',
         content: [
+            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3' },
             { type: 'paragraph', text: 'Esta semana vas a descubrir cómo tu cuerpo también forma parte del proceso de autorregulación emocional. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: "ya estás a salvo".' },
             { type: 'title', text: 'Psicoeducación' },
             { type: 'paragraph', text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.' },
@@ -409,3 +410,4 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
