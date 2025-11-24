@@ -56,8 +56,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Tipos de estrés',
-          audioUrl:
-            'https://workwellfut.com/audios/ruta1/semana1/Tiposdeestres.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tiposdeestres.mp3',
           content: [
             {
               type: 'list',
@@ -183,7 +182,7 @@ export const stressManagementPath: Path = {
         },
         {
           type: 'therapeuticNotebookReflection',
-          title: 'Reflexión',
+          title: 'Reflexión Final de la Semana',
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3',
           prompts: [
             'Tómate un momento para integrar todo lo aprendido:',
@@ -427,6 +426,14 @@ export const stressManagementPath: Path = {
               type: 'paragraph',
               text: 'Cómo aplicarlo:\n1.\tHumedece una toalla o paño con agua fría.\n2.\tAplícalo entre 10 y 20 segundos en:\no\tLa nuca\no\tLas muñecas\no\tLa parte interna de los brazos o las mejillas\n3.\tRespira mientras sientes el contacto del frío.\nSi estás fuera de casa, puedes usar agua del grifo o un cubito envuelto en tela.\nEste pequeño “shock” activa una respuesta calmante en tu cuerpo y te ayuda a pausar el bucle de ansiedad.',
             },
+          ],
+        },
+        {
+          type: 'therapeuticNotebookReflection',
+          title: 'Reflexión',
+          prompts: [
+            'Tómate un momento para integrar todo lo aprendido:',
+            '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
         { type: 'title', text: 'Resumen Clave' },
