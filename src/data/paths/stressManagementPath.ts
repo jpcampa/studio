@@ -108,13 +108,13 @@ export const stressManagementPath: Path = {
           type: 'stressMapExercise',
           title: 'Ejercicio 1: Mapa del Estrés Personal',
           objective: 'Con este ejercicio empezarás a reconocer cómo se manifiesta el estrés en ti. Al explorar tus pensamientos, emociones, sensaciones físicas y comportamientos cuando te sientes bajo presión, podrás comprender mejor lo que te ocurre y dar los primeros pasos para recuperar el equilibrio y sentirte más en calma.',
-          duration: '8-12 min',
+          duration: '5 a 10 minutos',
         },
         {
             type: 'triggerExercise',
             title: 'Ejercicio 2: Identifica tu disparador',
             objective: 'Aprender a diferenciar si lo que te está generando estrés viene del entorno (externo) o de ti mismo/a (interno), para empezar a responder con conciencia en lugar de reaccionar en automático.',
-            duration: '7-10 min',
+            duration: '5 a 8 minutos',
         },
         {
             type: 'title',
@@ -400,5 +400,7 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
+    
 
     
