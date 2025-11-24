@@ -11,9 +11,6 @@ import { ArrowRight, Info, Shield, ListChecks, UserCheck, BookOpen, FileJson } f
 export default function AssessmentIntroPage() {
   const t = useTranslations();
   
-  // La URL del JSON para el botón de depuración
-  const questionsJsonUrl = "https://firebasestorage.googleapis.com/v0/b/workwell-c4rlk.firebasestorage.app/o/assessment-questions.json?alt=media&token=02f5710e-38c0-4a29-90d5-0e3681acf4c4";
-
   return (
     <div className="container mx-auto py-8 flex justify-center">
       <Card className="w-full max-w-3xl shadow-xl my-8 overflow-hidden">
@@ -90,12 +87,6 @@ export default function AssessmentIntroPage() {
             <Link href="/assessment">
               {t.assessmentIntroPageStartButton}
               <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link href={questionsJsonUrl} target="_blank" rel="noopener noreferrer">
-              <FileJson className="mr-2 h-4 w-4" />
-              Ver JSON de Preguntas
             </Link>
           </Button>
         </CardFooter>
