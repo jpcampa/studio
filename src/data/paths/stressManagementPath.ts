@@ -15,8 +15,8 @@ export const stressManagementPath: Path = {
       content: [
         {
           type: 'paragraphWithAudio',
-          text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.',
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
+          text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.',
         },
         { type: 'title', text: 'Psicoeducación' },
         {
@@ -128,7 +128,8 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Cómo saber si el estrés te está sobrepasando?',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
+          audioUrl:
+            'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
           content: [
             {
               type: 'paragraph',
@@ -192,14 +193,12 @@ export const stressManagementPath: Path = {
           ],
         },
         {
-          type: 'title',
-          text: 'Resumen Clave de la Semana 1',
+          type: 'paragraphWithAudio',
+          text: '',
+          audioUrl:
+            'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
         },
-        {
-            type: 'paragraphWithAudio',
-            text: '',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'
-        },
+        { type: 'title', text: 'Resumen Clave de la Semana 1' },
         {
           type: 'list',
           items: [
@@ -277,6 +276,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Tu detector interno de seguridad',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
           content: [
             {
               type: 'paragraph',
