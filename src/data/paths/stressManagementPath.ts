@@ -11,7 +11,7 @@ export const stressManagementPath: Path = {
       id: 'estres_sem1',
       title: 'Semana 1: Comprende el Estrés y Cómo te Afecta',
       type: 'introduction',
-      estimatedTime: '20-25 min',
+      estimatedTime: '25-30 min',
       content: [
         { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3' },
         { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
@@ -57,7 +57,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Por qué sentimos estrés?',
-            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3",
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Porquesentimosestres.mp3',
             content: [
               { type: 'paragraph', text: 'El estrés no depende solo de lo que pasa fuera, sino de cómo lo interpretas y con qué recursos cuentas para enfrentarlo.\nAlgunos factores que influyen:' },
               { type: 'list', items: [
@@ -71,7 +71,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Qué pasa si no lo gestionamos?',
-            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Quepasasinologestionamos.mp3",
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Quepasasinologestionamos.mp3',
             content: [
               { type: 'paragraph', text: 'El estrés mantenido afecta a todos los niveles:' },
               { type: 'list', items: [
@@ -85,7 +85,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'Tus “mínimos no negociables”',
-            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Tusminimosnonegociables.mp3",
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Tusminimosnonegociables.mp3',
             content: [
               { type: 'paragraph', text: 'Cuando el estrés aparece, lo primero que solemos dejar de lado son las cosas que más nos sostienen: dormir bien, comer con calma, mover el cuerpo, hablar con alguien que nos escucha.\nEstas pequeñas acciones no son lujos, son necesidades básicas. Las llamamos “mínimos no negociables” porque son el suelo emocional sobre el que puedes caminar cada día. Si los abandonas, el estrés encuentra terreno fértil para crecer.\nDormir entre 7 y 8 horas, moverte al menos 15 minutos al día, comer con conciencia, tener pausas reales de desconexión y mantener vínculos afectivos de calidad… son tu mejor red de protección.' },
             ],
@@ -93,7 +93,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: '¿Cómo saber si el estrés te está sobrepasando?',
-            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3",
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Comosabersielestresteestasobrepasando.mp3',
             content: [
               { type: 'paragraph', text: 'A veces el cuerpo lo sabe antes que tú:' },
               { type: 'list', items: [
@@ -108,7 +108,7 @@ export const stressManagementPath: Path = {
         {
             type: 'collapsible',
             title: 'El estrés como brújula',
-            audioUrl: "https://workwellfut.com/audios/ruta1/semana1/Elestrescomobrujulaycierredelapsicoeducacion.mp3",
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Elestrescomobrujulaycierredelapsicoeducacion.mp3',
             content: [
               { type: 'paragraph', text: 'El estrés no es una señal de que estés rota o roto. Es una brújula que te está mostrando que algo en tu vida necesita atención, cambio o cuidado.\nIgnorarlo o luchar contra él solo lo hace más fuerte. Aprender a escucharlo con curiosidad y compasión es el verdadero camino hacia la calma.\nVer el estrés con conciencia no significa eliminarlo, sino recuperar el poder sobre tu vida. Y ese poder empieza aquí, ahora, con tu decisión de mirar hacia dentro con valentía.' }
             ]
@@ -128,14 +128,17 @@ export const stressManagementPath: Path = {
             duration: '5 a 8 minutos',
         },
         {
-            type: 'title',
-            text: 'Resumen Clave de la Semana 1'
+            type: 'therapeuticNotebookReflection',
+            title: 'Reflexión',
+            prompts: [
+              'Tómate un momento para integrar todo lo aprendido:',
+              '¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?',
+              '¿Qué hice en esos momentos?',
+              '¿Qué podría probar diferente la próxima vez?'
+            ]
         },
-        {
-            type: 'paragraphWithAudio',
-            text: '',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'
-        },
+        { type: 'title', text: 'Resumen Clave de la Semana 1' },
+        { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'},
         {
             type: 'list',
             items: [
@@ -405,3 +408,4 @@ export const stressManagementPath: Path = {
     }
   ],
 };
+
