@@ -48,6 +48,7 @@ export default async function Page({ params }: RoutePageProps<{ slug: string }>)
       notFound();
   }
 
+  // Se gestiona el cambio de dominio en la URL de la imagen
   let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   if (imageUrl) {
     imageUrl = imageUrl.replace('workwellfut.hl1450.dinaserver.com', 'workwellfut.com');
@@ -95,6 +96,7 @@ export default async function Page({ params }: RoutePageProps<{ slug: string }>)
   );
 }
 
+// Función para generar los metadatos de la página (título de la pestaña)
 export async function generateMetadata({ params }: RoutePageProps<{ slug: string }>): Promise<Metadata> {
   const { slug } = params;
   const post = await getPostBySlug(slug);

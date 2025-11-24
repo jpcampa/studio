@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
-import { getPostsByCategory, getCategoryBySlug } from '@/data/resourcesData';
+import { getPostsByCategory, getCategoryBySlug, type ResourcePost, type ResourceCategory } from '@/data/resourcesData';
 import { notFound } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { Metadata } from 'next';
@@ -12,33 +12,6 @@ import type { RoutePageProps } from '@/types/page-props';
 
 // Fija la página a renderizado dinámico para asegurar que los datos se obtienen en cada petición
 export const dynamic = 'force-dynamic';
-
-type ResourceCategory = {
-    id: number;
-    name: string;
-    slug: string;
-    count: number;
-};
-type ResourcePost = {
-  id: number;
-  slug: string;
-  title: { rendered: string };
-  excerpt: { rendered: string };
-  content: { rendered: string };
-  date: string;
-  categories: number[];
-  featured_media: number; // Corrected type
-  _embedded?: {
-    'wp:featuredmedia'?: {
-      source_url: string;
-    }[];
-    'wp:term'?: {
-        id: number;
-        name: string;
-        slug: string;
-    }[][];
-  };
-};
 
 export default async function Page({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = params;
@@ -48,22 +21,27 @@ export default async function Page({ params }: RoutePageProps<{ slug: string }>)
   let error: string | null = null;
 
   try {
+    // Se obtienen la categoría y los posts en paralelo para mayor eficiencia
     const [categoryResult, postsResult] = await Promise.all([
       getCategoryBySlug(slug),
       getPostsByCategory(slug),
     ]);
 
     category = categoryResult;
-    posts = postsResult ?? [];
+    posts = postsResult ?? []; // Asegura que posts sea un array aunque el resultado sea nulo
 
+    // Si la categoría no existe, lanzamos un 404
     if (!category) {
       notFound();
     }
   } catch (e) {
       console.error(`Error fetching data for category '${slug}':`, e);
+      // Asignamos un mensaje de error para mostrarlo en la UI
       error = "Ocurrió un error inesperado al cargar la página de esta categoría.";
   }
   
+  // Este es un chequeo de seguridad final. Si la categoría no se encontró,
+  // la función notFound() ya se habrá llamado, pero esto previene errores de renderizado.
   if (!category) {
     notFound();
   }
@@ -98,6 +76,7 @@ export default async function Page({ params }: RoutePageProps<{ slug: string }>)
       {!error && posts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
+            // Se gestiona el cambio de dominio en la URL de la imagen
             let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
             if (imageUrl) {
               imageUrl = imageUrl.replace('workwellfut.hl1450.dinaserver.com', 'workwellfut.com');
@@ -138,6 +117,7 @@ export default async function Page({ params }: RoutePageProps<{ slug: string }>)
   );
 }
 
+// Función para generar los metadatos de la página (título de la pestaña)
 export async function generateMetadata({ params }: RoutePageProps<{ slug: string }>): Promise<Metadata> {
   const { slug } = params;
   const category = await getCategoryBySlug(slug);
