@@ -183,6 +183,7 @@ export const stressManagementPath: Path = {
         {
           type: 'therapeuticNotebookReflection',
           title: 'Reflexión',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3',
           prompts: [
             'Tómate un momento para integrar todo lo aprendido:',
             '¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?',
@@ -190,10 +191,9 @@ export const stressManagementPath: Path = {
             '¿Qué podría probar diferente la próxima vez?',
           ],
         },
-        { type: 'title', text: 'Resumen Clave de la Semana 1' },
         {
           type: 'paragraphWithAudio',
-          text: '',
+          text: 'Resumen Clave de la Semana 1',
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
         },
         {
@@ -328,21 +328,12 @@ export const stressManagementPath: Path = {
             { type: 'paragraph', text: 'En tu cuerpo:' },
             {
               type: 'list',
-              items: [
-                'La respiración se vuelve más profunda y regular.',
-                'Se regula el CO₂ en sangre, reduciendo mareos y sensaciones de ahogo.',
-                'Se libera tensión muscular acumulada.',
-                'Aparece una sensación de alivio, calor o tranquilidad.',
-              ],
+              items: ['La respiración se vuelve más profunda y regular.', 'Se regula el CO₂ en sangre, reduciendo mareos y sensaciones de ahogo.', 'Se libera tensión muscular acumulada.', 'Aparece una sensación de alivio, calor o tranquilidad.'],
             },
             { type: 'paragraph', text: 'En tu mente:' },
             {
               type: 'list',
-              items: [
-                'Recuperas el control y vuelves al presente.',
-                'Se interrumpe el bucle de pensamientos ansiosos.',
-                'Refuerzas el autocuidado y la conexión contigo.',
-              ],
+              items: ['Recuperas el control y vuelves al presente.', 'Se interrumpe el bucle de pensamientos ansiosos.', 'Refuerzas el autocuidado y la conexión contigo.'],
             },
             {
               type: 'paragraph',
@@ -431,7 +422,7 @@ export const stressManagementPath: Path = {
             'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
-        { type: 'title', text: 'Resumen Clave' },
+        { type: 'paragraphWithAudio', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
         {
           type: 'list',
           items: [
@@ -615,5 +606,7 @@ export const stressManagementPath: Path = {
   ],
 };
 
+
+    
 
     
