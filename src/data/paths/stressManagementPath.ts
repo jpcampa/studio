@@ -12,9 +12,12 @@ export const stressManagementPath: Path = {
       title: 'Semana 1: Comprende el Estrés y Cómo te Afecta',
       type: 'introduction',
       estimatedTime: '20-25 min',
-      audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
       content: [
-        { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
+        { 
+            type: 'paragraphWithAudio', 
+            text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3'
+        },
         { type: 'title', text: 'Psicoeducación' },
         {
           type: 'collapsible',
@@ -181,7 +184,7 @@ export const stressManagementPath: Path = {
             '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ]
         },
-        { type: 'title', text: 'Resumen Clave de la Semana 1', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'},
+        { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana 1', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'},
         {
           type: 'list',
           items: [
@@ -303,7 +306,7 @@ export const stressManagementPath: Path = {
                 '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
               ]
             },
-            { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
+            { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
             { type: 'list', items: ['Tu cuerpo también forma parte de tu sistema de regulación emocional.', 'El sistema nervioso reacciona con alarma incluso ante estímulos cotidianos.', 'Puedes activar el sistema de calma mediante técnicas sencillas y efectivas.', 'La respiración, el movimiento suave o el contacto físico envían señales de seguridad al cerebro.', 'Cuanto más entrenas estas técnicas, más fácil te resulta acceder a la calma cuando la necesitas.'] },
             { type: 'quote', text: 'Respirar con conciencia es el gesto más pequeño y poderoso que puedes hacer por ti.'}
         ]
@@ -424,17 +427,13 @@ export const stressManagementPath: Path = {
               title: 'Reflexión Final de la Semana',
               audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/REFLEXION.mp3',
               prompts: [
-                'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tómate unos minutos para integrar lo aprendido.',
+                'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',
                 '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',
                 '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',
                 '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?',
               ],
             },
-            {
-                type: 'paragraphWithAudio',
-                text: 'Resumen Clave de la Semana',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3',
-            },
+            { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3'},
             { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
         ]
@@ -499,41 +498,13 @@ export const stressManagementPath: Path = {
               duration: '10-15 min',
               audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3",
             },
-            { 
-              type: 'therapeuticNotebookReflection', 
-              title: 'Reflexión Final de la Semana',
-              audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/REFLEXION.mp3',
-              prompts: [
-                'Tómate un momento para integrar todo lo aprendido:',
-                '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
-              ]
-            },
+            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/REFLEXION.mp3', prompts: ['¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?'] },
             { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/RESUMEN.mp3' },
-            { type: 'list', items: [
-                'El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.',
-                'Tener un plan personal te permite actuar antes de desbordarte.',
-                'Reconocer tus señales tempranas es una forma de autocuidado.',
-                'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.',
-            ]},
+            { type: 'list', items: ['El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.', 'Tener un plan personal te permite actuar antes de desbordarte.', 'Reconocer tus señales tempranas es una forma de autocuidado.', 'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.'] },
             { type: 'quote', text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.'},
-            { 
-              type: 'therapeuticNotebookReflection', 
-              title: 'Reflexión Final de la Ruta',
-              audioUrl: 'https://workwellfut.com/audios/ruta1/REFLEXIONRUTA.mp3',
-              prompts: [
-                'Has llegado al final de la Ruta. Reconócete el trabajo hecho. Has aprendido qué es el estrés, cómo funciona en ti, de qué formas puedes gestionarlo y has elaborado un plan para afrontarlo cada vez que aparezca.',
-                'Vamos ahora, a pasar a la reflexión final.',
-                '¿Qué me ha enseñado esta ruta sobre mí misma/o que no quiero olvidar?',
-              ]
-            },
-            { type: 'title', text: 'Resumen Final de la Ruta'},
-            { type: 'list', items: [
-              'Has aprendido que el estrés no es tu enemigo, sino una señal que merece ser escuchada.',
-              'Comprendiste cómo se activa en tu cuerpo, tus pensamientos y emociones.',
-              'Descubriste técnicas prácticas para regularte desde dentro, tanto en lo físico como en lo mental.',
-              'Identificaste tus patrones de autoexigencia y aprendiste a hablarte con más compasión.',
-              'Has creado tu propio plan de acción para afrontar los momentos difíciles con mayor claridad y cuidado.',
-            ]},
+            { type: 'therapeuticNotebookReflection', title: 'Reflexión final', audioUrl: 'https://workwellfut.com/audios/ruta1/REFLEXIONRUTA.mp3', prompts: ['Has llegado al final de la Ruta. Reconócete el trabajo hecho. Has aprendido qué es el estrés, cómo funciona en ti, de qué formas puedes gestionarlo y has elaborado un plan para afrontarlo cada vez que aparezca.', 'Vamos ahora, a pasar a la reflexión final.', '¿Qué me ha enseñado esta ruta sobre mí misma/o que no quiero olvidar?']},
+            { type: 'title', text: 'Resumen Final de la Ruta', audioUrl: 'https://workwellfut.com/audios/ruta1/RESUMENRUTA.mp3'},
+            { type: 'list', items: ['Has aprendido que el estrés no es tu enemigo, sino una señal que merece ser escuchada.', 'Comprendiste cómo se activa en tu cuerpo, tus pensamientos y emociones.', 'Descubriste técnicas prácticas para regularte desde dentro, tanto en lo físico como en lo mental.', 'Identificaste tus patrones de autoexigencia y aprendiste a hablarte con más compasión.', 'Has creado tu propio plan de acción para afrontar los momentos difíciles con mayor claridad y cuidado.'] },
             { type: 'paragraph', text: 'Esta ruta no termina aquí: empieza tu camino con más herramientas, conciencia y confianza para cuidarte.'}
         ]
     }
