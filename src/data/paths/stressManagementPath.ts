@@ -130,6 +130,7 @@ export const stressManagementPath: Path = {
         {
             type: 'therapeuticNotebookReflection',
             title: 'Reflexión',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3',
             prompts: [
               'Tómate un momento para integrar todo lo aprendido:',
               '¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?',
@@ -137,7 +138,7 @@ export const stressManagementPath: Path = {
               '¿Qué podría probar diferente la próxima vez?'
             ]
         },
-        { type: 'title', text: 'Resumen Clave de la Semana 1' },
+        { type: 'title', text: 'Resumen Clave de la Semana 1'},
         { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'},
         {
             type: 'list',
@@ -408,4 +409,3 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
