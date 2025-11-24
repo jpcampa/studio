@@ -176,7 +176,7 @@ export const stressManagementPath: Path = {
               'Aprender a diferenciar si lo que te está generando estrés viene del entorno (externo) o de ti mismo/a (interno), para empezar a responder con conciencia en lugar de reaccionar en automático.',
             duration: '5 a 8 minutos',
         },
-        { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+        { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3', prompts: [
             'Tómate un momento para integrar todo lo aprendido:',
             '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ]
@@ -423,12 +423,20 @@ export const stressManagementPath: Path = {
                 'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',
                 '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',
                 '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',
-                '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
+                '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?',
               ]
             },
-            { type: 'title', text: 'Resumen Clave' },
-            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
-            { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
+            { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
+            {
+              type: 'list',
+              items: [
+                'El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.',
+                'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.',
+                'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.',
+                'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.',
+                'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.',
+              ],
+            },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
         ]
     },
@@ -438,7 +446,11 @@ export const stressManagementPath: Path = {
         type: 'summary',
         estimatedTime: '15-20 min',
         content: [
-            { type: 'paragraph', text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.'},
+            { 
+                type: 'paragraphWithAudio', 
+                text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/INTRODUCCIONSEMANA4.mp3'
+            },
             { type: 'title', text: 'Psicoeducación' },
             { type: 'paragraph', text: 'De la teoría a la práctica: tu plan personal para sostenerte\nEl estrés no desaparece para siempre. Vuelve en forma de tareas acumuladas, expectativas, interrupciones o pensamientos exigentes. Por eso, el objetivo de esta semana es ayudarte a crear tu propio plan de acción: un mapa de recursos, señales de alerta y estrategias que te ayuden a cuidarte cuando lo necesites.\nMás adelante, en la Técnica 1, empezarás a diseñar tu plan personalizado.\nPero antes, necesitas entender para qué sirve, cuáles son sus partes y cómo te ayuda a sostenerte en los momentos difíciles. Este contexto será tu base para crear algo realmente útil y tuyo.\nEste plan no es un protocolo rígido. Es una herramienta viva, ajustada a tu realidad y fortalecida por todo lo que has aprendido. Aquí no buscamos perfección, sino continuidad. Porque prevenir recaídas no es evitar el estrés, sino prepararte para responder con mayor conciencia cuando vuelva a aparecer.'},
             {
@@ -492,10 +504,5 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
-     
-
-    
-
 
     
