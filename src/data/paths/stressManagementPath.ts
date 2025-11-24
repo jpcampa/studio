@@ -28,6 +28,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Lo que ocurre en tu cerebro y en tu cuerpo',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/LoQueocurreentuCerebroyntucuerpo.mp3',
           content: [
             { type: 'paragraph', text: 'Desde la neurociencia sabemos que cuando estamos estresados, se activa un sistema de emergencia en el cerebro. Se liberan hormonas como la adrenalina y el cortisol, que nos preparan para actuar rápido. Esto puede ayudarnos en momentos puntuales, pero si se mantiene en el tiempo, empieza a desgastarnos: fatiga, insomnio, irritabilidad, dificultad para concentrarnos… Suena familiar, ¿verdad?' }
           ]
@@ -239,7 +240,6 @@ export const stressManagementPath: Path = {
         title: 'Semana 3: Reestructura tus Pensamientos de Sobrecarga',
         type: 'skill_practice',
         estimatedTime: '20-25 min',
-        audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/INTRODUCCIONSEMANA3.mp3',
         content: [
             { type: 'paragraph', text: 'Esta semana vas a entrenar una habilidad fundamental para reducir el estrés: identificar y transformar los pensamientos que te sobrecargan. El objetivo es que aprendas a detectar cuándo tu mente se activa en modo exigencia, catastrofismo o rigidez, y puedas responder con mayor flexibilidad, realismo y amabilidad hacia ti.'},
             { type: 'title', text: 'Psicoeducación' },
