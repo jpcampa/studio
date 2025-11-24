@@ -424,7 +424,7 @@ export const stressManagementPath: Path = {
                 'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',    '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',   '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',   '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
               ]
             },
-            { type: 'title', text: 'Resumen Clave' },
+            { type: 'title', text: 'Resumen Clave'},
             { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3'},
             { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
@@ -469,6 +469,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 3: Prevención de recaídas',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa3Prevencionderecaidas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Recaer no es fracasar. Es aplicar lo aprendido en un nuevo ciclo.\nSeñales tempranas de recaída:'},
                     { type: 'list', items: ['Autoexigencia creciente', 'Abandono de rutinas de autocuidado', 'Pensamientos rígidos o catastrofistas']},
