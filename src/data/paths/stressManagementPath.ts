@@ -318,7 +318,15 @@ export const stressManagementPath: Path = {
                 'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
               ]
             },
-            { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'},
+            {
+              type: 'title',
+              text: 'Resumen Clave de la Semana',
+            },
+            {
+                type: 'paragraphWithAudio',
+                text: '',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/RESUMENYCIERRE.mp3'
+            },
             { type: 'list', items: ['Tu cuerpo también forma parte de tu sistema de regulación emocional.', 'El sistema nervioso reacciona con alarma incluso ante estímulos cotidianos.', 'Puedes activar el sistema de calma mediante técnicas sencillas y efectivas.', 'La respiración, el movimiento suave o el contacto físico envían señales de seguridad al cerebro.', 'Cuanto más entrenas estas técnicas, más fácil te resulta acceder a la calma cuando la necesitas.'] },
             { type: 'quote', text: 'Respirar con conciencia es el gesto más pequeño y poderoso que puedes hacer por ti.'}
         ]
@@ -365,6 +373,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Un mismo hecho, dos emociones distintas',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Unmismohechodosemocionesdistintas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Situación: Tu pareja no contesta a tu mensaje en horas.'},
                     { type: 'list', items: ['Pensamiento 1: “Está enfadado/a conmigo” → Ansiedad, inseguridad.', 'Pensamiento 2: “Estará ocupado/a” → Calma, paciencia.']},
