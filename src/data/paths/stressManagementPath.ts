@@ -15,8 +15,8 @@ export const stressManagementPath: Path = {
       content: [
         {
           type: 'paragraphWithAudio',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
           text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
         },
         { type: 'title', text: 'Psicoeducación' },
         {
@@ -182,8 +182,7 @@ export const stressManagementPath: Path = {
         },
         {
           type: 'therapeuticNotebookReflection',
-          title: 'Reflexión Final de la Semana',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3',
+          title: 'Reflexión',
           prompts: [
             'Tómate un momento para integrar todo lo aprendido:',
             '¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?',
@@ -191,14 +190,11 @@ export const stressManagementPath: Path = {
             '¿Qué podría probar diferente la próxima vez?',
           ],
         },
+        { type: 'title', text: 'Resumen Clave de la Semana 1' },
         {
-          type: 'title',
-          text: 'Resumen Clave de la Semana 1',
-        },
-        {
-            type: 'paragraphWithAudio',
-            text: '',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
+          type: 'paragraphWithAudio',
+          text: '',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
         },
         {
           type: 'list',
@@ -370,8 +366,7 @@ export const stressManagementPath: Path = {
         {
           type: 'exercise',
           title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)',
-          objective:
-            'Salir del bucle mental ansioso y volver al momento presente.',
+          objective: 'Salir del bucle mental ansioso y volver al momento presente.',
           content: [
             {
               type: 'paragraph',
@@ -431,9 +426,9 @@ export const stressManagementPath: Path = {
         {
           type: 'therapeuticNotebookReflection',
           title: 'Reflexión',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/REFLEXION.mp3',
           prompts: [
-            'Tómate un momento para integrar todo lo aprendido:',
-            '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
+            'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
         { type: 'title', text: 'Resumen Clave' },
