@@ -177,24 +177,12 @@ export const stressManagementPath: Path = {
               'Aprender a diferenciar si lo que te está generando estrés viene del entorno (externo) o de ti mismo/a (interno), para empezar a responder con conciencia en lugar de reaccionar en automático.',
             duration: '5 a 8 minutos',
         },
-        {
-          type: 'therapeuticNotebookReflection',
-          title: 'Reflexión Final de la Semana',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3',
-          prompts: [
+        { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
             'Tómate un momento para integrar todo lo aprendido:',
             '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
-          ],
+          ]
         },
-        {
-          type: 'title',
-          text: 'Resumen Clave de la Semana 1',
-        },
-        {
-            type: 'paragraphWithAudio',
-            text: '',
-            audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3'
-        },
+        { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana 1', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3' },
         {
           type: 'list',
           items: [
@@ -383,6 +371,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Las distorsiones cognitivas: filtros mentales que aumentan tu estrés',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/Distorsionescognitivas.mp3',
                 content: [
                     { type: 'paragraph', text: 'Nuestro cerebro tiende a interpretar la realidad con atajos que a veces fallan. Estas distorsiones son formas automáticas y poco realistas de pensar que exageran lo negativo, minimizan lo positivo o interpretan las cosas de forma rígida. Aprender a identificarlas te permite ganar claridad y aliviar tu carga emocional.'},
                     { 
