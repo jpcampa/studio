@@ -207,6 +207,7 @@ export const stressManagementPath: Path = {
                 text: '¿Sabías que tu cuerpo también forma parte del proceso de autorregulación emocional? Bienvenida o bienvenido a la segunda sesión de esta ruta: “Activa tu regulación fisiológica”.   Esta semana vas a descubrir cómo tu cuerpo participa en la gestión del estrés. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: “ya estás a salvo”.   Mientras escuchas este audio, piensa en algún momento reciente en que tu cuerpo te haya ayudado a calmarte sin proponértelo.   En el siguiente audio te explicaré por qué esto no es casualidad.',
                 audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
             },
+            { type: 'title', text: 'Psicoeducación' },
             { type: 'paragraph', text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.' },
             {
                 type: 'collapsible',
@@ -423,20 +424,12 @@ export const stressManagementPath: Path = {
                 'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',
                 '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',
                 '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',
-                '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?',
+                '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
               ]
             },
             { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
-            {
-              type: 'list',
-              items: [
-                'El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.',
-                'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.',
-                'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.',
-                'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.',
-                'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.',
-              ],
-            },
+            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
+            { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
         ]
     },
@@ -456,6 +449,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 1: Evaluación y conciencia',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa1Evaluacionyconciencia.mp3',
                 content: [
                     { type: 'paragraph', text: 'Todo buen plan empieza por observarte.\nDurante estas semanas, has aprendido a identificar cómo se activa el estrés en ti: qué lo dispara, cómo reacciona tu cuerpo, qué pensamientos se repiten y qué emociones se intensifican. Ahora es momento de consolidar esa información para que se convierta en una alerta temprana que te ayude a actuar antes de desbordarte.\n¿Cómo saber que el estrés está empezando a subir?'},
                     { type: 'list', items: ['Me cuesta dormir o me despierto cansado/a', 'Tensión muscular (cuello, mandíbula, pecho)', 'Me irrito o me siento desconectada/o sin saber por qué', 'Me aíslo o aumento conductas evasivas (pantallas, comida, control excesivo)', 'Vuelvo a pensar “no puedo con esto” o “tengo que hacerlo todo perfecto”']},
@@ -506,3 +500,4 @@ export const stressManagementPath: Path = {
 };
 
     
+
