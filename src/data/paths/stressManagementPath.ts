@@ -6,7 +6,6 @@ export const stressManagementPath: Path = {
   title: 'Gestionar el Estrés con Conciencia',
   description: 'El estrés no es tu enemigo, es una señal que merece ser escuchada. En esta ruta aprenderás a reconocer cómo se activa en ti, regularlo con técnicas efectivas y responder con más calma y conciencia.',
   dataAiHint: 'stress management mindfulness',
-  audioUrl: 'https://workwellfut.com/audios/ruta1/INTRODUCCIONRUTA.mp3',
   modules: [
     {
       id: 'estres_sem1',
@@ -21,6 +20,7 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: '¿Qué es el estrés?',
+          audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/Queeselestresyporquenoestuenemigo.mp3',
           content: [
             { type: 'paragraph', text: 'El estrés aparece cuando sentimos que las demandas del entorno —una tarea urgente, una discusión, un cambio inesperado— superan nuestros recursos. No es simplemente estar nervioso o tener prisa: es un conjunto de reacciones físicas, emocionales y mentales que se activan para intentar protegernos.\nAntiguamente, esta respuesta tenía mucho sentido. Si aparecía un depredador, el cuerpo se preparaba para luchar o huir: el corazón se aceleraba, los músculos se tensaban, el cerebro entraba en alerta. Hoy en día, nuestros “depredadores” son emails urgentes, facturas, críticas o nuestra propia autoexigencia. Y el cuerpo, que no distingue entre un tigre y una reunión complicada, reacciona igual.\nDesde la neurociencia sabemos que cuando estamos estresados, se activa un sistema de emergencia en el cerebro. Se liberan hormonas como la adrenalina y el cortisol, que nos preparan para actuar rápido. Esto puede ayudarnos en momentos puntuales, pero si se mantiene en el tiempo, empieza a desgastarnos: fatiga, insomnio, irritabilidad, dificultad para concentrarnos… Suena familiar, ¿verdad?' },
           ],
@@ -327,7 +327,7 @@ export const stressManagementPath: Path = {
             { type: 'title', text: 'Técnicas Específicas'},
             { 
               type: 'detectiveExercise', 
-              title: 'Ejercicio 1: Detective de Pensamientos Estresantes',
+              title: 'Ejercicio 1: Detective de Pensamientos Estresantes', 
               objective: 'En este ejercicio vas a convertirte en un detective de tu propia mente. Aprenderás a observar esos pensamientos automáticos que te sobrecargan, detectar los filtros que distorsionan tu percepción y reformularlos con una mirada más realista, flexible y amable. Esto fortalecerá tu conciencia emocional y te ayudará a regular ese diálogo interno que, a veces, se vuelve demasiado exigente.',
             },
             { 
@@ -402,11 +402,3 @@ export const stressManagementPath: Path = {
 };
 
     
-
-    
-
-    
-
-    
-
-
