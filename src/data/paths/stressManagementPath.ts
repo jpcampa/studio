@@ -299,7 +299,7 @@ export const stressManagementPath: Path = {
                 { type: 'paragraph', text: 'Cómo aplicarlo:\n1.\tHumedece una toalla o paño con agua fría.\n2.\tAplícalo entre 10 y 20 segundos en:\no\tLa nuca\no\tLas muñecas\no\tLa parte interna de los brazos o las mejillas\n3.\tRespira mientras sientes el contacto del frío.\nSi estás fuera de casa, puedes usar agua del grifo o un cubito envuelto en tela.\nEste pequeño “shock” activa una respuesta calmante en tu cuerpo y te ayuda a pausar el bucle de ansiedad.' }
             ]},
             { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/REFLEXION.mp3', prompts: [
-                'Tómate un momento para integrar todo lo aprendido:',
+                'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.',
                 '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
               ]
             },
@@ -420,7 +420,7 @@ export const stressManagementPath: Path = {
               title: 'Ejercicio 2: Tabla de Exigencias vs. Deseos Reales', 
               objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
-            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', prompts: [
+            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3', prompts: [
               '¿Cuál fue el descubrimiento más importante para ti y por qué?',
               '¿Qué has aprendido sobre tu forma de pensar que antes no veías con tanta claridad?',
               '¿Cómo te has sentido al transformar un pensamiento exigente en uno más realista y amable?',
@@ -494,4 +494,4 @@ export const stressManagementPath: Path = {
   ],
 };
 
-    
+     
