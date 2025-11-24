@@ -11,7 +11,7 @@ export const stressManagementPath: Path = {
       id: 'estres_sem1',
       title: 'Semana 1: Comprende el Estrés y Cómo te Afecta',
       type: 'introduction',
-      estimatedTime: '25-30 min',
+      estimatedTime: '20-25 min',
       content: [
         { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3' },
         { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
@@ -173,6 +173,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: '¿Por qué ocurre esto?',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/Tucuerpotambienregulatusemociones.mp3',
                 content: [
                     { type: 'paragraph', text: 'Porque dentro de ti hay un sistema que trabaja sin que tú lo controles, llamado Sistema Nervioso Autónomo. Es como un piloto automático que regula tu respiración, el ritmo del corazón, la tensión de tus músculos… y lo hace todo sin que tengas que pensarlo.\nEste sistema tiene dos ramas principales:\n•\tUna te activa cuando hay peligro.\n•\tLa otra te ayuda a calmarte y recuperarte.\nCuando estas dos partes están en equilibrio, te sientes presente, tranquilo/a y con energía. Pero si la balanza se inclina demasiado hacia el lado de la activación… empiezas a vivir en modo alerta constante.' },
                     { type: 'paragraph', text: 'Rama simpática: tu sistema de alarma\nEsta es la parte que se enciende cuando algo se percibe como una amenaza. Y no hace falta que sea un peligro real. El cuerpo no distingue entre un león y un correo urgente: si tu sistema cree que algo puede salir mal, activa la alarma igual.\nEn ese momento, tu corazón se acelerada, respiras más rápido, tus músculos se tensan… Es tu cuerpo preparándose para “luchar o huir”. A corto plazo, esta reacción puede ayudarte a resolver un problema. Pero si se mantiene encendida mucho tiempo, te agota, te desconecta y puede dejar encendida la ansiedad.' },
@@ -417,5 +418,3 @@ export const stressManagementPath: Path = {
   ],
 };
 
-
-    
