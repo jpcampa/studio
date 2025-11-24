@@ -421,14 +421,11 @@ export const stressManagementPath: Path = {
               objective: 'En este ejercicio vas a observar con honestidad tus propias exigencias internas y diferenciarlas de tus verdaderos deseos y necesidades. Aprenderás a soltar los "debería" que te presionan y a reformularlos con una mirada más compasiva. Este proceso te ayudará a liberar tu mente del exceso de autoexigencia y a reconectar con una forma de cuidarte más humana, realista y sostenible.',
             },
             { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/REFLEXION.mp3', prompts: [
-                'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',
-                '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',
-                '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',
-                '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
+                'Ha llegado el momento de reflexionar sobre ti y lo que has descubierto. Tomate unos minutos para integrar lo aprendido.',    '¿Qué pensamientos me estoy creyendo que me hacen más daño que bien?',   '¿Qué exigencias internas me alejan de mis verdaderas necesidades?',   '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
               ]
             },
-            { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
-            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
+            { type: 'title', text: 'Resumen Clave' },
+            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3'},
             { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
         ]
@@ -459,6 +456,7 @@ export const stressManagementPath: Path = {
             {
                 type: 'collapsible',
                 title: 'Etapa 2: Objetivos y estrategias',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/Etapa2Objetivosyestrategias.mp3',
                 content: [
                     { type: 'paragraph', text: 'Tu plan de acción se construye sobre lo que ya has practicado. No necesitas hacerlo perfecto, sino contar con algunas herramientas bien integradas que puedas activar cuando lo necesites.\nEstrategias cognitivas:'},
                     { type: 'list', items: ['Reestructuración cognitiva: detectar pensamientos automáticos y transformarlos en versiones más amables', 'Autoinstrucciones positivas: Ej. “Estoy haciendo lo que puedo con lo que tengo”', 'Identificación de pensamientos exigentes (Semana 3)']},
