@@ -11,10 +11,9 @@ export const stressManagementPath: Path = {
       id: 'estres_sem1',
       title: 'Semana 1: Comprende el Estrés y Cómo te Afecta',
       type: 'introduction',
-      estimatedTime: '25-30 min',
-      audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3',
+      estimatedTime: '20-25 min',
       content: [
-        { type: 'paragraph', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.' },
+        { type: 'paragraphWithAudio', text: 'Esta semana vas a descubrir qué es realmente el estrés, por qué no es tu enemigo y cómo se manifiesta en ti. El objetivo es que empieces a escucharlo sin miedo y comprendas que es una señal valiosa: algo en tu vida necesita atención, cuidado o un cambio.', audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/INTROSEMANA1.mp3' },
         { type: 'title', text: 'Psicoeducación' },
         {
           type: 'collapsible',
@@ -401,7 +400,5 @@ export const stressManagementPath: Path = {
     }
   ],
 };
-
-
 
     
