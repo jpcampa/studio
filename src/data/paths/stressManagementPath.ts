@@ -186,18 +186,12 @@ export const stressManagementPath: Path = {
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/REFLEXION.mp3',
           prompts: [
             'Tómate un momento para integrar todo lo aprendido:',
-            '¿Qué situaciones me han hecho sentir más sobrepasado/a últimamente?',
-            '¿Qué hice en esos momentos?',
-            '¿Qué podría probar diferente la próxima vez?',
+            '¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
         {
           type: 'title',
           text: 'Resumen Clave de la Semana 1',
-        },
-        {
-          type: 'paragraphWithAudio',
-          text: '',
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana1/RESUMENYCIERRE.mp3',
         },
         {
@@ -225,11 +219,7 @@ export const stressManagementPath: Path = {
           text: '¿Sabías que tu cuerpo también forma parte del proceso de autorregulación emocional? Bienvenida o bienvenido a la segunda sesión de esta ruta: “Activa tu regulación fisiológica”.   Esta semana vas a descubrir cómo tu cuerpo participa en la gestión del estrés. El objetivo es que empieces a conocer tu sistema nervioso, entiendas por qué se activa en ciertos momentos y aprendas a enviarle señales de seguridad. Vas a entrenar técnicas que te ayuden a decirle a tu cuerpo: “ya estás a salvo”.   Mientras escuchas este audio, piensa en algún momento reciente en que tu cuerpo te haya ayudado a calmarte sin proponértelo.   En el siguiente audio te explicaré por qué esto no es casualidad.',
           audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/INTROSEMANA2.mp3',
         },
-        { type: 'title', text: 'Psicoeducación' },
-        {
-          type: 'paragraph',
-          text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.',
-        },
+        { type: 'paragraph', text: '¿Te ha pasado alguna vez que estás nervioso/a, con la cabeza llena de cosas, y de pronto respiras más lento o te estiras… y sientes que algo empieza a aflojarse por dentro?\nEso no es casualidad: es tu cuerpo haciendo su parte para ayudarte a recuperar la calma.\nY es que no solo la mente participa en la gestión del estrés. Tu cuerpo tiene un papel clave. Muchas veces, aunque tú quieras estar tranquilo/a, tu cuerpo reacciona como si estuvieras en medio de una emergencia.' },
         {
           type: 'collapsible',
           title: '¿Por qué ocurre esto?',
@@ -277,7 +267,8 @@ export const stressManagementPath: Path = {
         {
           type: 'collapsible',
           title: 'Tu detector interno de seguridad',
-          audioUrl: 'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
+          audioUrl:
+            'https://workwellfut.com/audios/ruta1/semana2/TudetectorinternodeseguridadylaTeoriaPolivagal.mp3',
           content: [
             {
               type: 'paragraph',
@@ -426,7 +417,10 @@ export const stressManagementPath: Path = {
             'Tómate unos minutos para responder en tu cuaderno o en el espacio que te ofrecemos dentro de la app. No hay respuestas correctas: solo pistas valiosas que te ayudan a conocerte mejor.   ¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?',
           ],
         },
-        { type: 'title', text: 'Resumen Clave de la Semana'},
+        {
+          type: 'title',
+          text: 'Resumen Clave de la Semana',
+        },
         {
           type: 'paragraphWithAudio',
           text: '',
@@ -454,7 +448,11 @@ export const stressManagementPath: Path = {
         type: 'skill_practice',
         estimatedTime: '20-25 min',
         content: [
-            { type: 'paragraph', text: 'Esta semana vas a entrenar una habilidad fundamental para reducir el estrés: identificar y transformar los pensamientos que te sobrecargan. El objetivo es que aprendas a detectar cuándo tu mente se activa en modo exigencia, catastrofismo o rigidez, y puedas responder con mayor flexibilidad, realismo y amabilidad hacia ti.'},
+            {
+                type: 'paragraphWithAudio',
+                text: 'Esta semana vas a entrenar una habilidad fundamental para reducir el estrés: identificar y transformar los pensamientos que te sobrecargan. El objetivo es que aprendas a detectar cuándo tu mente se activa en modo exigencia, catastrofismo o rigidez, y puedas responder con mayor flexibilidad, realismo y amabilidad hacia ti.',
+                audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/INTRODUCCIONSEMANA3.mp3'
+            },
             { type: 'title', text: 'Psicoeducación' },
             { type: 'paragraph', text: 'Lo que piensas puede calmarte… o estresarte aún más.\n¿Te has dicho alguna vez cosas como “no voy a poder”, “todo depende de mí” o “si no lo hago perfecto, es un fracaso”? Estos pensamientos no son solo frases: son como unas gafas que se colocan solas y tiñen todo lo que vives. Muchas veces el estrés no viene solo de lo que ocurre, sino de lo que te dices cuando eso ocurre.'},
             {
@@ -611,7 +609,5 @@ export const stressManagementPath: Path = {
             { type: 'quote', text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.'}
         ]
     }
-  ]
+  ],
 };
-
-    
