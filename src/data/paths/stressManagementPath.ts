@@ -426,7 +426,8 @@ export const stressManagementPath: Path = {
                 '¿Cómo sería mi día a día si me hablara con más comprensión y menos juicio?'
               ]
             },
-            { type: 'title', text: 'Resumen Clave', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
+            { type: 'title', text: 'Resumen Clave' },
+            { type: 'paragraphWithAudio', text: '', audioUrl: 'https://workwellfut.com/audios/ruta1/semana3/RESUMEN.mp3' },
             { type: 'list', items: ['El estrés no solo viene de fuera, sino de cómo interpretas lo que ocurre.', 'Tus pensamientos automáticos pueden aumentar o aliviar tu malestar.', 'Las distorsiones cognitivas son filtros mentales que puedes aprender a detectar.', 'Reestructurar es entrenar la mente para pensar con más claridad, flexibilidad y compasión.', 'No eres lo que piensas: eres quien decide cómo responder a lo que piensa.'] },
             { type: 'quote', text: 'No eres lo que piensas. Eres quien decide cómo responder a esos pensamientos.' }
         ]
@@ -493,5 +494,8 @@ export const stressManagementPath: Path = {
 };
 
      
+
+    
+
 
     
