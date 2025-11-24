@@ -16,33 +16,7 @@ export const dynamic = 'force-dynamic';
 export default async function Page({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = params;
 
-  let post: ResourcePost | undefined;
-  let error: string | null = null;
-  
-  try {
-    post = await getPostBySlug(slug);
-  } catch (e: unknown) {
-    console.error(`Error fetching post ${slug}:`, e);
-    error = "No se pudo cargar el artículo. Por favor, inténtalo de nuevo más tarde.";
-  }
-
-  if (error) {
-    return (
-        <div className="container mx-auto py-8 text-center">
-            <Alert variant="destructive" className="max-w-2xl mx-auto">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
-            </Alert>
-             <div className="mt-8">
-                <Button variant="outline" asChild>
-                <Link href="/resources">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Volver a Recursos
-                </Link>
-                </Button>
-            </div>
-        </div>
-    );
-  }
+  const post: ResourcePost | null = await getPostBySlug(slug);
 
   if (!post) {
       notFound();

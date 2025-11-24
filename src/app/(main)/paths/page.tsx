@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { pathsData, Path } from '@/data/pathsData';
+import { pathsData, type Path } from '@/data/pathsData';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/translations';

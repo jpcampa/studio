@@ -16,36 +16,16 @@ export const dynamic = 'force-dynamic';
 export default async function Page({ params }: RoutePageProps<{ slug: string }>) {
   const { slug } = params;
   
-  let category: ResourceCategory | undefined;
-  let posts: ResourcePost[] = [];
-  let error: string | null = null;
+  const category: ResourceCategory | null = await getCategoryBySlug(slug);
 
-  try {
-    // Se obtienen la categoría y los posts en paralelo para mayor eficiencia
-    const [categoryResult, postsResult] = await Promise.all([
-      getCategoryBySlug(slug),
-      getPostsByCategory(slug),
-    ]);
-
-    category = categoryResult;
-    posts = postsResult ?? []; // Asegura que posts sea un array aunque el resultado sea nulo
-
-    // Si la categoría no existe, lanzamos un 404
-    if (!category) {
-      notFound();
-    }
-  } catch (e) {
-      console.error(`Error fetching data for category '${slug}':`, e);
-      // Asignamos un mensaje de error para mostrarlo en la UI
-      error = "Ocurrió un error inesperado al cargar la página de esta categoría.";
-  }
-  
-  // Este es un chequeo de seguridad final. Si la categoría no se encontró,
-  // la función notFound() ya se habrá llamado, pero esto previene errores de renderizado.
+  // Si la categoría no existe, lanzamos un 404
   if (!category) {
     notFound();
   }
 
+  // Ahora que sabemos que la categoría existe, obtenemos los posts.
+  const posts: ResourcePost[] = await getPostsByCategory(slug);
+  
   return (
     <div className="container mx-auto py-8">
       <div className="text-center mb-12">
@@ -60,20 +40,13 @@ export default async function Page({ params }: RoutePageProps<{ slug: string }>)
         </Button>
       </div>
 
-       {error && (
-         <Alert variant="destructive" className="mb-8 max-w-2xl mx-auto">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {!error && posts.length === 0 && (
+       {posts.length === 0 && (
           <Alert className="mb-8 max-w-2xl mx-auto">
             <AlertDescription>No hay artículos en esta categoría todavía.</AlertDescription>
           </Alert>
       )}
 
-      {!error && posts.length > 0 && (
+      {posts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
             // Se gestiona el cambio de dominio en la URL de la imagen

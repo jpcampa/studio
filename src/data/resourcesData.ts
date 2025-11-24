@@ -92,33 +92,35 @@ export async function getPostsByCategory(categorySlug: string): Promise<Resource
 
 /**
  * Obtiene un post específico por su slug.
+ * Devuelve null si no lo encuentra o si hay un error.
  */
-export async function getPostBySlug(slug: string): Promise<ResourcePost | undefined> {
+export async function getPostBySlug(slug: string): Promise<ResourcePost | null> {
     noStore();
      try {
         const res = await fetch(`${API_BASE_URL}/posts?slug=${slug}&_embed&_fields=id,slug,title,excerpt,content,date,categories,featured_media,_embedded`, { next: { revalidate: 3600 } });
         if (!res.ok) {
              console.error(`Failed to fetch post by slug ${slug}: ${res.status} ${res.statusText}`);
-             return undefined;
+             return null;
         }
         const posts: ResourcePost[] = await res.json();
-        return posts[0];
+        return posts[0] || null; // Devuelve el post o null si el array está vacío
     } catch (error) {
         console.error(`Error in getPostBySlug for slug ${slug}:`, error);
-        return undefined;
+        return null;
     }
 }
 
 /**
  * Obtiene una categoría específica por su slug.
+ * Devuelve null si no la encuentra o si hay un error.
  */
-export async function getCategoryBySlug(slug: string): Promise<ResourceCategory | undefined> {
+export async function getCategoryBySlug(slug: string): Promise<ResourceCategory | null> {
     noStore();
     try {
         const categories = await getResourceCategories();
-        return categories.find(cat => cat.slug === slug);
+        return categories.find(cat => cat.slug === slug) || null;
     } catch (error) {
         console.error(`Error in getCategoryBySlug for slug ${slug}:`, error);
-        return undefined;
+        return null;
     }
 }
