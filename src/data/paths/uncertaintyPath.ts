@@ -49,6 +49,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: '¿Cómo reacciona tu cuerpo?',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio5Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'Cuando enfrentas una situación incierta, tu cuerpo reacciona: el corazón se acelerada, se tensan los músculos, la mente se agita.\nEsto es adaptativo: tu cerebro intenta protegerte anticipando lo peor. Pero si esa respuesta se vuelve constante, vives en modo alerta, con un “radar” emocional encendido todo el tiempo.' }
           ]
@@ -288,6 +289,7 @@ export const uncertaintyPath: Path = {
             title: 'Ejercicio 2: ¿Y si…? pero también…',
             objective: 'Esta técnica no busca eliminar los pensamientos de duda, sino equilibrarlos con otra posibilidad más amable y realista que reconozca tu capacidad.',
             duration: '5–7 minutos',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion3audio6tecnica2.mp3',
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion3.mp3',
@@ -368,7 +370,7 @@ export const uncertaintyPath: Path = {
             title: 'Ejercicio 1: Mi mantra de confianza',
             objective: 'Crea una frase breve, realista y significativa que funcione como una brújula interna para recordarte que puedes sostenerte aunque no tengas todo resuelto.',
             duration: '7–10 minutos',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio5tecnica1.mp3'
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio5tecnica1.mp3',
           },
           {
             type: 'exercise',
@@ -393,7 +395,7 @@ export const uncertaintyPath: Path = {
           { 
             type: 'title', 
             text: 'Resumen Clave de la Semana',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3'
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3',
           },
           { type: 'list', items: [
             'Controlarlo todo puede parecer seguro… pero suele alimentar tu ansiedad.',
