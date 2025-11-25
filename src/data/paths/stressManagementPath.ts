@@ -444,10 +444,10 @@ export const stressManagementPath: Path = {
         type: 'summary',
         estimatedTime: '15-20 min',
         content: [
-            { 
-                type: 'paragraphWithAudio', 
-                text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.',
-                audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/INTRODUCCIONSEMANA4.mp3'
+            {
+              type: 'paragraphWithAudio',
+              text: 'Esta semana vas a consolidar todo lo aprendido creando tu propio plan de bienestar emocional. El objetivo es que desarrolles una herramienta personalizada para prevenir recaídas, cuidarte en los momentos difíciles y responder con más conciencia cuando el estrés reaparezca. Tener un plan no significa eliminar el estrés, sino recordarte que tienes recursos para afrontarlo con calma, flexibilidad y autocompasión.',
+              audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/INTRODUCCIONSEMANA4.mp3',
             },
             { type: 'title', text: 'Psicoeducación' },
             { type: 'paragraph', text: 'De la teoría a la práctica: tu plan personal para sostenerte\nEl estrés no desaparece para siempre. Vuelve en forma de tareas acumuladas, expectativas, interrupciones o pensamientos exigentes. Por eso, el objetivo de esta semana es ayudarte a crear tu propio plan de acción: un mapa de recursos, señales de alerta y estrategias que te ayuden a cuidarte cuando lo necesites.\nMás adelante, en la Técnica 1, empezarás a diseñar tu plan personalizado.\nPero antes, necesitas entender para qué sirve, cuáles son sus partes y cómo te ayuda a sostenerte en los momentos difíciles. Este contexto será tu base para crear algo realmente útil y tuyo.\nEste plan no es un protocolo rígido. Es una herramienta viva, ajustada a tu realidad y fortalecida por todo lo que has aprendido. Aquí no buscamos perfección, sino continuidad. Porque prevenir recaídas no es evitar el estrés, sino prepararte para responder con mayor conciencia cuando vuelva a aparecer.'},
@@ -498,15 +498,53 @@ export const stressManagementPath: Path = {
               duration: '10-15 min',
               audioUrl: "https://workwellfut.com/audios/r1_desc/Sesion-4-tecnica-2-ensayo-de-crisis-imaginaria.mp3",
             },
-            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/REFLEXION.mp3', prompts: ['¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?'] },
+            {
+              type: 'therapeuticNotebookReflection',
+              title: 'Reflexión Final de la Semana',
+              audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/REFLEXION.mp3',
+              prompts: ['¿Qué me ayuda a volver a mi centro cuando me siento desbordado/a?'],
+            },
             { type: 'paragraphWithAudio', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta1/semana4/RESUMEN.mp3' },
             { type: 'list', items: ['El estrés no desaparece, pero puedes prepararte para atravesarlo con más conciencia.', 'Tener un plan personal te permite actuar antes de desbordarte.', 'Reconocer tus señales tempranas es una forma de autocuidado.', 'Recaer no es fracasar: es una oportunidad de aplicar lo aprendido.'] },
             { type: 'quote', text: 'Tener un plan no evita el estrés, pero te recuerda que sabes cómo cuidarte cuando aparezca.'},
-            { type: 'therapeuticNotebookReflection', title: 'Reflexión final', audioUrl: 'https://workwellfut.com/audios/ruta1/REFLEXIONRUTA.mp3', prompts: ['Has llegado al final de la Ruta. Reconócete el trabajo hecho. Has aprendido qué es el estrés, cómo funciona en ti, de qué formas puedes gestionarlo y has elaborado un plan para afrontarlo cada vez que aparezca.', 'Vamos ahora, a pasar a la reflexión final.', '¿Qué me ha enseñado esta ruta sobre mí misma/o que no quiero olvidar?']},
-            { type: 'title', text: 'Resumen Final de la Ruta', audioUrl: 'https://workwellfut.com/audios/ruta1/RESUMENRUTA.mp3'},
-            { type: 'list', items: ['Has aprendido que el estrés no es tu enemigo, sino una señal que merece ser escuchada.', 'Comprendiste cómo se activa en tu cuerpo, tus pensamientos y emociones.', 'Descubriste técnicas prácticas para regularte desde dentro, tanto en lo físico como en lo mental.', 'Identificaste tus patrones de autoexigencia y aprendiste a hablarte con más compasión.', 'Has creado tu propio plan de acción para afrontar los momentos difíciles con mayor claridad y cuidado.'] },
-            { type: 'paragraph', text: 'Esta ruta no termina aquí: empieza tu camino con más herramientas, conciencia y confianza para cuidarte.'}
         ]
+    },
+    {
+      id: 'estres_cierre',
+      title: 'Cierre de la Ruta: Integración y Próximos Pasos',
+      type: 'summary',
+      estimatedTime: '10-15 min',
+      content: [
+          {
+            type: 'therapeuticNotebookReflection',
+            title: 'Reflexión final de la Ruta',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/REFLEXIONRUTA.mp3',
+            prompts: [
+              'Has llegado al final de la Ruta. Reconócete el trabajo hecho. Has aprendido qué es el estrés, cómo funciona en ti, de qué formas puedes gestionarlo y has elaborado un plan para afrontarlo cada vez que aparezca.',
+              'Vamos ahora, a pasar a la reflexión final.',
+              '¿Qué me ha enseñado esta ruta sobre mí misma/o que no quiero olvidar?'
+            ]
+          },
+          {
+            type: 'title',
+            text: 'Resumen Final de la Ruta',
+            audioUrl: 'https://workwellfut.com/audios/ruta1/RESUMENRUTA.mp3'
+          },
+          {
+            type: 'list',
+            items: [
+              'Has aprendido que el estrés no es tu enemigo, sino una señal que merece ser escuchada.',
+              'Comprendiste cómo se activa en tu cuerpo, tus pensamientos y emociones.',
+              'Descubriste técnicas prácticas para regularte desde dentro, tanto en lo físico como en lo mental.',
+              'Identificaste tus patrones de autoexigencia y aprendiste a hablarte con más compasión.',
+              'Has creado tu propio plan de acción para afrontar los momentos difíciles con mayor claridad y cuidado.',
+            ]
+          },
+          {
+            type: 'paragraph',
+            text: 'Esta ruta no termina aquí: empieza tu camino con más herramientas, conciencia y confianza para cuidarte.'
+          }
+      ]
     }
   ],
 };
