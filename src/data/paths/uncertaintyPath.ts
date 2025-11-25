@@ -6,6 +6,7 @@ export const uncertaintyPath: Path = {
   title: 'Tolerar la Incertidumbre con Confianza',
   description: 'Aprende a convivir con lo incierto sin perder el equilibrio, transformando el control en confianza y la ansiedad en calma consciente.',
   dataAiHint: 'uncertainty trust mindfulness',
+  audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Introruta2.mp3',
   modules: [
     {
       id: 'incertidumbre_sem1',
@@ -287,7 +288,6 @@ export const uncertaintyPath: Path = {
             title: 'Ejercicio 2: ¿Y si…? pero también…',
             objective: 'Esta técnica no busca eliminar los pensamientos de duda, sino equilibrarlos con otra posibilidad más amable y realista que reconozca tu capacidad.',
             duration: '5–7 minutos',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion3audio6tecnica2.mp3'
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion3.mp3',
