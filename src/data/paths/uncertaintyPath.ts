@@ -13,6 +13,7 @@ export const uncertaintyPath: Path = {
       title: 'Semana 1: Entiende qué es la Incertidumbre y cómo la vivo',
       type: 'introduction',
       estimatedTime: '20-25 min',
+      audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Introruta2.mp3',
       content: [
         { type: 'paragraph', text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.' },
         { 
@@ -283,8 +284,7 @@ export const uncertaintyPath: Path = {
             type: 'mantraExercise',
             title: 'Ejercicio 2: ¿Y si…? pero también…',
             objective: 'Esta técnica no busca eliminar los pensamientos de duda, sino equilibrarlos con otra posibilidad más amable y realista que reconozca tu capacidad.',
-            duration: '5–7 minutos',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion3audio6tecnica2.mp3',
+            duration: '5–7 minutos'
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion3.mp3',
@@ -365,7 +365,7 @@ export const uncertaintyPath: Path = {
             title: 'Ejercicio 1: Mi mantra de confianza',
             objective: 'Crea una frase breve, realista y significativa que funcione como una brújula interna para recordarte que puedes sostenerte aunque no tengas todo resuelto.',
             duration: '7–10 minutos',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio5tecnica1.mp3'
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio5tecnica1.mp3',
           },
           {
             type: 'exercise',
@@ -405,9 +405,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-
-    
-
-    
-
