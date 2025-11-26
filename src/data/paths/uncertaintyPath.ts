@@ -1,4 +1,5 @@
 
+
 import type { Path } from '../pathsData';
 
 export const uncertaintyPath: Path = {
@@ -16,7 +17,7 @@ export const uncertaintyPath: Path = {
       content: [
         { 
             type: 'paragraphWithAudio', 
-            text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.',
+            text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno. No se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3'
         },
         { 
@@ -163,7 +164,7 @@ export const uncertaintyPath: Path = {
               { type: 'paragraph', text: 'Cuando te sientes ansioso o en alerta sin un peligro real delante, es porque tu mente o tu sistema nervioso han interpretado algo como una posible amenaza. Esto puede ocurrir por varios motivos:'},
               { type: 'collapsible', title: 'Errores de pensamiento', content: [{type: 'paragraph', text: 'A veces, sin darte cuenta, caes en formas de pensar que distorsionan la realidad y aumentan el miedo. Por ejemplo:   Sobredimensionar el riesgo: Imaginas que algo es más peligroso de lo que realmente es. Ej.: “Si me equivoco, será un desastre”.   Imaginar consecuencias extremas: Das por hecho que el peor escenario va a suceder. Ej.: “Seguro que me rechazan y no podré con esto”.   Sentirte incapaz: Crees que no tienes recursos para afrontarlo. Ej.: “No voy a poder gestionarlo si algo sale mal”.'}]},
               { type: 'collapsible', title: 'Creencias aprendidas', content: [{type: 'paragraph', text: 'Detrás de esos pensamientos, a veces hay creencias más profundas que aprendiste con el tiempo (de tu entorno, de la infancia o de experiencias difíciles). Estas creencias te hacen interpretar muchas situaciones como peligrosas, aunque no lo sean realmente.   Algunas creencias comunes son:   “No debo fallar nunca” → convierte cualquier error en un drama.   “El mundo es peligroso” → te hace vivir en estado de alerta.   “No puedo equivocarme” → te paraliza ante lo incierto.' }]},
-              { type: 'collapsible', title: 'Neurocepción inconsciente', content: [{type: 'paragraph', text: 'Este es un concepto de la neurociencia muy importante: tu sistema nervioso evalúa todo lo que ocurre a tu alrededor sin que tú lo decidas de forma consciente. Percibe detalles como:   El tono de voz de alguien   Una mirada o gesto   Un recuerdo doloroso   O simplemente un cambio en tu entorno   Y si interpreta alguna de estas señales como insegura, activa la alarma automáticamente. No es culpa tuya, es un sistema diseñado para protegerte. Pero muchas veces actúa por error.'}]}
+              { type: 'collapsible', title: 'Neurocepción inconsciente', content: [{type: 'paragraph', text: 'Este es un concepto de la neurociencia muy importante: tu sistema nervioso evalúa todo lo que ocurre a tu alrededor sin que tú lo decidas de forma consciente. Percibe detalles como:   El tono de voz de alguien   Una mirada o gesto   Un recuerdo doloroso   O simplemente un cambio en tu entorno   Y si interpreta alguna de esas señales como insegura, activa la alarma automáticamente. No es culpa tuya, es un sistema diseñado para protegerte. Pero muchas veces actúa por error.'}]}
             ]
           },
           {
@@ -201,8 +202,8 @@ export const uncertaintyPath: Path = {
                     type: 'collapsible',
                     title: '¿Cuándo puedes usarlas?',
                     content: [
-                        { type: 'list', items: ['En el momento: si sientes ansiedad o bloqueo', 'Antes de una situación desafiante', 'Como rutina diaria para entrenar tu equilibrio'] },
-                        { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.' }
+                      { type: 'list', items: ['En el momento: si sientes ansiedad o bloqueo', 'Antes de una situación desafiante', 'Como rutina diaria para entrenar tu equilibrio'] },
+                      { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.'}
                     ]
                 },
                 { type: 'title', text: 'Selección de técnicas' },
@@ -214,7 +215,7 @@ export const uncertaintyPath: Path = {
                 { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
                 { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
                 { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
-                 {
+                {
                     type: 'therapeuticNotebookReflection',
                     title: 'Registro de experiencia personal',
                     prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:']
@@ -233,46 +234,31 @@ export const uncertaintyPath: Path = {
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
             content: [
               { type: 'paragraph', text: '¿Y si no necesitas tenerlo todo bajo control?\n\nCuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre.\n\nPara entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: exponerte, en dosis pequeñas, a lo que no puedes controlar.\n\nEste ejercicio te invita a hacerlo de forma segura y consciente.' },
-              {
-                type: 'therapeuticNotebookReflection',
-                title: 'Paso 1: Elige tu situación',
-                prompts: [
-                  'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. ¿Cuál será tu pequeña exposición de hoy?',
-                  'Ejemplos:',
-                  '• Enviar un mensaje sin revisar 3 veces',
-                  '• Tomar una decisión sencilla sin pedir confirmación',
-                  '• Hacer una pregunta en clase o en una reunión, aunque no estés 100% seguro/a',
-                  '• No llevar siempre el objeto “por si acaso” (medicación, agua, cargador…)',
-                  '• Empezar una conversación sin planear qué vas a decir',
-                ],
-              },
-              {
-                type: 'therapeuticNotebookReflection',
-                title: 'Paso 2: Antes de actuar',
-                prompts: [
+              { type: 'title', text: 'Paso 1: Elige tu situación' },
+              { type: 'therapeuticNotebookReflection', title: '', prompts: [
+                  'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. Ejemplos: • Enviar un mensaje sin revisar 3 veces • Tomar una decisión sencilla sin pedir confirmación • Hacer una pregunta en clase o en una reunión, aunque no estés 100% seguro/a • No llevar siempre el objeto “por si acaso” (medicación, agua, cargador…) • Empezar una conversación sin planear qué vas a decir',
+                  '¿Cuál será tu pequeña exposición de hoy?'
+              ]},
+              { type: 'title', text: 'Paso 2: Antes de actuar' },
+              { type: 'therapeuticNotebookReflection', title: '', prompts: [
                   'No anticipes el resultado. Haz la acción con conciencia. Antes de actuar, reflexiona y escribe:',
                   '¿Qué creo que podría salir mal?',
                   '¿Qué haría si eso pasara?',
                   '¿En qué otras ocasiones me he enfrentado a situaciones inciertas como esta? ¿Qué hice entonces que me ayudó o me dio fuerza?',
                   'Luego, haz la acción sin intentar garantizar que todo saldrá perfecto. Solo obsérvate.',
-                ],
-              },
-              {
-                type: 'therapeuticNotebookReflection',
-                title: 'Paso 3: Observa lo que ocurrió',
-                prompts: [
+              ]},
+              { type: 'title', text: 'Paso 3: Observa lo que ocurrió' },
+              { type: 'therapeuticNotebookReflection', title: '', prompts: [
                   'Después de haber realizado tu pequeño acto de exposición, reflexiona:',
-                  'En tu cuerpo: ¿Se activó algo? ¿Hubo tensión, calor, respiración acelerada? ¿Cómo fue cambiando?',
-                  'En tu mente: ¿Qué pensamientos aparecieron? ¿Se cumplieron tus predicciones? ¿Qué historia te estaba contando tu cabeza?',
-                  'En la realidad: ¿Qué ocurrió realmente? ¿Pasó algo tan grave como temías? ¿Hubo alguna consecuencia real o solo una sensación pasajera?',
-                ],
-              },
-              {
-                type: 'therapeuticNotebookReflection',
-                title: 'Reflexión final para tu cuaderno terapéutico:',
-                prompts: ['¿Qué pasó cuando no tuve todas las respuestas?', '¿Fue tan grave como imaginaba?'],
-              },
-            ],
+                  'En tu cuerpo: • ¿Se activó algo? • ¿Hubo tensión, calor, respiración acelerada? • ¿Cómo fue cambiando?',
+                  'En tu mente: • ¿Qué pensamientos aparecieron? • ¿Se cumplieron tus predicciones? • ¿Qué historia te estaba contando tu cabeza?',
+                  'En la realidad: • ¿Qué ocurrió realmente? • ¿Pasó algo tan grave como temías? • ¿Hubo alguna consecuencia real o solo una sensación pasajera?',
+              ]},
+              { type: 'therapeuticNotebookReflection', title: 'Reflexión final para tu cuaderno terapéutico:', prompts: [
+                '¿Qué pasó cuando no tuve todas las respuestas?',
+                '¿Fue tan grave como imaginaba?'
+              ]}
+            ]
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion2.mp3',
@@ -441,10 +427,10 @@ export const uncertaintyPath: Path = {
             content: [
               { type: 'paragraph', text: 'Esta semana vas a entrenar una nueva forma de relacionarte con la incertidumbre:' },
               { type: 'list', items: [
-                  '🔸 Dejar de intentar controlar lo incontrolable',
-                  '🔸 Aceptar lo que sientes, sin juzgarte',
-                  '🔸 Confiar en que puedes sostenerte, incluso sin certezas',
-                  '🔸 Avanzar paso a paso, sin perder de vista lo que te importa'
+                  'Dejar de intentar controlar lo incontrolable',
+                  'Aceptar lo que sientes, sin juzgarte',
+                  'Confiar en que puedes sostenerte, incluso sin certezas',
+                  'Avanzar paso a paso, sin perder de vista lo que te importa'
               ]}
             ]
           },
@@ -494,5 +480,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
-    
