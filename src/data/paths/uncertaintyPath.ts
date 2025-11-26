@@ -115,6 +115,10 @@ export const uncertaintyPath: Path = {
       type: 'skill_practice',
       estimatedTime: '20-25 min',
       content: [
+          {
+            type: 'paragraph',
+            text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos?   En esta segunda semana vamos a trabajar precisamente en eso: en comprender por qué ocurre y cómo dejar de anticipar lo peor. No se trata de controlar cada detalle de tu vida, sino de descubrir que puedes vivir con más calma incluso cuando no tienes todas las respuestas.   Vas a entender cómo funciona la anticipación ansiosa y por qué tu cuerpo reacciona con alarma ante lo incierto, aunque no haya un peligro real.  Aprenderás a entrenar tu mente para frenar los pensamientos catastrofistas y a reconectar con el presente usando técnicas de exposición, regulación y atención plena.   También comenzarás a distinguir entre lo que tu mente imagina y lo que realmente está ocurriendo. Porque esta semana no se trata de eliminar la ansiedad, sino de reducir su poder sobre ti y ganar confianza paso a paso.',
+          },
           { type: 'title', text: 'Psicoeducación' },
           {
             type: 'title',
@@ -395,7 +399,7 @@ export const uncertaintyPath: Path = {
           { 
             type: 'title', 
             text: 'Resumen Clave de la Semana',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion4.mp3'
           },
           { type: 'list', items: [
             'Controlarlo todo puede parecer seguro… pero suele alimentar tu ansiedad.',
