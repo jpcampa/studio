@@ -167,7 +167,7 @@ export const uncertaintyPath: Path = {
                 {
                     type: 'collapsible',
                     title: '¿Por qué estas técnicas funcionan?',
-                    content: [{ type: 'paragraph', text: 'Cuando estás en modo alerta —corazón acelerado, cuerpo tenso, mente agitada— tu sistema nervioso intenta protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas activan el sistema parasimpático, que envía una señal clara al cuerpo: “ya no estás en peligro”. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios científicos muestran que 8 semanas de práctica de respiración o mindfulness pueden reducir el volumen de la amígdala, el centro del miedo en el cerebro. Es decir: estás entrenando tu cuerpo y tu mente para vivir con más calma.' }]
+                    content: [{ type: 'paragraph', text: 'Cuando estás en modo alerta —con el corazón acelerado, el cuerpo tenso y la mente agitada— tu sistema nervioso está intentando protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas ayudan a activar el sistema parasimpático, el encargado de enviarle al cuerpo el mensaje de que ya no hay peligro. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios científicos muestran que 8 semanas de práctica de respiración o mindfulness pueden reducir el volumen de la amígdala, el centro del miedo en el cerebro. Es decir: estás entrenando tu cuerpo y tu mente para vivir con más calma.' }]
                 },
                 {
                     type: 'collapsible',
@@ -180,7 +180,11 @@ export const uncertaintyPath: Path = {
                     type: 'collapsible',
                     title: '¿Cuándo puedes usarlas?',
                     content: [
-                        { type: 'list', items: ['En el momento: si sientes ansiedad o bloqueo', 'Antes de una situación desafiante', 'Como rutina diaria para entrenar tu equilibrio']},
+                        { type: 'list', items: [
+                            'En el momento: si sientes ansiedad o bloqueo',
+                            'Antes de una situación desafiante',
+                            'Como rutina diaria para entrenar tu equilibrio'
+                        ]},
                         { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo. La calma también se entrena.'}
                     ]
                 },
@@ -207,7 +211,7 @@ export const uncertaintyPath: Path = {
             objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
             content: [
-              { type: 'paragraph', text: '¿Y si no necesitas tenerlo todo bajo control? Cuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre. Para entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: exponerte, en dosis pequeñas, a lo que no puedes controlar. Este ejercicio te invita a hacerlo de forma segura y consciente.'}
+              { type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. No anticipes el resultado. Haz la acción con conciencia.'}
             ]
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
@@ -321,7 +325,7 @@ export const uncertaintyPath: Path = {
             ]},
           { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion3.mp3' },
           { type: 'list', items: [
-              'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guion.',
+              'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guión.',
               'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
               'Imaginar más de un desenlace te ayuda a salir del modo “todo o nada” y a recuperar perspectiva.',
               'Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista, utilizando el \'pero también\'.',
@@ -402,7 +406,7 @@ export const uncertaintyPath: Path = {
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion4.mp3',
            prompts: [
              '¿Qué parte de ti se suaviza cuando dejas de intentar controlarlo todo?',
-             '¿Qué notas en tu cuerpo cuando sueltas la tensión de tener todas las respuestas?',
+             '¿Cómo se siente tu cuerpo cuando te permites no saberlo todo?',
              '¿Qué cambia en tu mente cuando aceptas que no necesitas prever cada paso?',
              '¿Qué te gustaría recordarte la próxima vez que intentes tenerlo todo bajo control?'
           ]},
@@ -425,3 +429,6 @@ export const uncertaintyPath: Path = {
   ],
 };
 
+
+
+    
