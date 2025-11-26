@@ -156,6 +156,7 @@ import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
 import { ExposureLadderExercise } from './ExposureLadderExercise';
 import { CalmVisualizationExercise } from './CalmVisualizationExercise';
 import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
+import { RitualDeEntregaConscienteExercise } from './RitualDeEntregaConscienteExercise';
 
 // =================== ERROR BOUNDARIES ===================
 
@@ -268,17 +269,15 @@ ${reflection}
         <CardTitle className="text-lg text-primary flex items-center gap-4">
           <NotebookText className="h-6 w-6" />
           <span>{content.title}</span>
-        </CardTitle>
-        {content.audioUrl && (
-          <div className="mt-2">
+          {content.audioUrl && (
             <audio
               src={content.audioUrl}
               controls
               controlsList="nodownload"
-              className="w-full h-10"
+              className="h-8 max-w-[200px] sm:max-w-xs"
             />
-          </div>
-        )}
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSaveReflection} className="space-y-4">
@@ -1339,7 +1338,7 @@ function ContentItemRenderer({
             dangerouslySetInnerHTML={{ __html: contentItem.text.replace(/\n/g, '<br />') }}
           />
           {contentItem.audioUrl && (
-            <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="w-full h-10 mt-2" />
+            <audio src={contentItem.audioUrl} controls controlsList="nodownload" className="w-full h-10" />
           )}
         </div>
       );
@@ -1770,6 +1769,8 @@ function ContentItemRenderer({
       const crisisRehearsalContent = contentItem ;
       return <ImaginedCrisisRehearsalExercise key={index} content={crisisRehearsalContent} pathId={pathId} />;
     }
+    case 'ritualDeEntregaConscienteExercise':
+        return <RitualDeEntregaConscienteExercise key={index} content={contentItem} pathId={pathId} />;
 
     // ...
     default:
