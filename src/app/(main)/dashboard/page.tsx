@@ -19,7 +19,7 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText, RefreshCw, Loader2, ArrowRight } from "lucide-react";
+import { Smile, TrendingUp, Target, Lightbulb, Edit, Radar, LineChart as LineChartIcon, NotebookPen, CheckCircle, Info, UserCircle2, Lock, KeyRound, ShieldQuestion, Trash2, Activity, Send, FileText, RefreshCw, Loader2, ArrowRight, ClipboardList } from "lucide-react";
 import { getRecentEmotionalEntries, addEmotionalEntry, formatEntryTimestamp, type EmotionalEntry, getEmotionalEntries, overwriteEmotionalEntries } from "@/data/emotionalEntriesStore";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -627,6 +627,32 @@ export default function DashboardPage() {
           />
         </div>
       </section>
+
+      <section aria-labelledby="assessment-cta-heading" className="py-6">
+        <h2 id="assessment-cta-heading" className="sr-only">Acceso a la Evaluación</h2>
+        <Card className="shadow-lg">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-primary flex items-center">
+              <ClipboardList className="mr-3 h-6 w-6" />
+              Tu Evaluación de Bienestar
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              ¿Sientes que es momento de revisar cómo estás? Vuelve a realizar la evaluación para obtener una nueva perspectiva sobre tu perfil emocional y recibir recomendaciones actualizadas.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button asChild size="lg">
+              <Link href="/assessment">
+                {t.takeInitialAssessment}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </section>
+
     </div>
   );
 }
