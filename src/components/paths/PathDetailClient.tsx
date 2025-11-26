@@ -63,6 +63,7 @@ import { UncertaintyMapExercise } from '@/components/paths/UncertaintyMapExercis
 import { ControlTrafficLightExercise } from '@/components/paths/ControlTrafficLightExercise';
 import { AlternativeStoriesExercise } from '@/components/paths/AlternativeStoriesExercise';
 import { MantraExercise } from '@/components/paths/MantraExercise';
+import { RitualDeEntregaConscienteExercise } from './RitualDeEntregaConscienteExercise';
 // RUTA 3
 import { DelSabotajeALaAccionExercise } from '@/components/paths/DelSabotajeALaAccionExercise';
 // RUTA 4
@@ -1489,6 +1490,8 @@ function ContentItemRenderer({
       return <AlternativeStoriesExercise key={index} content={contentItem} />;
     case 'mantraExercise':
       return <MantraExercise key={index} content={contentItem} />;
+    case 'ritualDeEntregaConscienteExercise':
+      return <RitualDeEntregaConscienteExercise key={index} content={contentItem} pathId={pathId} />;
     case 'delSabotajeALaAccionExercise':
       return <DelSabotajeALaAccionExercise key={index} content={contentItem} />;
     case 'therapeuticNotebookReflection':

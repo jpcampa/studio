@@ -7,7 +7,6 @@ export const uncertaintyPath: Path = {
   title: 'Tolerar la Incertidumbre con Confianza',
   description: 'Aprende a convivir con lo incierto sin perder el equilibrio, transformando el control en confianza y la ansiedad en calma consciente.',
   dataAiHint: 'uncertainty trust mindfulness',
-  audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Introruta2.mp3',
   modules: [
     {
       id: 'incertidumbre_sem1',
@@ -50,7 +49,6 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: '¿Cómo reacciona tu cuerpo?',
-          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio5Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'Cuando enfrentas una situación incierta, tu cuerpo reacciona: el corazón se acelerada, se tensan los músculos, la mente se agita.\nEsto es adaptativo: tu cerebro intenta protegerte anticipando lo peor. Pero si esa respuesta se vuelve constante, vives en modo alerta, con un “radar” emocional encendido todo el tiempo.' }
           ]
@@ -175,19 +173,15 @@ export const uncertaintyPath: Path = {
                     type: 'collapsible',
                     title: '¿Qué cambia cuando las practicas?',
                     content: [
-                        { type: 'paragraph', text: '🔹 En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\n🔹 En tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas herramientas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }
+                        { type: 'paragraph', text: 'En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\nEn tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas herramientas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }
                     ]
                 },
-                 {
+                {
                     type: 'collapsible',
                     title: '¿Cuándo puedes usarlas?',
                     content: [
-                        { type: 'list', items: [
-                            'En el momento: si sientes ansiedad o bloqueo',
-                            'Antes de una situación desafiante',
-                            'Como rutina diaria para entrenar tu equilibrio'
-                        ]},
-                        { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.'}
+                        { type: 'list', items: ['En el momento: si sientes ansiedad o bloqueo', 'Antes de una situación desafiante', 'Como rutina diaria para entrenar tu equilibrio']},
+                        { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo. La calma también se entrena.'}
                     ]
                 },
                 { type: 'title', text: 'Selección de técnicas' },
@@ -213,7 +207,7 @@ export const uncertaintyPath: Path = {
             objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
             content: [
-              { type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. No anticipes el resultado. Haz la acción con conciencia.'}
+              { type: 'paragraph', text: '¿Y si no necesitas tenerlo todo bajo control? Cuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre. Para entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: exponerte, en dosis pequeñas, a lo que no puedes controlar. Este ejercicio te invita a hacerlo de forma segura y consciente.'}
             ]
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
@@ -327,7 +321,7 @@ export const uncertaintyPath: Path = {
             ]},
           { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion3.mp3' },
           { type: 'list', items: [
-              'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guión.',
+              'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guion.',
               'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
               'Imaginar más de un desenlace te ayuda a salir del modo “todo o nada” y a recuperar perspectiva.',
               'Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista, utilizando el \'pero también\'.',
@@ -398,12 +392,11 @@ export const uncertaintyPath: Path = {
             duration: '7–10 minutos'
           },
           {
-            type: 'exercise',
+            type: 'ritualDeEntregaConscienteExercise',
             title: 'Ejercicio 2: Mi ritual de entrega consciente',
             objective: 'Aprende a soltar la tensión mental o física cuando el control se vuelve agotador, a través de la escritura, la respiración o la gratitud.',
             duration: '5–10 minutos por opción',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio6tecnica2.mp3',
-            content: []
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion4.mp3',
@@ -431,3 +424,4 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
+

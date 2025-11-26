@@ -47,7 +47,7 @@ export function RitualDeEntregaConscienteExercise({ content, pathId }: RitualDeE
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Button variant="outline" className="h-24 flex-col" onClick={() => setStep(1)}><Book className="mb-2"/>Escribir y soltar</Button>
             <Button variant="outline" className="h-24 flex-col" onClick={() => setStep(2)}><Wind className="mb-2"/>Respirar con intención</Button>
-            <Button variant="outline" className="h-24 flex-col" onClick={() => setStep(3)}><Feather className="mb-2"/>Cerrar con gratitud</Button>
+            <Button variant="outline" className="h-24 flex-col" onClick={() => setStep(3)}><Feather className="mb-2"/>Cerrar el día con gratitud</Button>
         </div>
     </div>
   );
@@ -55,12 +55,13 @@ export function RitualDeEntregaConscienteExercise({ content, pathId }: RitualDeE
   const renderWriteAndRelease = () => (
     <div className="space-y-4 p-2 animate-in fade-in-0 duration-500">
         <h4 className="font-semibold text-lg">Opción 1: Escribir y Soltar</h4>
+        <p className="text-xs text-muted-foreground">Ideal si tu mente está llena de pensamientos anticipatorios o autoexigencias.</p>
         <div className="space-y-2">
             <Label htmlFor="inquietud">Paso 1: Escribe todo lo que te inquieta</Label>
             <Textarea id="inquietud" value={writtenInquietud} onChange={e => setWrittenInquietud(e.target.value)} placeholder="Frases cortas, sin filtro..."/>
         </div>
         <div className="space-y-2">
-            <Label>Paso 2: Reflexiona</Label>
+            <Label>Paso 2: Léelo en voz baja y reflexiona</Label>
             <p className="text-xs text-muted-foreground">• ¿Es esto cierto? • ¿Me ayuda pensar así? • ¿Podría verlo de forma más realista?</p>
             <Textarea value={writtenReflection} onChange={e => setWrittenReflection(e.target.value)} placeholder="Tu reflexión..."/>
         </div>
@@ -99,6 +100,7 @@ export function RitualDeEntregaConscienteExercise({ content, pathId }: RitualDeE
   const renderGratitudeClosing = () => (
     <div className="space-y-4 p-2 animate-in fade-in-0 duration-500">
         <h4 className="font-semibold text-lg">Opción 3: Cerrar el Día con Gratitud</h4>
+         <p className="text-sm text-muted-foreground">Hacer esto cada noche entrena a tu mente a cerrar el día con amabilidad, no con autoexigencia.</p>
         <div className="space-y-2">
             <Label htmlFor="gratitude">¿Qué agradezco hoy?</Label>
             <Textarea id="gratitude" value={gratitude} onChange={e => setGratitude(e.target.value)}/>
@@ -111,7 +113,6 @@ export function RitualDeEntregaConscienteExercise({ content, pathId }: RitualDeE
             <Label htmlFor="calm-moment">¿Qué momento me conectó con la calma?</Label>
             <Textarea id="calm-moment" value={calmMoment} onChange={e => setCalmMoment(e.target.value)}/>
         </div>
-        <p className="text-xs italic text-muted-foreground">Hacer esto cada noche entrena a tu mente a cerrar el día con amabilidad, no con autoexigencia.</p>
         <Button onClick={() => {
             const content = `**Agradezco:**\n${gratitude}\n\n**Avance:**\n${advancement}\n\n**Momento de calma:**\n${calmMoment}`;
             handleSave("Cierre con Gratitud", content);
@@ -133,8 +134,8 @@ export function RitualDeEntregaConscienteExercise({ content, pathId }: RitualDeE
   return (
     <Card className="bg-muted/30 my-6 shadow-md">
       <CardHeader>
-        <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{content.title}</CardTitle>
-        {content.objective && <CardDescription className="pt-2">{content.objective}</CardDescription>}
+        <CardTitle className="text-lg text-accent flex items-center"><Edit3 className="mr-2"/>{(content as any).title}</CardTitle>
+        {(content as any).objective && <CardDescription className="pt-2">{(content as any).objective}</CardDescription>}
       </CardHeader>
       <CardContent>
         {renderContent()}
