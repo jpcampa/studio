@@ -245,7 +245,9 @@ export default function DashboardPage() {
   const [allEntriesForChart, setAllEntriesForChart] = useState<EmotionalEntry[]>([]);
   const [isRefreshingEmotions, setIsRefreshingEmotions] = useState(false);
   const [latestAssessment, setLatestAssessment] = useState<AssessmentRecord | null>(null);
-  const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
+  
+  // No necesitamos el estado para las dimensiones, ya que están incrustadas.
+  // const [assessmentDimensions, setAssessmentDimensions] = useState<AssessmentDimension[]>([]);
 
 
   const generateUserActivityApiUrl = useCallback((newEntryData: EmotionalEntry, userIdForUrlParam?: string | null): string => {
@@ -265,31 +267,47 @@ export default function DashboardPage() {
   }, []);
 
 
-  useEffect(() => {
-    const loadInitialData = () => {
-        const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
-        const loadedAllEntries = getEmotionalEntries(); 
-        const assessmentHistory = getAssessmentHistory();
-        
-        if (assessmentHistory.length > 0) {
-            setLatestAssessment(assessmentHistory[0]);
+  const loadDataFromStorage = useCallback(() => {
+    const loadedRecentEntries = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
+    const loadedAllEntries = getEmotionalEntries(); 
+    const assessmentHistory = getAssessmentHistory();
+    
+    if (assessmentHistory.length > 0) {
+        setLatestAssessment(assessmentHistory[0]);
+    } else {
+        setLatestAssessment(null);
+    }
+
+    setRecentEntries(loadedRecentEntries);
+    setAllEntriesForChart(loadedAllEntries);
+
+    if (loadedRecentEntries.length > 0) {
+        const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
+        if (lastRegisteredEmotion) {
+            setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
+        } else {
+            setLastEmotion(null);
         }
-
-        // Questions are now embedded, no need to fetch.
-        setAssessmentDimensions(assessmentDimensionsData);
-
-        setRecentEntries(loadedRecentEntries);
-        setAllEntriesForChart(loadedAllEntries);
-
-        if (loadedRecentEntries.length > 0) {
-            const lastRegisteredEmotion = emotionOptions.find(e => e.value === loadedRecentEntries[0].emotion);
-            if (lastRegisteredEmotion) {
-                setLastEmotion(t[lastRegisteredEmotion.labelKey as keyof typeof t] || lastRegisteredEmotion.value);
-            }
-        }
-    };
-    loadInitialData();
+    } else {
+        setLastEmotion(null);
+    }
   }, [t]);
+
+  useEffect(() => {
+    // Carga inicial de datos
+    loadDataFromStorage();
+
+    // Escuchar eventos para recargar si los datos cambian en otra parte de la app
+    window.addEventListener('storage', loadDataFromStorage);
+    window.addEventListener('emotional-entries-updated', loadDataFromStorage);
+    window.addEventListener('assessment-history-updated', loadDataFromStorage);
+
+    return () => {
+      window.removeEventListener('storage', loadDataFromStorage);
+      window.removeEventListener('emotional-entries-updated', loadDataFromStorage);
+      window.removeEventListener('assessment-history-updated', loadDataFromStorage);
+    };
+  }, [loadDataFromStorage]);
 
 
   const chartData = useMemo(() => {
@@ -336,12 +354,8 @@ export default function DashboardPage() {
 
     const newEntry = addEmotionalEntry(data);
 
-    setRecentEntries(prevEntries => [newEntry, ...prevEntries].slice(0, NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD));
-    setAllEntriesForChart(prevAllEntries => [newEntry, ...prevAllEntries].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-    const lastRegisteredEmotionDetails = emotionOptions.find(e => e.value === newEntry.emotion);
-    if (lastRegisteredEmotionDetails) {
-        setLastEmotion(t[lastRegisteredEmotionDetails.labelKey as keyof typeof t] || lastRegisteredEmotionDetails.value);
-    }
+    // Actualiza el estado local para reflejar el cambio inmediatamente
+    loadDataFromStorage();
 
     toast({
       title: t.emotionalEntrySavedTitle,
@@ -440,17 +454,7 @@ export default function DashboardPage() {
     if (result.success && result.entries) {
       console.log("DashboardPage (handleRefreshEmotions): Successfully fetched activities. Entries count:", result.entries.length);
       overwriteEmotionalEntries(result.entries);
-      const newRecent = getRecentEmotionalEntries(NUM_RECENT_ENTRIES_TO_SHOW_ON_DASHBOARD);
-      const newAll = getEmotionalEntries();
-      console.log("DashboardPage (handleRefreshEmotions): Entries from localStorage after overwrite (newAll first 5):", JSON.stringify(newAll.slice(0,5)));
-      setRecentEntries(newRecent);
-      setAllEntriesForChart(newAll);
-      if (newRecent.length > 0) {
-        const lastRegEmotion = emotionOptions.find(e => e.value === newRecent[0].emotion);
-        setLastEmotion(lastRegEmotion ? (t[lastRegEmotion.labelKey as keyof typeof t] || lastRegEmotion.value) : null);
-      } else {
-        setLastEmotion(null);
-      }
+      loadDataFromStorage(); // Recarga todo desde el localStorage
       toast({
         title: "Emociones Actualizadas",
         description: "Se han cargado tus últimos registros emocionales.",
@@ -608,7 +612,7 @@ export default function DashboardPage() {
             {latestAssessment ? (
                 <EmotionalProfileChart 
                     results={latestAssessment.data}
-                    assessmentDimensions={assessmentDimensions}
+                    assessmentDimensions={assessmentDimensionsData}
                     className="lg:h-[450px]"
                 />
             ) : (
@@ -629,7 +633,6 @@ export default function DashboardPage() {
       </section>
 
       <section aria-labelledby="assessment-cta-heading" className="py-6">
-        <h2 id="assessment-cta-heading" className="sr-only">Acceso a la Evaluación</h2>
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-primary flex items-center">
@@ -639,13 +642,16 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              ¿Sientes que es momento de revisar cómo estás? Vuelve a realizar la evaluación para obtener una nueva perspectiva sobre tu perfil emocional y recibir recomendaciones actualizadas.
+              {latestAssessment ? 
+                '¿Sientes que es momento de revisar cómo estás? Vuelve a realizar la evaluación para obtener una nueva perspectiva sobre tu perfil emocional y recibir recomendaciones actualizadas.' :
+                'Realiza tu primera evaluación para descubrir tu perfil emocional y recibir rutas de desarrollo personalizadas.'
+              }
             </p>
           </CardContent>
           <CardFooter>
             <Button asChild size="lg">
-              <Link href="/assessment">
-                {t.takeInitialAssessment}
+              <Link href="/assessment/intro">
+                {latestAssessment ? "Volver a Evaluarme" : t.takeInitialAssessment}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -657,4 +663,3 @@ export default function DashboardPage() {
   );
 }
 
-    

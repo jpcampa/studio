@@ -26,7 +26,13 @@ export function getAssessmentHistory(): AssessmentRecord[] {
     const item = localStorage.getItem(ASSESSMENT_HISTORY_KEY);
     const records = item ? (JSON.parse(item) as AssessmentRecord[]) : [];
     // Sort by timestamp descending (newest first)
-    return records.sort((a, b) => parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime());
+    return records.sort((a, b) => {
+        try {
+            return parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime()
+        } catch(e) {
+            return 0; // if dates are invalid, don't sort
+        }
+    });
   } catch (error) {
     console.error("Error reading assessment history from localStorage:", error);
     return [];
@@ -61,6 +67,7 @@ export function saveAssessmentToHistory(assessmentData: InitialAssessmentOutput,
     const updatedHistory = [newRecord, ...currentHistory].slice(0, MAX_HISTORY_ENTRIES);
     localStorage.setItem(ASSESSMENT_HISTORY_KEY, JSON.stringify(updatedHistory));
     console.log("AssessmentHistoryStore: Saved new assessment record. Total records:", updatedHistory.length);
+    window.dispatchEvent(new CustomEvent('assessment-history-updated'));
     return newRecord;
   } catch (error) {
     console.error("Error saving assessment record to localStorage:", error);
@@ -99,6 +106,7 @@ export function clearAssessmentHistory(): void {
   try {
     localStorage.removeItem(ASSESSMENT_HISTORY_KEY);
     console.log("Assessment history cleared from localStorage.");
+    window.dispatchEvent(new CustomEvent('assessment-history-updated'));
   } catch (error) {
     console.error("Error clearing assessment history from localStorage:", error);
   }
@@ -112,7 +120,7 @@ export function overwriteAssessmentHistory(records: AssessmentRecord[]): void {
         try {
             return parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime();
         } catch (e) {
-            // Fallback for potentially non-ISO timestamps from API before they are normalized
+             // Fallback for potentially non-ISO timestamps from API before they are normalized
              try {
                 return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
              } catch (e2) {
@@ -124,6 +132,7 @@ export function overwriteAssessmentHistory(records: AssessmentRecord[]): void {
     const recordsToStore = sortedRecords.slice(0, MAX_HISTORY_ENTRIES);
     localStorage.setItem(ASSESSMENT_HISTORY_KEY, JSON.stringify(recordsToStore));
     console.log("AssessmentHistoryStore: Overwritten local assessment history with API data. Total records:", recordsToStore.length);
+    window.dispatchEvent(new CustomEvent('assessment-history-updated'));
   } catch (error) {
     console.error("Error overwriting assessment history in localStorage:", error);
   }
