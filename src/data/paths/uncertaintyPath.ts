@@ -163,39 +163,22 @@ export const uncertaintyPath: Path = {
             objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio6tecnica1.mp3',
             content: [
-                { type: 'paragraph', text: '¿Sientes que tu cuerpo se acelera cuando estás en tensión? Respirar más lento, mover el cuerpo o sentir el contacto con tu entorno puede ayudarte más de lo que imaginas. Aquí encontrarás técnicas validadas por la ciencia para calmar tu sistema nervioso. Elige la que más te ayude y practica durante unos minutos. Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.'},
-                { type: 'collapsible', title: '¿Por qué estas técnicas funcionan?', content: [{ type: 'paragraph', text: 'Cuando estás en modo alerta —con el corazón acelerado, el cuerpo tenso y la mente agitada— tu sistema nervioso está intentando protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas ayudan a activar el sistema parasimpático, el encargado de enviarle al cuerpo el mensaje de que ya no hay peligro. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios han demostrado que practicar respiración consciente o mindfulness durante al menos 8 semanas puede producir cambios reales en el cerebro, como la reducción del volumen de la amígdala (centro de alerta y miedo). Es decir: te entrenas para vivir con más calma.' }] },
-                { type: 'collapsible', title: '¿Qué cambia cuando las practicas?', content: [
-                    { type: 'paragraph', text: 'En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\nEn tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas herramientas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }
-                ]},
-                {
-                    type: 'collapsible',
-                    title: '¿Cuándo puedes usarlas?',
-                    content: [
-                        { type: 'list', items: ['En el momento: si sientes ansiedad o bloqueo', 'Antes de una situación desafiante', 'Como rutina diaria para entrenar tu equilibrio'] }
-                    ]
-                },
-                { type: 'title', text: 'Selección de técnicas' },
-                { type: 'paragraph', text: 'Explora todas y guarda tus favoritas. Puedes repetirlas cuando lo necesites.'},
-                { type: 'collapsible', title: 'Respiración 4–2–6 con gesto de autocuidado', content: [{ type: 'paragraph', text: 'Ideal antes de dormir o al comenzar el día.' }] },
-                { type: 'collapsible', title: 'Respiración diafragmática (guiada paso a paso)', content: [{ type: 'paragraph', text: 'Perfecta para reducir tensión acumulada o centrarte al empezar la jornada.' }] },
-                { type: 'collapsible', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', content: [{ type: 'paragraph', text: 'Úsala cuando tu mente se inunde de pensamientos anticipatorios.' }] },
-                { type: 'collapsible', title: 'Escaneo corporal sin juicio (body scan)', content: [{ type: 'paragraph', text: 'Útil para relajarte al final del día o facilitar el descanso.' }] },
-                { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
-                { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
-                { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
-                { type: 'therapeuticNotebookReflection', title: 'Registro de experiencia personal', prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:'] },
+                { type: 'paragraph', text: 'Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.'}
             ]
           },
-          { 
-            type: 'exercise', 
-            title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', 
-            objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
+          {
+            type: 'exercise',
+            title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto',
+            objective:
+              'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
+            duration: '5–10 minutos',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
             content: [
-              { type: 'paragraph', text: 'Cuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre. Para entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: exponerte, en dosis pequeñas, a lo que no puedes controlar. Este ejercicio te invita a hacerlo de forma segura y consciente.'},
-              { type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. No anticipes el resultado. Haz la acción con conciencia.'}
-            ]
+              {
+                type: 'paragraph',
+                text: 'PANTALLA 1 – Introducción general   ¿Y si no necesitas tenerlo todo bajo control?   Cuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre.   Para entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave:  Exponerte, en dosis pequeñas, a lo que no puedes controlar.   Este ejercicio te invita a hacerlo de forma segura y consciente.      PANTALLA 2 – Paso 1: Elige tu situación   Paso 1. Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal.   Ejemplos:  • Enviar un mensaje sin revisar 3 veces  • Tomar una decisión sencilla sin pedir confirmación  • Hacer una pregunta en clase o en una reunión, aunque no estés 100% seguro/a  • No llevar siempre el objeto “por si acaso” (medicación, agua, cargador…)  • Empezar una conversación sin planear qué vas a decir   ¿Cuál será tu pequeña exposición de hoy?  [Campo de escritura libre obligatorio]      PANTALLA 3 – Paso 2: Antes de actuar   No anticipes el resultado. Haz la acción con conciencia.  Antes de actuar, reflexiona y escribe:   ¿Qué creo que podría salir mal?  [Campo obligatorio]   ¿Qué haría si eso pasara?  [Campo obligatorio]   ¿En qué otras ocasiones me he enfrentado a situaciones inciertas como esta? ¿Qué hice entonces que me ayudó o me dio fuerza?  [Campo obligatorio]   Luego, haz la acción sin intentar garantizar que todo saldrá perfecto. Solo obsérvate.      PANTALLA 4 – Paso 3: Observa lo que ocurrió   Después de haber realizado tu pequeño acto de exposición, reflexiona:   En tu cuerpo:  • ¿Se activó algo?  • ¿Hubo tensión, calor, respiración acelerada?  • ¿Cómo fue cambiando?   [Campo de respuesta libre]    En tu mente:  • ¿Qué pensamientos aparecieron?  • ¿Se cumplieron tus predicciones?  • ¿Qué historia te estaba contando tu cabeza?   [Campo de respuesta libre]    En la realidad:  • ¿Qué ocurrió realmente?  • ¿Pasó algo tan grave como temías?  • ¿Hubo alguna consecuencia real o solo una sensación pasajera?   [Campo de respuesta libre]       PANTALLA 5 – Reflexión final (cuaderno terapéutico)   Reflexión para tu cuaderno terapéutico:  • ¿Qué pasó cuando no tuve todas las respuestas?  • ¿Fue tan grave como imaginaba?   [Campo de escritura libre – Guardar en Cuaderno Terapéutico]',
+              },
+            ],
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion2.mp3',
@@ -379,12 +362,11 @@ export const uncertaintyPath: Path = {
             duration: '7–10 minutos'
           },
           {
-            type: 'exercise',
+            type: 'ritualDeEntregaConscienteExercise',
             title: 'Ejercicio 2: Mi ritual de entrega consciente',
             objective: 'Aprende a soltar la tensión mental o física cuando el control se vuelve agotador, a través de la escritura, la respiración o la gratitud.',
             duration: '5–10 minutos por opción',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio6tecnica2.mp3',
-            content: []
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion4.mp3',
@@ -431,6 +413,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'title',
           text: 'Resumen final de la Ruta',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Resumenfinalruta2.mp3'
         },
         {
           type: 'list',
@@ -458,3 +441,4 @@ export const uncertaintyPath: Path = {
     
 
     
+
