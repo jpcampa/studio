@@ -34,7 +34,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'collapsible',
           title: '¿Por qué nos cuesta tanto la incertidumbre?',
-          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion1.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio4Ruta2Sesion1.mp3',
           content: [
             { type: 'paragraph', text: 'Porque nuestro sistema emocional busca seguridad. Preferimos incluso una mala noticia conocida antes que quedarnos en el “no sé”.\nEstudios en neurociencia han demostrado que la incertidumbre activa el sistema de amenaza cerebral (en especial, la amígdala) de forma parecida a como lo haría un peligro real.\nCuando esto ocurre, muchas personas sienten:\n•\tNecesidad de controlarlo todo.\n•\tPensamientos de anticipación (“¿Y si…?”).\n•\tEvitación de decisiones o situaciones inciertas.' }
           ]
@@ -165,7 +165,7 @@ export const uncertaintyPath: Path = {
             objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio6tecnica1.mp3',
             content: [
-                { type: 'paragraph', text: '¿Sientes que tu cuerpo se acelera cuando estás en tensión?  Respirar más lento, mover el cuerpo o sentir el contacto con tu entorno puede ayudarte más de lo que imaginas.   Aquí encontrarás técnicas validadas por la ciencia para calmar tu sistema nervioso. Elige la que más te ayude y practica durante unos minutos.  Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.' },
+                { type: 'paragraph', text: '¿Sientes que tu cuerpo se acelera cuando estás en tensión? Respirar más lento, mover el cuerpo o sentir el contacto con tu entorno puede ayudarte más de lo que imaginas. Aquí encontrarás técnicas validadas por la ciencia para calmar tu sistema nervioso. Elige la que más te ayude y practica durante unos minutos. Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.' },
                 {
                     type: 'collapsible',
                     title: '¿Por qué estas técnicas funcionan?',
@@ -178,11 +178,15 @@ export const uncertaintyPath: Path = {
                         { type: 'paragraph', text: '🔹 En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\n🔹 En tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas herramientas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }
                     ]
                 },
-                {
+                 {
                     type: 'collapsible',
                     title: '¿Cuándo puedes usarlas?',
                     content: [
-                        { type: 'list', items: ['En el momento: si sientes ansiedad o bloqueo', 'Antes de una situación desafiante', 'Como rutina diaria para entrenar tu equilibrio'] },
+                        { type: 'list', items: [
+                            'En el momento: si sientes ansiedad o bloqueo',
+                            'Antes de una situación desafiante',
+                            'Como rutina diaria para entrenar tu equilibrio'
+                        ]},
                         { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.'}
                     ]
                 },
@@ -196,7 +200,11 @@ export const uncertaintyPath: Path = {
                 { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
                 { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
                 { type: 'therapeuticNotebookReflection', title: 'Registro de experiencia personal', prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:'] },
-                { type: 'collapsible', title: 'Resumen clave', content: [{ type: 'paragraph', text: 'Cada vez que practicas una técnica de calma, estás enviando un mensaje claro a tu sistema nervioso:  “No estás en peligro. Puedes estar en paz.”   Estas experiencias repetidas se convierten en nuevas referencias internas. Lo incierto se vuelve más manejable.  Tu cuerpo aprende a activarse menos, calmarse antes y recuperar el equilibrio con mayor facilidad.   Estás construyendo dentro de ti un pequeño refugio al que volver cuando todo alrededor es incierto.  La calma deja de ser solo una técnica… y se convierte en una capacidad que forma parte de ti.' }] }
+                { 
+                    type: 'collapsible', 
+                    title: 'Resumen clave', 
+                    content: [{ type: 'paragraph', text: 'Cada vez que practicas una técnica de calma, estás enviando un mensaje claro a tu sistema nervioso: “No estás en peligro. Puedes estar en paz.”\n\nEstas experiencias repetidas se convierten en nuevas referencias internas. Lo incierto se vuelve más manejable.\nTu cuerpo aprende a activarse menos, calmarse antes y recuperar el equilibrio con mayor facilidad.\n\nEstás construyendo dentro de ti un pequeño refugio al que volver cuando todo alrededor es incierto.\nLa calma deja de ser solo una técnica… y se convierte en una capacidad que forma parte de ti.' }]
+                }
             ]
           },
           {
@@ -357,7 +365,7 @@ export const uncertaintyPath: Path = {
             title: 'Confiar no es saber cómo saldrá, es saber que puedes con ello',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion4.mp3',
             content: [
-                { type: 'paragraph', text: 'A veces creemos que solo estaremos bien si lo tenemos todo claro. Pero en realidad, lo que genera estabilidad no es la certeza, sino la confianza:\n✔️ Confianza en que sabrás responder\n✔️ Confianza en que podrás adaptarte, incluso con miedo\n✔️ Confianza en que no necesitas hacerlo perfecto para estar bien\nTu confianza no crece cuando todo es fácil. Crece cuando te atreves, incluso sin garantías.'}
+                { type: 'paragraph', text: 'A veces creemos que solo estaremos bien si lo tenemos todo claro. Pero en realidad, lo que genera estabilidad no es la certeza, sino la confianza:\n• Confianza en que sabrás responder\n• Confianza en que podrás adaptarte, incluso con miedo\n• Confianza en que no necesitas hacerlo perfecto para estar bien\nTu confianza no crece cuando todo es fácil. Crece cuando te atreves, incluso sin garantías.'}
             ]
           },
           {
@@ -365,7 +373,7 @@ export const uncertaintyPath: Path = {
             title: 'Caminar paso a paso: la alternativa a planearlo todo',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio3Ruta2Sesion4.mp3',
             content: [
-                { type: 'paragraph', text: 'Cuando intentas prever cada detalle y tener todo controlado desde el inicio, te vuelves rígido/a. Y eso, en un mundo cambiante, es agotador.\nLa alternativa es desarrollar flexibilidad estratégica:\n✔️ Avanzar con intención, aunque no esté todo resuelto\n✔️ Dar un paso desde donde estás, con lo que tienes\nLa confianza se construye caminando, no planificando eternamente. Y cuando algo no sale como esperabas, no es un fallo: es parte del proceso.'}
+                { type: 'paragraph', text: 'Cuando intentas prever cada detalle y tener todo controlado desde el inicio, te vuelves rígido/a. Y eso, en un mundo cambiante, es agotador.\nLa alternativa es desarrollar flexibilidad estratégica:\n• Avanzar con intención, aunque no esté todo resuelto\n• Dar un paso desde donde estás, con lo que tienes\nLa confianza se construye caminando, no planificando eternamente. Y cuando algo no sale como esperabas, no es un fallo: es parte del proceso.'}
             ]
           },
           {
@@ -395,15 +403,11 @@ export const uncertaintyPath: Path = {
             objective: 'Aprende a soltar la tensión mental o física cuando el control se vuelve agotador, a través de la escritura, la respiración o la gratitud.',
             duration: '5–10 minutos por opción',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio6tecnica2.mp3',
-            content: [
-                { type: 'paragraph', text: 'Cuando intentas controlarlo todo, tu mente se agota. Este ejercicio te propone soltar por un momento. Elige la forma que hoy más te ayude: Escribir y soltar, Respirar con intención o Cerrar el día con gratitud.'}
-            ]
+            content: []
           },
-          { 
-            type: 'therapeuticNotebookReflection', 
-            title: 'Reflexión Final de la Semana', 
-            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion4.mp3',
-            prompts: [
+           { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
+           audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio7Ruta2Sesion4.mp3',
+           prompts: [
              '¿Qué parte de ti se suaviza cuando dejas de intentar controlarlo todo?',
              '¿Qué notas en tu cuerpo cuando sueltas la tensión de tener todas las respuestas?',
              '¿Qué cambia en tu mente cuando aceptas que no necesitas prever cada paso?',
@@ -427,4 +431,3 @@ export const uncertaintyPath: Path = {
     }
   ],
 };
-
