@@ -218,7 +218,7 @@ export const uncertaintyPath: Path = {
                 { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
                 { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
                 { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
-                 {
+                {
                     type: 'therapeuticNotebookReflection',
                     title: 'Registro de experiencia personal',
                     prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:']
@@ -226,28 +226,72 @@ export const uncertaintyPath: Path = {
                 {
                     type: 'collapsible',
                     title: 'Resumen clave',
-                    content: [{ type: 'paragraph', text: 'Cada vez que practicas una técnica de calma, estás enviando un mensaje claro a tu sistema nervioso: “No estás en peligro. Puedes estar en paz.”\n\nEstas experiencias repetidas se convierten en nuevas referencias internas. Lo incierto se vuelve más manejable.\nTu cuerpo aprende a activarse menos, calmarse antes y recuperar el equilibrio con mayor facilidad.\n\nEstás construyendo dentro de ti un pequeño refugio al que volver cuando todo alrededor es incierto.\nLa calma deja de ser solo una técnica… y se convierte en una capacidad que forma parte de ti.' }]
+                    content: [{ type: 'paragraph', text: 'Cada vez que practicas una técnica de calma, estás enviando un mensaje claro a tu sistema nervioso:  “No estás en peligro. Puedes estar en paz.”   Estas experiencias repetidas se convierten en nuevas referencias internas. Lo incierto se vuelve más manejable.  Tu cuerpo aprende a activarse menos, calmarse antes y recuperar el equilibrio con mayor facilidad.   Estás construyendo dentro de ti un pequeño refugio al que volver cuando todo alrededor es incierto.  La calma deja de ser solo una técnica… y se convierte en una capacidad que forma parte de ti.' }]
                 }
             ]
           },
-          { 
-            type: 'exercise', 
-            title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', 
+          {
+            type: 'exercise',
+            title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto',
             objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
             content: [
-              {type: 'paragraph', text: '¿Y si no necesitas tenerlo todo bajo control? Cuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre. Para entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: Exponerte, en dosis pequeñas, a lo que no puedes controlar. Este ejercicio te invita a hacerlo de forma segura y consciente.'},
-              {type: 'title', text: 'Paso 1: Elige tu situación'},
-              {type: 'paragraph', text: 'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. Ejemplos: • Enviar un mensaje sin revisar 3 veces • Tomar una decisión sencilla sin pedir confirmación • Hacer una pregunta en clase o en una reunión, aunque no estés 100% seguro/a • No llevar siempre el objeto “por si acaso” (medicación, agua, cargador…) • Empezar una conversación sin planear qué vas a decir'},
-              {type: 'therapeuticNotebookReflection', title: '¿Cuál será tu pequeña exposición de hoy?', prompts: []},
-              {type: 'title', text: 'Paso 2: Antes de actuar'},
-              {type: 'paragraph', text: 'No anticipes el resultado. Haz la acción con conciencia. Antes de actuar, reflexiona y escribe:'},
-              {type: 'therapeuticNotebookReflection', title: '¿Qué creo que podría salir mal? ¿Qué haría si eso pasara? ¿En qué otras ocasiones me he enfrentado a situaciones inciertas como esta? ¿Qué hice entonces que me ayudó o me dio fuerza?', prompts: []},
-              {type: 'title', text: 'Paso 3: Observa lo que ocurrió'},
-              {type: 'paragraph', text: 'Después de haber realizado tu pequeño acto de exposición, reflexiona:'},
-              {type: 'therapeuticNotebookReflection', title: 'En tu cuerpo: ¿Se activó algo? ¿Hubo tensión, calor, respiración acelerada? ¿Cómo fue cambiando? En tu mente: ¿Qué pensamientos aparecieron? ¿Se cumplieron tus predicciones? ¿Qué historia te estaba contando tu cabeza? En la realidad: ¿Qué ocurrió realmente? ¿Pasó algo tan grave como temías? ¿Hubo alguna consecuencia real o solo una sensación pasajera?', prompts: []},
-              {type: 'therapeuticNotebookReflection', title: 'Reflexión final para tu cuaderno terapéutico:', prompts: ['¿Qué pasó cuando no tuve todas las respuestas?', '¿Fue tan grave como imaginaba?']}
-            ]
+              {
+                type: 'paragraph',
+                text: '¿Y si no necesitas tenerlo todo bajo control?\n\nCuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre.\n\nPara entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: exponerte, en dosis pequeñas, a lo que no puedes controlar.\n\nEste ejercicio te invita a hacerlo de forma segura y consciente.',
+              },
+              { type: 'title', text: 'Paso 1: Elige tu situación' },
+              {
+                type: 'therapeuticNotebookReflection',
+                title: '¿Cuál será tu pequeña exposición de hoy?',
+                prompts: [
+                  'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal.',
+                  'Ejemplos:',
+                  '• Enviar un mensaje sin revisar 3 veces',
+                  '• Tomar una decisión sencilla sin pedir confirmación',
+                  '• Hacer una pregunta en clase o en una reunión, aunque no estés 100% seguro/a',
+                  '• No llevar siempre el objeto “por si acaso” (medicación, agua, cargador…)',
+                  '• Empezar una conversación sin planear qué vas a decir',
+                ],
+              },
+              { type: 'title', text: 'Paso 2: Antes de actuar' },
+              {
+                type: 'therapeuticNotebookReflection',
+                title: 'No anticipes el resultado. Haz la acción con conciencia. Antes de actuar, reflexiona y escribe:',
+                prompts: [
+                  '¿Qué creo que podría salir mal?',
+                  '¿Qué haría si eso pasara?',
+                  '¿En qué otras ocasiones me he enfrentado a situaciones inciertas como esta? ¿Qué hice entonces que me ayudó o me dio fuerza?',
+                  'Luego, haz la acción sin intentar garantizar que todo saldrá perfecto. Solo obsérvate.',
+                ],
+              },
+              { type: 'title', text: 'Paso 3: Observa lo que ocurrió' },
+              {
+                type: 'therapeuticNotebookReflection',
+                title: 'Después de haber realizado tu pequeño acto de exposición, reflexiona:',
+                prompts: [
+                  'En tu cuerpo:',
+                  '• ¿Se activó algo?',
+                  '• ¿Hubo tensión, calor, respiración acelerada?',
+                  '• ¿Cómo fue cambiando?',
+                  '',
+                  'En tu mente:',
+                  '• ¿Qué pensamientos aparecieron?',
+                  '• ¿Se cumplieron tus predicciones?',
+                  '• ¿Qué historia te estaba contando tu cabeza?',
+                  '',
+                  'En la realidad:',
+                  '• ¿Qué ocurrió realmente?',
+                  '• ¿Pasó algo tan grave como temías?',
+                  '• ¿Hubo alguna consecuencia real o solo una sensación pasajera?',
+                ],
+              },
+              {
+                type: 'therapeuticNotebookReflection',
+                title: 'Reflexión final para tu cuaderno terapéutico:',
+                prompts: ['¿Qué pasó cuando no tuve todas las respuestas?', '¿Fue tan grave como imaginaba?'],
+              },
+            ],
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion2.mp3',
@@ -360,7 +404,7 @@ export const uncertaintyPath: Path = {
             ]},
           { type: 'title', text: 'Resumen Clave de la Semana', audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion3.mp3' },
           { type: 'list', items: [
-              'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guion.',
+              'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guión.',
               'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
               'Imaginar más de un desenlace te ayuda a salir del modo “todo o nada” y a recuperar perspectiva.',
               'Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista.',
