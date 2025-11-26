@@ -126,7 +126,7 @@ export const uncertaintyPath: Path = {
             title: '¿Por qué imaginamos lo peor?',
             audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion2.mp3',
             content: [
-                { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real. ' },
+                { type: 'paragraph', text: 'A veces, tu cuerpo reacciona con ansiedad sin que haya pasado nada realmente peligroso. Solo hace falta un pensamiento como “¿Y si me equivoco?” o “¿Y si esto sale mal?” para que tu mente entre en bucle y tu cuerpo se ponga en alerta. \n\nEsto es lo que llamamos anticipación ansiosa: una forma de preocupación centrada en lo que podría pasar. Aunque sea solo imaginación, activa emociones, sensaciones y comportamientos como si el peligro fuera real.'},
                 {
                     type: 'collapsible',
                     title: '¿Cómo funciona la anticipación?',
@@ -201,11 +201,7 @@ export const uncertaintyPath: Path = {
                     type: 'collapsible',
                     title: '¿Cuándo puedes usarlas?',
                     content: [
-                        { type: 'list', items: [
-                            'En el momento: si sientes ansiedad o bloqueo',
-                            'Antes de una situación desafiante',
-                            'Como rutina diaria para entrenar tu equilibrio'
-                        ]},
+                        { type: 'list', items: ['En el momento: si sientes ansiedad o bloqueo', 'Antes de una situación desafiante', 'Como rutina diaria para entrenar tu equilibrio'] },
                         { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.' }
                     ]
                 },
@@ -218,7 +214,7 @@ export const uncertaintyPath: Path = {
                 { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
                 { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
                 { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
-                {
+                 {
                     type: 'therapeuticNotebookReflection',
                     title: 'Registro de experiencia personal',
                     prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:']
@@ -236,16 +232,12 @@ export const uncertaintyPath: Path = {
             objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
             content: [
-              {
-                type: 'paragraph',
-                text: '¿Y si no necesitas tenerlo todo bajo control?\n\nCuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre.\n\nPara entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: exponerte, en dosis pequeñas, a lo que no puedes controlar.\n\nEste ejercicio te invita a hacerlo de forma segura y consciente.',
-              },
-              { type: 'title', text: 'Paso 1: Elige tu situación' },
+              { type: 'paragraph', text: '¿Y si no necesitas tenerlo todo bajo control?\n\nCuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre.\n\nPara entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave: exponerte, en dosis pequeñas, a lo que no puedes controlar.\n\nEste ejercicio te invita a hacerlo de forma segura y consciente.' },
               {
                 type: 'therapeuticNotebookReflection',
-                title: '¿Cuál será tu pequeña exposición de hoy?',
+                title: 'Paso 1: Elige tu situación',
                 prompts: [
-                  'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal.',
+                  'Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal. ¿Cuál será tu pequeña exposición de hoy?',
                   'Ejemplos:',
                   '• Enviar un mensaje sin revisar 3 veces',
                   '• Tomar una decisión sencilla sin pedir confirmación',
@@ -254,36 +246,25 @@ export const uncertaintyPath: Path = {
                   '• Empezar una conversación sin planear qué vas a decir',
                 ],
               },
-              { type: 'title', text: 'Paso 2: Antes de actuar' },
               {
                 type: 'therapeuticNotebookReflection',
-                title: 'No anticipes el resultado. Haz la acción con conciencia. Antes de actuar, reflexiona y escribe:',
+                title: 'Paso 2: Antes de actuar',
                 prompts: [
+                  'No anticipes el resultado. Haz la acción con conciencia. Antes de actuar, reflexiona y escribe:',
                   '¿Qué creo que podría salir mal?',
                   '¿Qué haría si eso pasara?',
                   '¿En qué otras ocasiones me he enfrentado a situaciones inciertas como esta? ¿Qué hice entonces que me ayudó o me dio fuerza?',
                   'Luego, haz la acción sin intentar garantizar que todo saldrá perfecto. Solo obsérvate.',
                 ],
               },
-              { type: 'title', text: 'Paso 3: Observa lo que ocurrió' },
               {
                 type: 'therapeuticNotebookReflection',
-                title: 'Después de haber realizado tu pequeño acto de exposición, reflexiona:',
+                title: 'Paso 3: Observa lo que ocurrió',
                 prompts: [
-                  'En tu cuerpo:',
-                  '• ¿Se activó algo?',
-                  '• ¿Hubo tensión, calor, respiración acelerada?',
-                  '• ¿Cómo fue cambiando?',
-                  '',
-                  'En tu mente:',
-                  '• ¿Qué pensamientos aparecieron?',
-                  '• ¿Se cumplieron tus predicciones?',
-                  '• ¿Qué historia te estaba contando tu cabeza?',
-                  '',
-                  'En la realidad:',
-                  '• ¿Qué ocurrió realmente?',
-                  '• ¿Pasó algo tan grave como temías?',
-                  '• ¿Hubo alguna consecuencia real o solo una sensación pasajera?',
+                  'Después de haber realizado tu pequeño acto de exposición, reflexiona:',
+                  'En tu cuerpo: ¿Se activó algo? ¿Hubo tensión, calor, respiración acelerada? ¿Cómo fue cambiando?',
+                  'En tu mente: ¿Qué pensamientos aparecieron? ¿Se cumplieron tus predicciones? ¿Qué historia te estaba contando tu cabeza?',
+                  'En la realidad: ¿Qué ocurrió realmente? ¿Pasó algo tan grave como temías? ¿Hubo alguna consecuencia real o solo una sensación pasajera?',
                 ],
               },
               {
@@ -407,7 +388,7 @@ export const uncertaintyPath: Path = {
               'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guión.',
               'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
               'Imaginar más de un desenlace te ayuda a salir del modo “todo o nada” y a recuperar perspectiva.',
-              'Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista.',
+              "Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista, utilizando el 'pero también'.",
               'Adaptarte no significa rendirte, sino moverte con inteligencia emocional ante lo incierto.'
           ]},
           { type: 'quote', text: 'No necesitas certezas para avanzar. Necesito confianza en mi capacidad de adaptarme.'}
@@ -511,5 +492,7 @@ export const uncertaintyPath: Path = {
           { type: 'quote', text: 'Cuando dejo de controlar, abro espacio para estar presente… y responder con lo que tengo, no con lo que imagino.'}
         ]
     }
-  ]
+  ],
 };
+
+    
