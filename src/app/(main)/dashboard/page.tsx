@@ -650,7 +650,7 @@ export default function DashboardPage() {
           </CardContent>
           <CardFooter>
             <Button asChild size="lg">
-              <Link href="/assessment/intro">
+              <Link href="/assessment/review">
                 {latestAssessment ? "Volver a Evaluarme" : t.takeInitialAssessment}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -662,4 +662,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
