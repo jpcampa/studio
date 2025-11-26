@@ -1,5 +1,4 @@
 
-
 import type { Path } from '../pathsData';
 
 export const uncertaintyPath: Path = {
@@ -185,7 +184,32 @@ export const uncertaintyPath: Path = {
             objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio6tecnica1.mp3',
             content: [
-              { type: 'paragraph', text: 'Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.'}
+                { type: 'paragraph', text: '¿Sientes que tu cuerpo se acelera cuando estás en tensión? Respirar más lento, mover el cuerpo o sentir el contacto con tu entorno puede ayudarte más de lo que imaginas. Aquí encontrarás técnicas validadas por la ciencia para calmar tu sistema nervioso. Elige la que más te ayude y practica durante unos minutos. Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.' },
+                {
+                    type: 'collapsible',
+                    title: '¿Por qué estas técnicas funcionan?',
+                    content: [{ type: 'paragraph', text: 'Cuando estás en modo alerta —corazón acelerado, cuerpo tenso, mente agitada— tu sistema nervioso intenta protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas activan el sistema parasimpático, que envía una señal clara al cuerpo: “ya no estás en peligro”. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios científicos muestran que 8 semanas de práctica de respiración o mindfulness pueden reducir el volumen de la amígdala, el centro del miedo en el cerebro. Es decir: estás entrenando tu cuerpo y tu mente para vivir con más calma.' }]
+                },
+                {
+                    type: 'collapsible',
+                    title: '¿Qué cambia cuando las practicas?',
+                    content: [
+                        { type: 'paragraph', text: '🔹 En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\n🔹 En tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas técnicas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }]
+                },
+                 {
+                    type: 'collapsible',
+                    title: '¿Cuándo puedes usarlas?',
+                    content: [{ type: 'paragraph', text: '🕒 En el momento: si sientes ansiedad o bloqueo\n🛡️ Antes de una situación desafiante\n🌱 Como rutina diaria para entrenar tu equilibrio' }]
+                },
+                { type: 'title', text: 'Selección de técnicas' },
+                { type: 'paragraph', text: 'Explora todas y guarda tus favoritas. Puedes repetirlas cuando lo necesites.'},
+                { type: 'collapsible', title: 'Respiración 4–2–6 con gesto de autocuidado', content: [{ type: 'paragraph', text: 'Ideal antes de dormir o al comenzar el día.' }] },
+                { type: 'collapsible', title: 'Respiración diafragmática (guiada paso a paso)', content: [{ type: 'paragraph', text: 'Perfecta para reducir tensión acumulada o centrarte al empezar la jornada.' }] },
+                { type: 'collapsible', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', content: [{ type: 'paragraph', text: 'Úsala cuando tu mente se inunde de pensamientos anticipatorios.' }] },
+                { type: 'collapsible', title: 'Escaneo corporal sin juicio (body scan)', content: [{ type: 'paragraph', text: 'Útil para relajarte al final del día o facilitar el descanso.' }] },
+                { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
+                { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
+                { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
           ]},
           { 
             type: 'exercise', 
@@ -375,7 +399,7 @@ export const uncertaintyPath: Path = {
             title: 'Ejercicio 1: Mi mantra de confianza',
             objective: 'Crea una frase breve, realista y significativa que funcione como una brújula interna para recordarte que puedes sostenerte aunque no tengas todo resuelto.',
             duration: '7–10 minutos',
-            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio5tecnica1.mp3',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion4audio5tecnica1.mp3'
           },
           {
             type: 'exercise',
