@@ -200,23 +200,13 @@ export const uncertaintyPath: Path = {
                     type: 'collapsible',
                     title: '¿Cuándo puedes usarlas?',
                     content: [
-                      {
-                        type: 'paragraph',
-                        text: 'Puedes usar estas técnicas:',
-                      },
-                      {
-                        type: 'list',
-                        items: [
-                          'En el momento: si sientes ansiedad o bloqueo',
-                          'Antes de una situación desafiante',
-                          'Como rutina diaria para entrenar tu equilibrio',
-                        ],
-                      },
-                      {
-                        type: 'paragraph',
-                        text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.',
-                      },
-                    ],
+                        { type: 'list', items: [
+                            'En el momento: si sientes ansiedad o bloqueo',
+                            'Antes de una situación desafiante',
+                            'Como rutina diaria para entrenar tu equilibrio'
+                        ]},
+                        { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo. La calma también se entrena.' }
+                    ]
                 },
                 { type: 'title', text: 'Selección de técnicas' },
                 { type: 'paragraph', text: 'Explora todas y guarda tus favoritas. Puedes repetirlas cuando lo necesites.'},
@@ -227,6 +217,16 @@ export const uncertaintyPath: Path = {
                 { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
                 { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
                 { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
+                {
+                    type: 'therapeuticNotebookReflection',
+                    title: 'Registro de experiencia personal',
+                    prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:']
+                },
+                {
+                    type: 'collapsible',
+                    title: 'Resumen clave',
+                    content: [{ type: 'paragraph', text: 'Cada vez que practicas una técnica de calma, estás enviando un mensaje claro a tu sistema nervioso: “No estás en peligro. Puedes estar en paz.”\n\nEstas experiencias repetidas se convierten en nuevas referencias internas. Lo incierto se vuelve más manejable.\nTu cuerpo aprende a activarse menos, calmarse antes y recuperar el equilibrio con mayor facilidad.\n\nEstás construyendo dentro de ti un pequeño refugio al que volver cuando todo alrededor es incierto.\nLa calma deja de ser solo una técnica… y se convierte en una capacidad que forma parte de ti.' }]
+                }
           ]},
           { 
             type: 'exercise', 
@@ -454,5 +454,5 @@ export const uncertaintyPath: Path = {
           { type: 'quote', text: 'Cuando dejo de controlar, abro espacio para estar presente… y responder con lo que tengo, no con lo que imagino.'}
         ]
     }
-  ],
+  ]
 };
