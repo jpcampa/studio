@@ -17,7 +17,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'paragraphWithAudio',
           text: '¿Te ha pasado que cuanto menos sabes sobre algo, más te preocupas? Esta semana te acompaño a comprender qué es la incertidumbre, por qué tu cuerpo y tu mente reaccionan con incomodidad cuando no tienes el control, y cómo puedes empezar a relacionarte con lo incierto desde un lugar más flexible y sereno.\nNo se trata de eliminar la incertidumbre, sino de aprender a sostenerla sin que dirija tu vida.',
-          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio2Ruta2Sesion1.mp3'
         },
         { 
           type: 'title', 
@@ -116,8 +116,9 @@ export const uncertaintyPath: Path = {
       estimatedTime: '20-25 min',
       content: [
           {
-            type: 'paragraph',
+            type: 'paragraphWithAudio',
             text: '¿Te ha pasado que, cuando estás esperando algo importante o no sabes qué va a ocurrir, tu mente empieza a imaginar mil escenarios negativos?   En esta segunda semana vamos a trabajar precisamente en eso: en comprender por qué ocurre y cómo dejar de anticipar lo peor. No se trata de controlar cada detalle de tu vida, sino de descubrir que puedes vivir con más calma incluso cuando no tienes todas las respuestas.   Vas a entender cómo funciona la anticipación ansiosa y por qué tu cuerpo reacciona con alarma ante lo incierto, aunque no haya un peligro real.  Aprenderás a entrenar tu mente para frenar los pensamientos catastrofistas y a reconectar con el presente usando técnicas de exposición, regulación y atención plena.   También comenzarás a distinguir entre lo que tu mente imagina y lo que realmente está ocurriendo. Porque esta semana no se trata de eliminar la ansiedad, sino de reducir su poder sobre ti y ganar confianza paso a paso.',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio1Ruta2Sesion2.mp3',
           },
           { type: 'title', text: 'Psicoeducación' },
           {
