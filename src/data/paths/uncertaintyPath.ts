@@ -166,19 +166,12 @@ export const uncertaintyPath: Path = {
                 { type: 'paragraph', text: 'Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.'}
             ]
           },
-          {
-            type: 'exercise',
-            title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto',
-            objective:
-              'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
-            duration: '5–10 minutos',
+          { 
+            type: 'exercise', 
+            title: 'Ejercicio 2: Pequeños Actos de Exposición a lo Incierto', 
+            objective: 'Entrénate para vivir con más calma, incluso cuando no tienes todas las respuestas, mediante la exposición segura y consciente a lo que no puedes controlar.',
             audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio7tecnica2.mp3',
-            content: [
-              {
-                type: 'paragraph',
-                text: 'PANTALLA 1 – Introducción general   ¿Y si no necesitas tenerlo todo bajo control?   Cuando anticipas lo peor, tu cuerpo reacciona como si ya estuvieras en peligro. Pero esa percepción no siempre es real: muchas veces es solo una interpretación que tu mente hace ante la incertidumbre.   Para entrenarte a vivir con más calma, incluso cuando no tienes todas las respuestas, necesitas practicar algo clave:  Exponerte, en dosis pequeñas, a lo que no puedes controlar.   Este ejercicio te invita a hacerlo de forma segura y consciente.      PANTALLA 2 – Paso 1: Elige tu situación   Paso 1. Elige una situación cotidiana que suelas controlar en exceso o evitar por miedo a que algo salga mal.   Ejemplos:  • Enviar un mensaje sin revisar 3 veces  • Tomar una decisión sencilla sin pedir confirmación  • Hacer una pregunta en clase o en una reunión, aunque no estés 100% seguro/a  • No llevar siempre el objeto “por si acaso” (medicación, agua, cargador…)  • Empezar una conversación sin planear qué vas a decir   ¿Cuál será tu pequeña exposición de hoy?  [Campo de escritura libre obligatorio]      PANTALLA 3 – Paso 2: Antes de actuar   No anticipes el resultado. Haz la acción con conciencia.  Antes de actuar, reflexiona y escribe:   ¿Qué creo que podría salir mal?  [Campo obligatorio]   ¿Qué haría si eso pasara?  [Campo obligatorio]   ¿En qué otras ocasiones me he enfrentado a situaciones inciertas como esta? ¿Qué hice entonces que me ayudó o me dio fuerza?  [Campo obligatorio]   Luego, haz la acción sin intentar garantizar que todo saldrá perfecto. Solo obsérvate.      PANTALLA 4 – Paso 3: Observa lo que ocurrió   Después de haber realizado tu pequeño acto de exposición, reflexiona:   En tu cuerpo:  • ¿Se activó algo?  • ¿Hubo tensión, calor, respiración acelerada?  • ¿Cómo fue cambiando?   [Campo de respuesta libre]    En tu mente:  • ¿Qué pensamientos aparecieron?  • ¿Se cumplieron tus predicciones?  • ¿Qué historia te estaba contando tu cabeza?   [Campo de respuesta libre]    En la realidad:  • ¿Qué ocurrió realmente?  • ¿Pasó algo tan grave como temías?  • ¿Hubo alguna consecuencia real o solo una sensación pasajera?   [Campo de respuesta libre]       PANTALLA 5 – Reflexión final (cuaderno terapéutico)   Reflexión para tu cuaderno terapéutico:  • ¿Qué pasó cuando no tuve todas las respuestas?  • ¿Fue tan grave como imaginaba?   [Campo de escritura libre – Guardar en Cuaderno Terapéutico]',
-              },
-            ],
+            content: []
           },
            { type: 'therapeuticNotebookReflection', title: 'Reflexión Final de la Semana', 
            audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Audio8Ruta2Sesion2.mp3',
@@ -294,7 +287,7 @@ export const uncertaintyPath: Path = {
               'La rigidez cognitiva aparece cuando tu mente quiere protegerte… pero puede atraparte en un único guión.',
               'La flexibilidad mental se puede entrenar: se trata de abrir espacio a otras formas de ver, sentir y responder.',
               'Imaginar más de un desenlace te ayuda a salir del modo “todo o nada” y a recuperar perspectiva.',
-              "Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista, utilizando el 'pero también'.",
+              'Aunque no puedas evitar pensar “¿Y si…?”, sí puedes equilibrar esa voz con una más compasiva y realista, utilizando el \'pero también\'.',
               'Adaptarte no significa rendirte, sino moverte con inteligencia emocional ante lo incierto.'
           ]},
           { type: 'quote', text: 'No necesitas certezas para avanzar. Necesito confianza en mi capacidad de adaptarme.'}
@@ -401,7 +394,7 @@ export const uncertaintyPath: Path = {
         {
           type: 'therapeuticNotebookReflection',
           title: 'Reflexión final de la Ruta',
-          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Resumenfinalruta2.mp3',
+          audioUrl: 'https://workwellfut.com/audios/ruta2/descripciones/Reflexionfinalruta2.mp3',
           prompts: [
             'Te proponemos cerrar este proceso con algunas preguntas clave:',
             '¿Qué he aprendido sobre mí al observar cómo vivo la incertidumbre?',
@@ -441,4 +434,5 @@ export const uncertaintyPath: Path = {
     
 
     
+
 
