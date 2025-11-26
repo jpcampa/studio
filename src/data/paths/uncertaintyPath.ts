@@ -163,7 +163,7 @@ export const uncertaintyPath: Path = {
               { type: 'paragraph', text: 'Cuando te sientes ansioso o en alerta sin un peligro real delante, es porque tu mente o tu sistema nervioso han interpretado algo como una posible amenaza. Esto puede ocurrir por varios motivos:'},
               { type: 'collapsible', title: 'Errores de pensamiento', content: [{type: 'paragraph', text: 'A veces, sin darte cuenta, caes en formas de pensar que distorsionan la realidad y aumentan el miedo. Por ejemplo:   Sobredimensionar el riesgo: Imaginas que algo es más peligroso de lo que realmente es. Ej.: “Si me equivoco, será un desastre”.   Imaginar consecuencias extremas: Das por hecho que el peor escenario va a suceder. Ej.: “Seguro que me rechazan y no podré con esto”.   Sentirte incapaz: Crees que no tienes recursos para afrontarlo. Ej.: “No voy a poder gestionarlo si algo sale mal”.'}]},
               { type: 'collapsible', title: 'Creencias aprendidas', content: [{type: 'paragraph', text: 'Detrás de esos pensamientos, a veces hay creencias más profundas que aprendiste con el tiempo (de tu entorno, de la infancia o de experiencias difíciles). Estas creencias te hacen interpretar muchas situaciones como peligrosas, aunque no lo sean realmente.   Algunas creencias comunes son:   “No debo fallar nunca” → convierte cualquier error en un drama.   “El mundo es peligroso” → te hace vivir en estado de alerta.   “No puedo equivocarme” → te paraliza ante lo incierto.' }]},
-              { type: 'collapsible', title: 'Neurocepción inconsciente', content: [{type: 'paragraph', text: 'Este es un concepto de la neurociencia muy importante: tu sistema nervioso evalúa todo lo que ocurre a tu alrededor sin que tú lo decidas de forma consciente. Percibe detalles como:   El tono de voz de alguien   Una mirada o gesto   Un recuerdo doloroso   O simplemente un cambio en tu entorno   Y si interpreta alguna de esas señales como insegura, activa la alarma automáticamente. No es culpa tuya, es un sistema diseñado para protegerte. Pero muchas veces actúa por error.'}]}
+              { type: 'collapsible', title: 'Neurocepción inconsciente', content: [{type: 'paragraph', text: 'Este es un concepto de la neurociencia muy importante: tu sistema nervioso evalúa todo lo que ocurre a tu alrededor sin que tú lo decidas de forma consciente. Percibe detalles como:   El tono de voz de alguien   Una mirada o gesto   Un recuerdo doloroso   O simplemente un cambio en tu entorno   Y si interpreta alguna de estas señales como insegura, activa la alarma automáticamente. No es culpa tuya, es un sistema diseñado para protegerte. Pero muchas veces actúa por error.'}]}
             ]
           },
           {
@@ -178,56 +178,56 @@ export const uncertaintyPath: Path = {
             ]
           },
           { type: 'title', text: 'Técnicas Específicas' },
-           { 
-              type: 'exercise', 
-              title: 'Ejercicio 1: Calmar tu Cuerpo para Calmar tu Mente', 
-              objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.',
-              audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio6tecnica1.mp3',
-              content: [
-                  { type: 'paragraph', text: '¿Sientes que tu cuerpo se acelera cuando estás en tensión? Respirar más lento, mover el cuerpo o sentir el contacto con tu entorno puede ayudarte más de lo que imaginas. Aquí encontrarás técnicas validadas por la ciencia para calmar tu sistema nervioso. Elige la que más te ayude y practica durante unos minutos. Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.' },
-                  {
-                      type: 'collapsible',
-                      title: '¿Por qué estas técnicas funcionan?',
-                      content: [{ type: 'paragraph', text: 'Cuando estás en modo alerta —corazón acelerado, cuerpo tenso, mente agitada— tu sistema nervioso intenta protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas activan el sistema parasimpático, que envía una señal clara al cuerpo: “ya no estás en peligro”. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios científicos muestran que 8 semanas de práctica de respiración o mindfulness pueden reducir el volumen de la amígdala, el centro del miedo en el cerebro. Es decir: estás entrenando tu cuerpo y tu mente para vivir con más calma.' }]
-                  },
-                  {
-                      type: 'collapsible',
-                      title: '¿Qué cambia cuando las practicas?',
-                      content: [
-                          { type: 'paragraph', text: '🔹 En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\n🔹 En tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas técnicas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }
-                      ]
-                  },
-                  {
-                      type: 'collapsible',
-                      title: '¿Cuándo puedes usarlas?',
-                      content: [
-                          { type: 'list', items: [
-                              'En el momento: si sientes ansiedad o bloqueo',
-                              'Antes de una situación desafiante',
-                              'Como rutina diaria para entrenar tu equilibrio'
-                          ]},
-                          { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo. La calma también se entrena.' }
-                      ]
-                  },
-                  { type: 'title', text: 'Selección de técnicas' },
-                  { type: 'paragraph', text: 'Explora todas y guarda tus favoritas. Puedes repetirlas cuando lo necesites.'},
-                  { type: 'collapsible', title: 'Respiración 4–2–6 con gesto de autocuidado', content: [{ type: 'paragraph', text: 'Ideal antes de dormir o al comenzar el día.' }] },
-                  { type: 'collapsible', title: 'Respiración diafragmática (guiada paso a paso)', content: [{ type: 'paragraph', text: 'Perfecta para reducir tensión acumulada o centrarte al empezar la jornada.' }] },
-                  { type: 'collapsible', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', content: [{ type: 'paragraph', text: 'Úsala cuando tu mente se inunde de pensamientos anticipatorios.' }] },
-                  { type: 'collapsible', title: 'Escaneo corporal sin juicio (body scan)', content: [{ type: 'paragraph', text: 'Útil para relajarte al final del día o facilitar el descanso.' }] },
-                  { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
-                  { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
-                  { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
-                  {
-                      type: 'therapeuticNotebookReflection',
-                      title: 'Registro de experiencia personal',
-                      prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:']
-                  },
-                  {
-                      type: 'collapsible',
-                      title: 'Resumen clave',
-                      content: [{ type: 'paragraph', text: 'Cada vez que practicas una técnica de calma, estás enviando un mensaje claro a tu sistema nervioso: “No estás en peligro. Puedes estar en paz.”\n\nEstas experiencias repetidas se convierten en nuevas referencias internas. Lo incierto se vuelve más manejable.\nTu cuerpo aprende a activarse menos, calmarse antes y recuperar el equilibrio con mayor facilidad.\n\nEstás construyendo dentro de ti un pequeño refugio al que volver cuando todo alrededor es incierto.\nLa calma deja de ser solo una técnica… y se convierte en una capacidad que forma parte de ti.' }]
-                  }
+          { 
+            type: 'exercise', 
+            title: 'Ejercicio 1: Calmar tu Cuerpo para Calmar tu Mente', 
+            objective: 'Encuentra técnicas validadas por la ciencia para calmar tu sistema nervioso y elige las que más te ayuden.',
+            audioUrl: 'https://workwellfut.com/audios/ruta2/tecnicas/Ruta2sesion2audio6tecnica1.mp3',
+            content: [
+                { type: 'paragraph', text: '¿Sientes que tu cuerpo se acelera cuando estás en tensión? Respirar más lento, mover el cuerpo o sentir el contacto con tu entorno puede ayudarte más de lo que imaginas. Aquí encontrarás técnicas validadas por la ciencia para calmar tu sistema nervioso. Elige la que más te ayude y practica durante unos minutos. Puedes usarlas cuando notes ansiedad o como parte de tu rutina diaria.' },
+                {
+                    type: 'collapsible',
+                    title: '¿Por qué estas técnicas funcionan?',
+                    content: [{ type: 'paragraph', text: 'Cuando estás en modo alerta —corazón acelerado, cuerpo tenso, mente agitada— tu sistema nervioso intenta protegerte. Pero si esa activación se mantiene, tu bienestar se resiente.\nEstas técnicas activan el sistema parasimpático, que envía una señal clara al cuerpo: “ya no estás en peligro”. Al practicar con regularidad, no solo te calmas en el momento, sino que estás enseñándole a tu cuerpo a recuperar el equilibrio con más facilidad.\nEstudios científicos muestran que 8 semanas de práctica de respiración o mindfulness pueden reducir el volumen de la amígdala, el centro del miedo en el cerebro. Es decir: estás entrenando tu cuerpo y tu mente para vivir con más calma.' }]
+                },
+                {
+                    type: 'collapsible',
+                    title: '¿Qué cambia cuando las practicas?',
+                    content: [
+                        { type: 'paragraph', text: '🔹 En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\n🔹 En tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas técnicas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }
+                    ]
+                },
+                {
+                    type: 'collapsible',
+                    title: '¿Cuándo puedes usarlas?',
+                    content: [
+                        { type: 'list', items: [
+                            'En el momento: si sientes ansiedad o bloqueo',
+                            'Antes de una situación desafiante',
+                            'Como rutina diaria para entrenar tu equilibrio'
+                        ]},
+                        { type: 'paragraph', text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.' }
+                    ]
+                },
+                { type: 'title', text: 'Selección de técnicas' },
+                { type: 'paragraph', text: 'Explora todas y guarda tus favoritas. Puedes repetirlas cuando lo necesites.'},
+                { type: 'collapsible', title: 'Respiración 4–2–6 con gesto de autocuidado', content: [{ type: 'paragraph', text: 'Ideal antes de dormir o al comenzar el día.' }] },
+                { type: 'collapsible', title: 'Respiración diafragmática (guiada paso a paso)', content: [{ type: 'paragraph', text: 'Perfecta para reducir tensión acumulada o centrarte al empezar la jornada.' }] },
+                { type: 'collapsible', title: 'Anclaje sensorial inmediato (Técnica 5-4-3-2-1)', content: [{ type: 'paragraph', text: 'Úsala cuando tu mente se inunde de pensamientos anticipatorios.' }] },
+                { type: 'collapsible', title: 'Escaneo corporal sin juicio (body scan)', content: [{ type: 'paragraph', text: 'Útil para relajarte al final del día o facilitar el descanso.' }] },
+                { type: 'collapsible', title: 'Relajación muscular progresiva (Jacobson)', content: [{ type: 'paragraph', text: 'Si sientes ansiedad física o mucha tensión corporal.' }] },
+                { type: 'collapsible', title: 'Técnicas de presión profunda y balanceo corporal', content: [{ type: 'paragraph', text: 'Especialmente útiles en momentos de desregulación intensa.' }] },
+                { type: 'collapsible', title: 'Contacto frío breve (reset inmediato)', content: [{ type: 'paragraph', text: 'Interrumpe la activación emocional de forma rápida y directa.' }] },
+                 {
+                    type: 'therapeuticNotebookReflection',
+                    title: 'Registro de experiencia personal',
+                    prompts: ['¿Cómo te sentiste después de practicar alguna de estas técnicas? Escribe aquí tus palabras clave, sensaciones o una breve reflexión que quieras recordar:']
+                },
+                {
+                    type: 'collapsible',
+                    title: 'Resumen clave',
+                    content: [{ type: 'paragraph', text: 'Cada vez que practicas una técnica de calma, estás enviando un mensaje claro a tu sistema nervioso: “No estás en peligro. Puedes estar en paz.”\n\nEstas experiencias repetidas se convierten en nuevas referencias internas. Lo incierto se vuelve más manejable.\nTu cuerpo aprende a activarse menos, calmarse antes y recuperar el equilibrio con mayor facilidad.\n\nEstás construyendo dentro de ti un pequeño refugio al que volver cuando todo alrededor es incierto.\nLa calma deja de ser solo una técnica… y se convierte en una capacidad que forma parte de ti.' }]
+                }
             ]
           },
           { 
@@ -254,7 +254,7 @@ export const uncertaintyPath: Path = {
            prompts: [
               '¿Qué he aprendido sobre mi forma de reaccionar ante lo incierto?',
               '¿Qué me ha ayudado más: calmarme antes, enfrentarme directamente o ambas cosas?',
-              '¿Qué tipo de pensamientos suelen aumentar mi ansiedad? ¿Puedo verlos como historias, no como verdades?',
+              '¿Qué tipo de pensamientos suelen aumentar mi ansiedad?',
               '¿He notado algún cambio en cómo me siento al no tener el control total?',
               '¿Qué me gustaría seguir practicando para fortalecer mi confianza ante lo incierto?',
            ]},
