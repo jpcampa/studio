@@ -196,10 +196,27 @@ export const uncertaintyPath: Path = {
                     content: [
                         { type: 'paragraph', text: '🔹 En tu cuerpo:\n• Respiración más profunda y regular\n• Regulación del CO₂ (menos mareos o ahogo)\n• Reducción de tensión muscular\n• Sensaciones de alivio, calor o calma\n\n🔹 En tu mente:\n• Recuperas el control y vuelves al presente\n• Se interrumpe el bucle de pensamientos ansiosos\n• Refuerzas el autocuidado y la conexión contigo\n\nEstas técnicas usan el cuerpo como puerta de entrada al bienestar. Respiración, movimiento, atención plena o contacto sensorial... Todas comparten un mismo propósito: ayudarte a regularte y conectar contigo desde un lugar seguro.' }]
                 },
-                 {
+                {
                     type: 'collapsible',
                     title: '¿Cuándo puedes usarlas?',
-                    content: [{ type: 'paragraph', text: '🕒 En el momento: si sientes ansiedad o bloqueo\n🛡️ Antes de una situación desafiante\n🌱 Como rutina diaria para entrenar tu equilibrio' }]
+                    content: [
+                      {
+                        type: 'paragraph',
+                        text: 'Puedes usar estas técnicas:',
+                      },
+                      {
+                        type: 'list',
+                        items: [
+                          'En el momento: si sientes ansiedad o bloqueo',
+                          'Antes de una situación desafiante',
+                          'Como rutina diaria para entrenar tu equilibrio',
+                        ],
+                      },
+                      {
+                        type: 'paragraph',
+                        text: 'Practicar no solo te calma en el momento. Te transforma a largo plazo.\nLa calma también se entrena.',
+                      },
+                    ],
                 },
                 { type: 'title', text: 'Selección de técnicas' },
                 { type: 'paragraph', text: 'Explora todas y guarda tus favoritas. Puedes repetirlas cuando lo necesites.'},
