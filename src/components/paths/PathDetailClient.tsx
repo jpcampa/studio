@@ -156,7 +156,6 @@ import { QuestionYourIfsExercise } from './QuestionYourIfsExercise';
 import { ExposureLadderExercise } from './ExposureLadderExercise';
 import { CalmVisualizationExercise } from './CalmVisualizationExercise';
 import { ImaginedCrisisRehearsalExercise } from './ImaginedCrisisRehearsalExercise';
-import { RitualDeEntregaConscienteExercise } from './RitualDeEntregaConscienteExercise';
 
 // =================== ERROR BOUNDARIES ===================
 
@@ -1769,8 +1768,6 @@ function ContentItemRenderer({
       const crisisRehearsalContent = contentItem ;
       return <ImaginedCrisisRehearsalExercise key={index} content={crisisRehearsalContent} pathId={pathId} />;
     }
-    case 'ritualDeEntregaConscienteExercise':
-        return <RitualDeEntregaConscienteExercise key={index} content={contentItem} pathId={pathId} />;
 
     // ...
     default:
